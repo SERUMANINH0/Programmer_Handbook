@@ -1,0 +1,434 @@
+[
+  {
+    "id": "postman-new-request",
+    "category": "Postman",
+    "subcategory": "Requests",
+    "title": "Criar nova requisição (New Request)",
+    "description": "Cria uma nova aba de requisição HTTP, permitindo escolher método, URL, headers, body e demais parâmetros antes de enviar.",
+    "syntax": "Ctrl+N (Windows/Linux) | Cmd+N (Mac)",
+    "shortcut": "Ctrl+N",
+    "example": "Pressionar Ctrl+N, selecionar GET, digitar a URL da API e clicar em Send para testar o endpoint.",
+    "result": "Uma nova aba de requisição é aberta, pronta para configuração e envio.",
+    "notes": [
+      "Requisições podem ser salvas em uma Collection para reutilização e organização futura."
+    ],
+    "bestPractices": [
+      "Salve toda requisição relevante em uma Collection assim que ela funcionar, em vez de deixá-la apenas na aba temporária."
+    ],
+    "relatedCommands": ["postman-save-request", "postman-collections"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/create-requests/creating-requests/",
+    "externalReferences": [],
+    "tags": ["postman", "requests", "atalhos"],
+    "keywords": ["ctrl n", "nova requisicao", "new request"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-send-request",
+    "category": "Postman",
+    "subcategory": "Requests",
+    "title": "Enviar requisição (Send)",
+    "description": "Executa a requisição configurada na aba atual e exibe a resposta do servidor, incluindo status, headers, corpo e tempo de resposta.",
+    "syntax": "Ctrl+Enter (Windows/Linux) | Cmd+Enter (Mac)",
+    "shortcut": "Ctrl+Enter",
+    "example": "Com uma requisição POST configurada com body JSON, pressionar Ctrl+Enter para enviá-la sem precisar clicar no botão Send.",
+    "result": "A resposta é exibida no painel inferior, com código de status, tempo e tamanho da resposta.",
+    "bestPractices": [
+      "Use o atalho de teclado em vez do mouse para acelerar o ciclo de testar-ajustar-testar durante o desenvolvimento de uma API."
+    ],
+    "relatedCommands": ["postman-new-request", "postman-save-request"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/requests/",
+    "externalReferences": [],
+    "tags": ["postman", "requests", "atalhos"],
+    "keywords": ["ctrl enter", "send request", "enviar requisicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-save-request",
+    "category": "Postman",
+    "subcategory": "Requests",
+    "title": "Salvar requisição (Save)",
+    "description": "Salva a requisição atual dentro de uma Collection, preservando URL, método, headers, body, scripts e exemplos associados.",
+    "syntax": "Ctrl+S (Windows/Linux) | Cmd+S (Mac)",
+    "shortcut": "Ctrl+S",
+    "example": "Após configurar corretamente uma requisição de login, pressionar Ctrl+S e escolher a Collection 'Auth API' para salvá-la.",
+    "result": "A requisição passa a existir permanentemente na Collection escolhida, disponível para reuso e para o Runner.",
+    "bestPractices": [
+      "Nomeie as requisições de forma descritiva (ex: 'POST Criar Usuário') em vez de deixar o nome padrão da URL."
+    ],
+    "relatedCommands": ["postman-new-request", "postman-collections"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/create-requests/creating-requests/#saving-requests",
+    "externalReferences": [],
+    "tags": ["postman", "requests", "atalhos"],
+    "keywords": ["ctrl s", "save request", "salvar requisicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-collections",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Collections (coleções de requisições)",
+    "description": "Agrupa requisições relacionadas em pastas organizadas, permitindo compartilhamento, documentação, versionamento e execução em lote via Runner.",
+    "syntax": "New > Collection",
+    "example": "Criar a Collection 'E-commerce API' com subpastas 'Auth', 'Produtos' e 'Pedidos', cada uma contendo suas requisições correspondentes.",
+    "result": "As requisições ficam organizadas hierarquicamente e podem ser exportadas, compartilhadas via link ou sincronizadas em um Workspace de equipe.",
+    "notes": [
+      "Collections suportam variáveis próprias (Collection Variables), scripts compartilhados e documentação em Markdown."
+    ],
+    "bestPractices": [
+      "Organize Collections por domínio de negócio ou por serviço/microsserviço, não apenas por método HTTP."
+    ],
+    "commonMistakes": [
+      "Duplicar a mesma Collection em vez de usar Forks e Pull Requests para colaborar em equipe."
+    ],
+    "relatedCommands": ["postman-save-request", "postman-runner", "postman-environments"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/collections/collections-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "collections", "organizacao"],
+    "keywords": ["collections", "colecoes", "organizar requisicoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-environments",
+    "category": "Postman",
+    "subcategory": "Environments",
+    "title": "Environments (ambientes)",
+    "description": "Conjunto de variáveis específicas de um contexto (desenvolvimento, homologação, produção) que podem ser trocadas rapidamente sem editar as requisições.",
+    "syntax": "{{nomeDaVariavel}}",
+    "example": "Criar um Environment 'Produção' com a variável base_url = https://api.exemplo.com e usar {{base_url}}/usuarios na URL da requisição.",
+    "result": "Ao trocar o Environment ativo no seletor superior direito, todas as requisições passam a usar os novos valores automaticamente.",
+    "parameters": [
+      {
+        "name": "initial value",
+        "description": "Valor sincronizado e visível para quem tem acesso ao Environment compartilhado.",
+        "required": false
+      },
+      {
+        "name": "current value",
+        "description": "Valor local usado apenas na sua sessão, não sincronizado nem compartilhado.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Variáveis sensíveis (tokens, senhas) devem usar o tipo 'secret' para não aparecerem em texto plano nem serem exportadas por engano."
+    ],
+    "bestPractices": [
+      "Nunca deixe credenciais de produção como 'current value' em um Environment compartilhado com a equipe."
+    ],
+    "commonMistakes": [
+      "Fazer hardcode da URL base diretamente nas requisições em vez de usar variáveis de Environment."
+    ],
+    "relatedCommands": ["postman-collections", "postman-variables-scope"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/variables/managing-environments/",
+    "externalReferences": [],
+    "tags": ["postman", "environments", "variaveis"],
+    "keywords": ["environments", "ambientes", "variaveis de ambiente"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-variables-scope",
+    "category": "Postman",
+    "subcategory": "Environments",
+    "title": "Escopo de variáveis (Global, Collection, Environment, Local)",
+    "description": "Define a hierarquia de precedência entre os diferentes tipos de variáveis do Postman, da mais ampla (Global) à mais específica (Local).",
+    "syntax": "pm.globals | pm.collectionVariables | pm.environment | pm.variables (local)",
+    "example": "pm.environment.set(\"token\", pm.response.json().access_token);",
+    "result": "A variável fica disponível para uso em {{token}} em qualquer requisição do Environment ativo.",
+    "notes": [
+      "A ordem de precedência do menor para o maior escopo é: Global < Collection < Environment < Local (script) < Data variable.",
+      "Variáveis Local (definidas em pre-request scripts com pm.variables.set) têm a maior precedência e não persistem entre requisições."
+    ],
+    "bestPractices": [
+      "Prefira variáveis de Environment para valores que mudam entre ambientes e Collection Variables para valores fixos do domínio da API."
+    ],
+    "relatedCommands": ["postman-environments", "postman-pre-request-script"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/variables/variables/",
+    "externalReferences": [],
+    "tags": ["postman", "variaveis", "escopo"],
+    "keywords": ["escopo de variaveis", "pm.globals", "pm.environment", "precedencia"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-pre-request-script",
+    "category": "Postman",
+    "subcategory": "Scripts",
+    "title": "Pre-request Script",
+    "description": "Script JavaScript executado antes do envio da requisição, usado para gerar tokens, definir headers dinâmicos ou calcular valores necessários.",
+    "syntax": "pm.<método>",
+    "example": "pm.environment.set(\"timestamp\", Date.now());",
+    "result": "A variável 'timestamp' é atualizada no Environment ativo antes da requisição ser enviada, disponível como {{timestamp}}.",
+    "notes": [
+      "Também pode ser definido no nível da Collection, sendo executado automaticamente antes de toda requisição dela."
+    ],
+    "bestPractices": [
+      "Use Pre-request Scripts na Collection para lógica compartilhada, como renovação automática de token de autenticação."
+    ],
+    "commonMistakes": [
+      "Colocar lógica de autenticação duplicada em cada requisição em vez de centralizá-la no Pre-request Script da Collection."
+    ],
+    "relatedCommands": ["postman-test-script", "postman-variables-scope"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/writing-scripts/pre-request-scripts/",
+    "externalReferences": [],
+    "tags": ["postman", "scripts", "pre-request"],
+    "keywords": [
+      "pre-request script",
+      "script antes da requisicao",
+      "javascript postman"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-test-script",
+    "category": "Postman",
+    "subcategory": "Scripts",
+    "title": "Test Script (aba Tests/Post-response)",
+    "description": "Script JavaScript executado após a resposta chegar, usado para validar automaticamente o resultado da requisição com asserções.",
+    "syntax": "pm.test(\"nome do teste\", function () { pm.expect(...); });",
+    "example": "pm.test(\"Status é 200\", function () {\n  pm.response.to.have.status(200);\n});",
+    "result": "O painel 'Test Results' exibe quantos testes passaram ou falharam após o envio da requisição.",
+    "notes": [
+      "pm.response.json() retorna o corpo da resposta já parseado como objeto JavaScript para asserções mais ricas."
+    ],
+    "bestPractices": [
+      "Escreva pelo menos um teste de status code e um de schema/estrutura do corpo em toda requisição crítica da API."
+    ],
+    "commonMistakes": [
+      "Confundir a antiga sintaxe 'tests[\"nome\"] = condição;' (depreciada) com a atual API pm.test()."
+    ],
+    "relatedCommands": ["postman-pre-request-script", "postman-runner"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/writing-scripts/test-scripts/",
+    "externalReferences": [],
+    "tags": ["postman", "scripts", "testes"],
+    "keywords": ["test script", "pm.test", "testes automatizados postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-runner",
+    "category": "Postman",
+    "subcategory": "Runner",
+    "title": "Collection Runner",
+    "description": "Executa todas as requisições de uma Collection (ou pasta) em sequência, automaticamente, aplicando dados de um arquivo CSV/JSON e reportando resultados dos testes.",
+    "syntax": "Collection > ... > Run collection",
+    "example": "Selecionar a Collection 'API Usuários', configurar 3 iterações com um arquivo de dados CSV e clicar em Run para validar múltiplos cenários.",
+    "result": "Um relatório mostra quantas requisições foram executadas, quantos testes passaram/falharam e o tempo total de execução.",
+    "parameters": [
+      {
+        "name": "Iterations",
+        "description": "Número de vezes que a Collection será executada.",
+        "required": false,
+        "defaultValue": "1"
+      },
+      {
+        "name": "Delay",
+        "description": "Tempo de espera entre cada requisição, em milissegundos.",
+        "required": false,
+        "defaultValue": "0"
+      },
+      {
+        "name": "Data file",
+        "description": "Arquivo CSV ou JSON com dados para parametrizar as iterações.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "O Runner também pode ser executado via linha de comando usando a ferramenta Newman."
+    ],
+    "bestPractices": [
+      "Use o Collection Runner integrado a pipelines de CI/CD via Newman para validação automática de contratos de API."
+    ],
+    "relatedCommands": ["postman-collections", "postman-test-script", "postman-newman"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/",
+    "externalReferences": [],
+    "tags": ["postman", "runner", "testes"],
+    "keywords": ["collection runner", "executar colecao", "testes em lote"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-newman",
+    "category": "Postman",
+    "subcategory": "Runner",
+    "title": "Newman (CLI do Postman)",
+    "description": "Ferramenta de linha de comando que executa Collections do Postman fora da interface gráfica, ideal para integração em pipelines de CI/CD.",
+    "syntax": "newman run <collection.json> -e <environment.json>",
+    "example": "newman run E-commerce-API.postman_collection.json -e Producao.postman_environment.json --reporters cli,json",
+    "result": "A Collection é executada no terminal, exibindo resultados dos testes e retornando código de saída diferente de zero em caso de falha.",
+    "flags": [
+      {
+        "flag": "-e, --environment",
+        "description": "Especifica o arquivo de Environment a ser usado na execução."
+      },
+      {
+        "flag": "--reporters",
+        "description": "Define os formatos de relatório de saída (cli, json, html, junit)."
+      },
+      {
+        "flag": "-d, --iteration-data",
+        "description": "Especifica o arquivo de dados (CSV/JSON) para parametrizar as iterações."
+      },
+      {
+        "flag": "--bail",
+        "description": "Interrompe a execução assim que um teste falhar."
+      }
+    ],
+    "bestPractices": [
+      "Use o reporter 'junit' para integrar os resultados do Newman a dashboards de CI como Jenkins ou Azure DevOps."
+    ],
+    "relatedCommands": ["postman-runner"],
+    "difficulty": "avancado",
+    "platform": ["windows", "linux", "macos", "node"],
+    "version": "Newman 6",
+    "officialDocumentation": "https://learning.postman.com/docs/collections/using-newman-cli/command-line-integration-with-newman/",
+    "externalReferences": [],
+    "tags": ["postman", "newman", "ci-cd"],
+    "keywords": ["newman", "cli postman", "ci cd postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-new-tab",
+    "category": "Postman",
+    "subcategory": "Atalhos",
+    "title": "Nova aba (New Tab)",
+    "description": "Abre uma nova aba vazia na área de trabalho do Postman, permitindo trabalhar em múltiplas requisições simultaneamente.",
+    "syntax": "Ctrl+T (Windows/Linux) | Cmd+T (Mac)",
+    "shortcut": "Ctrl+T",
+    "example": "Pressionar Ctrl+T para abrir uma nova aba enquanto mantém a requisição atual aberta em outra aba.",
+    "result": "Uma nova aba em branco é aberta ao lado das já existentes.",
+    "relatedCommands": ["postman-new-request", "postman-close-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/getting-started/basics/navigating-postman/",
+    "externalReferences": [],
+    "tags": ["postman", "atalhos", "produtividade"],
+    "keywords": ["ctrl t", "nova aba", "new tab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-close-tab",
+    "category": "Postman",
+    "subcategory": "Atalhos",
+    "title": "Fechar aba (Close Tab)",
+    "description": "Fecha a aba de requisição atualmente ativa, sem afetar as demais abas abertas.",
+    "syntax": "Ctrl+W (Windows/Linux) | Cmd+W (Mac)",
+    "shortcut": "Ctrl+W",
+    "example": "Após concluir os testes em uma requisição temporária, pressionar Ctrl+W para fechar sua aba.",
+    "result": "A aba ativa é fechada e o foco move para a aba adjacente.",
+    "relatedCommands": ["postman-new-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/getting-started/basics/navigating-postman/",
+    "externalReferences": [],
+    "tags": ["postman", "atalhos", "produtividade"],
+    "keywords": ["ctrl w", "fechar aba", "close tab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-search",
+    "category": "Postman",
+    "subcategory": "Atalhos",
+    "title": "Busca global (Search)",
+    "description": "Abre uma busca universal para localizar requisições, Collections, Environments e outros recursos pelo nome em todo o Workspace.",
+    "syntax": "Ctrl+K (Windows/Linux) | Cmd+K (Mac)",
+    "shortcut": "Ctrl+K",
+    "example": "Pressionar Ctrl+K e digitar 'login' para localizar rapidamente a requisição de autenticação em qualquer Collection do Workspace.",
+    "result": "Uma lista filtrada de recursos correspondentes é exibida, navegável com as setas e Enter.",
+    "bestPractices": [
+      "Use a busca global em vez de navegar manualmente pela árvore de Collections em Workspaces grandes."
+    ],
+    "relatedCommands": ["postman-collections"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/getting-started/basics/navigating-postman/",
+    "externalReferences": [],
+    "tags": ["postman", "atalhos", "busca"],
+    "keywords": ["ctrl k", "busca global", "search postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-mock-server",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Mock Server",
+    "description": "Cria um servidor simulado que responde às requisições com exemplos salvos, permitindo desenvolver e testar integrações antes da API real estar pronta.",
+    "syntax": "Collection > ... > Mock collection",
+    "example": "Criar um Mock Server a partir da Collection 'Pagamentos', usando os exemplos salvos de cada requisição como respostas simuladas.",
+    "result": "Uma URL pública de mock é gerada, retornando as respostas de exemplo configuradas para cada endpoint.",
+    "bestPractices": [
+      "Use Mock Servers para desbloquear o desenvolvimento do frontend enquanto o backend real ainda está em construção."
+    ],
+    "relatedCommands": ["postman-collections"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser", "cloud"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/design-apis/mock-apis/create-mock-server/",
+    "externalReferences": [],
+    "tags": ["postman", "mock", "organizacao"],
+    "keywords": ["mock server", "servidor simulado", "api mock"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-monitors",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Monitors (monitoramento agendado)",
+    "description": "Executa uma Collection automaticamente em intervalos programados (a cada hora, diariamente, etc.), alertando por e-mail em caso de falhas.",
+    "syntax": "Collection > ... > Monitor collection",
+    "example": "Configurar um Monitor para rodar a Collection 'Health Checks' a cada 15 minutos, verificando se os endpoints críticos da API continuam disponíveis.",
+    "result": "O Postman executa a Collection no intervalo definido e envia notificações por e-mail se algum teste falhar.",
+    "bestPractices": [
+      "Use Monitors para verificações de disponibilidade (health checks) de endpoints críticos em produção."
+    ],
+    "relatedCommands": ["postman-runner", "postman-collections"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/monitoring-your-api/intro-monitors/",
+    "externalReferences": [],
+    "tags": ["postman", "monitors", "automacao"],
+    "keywords": ["monitors", "monitoramento agendado", "health check postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

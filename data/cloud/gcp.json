@@ -1,0 +1,763 @@
+[
+  {
+    "id": "gcp-cli-auth-login",
+    "category": "Google Cloud",
+    "subcategory": "gcloud CLI",
+    "title": "gcloud auth login",
+    "description": "Autentica a gcloud CLI com uma conta de usuário do Google, abrindo o navegador para o fluxo de login OAuth2.",
+    "syntax": "gcloud auth login [--no-launch-browser]",
+    "example": "gcloud auth login",
+    "result": "You are now logged in as [usuario@gmail.com].\nYour current project is [meu-projeto-123].",
+    "flags": [
+      {
+        "flag": "--no-launch-browser",
+        "description": "Não abre o navegador automaticamente; exibe uma URL para copiar manualmente (útil em SSH remoto)."
+      }
+    ],
+    "notes": [
+      "As credenciais ficam armazenadas localmente e usadas por todos os comandos `gcloud` subsequentes.",
+      "Para autenticação de aplicações/serviços, use `gcloud auth application-default login` ou uma service account em vez de conta de usuário."
+    ],
+    "bestPractices": [
+      "Em pipelines de CI/CD, prefira `gcloud auth activate-service-account` com uma chave JSON de service account armazenada em segredo.",
+      "Use `gcloud auth revoke` ao encerrar sessões em máquinas compartilhadas."
+    ],
+    "commonMistakes": [
+      "Confundir `gcloud auth login` (credenciais de usuário para a CLI) com `gcloud auth application-default login` (credenciais usadas por SDKs/bibliotecas nas aplicações)."
+    ],
+    "relatedCommands": ["gcp-cli-config-set-project", "gcp-iam-service-account"],
+    "difficulty": "iniciante",
+    "platform": ["cloud", "linux", "windows", "macos"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/auth/login",
+    "externalReferences": [],
+    "tags": ["gcp", "gcloud", "autenticacao"],
+    "keywords": ["gcloud auth login", "autenticar gcp", "login google cloud"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cli-config-set-project",
+    "category": "Google Cloud",
+    "subcategory": "gcloud CLI",
+    "title": "gcloud config set project",
+    "description": "Define o projeto GCP padrão usado implicitamente pelos comandos gcloud subsequentes, evitando repetir `--project` em cada chamada.",
+    "syntax": "gcloud config set project <project-id>",
+    "example": "gcloud config set project meu-projeto-123",
+    "result": "Updated property [core/project].",
+    "parameters": [
+      {
+        "name": "project-id",
+        "description": "ID único do projeto GCP (diferente do nome de exibição).",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Use `gcloud projects list` para ver os projetos acessíveis com a conta autenticada.",
+      "Configurações ficam salvas em um 'configuration' local (`gcloud config configurations list` mostra os perfis salvos)."
+    ],
+    "bestPractices": [
+      "Use `gcloud config configurations create <nome>` para manter perfis separados por ambiente (dev, staging, prod) e trocar com `gcloud config configurations activate <nome>`."
+    ],
+    "commonMistakes": [
+      "Executar comandos destrutivos (`gcloud projects delete`, `gcloud compute instances delete`) sem verificar antes qual projeto está ativo com `gcloud config get-value project`."
+    ],
+    "relatedCommands": ["gcp-cli-auth-login", "gcp-projects-billing"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/config/set",
+    "externalReferences": [],
+    "tags": ["gcp", "gcloud", "projeto"],
+    "keywords": [
+      "gcloud config set project",
+      "trocar projeto gcp",
+      "definir projeto padrao"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-compute-instances-create",
+    "category": "Google Cloud",
+    "subcategory": "Compute Engine",
+    "title": "gcloud compute instances create",
+    "description": "Cria uma máquina virtual (VM) no Compute Engine, o serviço de infraestrutura como serviço (IaaS) do GCP.",
+    "syntax": "gcloud compute instances create <nome> --zone <zona> --machine-type <tipo> --image-family <familia-imagem> --image-project <projeto-imagem>",
+    "example": "gcloud compute instances create vm-web01 --zone southamerica-east1-a --machine-type e2-medium --image-family ubuntu-2204-lts --image-project ubuntu-os-cloud",
+    "result": "NAME      ZONE                    MACHINE_TYPE  STATUS\nvm-web01  southamerica-east1-a    e2-medium     RUNNING",
+    "parameters": [
+      {
+        "name": "--zone",
+        "description": "Zona onde a VM será provisionada (ex: southamerica-east1-a).",
+        "required": true
+      },
+      {
+        "name": "--machine-type",
+        "description": "Tipo/tamanho da máquina (ex: e2-medium, n2-standard-4).",
+        "required": true
+      },
+      {
+        "name": "--image-family",
+        "description": "Família da imagem de SO a usar como base.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Uma zona pertence a uma região (ex: southamerica-east1-a está na região southamerica-east1).",
+      "Por padrão, a VM recebe um IP externo efêmero; use `--no-address` para criar sem IP público."
+    ],
+    "bestPractices": [
+      "Use grupos de instâncias gerenciados (Managed Instance Groups) em vez de VMs avulsas para cargas que precisam de auto scaling ou alta disponibilidade.",
+      "Restrinja acesso via firewall rules específicas em vez de expor portas de administração à internet."
+    ],
+    "commonMistakes": [
+      "Escolher `--machine-type` superdimensionado 'por segurança', aumentando custo sem necessidade real de CPU/memória."
+    ],
+    "relatedCommands": ["gcp-cli-config-set-project", "gcp-iam-service-account"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/compute/instances/create",
+    "externalReferences": [],
+    "tags": ["gcp", "compute-engine", "vm", "cli"],
+    "keywords": ["gcloud compute instances create", "criar vm gcp", "compute engine"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-compute-instances-list-delete",
+    "category": "Google Cloud",
+    "subcategory": "Compute Engine",
+    "title": "gcloud compute instances list / delete",
+    "description": "Lista as VMs do Compute Engine no projeto ativo e permite excluí-las quando não são mais necessárias.",
+    "syntax": "gcloud compute instances list\ngcloud compute instances delete <nome> --zone <zona> [--quiet]",
+    "example": "gcloud compute instances list\ngcloud compute instances delete vm-teste --zone southamerica-east1-a --quiet",
+    "result": "NAME       ZONE                  MACHINE_TYPE  STATUS\nvm-web01   southamerica-east1-a  e2-medium     RUNNING\nvm-teste   southamerica-east1-a  e2-small      RUNNING",
+    "flags": [
+      {
+        "flag": "--quiet",
+        "description": "Suprime o prompt de confirmação interativa da exclusão."
+      }
+    ],
+    "notes": [
+      "A exclusão remove também o disco de boot por padrão, a menos que ele tenha sido configurado com `--no-auto-delete`."
+    ],
+    "bestPractices": [
+      "Antes de excluir, confirme se há snapshots de disco necessários, pois discos excluídos sem snapshot não são recuperáveis."
+    ],
+    "commonMistakes": [
+      "Usar `--quiet` em scripts automatizados sem checar antes o nome exato da instância, apagando a VM errada."
+    ],
+    "relatedCommands": ["gcp-compute-instances-create"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/compute/instances/delete",
+    "externalReferences": [],
+    "tags": ["gcp", "compute-engine", "cli"],
+    "keywords": [
+      "gcloud compute instances list",
+      "gcloud compute instances delete",
+      "listar vms gcp",
+      "deletar vm gcp"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-storage-buckets-create",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Storage",
+    "title": "gcloud storage buckets create (gsutil mb)",
+    "description": "Cria um bucket no Cloud Storage, o serviço de armazenamento de objetos do GCP equivalente ao S3 da AWS.",
+    "syntax": "gcloud storage buckets create gs://<nome-bucket> --location <regiao-ou-multiregiao> --default-storage-class <classe>",
+    "example": "gcloud storage buckets create gs://meu-app-assets-prod --location southamerica-east1 --default-storage-class STANDARD",
+    "result": "Creating gs://meu-app-assets-prod/...",
+    "parameters": [
+      {
+        "name": "gs://<nome-bucket>",
+        "description": "Nome globalmente único do bucket (prefixado com gs://).",
+        "required": true
+      },
+      {
+        "name": "--location",
+        "description": "Região, dupla região ou multi-região onde os dados residem.",
+        "required": true
+      },
+      {
+        "name": "--default-storage-class",
+        "description": "Classe padrão dos objetos (STANDARD, NEARLINE, COLDLINE, ARCHIVE).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Nomes de bucket são globais em todo o Cloud Storage, não apenas dentro do projeto.",
+      "`gcloud storage` é a interface unificada recomendada atualmente, substituindo o antigo `gsutil` em novos scripts."
+    ],
+    "bestPractices": [
+      "Habilite 'Uniform bucket-level access' para gerenciar permissões via IAM em vez de ACLs por objeto, simplificando a governança.",
+      "Defina políticas de lifecycle para mover objetos automaticamente para classes mais baratas conforme a idade."
+    ],
+    "commonMistakes": [
+      "Tornar o bucket público (allUsers com Storage Object Viewer) por engano ao testar permissões, expondo dados sensíveis."
+    ],
+    "relatedCommands": ["gcp-storage-cp", "gcp-iam-add-policy-binding"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/storage/buckets/create",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-storage", "cli"],
+    "keywords": ["gcloud storage buckets create", "criar bucket gcp", "cloud storage"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-storage-cp",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Storage",
+    "title": "gcloud storage cp",
+    "description": "Copia arquivos entre o sistema local e um bucket do Cloud Storage, ou entre buckets, com suporte a operações recursivas e paralelas.",
+    "syntax": "gcloud storage cp <origem> <destino> [--recursive]",
+    "example": "gcloud storage cp ./dist gs://meu-app-assets-prod/build --recursive",
+    "result": "Copying file://dist/index.html to gs://meu-app-assets-prod/build/index.html\n... (demais arquivos)\nCompleted files 12/12 | 1.4MiB/1.4MiB",
+    "flags": [
+      {
+        "flag": "--recursive",
+        "description": "Copia diretórios inteiros recursivamente."
+      }
+    ],
+    "notes": [
+      "Substitui gradualmente o comando `gsutil cp`, mantendo sintaxe similar e desempenho superior em transferências grandes."
+    ],
+    "bestPractices": [
+      "Use `--dry-run` antes de operações em massa para revisar o que será copiado ou sobrescrito."
+    ],
+    "commonMistakes": [
+      "Esquecer `--recursive` ao copiar um diretório, copiando apenas o arquivo indicado sem os demais."
+    ],
+    "relatedCommands": ["gcp-storage-buckets-create"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/storage/cp",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-storage", "cli"],
+    "keywords": ["gcloud storage cp", "upload cloud storage", "copiar arquivos gcs"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-storage-classes",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Storage",
+    "title": "Classes de armazenamento do Cloud Storage",
+    "description": "Classes que definem custo, disponibilidade e requisitos mínimos de armazenamento dos objetos no Cloud Storage: Standard, Nearline, Coldline e Archive.",
+    "syntax": "gcloud storage objects update gs://<bucket>/<objeto> --storage-class <classe>",
+    "example": "gcloud storage objects update gs://meu-app-backups/backup-2025.zip --storage-class ARCHIVE",
+    "result": "Updating gs://meu-app-backups/backup-2025.zip...",
+    "notes": [
+      "Standard: acesso frequente, sem custo mínimo de armazenamento por duração.",
+      "Nearline: acesso ~1x por mês, duração mínima de 30 dias.",
+      "Coldline: acesso ~1x por trimestre, duração mínima de 90 dias.",
+      "Archive: acesso raro, duração mínima de 365 dias, menor custo de armazenamento e maior custo de acesso."
+    ],
+    "bestPractices": [
+      "Configure regras de lifecycle (`gcloud storage buckets update --lifecycle-file`) para transição automática entre classes conforme a idade do objeto."
+    ],
+    "commonMistakes": [
+      "Mover dados para Coldline/Archive e precisar deles com frequência maior que o esperado, pagando taxas de acesso antecipado (early deletion/access fees)."
+    ],
+    "relatedCommands": ["gcp-storage-buckets-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/storage/docs/storage-classes",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-storage", "custos"],
+    "keywords": [
+      "storage classes gcp",
+      "nearline coldline archive",
+      "classes de armazenamento gcs"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-run-deploy",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Run",
+    "title": "gcloud run deploy",
+    "description": "Implanta um container em Cloud Run, o serviço serverless de execução de containers do GCP com escalonamento automático (inclusive até zero instâncias).",
+    "syntax": "gcloud run deploy <servico> --image <imagem> --region <regiao> [--allow-unauthenticated] [--platform managed]",
+    "example": "gcloud run deploy minha-api --image southamerica-east1-docker.pkg.dev/meu-projeto-123/repo/minha-api:latest --region southamerica-east1 --allow-unauthenticated",
+    "result": "Service [minha-api] revision [minha-api-00001-abc] has been deployed and is serving 100 percent of traffic.\nService URL: https://minha-api-xyz123-rj.a.run.app",
+    "parameters": [
+      {
+        "name": "--image",
+        "description": "Imagem de container (geralmente do Artifact Registry) a ser implantada.",
+        "required": true
+      },
+      {
+        "name": "--region",
+        "description": "Região onde o serviço será executado.",
+        "required": true
+      },
+      {
+        "name": "--allow-unauthenticated",
+        "description": "Permite chamadas HTTP sem autenticação IAM (endpoint público).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Cloud Run também suporta deploy direto do código-fonte (`gcloud run deploy --source .`), que builda a imagem automaticamente via Cloud Build.",
+      "Cada deploy cria uma nova revisão; o tráfego pode ser dividido gradualmente entre revisões para canary releases."
+    ],
+    "bestPractices": [
+      "Defina `--min-instances` maior que zero para serviços sensíveis a latência de cold start.",
+      "Restrinja acesso com IAM (removendo `--allow-unauthenticated`) sempre que o serviço não precisar ser público."
+    ],
+    "commonMistakes": [
+      "Usar `--allow-unauthenticated` em serviços internos que deveriam ser acessados apenas por outros serviços autenticados via IAM."
+    ],
+    "relatedCommands": ["gcp-cloud-run-services-list", "gcp-artifact-registry"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/run/deploy",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-run", "serverless", "containers"],
+    "keywords": ["gcloud run deploy", "deploy cloud run", "cloud run gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-run-services-list",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Run",
+    "title": "gcloud run services list / describe",
+    "description": "Lista os serviços implantados no Cloud Run do projeto/região atual e exibe detalhes de configuração e tráfego de um serviço específico.",
+    "syntax": "gcloud run services list --region <regiao>\ngcloud run services describe <servico> --region <regiao>",
+    "example": "gcloud run services list --region southamerica-east1",
+    "result": "SERVICE    REGION                URL                                    LAST DEPLOYED BY        LAST DEPLOYED AT\nminha-api  southamerica-east1    https://minha-api-xyz123-rj.a.run.app usuario@gmail.com       2026-07-22T10:00:00Z",
+    "notes": [
+      "`describe` mostra detalhes como limites de CPU/memória, variáveis de ambiente e percentual de tráfego por revisão."
+    ],
+    "bestPractices": [
+      "Use tags de revisão (`--tag`) para testar uma nova revisão em uma URL isolada antes de direcionar tráfego de produção para ela."
+    ],
+    "commonMistakes": [
+      "Esquecer de especificar `--region`, levando a listas vazias ou comandos aplicados na região errada."
+    ],
+    "relatedCommands": ["gcp-cloud-run-deploy"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/run/services/list",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-run", "cli"],
+    "keywords": [
+      "gcloud run services list",
+      "listar servicos cloud run",
+      "cloud run describe"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-artifact-registry",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Run",
+    "title": "Artifact Registry",
+    "description": "Serviço gerenciado do GCP para armazenar e gerenciar imagens de container, pacotes de linguagens (npm, Maven, Python) e outros artefatos de build, usado tipicamente como origem das imagens implantadas no Cloud Run/GKE.",
+    "syntax": "gcloud artifacts repositories create <repo> --repository-format docker --location <regiao>\ndocker push <regiao>-docker.pkg.dev/<projeto>/<repo>/<imagem>:<tag>",
+    "example": "gcloud artifacts repositories create repo --repository-format docker --location southamerica-east1\ndocker push southamerica-east1-docker.pkg.dev/meu-projeto-123/repo/minha-api:latest",
+    "result": "Created repository [repo].\n... (push da imagem Docker concluído)",
+    "notes": [
+      "Artifact Registry substitui o antigo Container Registry (gcr.io), sendo a opção recomendada para novos projetos.",
+      "Requer autenticação Docker prévia com `gcloud auth configure-docker <regiao>-docker.pkg.dev`."
+    ],
+    "bestPractices": [
+      "Habilite verificação de vulnerabilidades (Artifact Analysis) nas imagens antes de promovê-las para produção.",
+      "Use políticas de limpeza (cleanup policies) para remover automaticamente imagens antigas não utilizadas."
+    ],
+    "commonMistakes": [
+      "Não configurar `gcloud auth configure-docker`, causando falha de autenticação ao dar push na imagem."
+    ],
+    "relatedCommands": ["gcp-cloud-run-deploy"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/artifact-registry/docs",
+    "externalReferences": [],
+    "tags": ["gcp", "artifact-registry", "containers", "docker"],
+    "keywords": ["artifact registry gcp", "container registry", "push imagem docker gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-functions-deploy",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Functions",
+    "title": "gcloud functions deploy",
+    "description": "Implanta uma função serverless no Cloud Functions (2ª geração, construída sobre Cloud Run), disparada por HTTP ou por eventos (Pub/Sub, Storage, Firestore etc.).",
+    "syntax": "gcloud functions deploy <nome> --gen2 --runtime <runtime> --region <regiao> --trigger-http --entry-point <funcao> [--allow-unauthenticated]",
+    "example": "gcloud functions deploy processar-upload --gen2 --runtime nodejs20 --region southamerica-east1 --trigger-http --entry-point processarUpload --allow-unauthenticated",
+    "result": "deploying function (may take a while - up to 2 minutes)...done.\nhttpsTrigger:\n  url: https://southamerica-east1-meu-projeto-123.cloudfunctions.net/processar-upload",
+    "parameters": [
+      {
+        "name": "--runtime",
+        "description": "Runtime da função (nodejs20, python312, go122, java21 etc.).",
+        "required": true
+      },
+      {
+        "name": "--trigger-http",
+        "description": "Define um gatilho HTTP; alternativas incluem --trigger-topic (Pub/Sub) e --trigger-bucket (Cloud Storage).",
+        "required": false
+      },
+      {
+        "name": "--entry-point",
+        "description": "Nome da função exportada no código que será executada.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Cloud Functions 2ª geração roda sobre a infraestrutura do Cloud Run e do Eventarc, unificando o modelo de eventos.",
+      "Para eventos de Cloud Storage, use `--trigger-event-filters` com o tipo de evento (ex: google.cloud.storage.object.v1.finalized)."
+    ],
+    "bestPractices": [
+      "Prefira Cloud Run diretamente quando a função crescer em complexidade ou precisar de mais controle sobre o runtime/container.",
+      "Defina timeouts e limites de memória compatíveis com a carga real, evitando superdimensionamento."
+    ],
+    "commonMistakes": [
+      "Usar `--allow-unauthenticated` em funções que processam dados sensíveis sem validação adicional de origem da requisição."
+    ],
+    "relatedCommands": ["gcp-cloud-run-deploy", "gcp-pubsub-overview"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI (2ª geração)",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/functions/deploy",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-functions", "serverless"],
+    "keywords": ["gcloud functions deploy", "cloud functions gcp", "deploy function gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-pubsub-overview",
+    "category": "Google Cloud",
+    "subcategory": "Cloud Functions",
+    "title": "Pub/Sub: conceitos básicos",
+    "description": "Serviço de mensageria assíncrona do GCP baseado no padrão publish/subscribe, usado para desacoplar serviços e disparar processamento orientado a eventos (inclusive Cloud Functions e Cloud Run).",
+    "syntax": "gcloud pubsub topics create <topico>\ngcloud pubsub subscriptions create <assinatura> --topic <topico>\ngcloud pubsub topics publish <topico> --message \"<mensagem>\"",
+    "example": "gcloud pubsub topics create pedidos-criados\ngcloud pubsub subscriptions create processar-pedidos --topic pedidos-criados\ngcloud pubsub topics publish pedidos-criados --message '{\"pedidoId\": 123}'",
+    "result": "messageIds:\n- '1234567890123456'",
+    "notes": [
+      "Um tópico pode ter múltiplas assinaturas independentes; cada assinatura recebe uma cópia de cada mensagem publicada.",
+      "Assinaturas podem ser 'pull' (o consumidor busca mensagens ativamente) ou 'push' (o Pub/Sub envia via HTTP, ex: para um endpoint de Cloud Run)."
+    ],
+    "bestPractices": [
+      "Configure uma dead-letter topic para mensagens que falham repetidamente no processamento, evitando loops infinitos de retry.",
+      "Defina um ack deadline compatível com o tempo real de processamento do consumidor."
+    ],
+    "commonMistakes": [
+      "Não confirmar (ack) as mensagens processadas, causando reentrega e processamento duplicado."
+    ],
+    "relatedCommands": ["gcp-cloud-functions-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/pubsub/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "pubsub", "mensageria", "eventos"],
+    "keywords": ["pubsub gcp", "publish subscribe google cloud", "topico e assinatura"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-iam-add-policy-binding",
+    "category": "Google Cloud",
+    "subcategory": "IAM",
+    "title": "gcloud projects add-iam-policy-binding",
+    "description": "Concede um papel (role) do IAM a um membro (usuário, grupo ou service account) no escopo de um projeto GCP.",
+    "syntax": "gcloud projects add-iam-policy-binding <project-id> --member \"<tipo:identificador>\" --role \"<role>\"",
+    "example": "gcloud projects add-iam-policy-binding meu-projeto-123 --member \"user:dev@empresa.com\" --role \"roles/run.developer\"",
+    "result": "Updated IAM policy for project [meu-projeto-123].\nbindings:\n- members:\n  - user:dev@empresa.com\n  role: roles/run.developer",
+    "parameters": [
+      {
+        "name": "--member",
+        "description": "Identidade que recebe o papel, prefixada pelo tipo (user:, serviceAccount:, group:, domain:).",
+        "required": true
+      },
+      {
+        "name": "--role",
+        "description": "Papel do IAM a conceder (ex: roles/viewer, roles/editor, ou um papel predefinido/customizado específico).",
+        "required": true
+      }
+    ],
+    "notes": [
+      "O IAM do GCP é hierárquico: papéis concedidos na organização ou na pasta (folder) são herdados pelos projetos abaixo.",
+      "Papéis básicos (Owner, Editor, Viewer) são amplos; prefira papéis predefinidos granulares (ex: roles/storage.objectViewer)."
+    ],
+    "bestPractices": [
+      "Prefira papéis predefinidos de escopo estreito a papéis básicos (Owner/Editor) sempre que possível.",
+      "Use grupos do Google Workspace/Cloud Identity para conceder papéis, facilitando auditoria em vez de vincular usuários individualmente."
+    ],
+    "commonMistakes": [
+      "Conceder `roles/editor` no projeto inteiro quando a necessidade real é acesso a um único serviço (ex: apenas Cloud Storage)."
+    ],
+    "relatedCommands": ["gcp-iam-service-account"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/projects/add-iam-policy-binding",
+    "externalReferences": [],
+    "tags": ["gcp", "iam", "seguranca"],
+    "keywords": [
+      "iam policy binding gcp",
+      "conceder papel gcp",
+      "add-iam-policy-binding"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-iam-service-account",
+    "category": "Google Cloud",
+    "subcategory": "IAM",
+    "title": "Service Accounts",
+    "description": "Contas de identidade não humana usadas por aplicações e VMs para autenticar e interagir com APIs do GCP, com permissões controladas via IAM.",
+    "syntax": "gcloud iam service-accounts create <nome> --display-name \"<descricao>\"\ngcloud iam service-accounts keys create <arquivo.json> --iam-account <nome>@<projeto>.iam.gserviceaccount.com",
+    "example": "gcloud iam service-accounts create api-backend --display-name \"Service account da API backend\"\ngcloud iam service-accounts keys create key.json --iam-account api-backend@meu-projeto-123.iam.gserviceaccount.com",
+    "result": "Created service account [api-backend].\ncreated key [abc123...] of type [json] as [key.json] for [api-backend@meu-projeto-123.iam.gserviceaccount.com]",
+    "notes": [
+      "Toda VM do Compute Engine e todo serviço do Cloud Run/Functions pode usar uma service account anexada em vez de uma chave JSON, eliminando a necessidade de gerenciar arquivos de credencial.",
+      "Chaves JSON de service account não expiram por padrão e devem ser tratadas como segredos críticos."
+    ],
+    "bestPractices": [
+      "Prefira anexar a service account diretamente ao recurso (VM, Cloud Run) a distribuir chaves JSON manualmente.",
+      "Rotacione e revogue chaves JSON não utilizadas regularmente; considere Workload Identity Federation para eliminar chaves de longa duração."
+    ],
+    "commonMistakes": [
+      "Commitar o arquivo `key.json` de uma service account no controle de versão, expondo credenciais com acesso ao projeto."
+    ],
+    "relatedCommands": ["gcp-iam-add-policy-binding", "gcp-cli-auth-login"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/iam/docs/service-account-overview",
+    "externalReferences": [],
+    "tags": ["gcp", "iam", "service-account", "seguranca"],
+    "keywords": [
+      "service account gcp",
+      "conta de servico google cloud",
+      "chave json service account"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-projects-billing",
+    "category": "Google Cloud",
+    "subcategory": "Projetos e Billing",
+    "title": "Projetos e contas de faturamento (Billing Accounts)",
+    "description": "No GCP, todo recurso pertence a um Projeto, e todo projeto precisa estar vinculado a uma Billing Account para consumir a maioria dos serviços além da camada gratuita.",
+    "syntax": "gcloud projects create <project-id> --name \"<nome-exibicao>\"\ngcloud billing projects link <project-id> --billing-account <billing-account-id>",
+    "example": "gcloud projects create meu-projeto-123 --name \"Meu Projeto\"\ngcloud billing projects link meu-projeto-123 --billing-account 000000-111111-222222",
+    "result": "Create in progress for [https://cloudresourcemanager.googleapis.com/v1/projects/meu-projeto-123].\nbillingAccountName: billingAccounts/000000-111111-222222\nbillingEnabled: true",
+    "notes": [
+      "O ID do projeto (project-id) é imutável e globalmente único; o nome de exibição pode ser alterado depois.",
+      "Projetos podem ser organizados em Folders e vinculados a uma Organization no nível superior da hierarquia de recursos."
+    ],
+    "bestPractices": [
+      "Use um projeto por ambiente (dev/staging/prod) ou por equipe, em vez de misturar tudo em um único projeto, para isolar billing e IAM.",
+      "Configure alertas de orçamento (Budget Alerts) na Billing Account desde a criação do projeto."
+    ],
+    "commonMistakes": [
+      "Excluir um projeto sem exportar antes dados críticos, assumindo que a exclusão pode ser revertida facilmente após o período de carência."
+    ],
+    "relatedCommands": ["gcp-cli-config-set-project"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/resource-manager/docs/creating-managing-projects",
+    "externalReferences": [],
+    "tags": ["gcp", "projetos", "billing"],
+    "keywords": [
+      "criar projeto gcp",
+      "billing account",
+      "conta de faturamento google cloud"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-vpc-firewall-rules",
+    "category": "Google Cloud",
+    "subcategory": "Rede",
+    "title": "VPC e Firewall Rules",
+    "description": "A VPC (Virtual Private Cloud) isola a rede dos recursos do GCP; firewall rules controlam explicitamente o tráfego de entrada e saída permitido entre eles e a internet.",
+    "syntax": "gcloud compute firewall-rules create <nome> --network <vpc> --direction INGRESS --action ALLOW --rules <protocolo:porta> --source-ranges <cidr>",
+    "example": "gcloud compute firewall-rules create permitir-ssh-interno --network default --direction INGRESS --action ALLOW --rules tcp:22 --source-ranges 10.0.0.0/8",
+    "result": "Creating firewall...done.\nNAME                    NETWORK  DIRECTION  PRIORITY  ALLOW   DENY  DISABLED\npermitir-ssh-interno    default  INGRESS    1000      tcp:22        False",
+    "notes": [
+      "Por padrão, a VPC 'default' do GCP vem com regras amplas (ex: permitir SSH e RDP de qualquer origem), que devem ser revisadas antes de usar em produção.",
+      "Firewall rules podem ser direcionadas por tags de rede ou por service account, não apenas por faixa de IP."
+    ],
+    "bestPractices": [
+      "Crie VPCs customizadas (modo personalizado) em vez de usar a VPC 'default' em ambientes de produção.",
+      "Restrinja `--source-ranges` ao mínimo necessário; evite 0.0.0.0/0 em portas administrativas."
+    ],
+    "commonMistakes": [
+      "Manter a regra padrão que permite tráfego irrestrito de entrada na VPC 'default', expondo serviços internos à internet."
+    ],
+    "relatedCommands": ["gcp-compute-instances-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/vpc/docs/firewalls",
+    "externalReferences": [],
+    "tags": ["gcp", "rede", "vpc", "firewall", "seguranca"],
+    "keywords": ["vpc gcp", "firewall rules google cloud", "regras de firewall gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-build-intro",
+    "category": "Google Cloud",
+    "subcategory": "CI/CD",
+    "title": "Cloud Build: introdução",
+    "description": "Serviço gerenciado de CI/CD do GCP que executa builds definidos em um arquivo `cloudbuild.yaml`, comumente usado para buildar imagens de container e implantá-las no Cloud Run/GKE.",
+    "syntax": "gcloud builds submit --config cloudbuild.yaml .",
+    "example": "# cloudbuild.yaml\nsteps:\n  - name: 'gcr.io/cloud-builders/docker'\n    args: ['build', '-t', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/repo/api', '.']\nimages:\n  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/repo/api'\n\n# Executar:\n# gcloud builds submit --config cloudbuild.yaml .",
+    "result": "Starting Step #0\nStep #0: Successfully built and pushed image.\nDONE",
+    "notes": [
+      "Cada step do cloudbuild.yaml roda em um container isolado, permitindo combinar linguagens e ferramentas diferentes no mesmo pipeline.",
+      "Triggers (`gcloud builds triggers create`) disparam builds automaticamente em push/PR de um repositório conectado (GitHub, Cloud Source Repositories etc.)."
+    ],
+    "bestPractices": [
+      "Versione o `cloudbuild.yaml` junto do código-fonte da aplicação.",
+      "Use substituições de variáveis (`substitutions`) em vez de valores fixos para reutilizar o mesmo pipeline entre ambientes."
+    ],
+    "commonMistakes": [
+      "Conceder à service account padrão do Cloud Build permissões amplas demais (ex: Editor do projeto) em vez de papéis específicos necessários ao pipeline."
+    ],
+    "relatedCommands": ["gcp-artifact-registry", "gcp-cloud-run-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/build/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-build", "ci-cd"],
+    "keywords": ["cloud build gcp", "cloudbuild.yaml", "ci cd google cloud"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-sql-overview",
+    "category": "Google Cloud",
+    "subcategory": "Bancos de dados",
+    "title": "Cloud SQL: banco de dados relacional gerenciado",
+    "description": "Serviço gerenciado do GCP para bancos de dados relacionais (MySQL, PostgreSQL, SQL Server), cuidando de backups, patches, replicação e alta disponibilidade.",
+    "syntax": "gcloud sql instances create <nome> --database-version <versao> --tier <tier> --region <regiao>",
+    "example": "gcloud sql instances create db-app-prod --database-version POSTGRES_15 --tier db-custom-2-7680 --region southamerica-east1",
+    "result": "Creating Cloud SQL instance...done.\nCreated [https://sqladmin.googleapis.com/.../db-app-prod].\nNAME          DATABASE_VERSION  LOCATION                 TIER                STATUS\ndb-app-prod   POSTGRES_15       southamerica-east1-a     db-custom-2-7680    RUNNABLE",
+    "notes": [
+      "O Cloud SQL Auth Proxy é a forma recomendada de conectar aplicações à instância de forma segura, sem expor IP público diretamente.",
+      "Instâncias podem ser configuradas com alta disponibilidade (réplica standby em outra zona) para failover automático."
+    ],
+    "bestPractices": [
+      "Habilite backups automáticos e point-in-time recovery antes de colocar a instância em produção.",
+      "Prefira conexão via Cloud SQL Auth Proxy ou IP privado a habilitar IP público sem restrições de rede."
+    ],
+    "commonMistakes": [
+      "Deixar a instância acessível por IP público sem autorização de rede restrita, expondo o banco a tentativas de acesso externo."
+    ],
+    "relatedCommands": ["gcp-iam-service-account"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/sql/docs/introduction",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-sql", "banco-de-dados"],
+    "keywords": [
+      "cloud sql gcp",
+      "banco de dados gerenciado google cloud",
+      "postgres cloud sql"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-cloud-monitoring-logging",
+    "category": "Google Cloud",
+    "subcategory": "Monitoramento",
+    "title": "Cloud Monitoring e Cloud Logging",
+    "description": "Serviços do GCP (parte da suíte Google Cloud Observability) para coletar métricas, logs e traces de recursos e aplicações, com dashboards e alertas configuráveis.",
+    "syntax": "gcloud logging read \"<filtro>\" --limit <n> --format json",
+    "example": "gcloud logging read \"resource.type=cloud_run_revision AND severity>=ERROR\" --limit 20 --format json",
+    "result": "[\n  {\n    \"severity\": \"ERROR\",\n    \"textPayload\": \"Erro ao conectar ao banco de dados\",\n    \"timestamp\": \"2026-07-22T09:58:00Z\"\n  }\n]",
+    "notes": [
+      "Cloud Logging usa uma sintaxe de filtro própria para buscar logs por recurso, severidade, período e conteúdo.",
+      "Cloud Monitoring permite criar políticas de alerta baseadas em métricas (CPU, latência, taxa de erro) com notificação por e-mail, SMS, Slack, PagerDuty etc."
+    ],
+    "bestPractices": [
+      "Defina sinks de exportação de logs para BigQuery ou Cloud Storage quando precisar de retenção maior que o padrão do Cloud Logging.",
+      "Crie dashboards por serviço com os indicadores-chave (latência p99, taxa de erro, saturação) para diagnóstico rápido de incidentes."
+    ],
+    "commonMistakes": [
+      "Não configurar exclusões de log (exclusion filters) para logs de alto volume e baixo valor, gerando custo desnecessário de armazenamento."
+    ],
+    "relatedCommands": ["gcp-cloud-run-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/logging/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "monitoramento", "logging", "observabilidade"],
+    "keywords": [
+      "cloud monitoring gcp",
+      "cloud logging",
+      "logs google cloud",
+      "alertas gcp"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-secret-manager",
+    "category": "Google Cloud",
+    "subcategory": "Segurança",
+    "title": "Secret Manager",
+    "description": "Serviço gerenciado do GCP para armazenar, versionar e controlar acesso a segredos (senhas, chaves de API, certificados) usados por aplicações.",
+    "syntax": "gcloud secrets create <nome> --data-file <arquivo>\ngcloud secrets versions access latest --secret <nome>",
+    "example": "echo -n \"minha-senha-secreta\" | gcloud secrets create db-password --data-file=-\ngcloud secrets versions access latest --secret db-password",
+    "result": "Created secret [db-password].\nminha-senha-secreta",
+    "notes": [
+      "Cada atualização de um segredo cria uma nova versão imutável; é possível referenciar 'latest' ou uma versão específica.",
+      "Acesso a segredos é controlado via IAM (papel `roles/secretmanager.secretAccessor`)."
+    ],
+    "bestPractices": [
+      "Conceda `secretAccessor` apenas à service account específica que precisa do segredo, nunca de forma ampla no projeto.",
+      "Integre o Secret Manager diretamente como variável de ambiente montada no Cloud Run/Functions em vez de buscar o segredo manualmente no código sempre que possível."
+    ],
+    "commonMistakes": [
+      "Armazenar segredos como variáveis de ambiente em texto puro na configuração do serviço em vez de referenciá-los via Secret Manager."
+    ],
+    "relatedCommands": ["gcp-iam-add-policy-binding", "gcp-cloud-run-deploy"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/secret-manager/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "secret-manager", "seguranca", "segredos"],
+    "keywords": [
+      "secret manager gcp",
+      "gerenciar segredos google cloud",
+      "gcloud secrets"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

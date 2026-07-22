@@ -1,0 +1,68 @@
+[
+  {
+    "id": "aws-s3-cp",
+    "category": "AWS",
+    "subcategory": "S3",
+    "title": "aws s3 cp",
+    "description": "Copia arquivos entre o sistema local e um bucket S3 (ou entre buckets), via AWS CLI.",
+    "syntax": "aws s3 cp <origem> <destino> [--recursive]",
+    "example": "aws s3 cp ./build s3://meu-bucket/app --recursive",
+    "result": "upload: build/index.html to s3://meu-bucket/app/index.html\n... (demais arquivos)",
+    "flags": [
+      {
+        "flag": "--recursive",
+        "description": "Copia diretórios inteiros recursivamente."
+      },
+      { "flag": "--acl", "description": "Define a ACL do objeto (ex: public-read)." }
+    ],
+    "notes": [
+      "Requer credenciais configuradas via `aws configure` ou variáveis de ambiente."
+    ],
+    "bestPractices": [
+      "Use `--dryrun` antes de operações em massa para conferir o que será alterado."
+    ],
+    "commonMistakes": [
+      "Esquecer `--recursive` ao copiar uma pasta inteira, copiando apenas o arquivo indicado."
+    ],
+    "relatedCommands": ["aws-s3-sync"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html",
+    "externalReferences": [],
+    "tags": ["aws", "s3", "cli"],
+    "keywords": ["aws s3 cp", "upload s3", "copiar arquivos s3"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "aws-iam-least-privilege",
+    "category": "AWS",
+    "subcategory": "IAM",
+    "title": "Princípio do menor privilégio (IAM)",
+    "description": "Prática de segurança em que cada usuário, papel (role) ou serviço recebe apenas as permissões estritamente necessárias para sua função.",
+    "syntax": "Política IAM JSON com Effect, Action e Resource explícitos.",
+    "example": "{\n  \"Effect\": \"Allow\",\n  \"Action\": [\"s3:GetObject\"],\n  \"Resource\": \"arn:aws:s3:::meu-bucket/*\"\n}",
+    "result": "O usuário/role só consegue ler objetos do bucket especificado, nada além disso.",
+    "notes": [
+      "Evite políticas com `\"Action\": \"*\"` e `\"Resource\": \"*\"` fora de contas de administração restritas."
+    ],
+    "bestPractices": [
+      "Prefira roles temporárias (STS) a chaves de acesso de longa duração.",
+      "Revise periodicamente permissões não utilizadas com o IAM Access Analyzer."
+    ],
+    "commonMistakes": [
+      "Anexar a política gerenciada `AdministratorAccess` a serviços/aplicações por comodidade."
+    ],
+    "relatedCommands": ["aws-s3-cp"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+    "externalReferences": [],
+    "tags": ["aws", "iam", "seguranca"],
+    "keywords": ["least privilege", "menor privilegio", "iam policy"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "testing-aaa-pattern",
+    "category": "Testes",
+    "subcategory": "Boas práticas",
+    "title": "Padrão AAA (Arrange-Act-Assert)",
+    "description": "Estrutura um teste em três partes claras: preparar o cenário (Arrange), executar a ação testada (Act) e verificar o resultado (Assert).",
+    "syntax": "// Arrange\n// Act\n// Assert",
+    "example": "test(\"soma dois numeros\", () => {\n  // Arrange\n  const a = 2, b = 3\n  // Act\n  const resultado = somar(a, b)\n  // Assert\n  expect(resultado).toBe(5)\n})",
+    "result": "Testes ficam mais legíveis e fáceis de manter, com responsabilidades bem separadas.",
+    "notes": ["Alguns frameworks (BDD) usam nomenclatura equivalente: Given-When-Then."],
+    "bestPractices": [
+      "Mantenha um único conceito lógico de 'Act' por teste — múltiplas ações indicam que o teste deveria ser dividido."
+    ],
+    "commonMistakes": [
+      "Misturar preparação e verificação no meio da execução, dificultando entender o que o teste realmente valida."
+    ],
+    "relatedCommands": ["testing-mocking", "testing-tdd"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/bliki/GivenWhenThen.html",
+    "externalReferences": [],
+    "tags": ["testes", "aaa", "boas-praticas"],
+    "keywords": ["arrange act assert", "padrao aaa", "estrutura de teste"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "testing-test-pyramid",
+    "category": "Testes",
+    "subcategory": "Estratégia",
+    "title": "Pirâmide de testes",
+    "description": "Modelo que sugere ter muitos testes unitários (rápidos e baratos), uma quantidade média de testes de integração e poucos testes end-to-end (lentos e caros).",
+    "syntax": "E2E (poucos) → Integração (médio) → Unitários (muitos)",
+    "example": "Uma API pode ter 200 testes unitários de regras de negócio, 30 testes de integração com o banco e 5 testes E2E do fluxo crítico de checkout.",
+    "result": "Feedback rápido no dia a dia (unitários) com confiança adicional de que o sistema funciona integrado (E2E).",
+    "notes": [
+      "Testes E2E são valiosos mas custosos em tempo de execução e manutenção — devem cobrir só os fluxos mais críticos."
+    ],
+    "bestPractices": [
+      "Priorize testes unitários para lógica de negócio pura; reserve E2E para jornadas críticas do usuário."
+    ],
+    "commonMistakes": [
+      "Inverter a pirâmide, com poucos testes unitários e uma suíte E2E gigante, lenta e frágil."
+    ],
+    "relatedCommands": ["testing-aaa-pattern"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/articles/practical-test-pyramid.html",
+    "externalReferences": [],
+    "tags": ["testes", "estrategia", "piramide-de-testes"],
+    "keywords": ["piramide de testes", "test pyramid", "testes unitarios vs e2e"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

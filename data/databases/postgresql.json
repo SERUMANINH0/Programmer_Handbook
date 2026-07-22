@@ -1,0 +1,73 @@
+[
+  {
+    "id": "postgres-create-index",
+    "category": "PostgreSQL",
+    "subcategory": "Performance",
+    "title": "CREATE INDEX",
+    "description": "Cria um índice em uma ou mais colunas de uma tabela para acelerar consultas de leitura.",
+    "syntax": "CREATE INDEX [CONCURRENTLY] nome_indice ON tabela (coluna);",
+    "example": "CREATE INDEX CONCURRENTLY idx_users_email ON users (email);",
+    "result": "CREATE INDEX",
+    "flags": [
+      {
+        "flag": "CONCURRENTLY",
+        "description": "Cria o índice sem travar escritas na tabela (mais lento, mas não bloqueante)."
+      },
+      {
+        "flag": "UNIQUE",
+        "description": "Garante que os valores indexados sejam únicos."
+      }
+    ],
+    "notes": ["Índices aceleram SELECTs mas adicionam custo a INSERT/UPDATE/DELETE."],
+    "bestPractices": [
+      "Crie índices em colunas usadas com frequência em WHERE, JOIN e ORDER BY.",
+      "Use `CONCURRENTLY` em produção para evitar lock na tabela durante a criação."
+    ],
+    "commonMistakes": [
+      "Criar índices em excesso, degradando a performance de escrita sem ganho real de leitura.",
+      "Esquecer que `CONCURRENTLY` não pode ser usado dentro de uma transação."
+    ],
+    "relatedCommands": ["postgres-explain-analyze", "postgres-vacuum"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "9.0+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-createindex.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "index", "performance"],
+    "keywords": ["create index", "indice", "performance sql"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "postgres-explain-analyze",
+    "category": "PostgreSQL",
+    "subcategory": "Performance",
+    "title": "EXPLAIN ANALYZE",
+    "description": "Mostra o plano de execução real de uma query, incluindo tempos de execução de cada etapa, para diagnosticar gargalos.",
+    "syntax": "EXPLAIN ANALYZE <query>;",
+    "example": "EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;",
+    "result": "Seq Scan on orders (cost=0.00..18.50 rows=5 width=120) (actual time=0.02..0.15 rows=5 loops=1)\nPlanning Time: 0.08 ms\nExecution Time: 0.19 ms",
+    "notes": [
+      "`EXPLAIN` sozinho só mostra o plano estimado, sem executar a query de fato.",
+      "`ANALYZE` executa a query de verdade — cuidado com queries destrutivas (use dentro de transação)."
+    ],
+    "bestPractices": [
+      "Procure por 'Seq Scan' em tabelas grandes como indício de que falta um índice adequado."
+    ],
+    "commonMistakes": [
+      "Rodar `EXPLAIN ANALYZE` em um INSERT/UPDATE/DELETE de produção sem envolver em uma transação com ROLLBACK."
+    ],
+    "relatedCommands": ["postgres-create-index"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "9.0+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-explain.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "explain", "performance"],
+    "keywords": ["explain analyze", "plano de execucao", "query performance"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "git-commit",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git commit",
+    "description": "Registra as alterações presentes na staging area como um novo snapshot no histórico do repositório.",
+    "syntax": "git commit -m \"<mensagem>\"",
+    "example": "git commit -m \"feat: adiciona autenticação de usuário\"",
+    "result": "[main 1a2b3c4] feat: adiciona autenticação de usuário\n 2 files changed, 40 insertions(+)",
+    "aliases": ["git ci"],
+    "flags": [
+      { "flag": "-m", "description": "Define a mensagem do commit inline." },
+      {
+        "flag": "-a",
+        "description": "Inclui automaticamente arquivos rastreados modificados."
+      },
+      {
+        "flag": "--amend",
+        "description": "Substitui o último commit em vez de criar um novo."
+      }
+    ],
+    "notes": ["Só arquivos previamente adicionados com `git add` entram no commit."],
+    "bestPractices": [
+      "Use Conventional Commits (feat, fix, chore, docs...) para manter o histórico legível.",
+      "Prefira commits pequenos e atômicos a um commit gigante com várias mudanças não relacionadas."
+    ],
+    "commonMistakes": [
+      "Esquecer de rodar `git add` antes e commitar um diff vazio ou incompleto.",
+      "Usar `--amend` em commits já enviados a um branch compartilhado, reescrevendo histórico alheio."
+    ],
+    "relatedCommands": ["git-add", "git-status", "git-log"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-commit",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "commit"],
+    "keywords": ["commit", "salvar alteracoes", "snapshot"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "git-rebase-interactive",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git rebase -i (rebase interativo)",
+    "description": "Reescreve uma sequência de commits permitindo reordenar, squashar, editar ou remover commits antes de reaplicá-los sobre outro ponto do histórico.",
+    "syntax": "git rebase -i <base>",
+    "example": "git rebase -i HEAD~5",
+    "result": "Abre o editor com os 5 últimos commits listados para reorganização (pick, squash, edit, drop...).",
+    "parameters": [
+      {
+        "name": "base",
+        "description": "Commit, branch ou HEAD~N a partir do qual reescrever o histórico.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "'pick' mantém o commit, 'squash'/'fixup' o funde com o anterior, 'reword' só edita a mensagem, 'drop' remove."
+    ],
+    "bestPractices": [
+      "Nunca faça rebase de commits que já foram enviados (push) a um branch compartilhado.",
+      "Combine com `git rebase --abort` sempre disponível caso o resultado saia errado."
+    ],
+    "commonMistakes": [
+      "Reescrever histórico de branches públicos, forçando `push --force` e quebrando o trabalho de outras pessoas.",
+      "Resolver conflitos e esquecer de rodar `git rebase --continue`."
+    ],
+    "relatedCommands": ["git-reflog", "git-cherry-pick", "git-merge"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-rebase",
+    "externalReferences": [
+      {
+        "label": "Git Book — Rebasing",
+        "url": "https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+      }
+    ],
+    "tags": ["git", "vcs", "rebase", "historico"],
+    "keywords": ["rebase interativo", "squash", "reescrever historico"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "git-stash",
+    "category": "Git",
+    "subcategory": "Fluxo de trabalho",
+    "title": "git stash",
+    "description": "Guarda temporariamente alterações não commitadas (staged e/ou working directory), limpando a árvore de trabalho para trocar de contexto rapidamente.",
+    "syntax": "git stash [push|pop|list|apply|drop]",
+    "example": "git stash push -m \"wip: ajuste no formulario\"",
+    "result": "Saved working directory and index state On main: wip: ajuste no formulario",
+    "flags": [
+      { "flag": "-u", "description": "Inclui também arquivos untracked no stash." },
+      {
+        "flag": "pop",
+        "description": "Reaplica o stash mais recente e o remove da pilha."
+      }
+    ],
+    "notes": [
+      "`git stash list` mostra todos os stashes guardados, do mais recente ao mais antigo."
+    ],
+    "bestPractices": [
+      "Use mensagens descritivas (`stash push -m`) quando tiver mais de um stash pendente."
+    ],
+    "commonMistakes": [
+      "Esquecer stashes antigos acumulados e perder contexto do que cada um continha."
+    ],
+    "relatedCommands": ["git-checkout", "git-status"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-stash",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "stash"],
+    "keywords": ["stash", "guardar alteracoes", "wip"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

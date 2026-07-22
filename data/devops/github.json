@@ -1,0 +1,831 @@
+[
+  {
+    "id": "gh-pull-request",
+    "category": "GitHub",
+    "subcategory": "Pull Requests",
+    "title": "Pull Request (PR)",
+    "description": "Mecanismo do GitHub para propor, discutir e revisar mudanças de um branch antes de integrá-las ao branch de destino, servindo como unidade central de colaboração e code review.",
+    "notes": [
+      "Um PR compara sempre um branch de origem (head) com um branch de destino (base), podendo até cruzar forks diferentes.",
+      "PRs continuam recebendo novos commits enquanto abertos: cada push atualiza automaticamente o diff e a discussão."
+    ],
+    "bestPractices": [
+      "Escreva uma descrição clara do que mudou e por quê, incluindo contexto para quem for revisar.",
+      "Mantenha PRs pequenos e focados em um único assunto para facilitar a revisão."
+    ],
+    "commonMistakes": [
+      "Abrir PRs enormes que misturam refatoração com nova funcionalidade, dificultando o review.",
+      "Não atualizar a descrição do PR depois de mudanças significativas de escopo."
+    ],
+    "relatedCommands": ["gh-pr-create", "gh-pr-review", "gh-merge-strategy-squash"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests",
+    "externalReferences": [],
+    "tags": ["github", "pull request", "colaboracao"],
+    "keywords": ["pull request", "pr", "revisao de codigo", "merge request do github"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-pr-create",
+    "category": "GitHub",
+    "subcategory": "Pull Requests",
+    "title": "Criar um Pull Request",
+    "description": "Fluxo de criação de um PR pela interface do GitHub: escolher branch base e branch de comparação, preencher título/descrição e opcionalmente marcar revisores, labels e um projeto.",
+    "syntax": "Compare & pull request → escolher base/compare → Create pull request",
+    "example": "Após um `git push origin feature/login`, o GitHub sugere automaticamente o botão \"Compare & pull request\" no topo do repositório.",
+    "result": "PR aberto com número sequencial (ex: #42), diff completo e timeline de discussão iniciada.",
+    "notes": [
+      "É possível abrir um PR direto de um fork para o repositório upstream (cross-fork pull request)."
+    ],
+    "bestPractices": [
+      "Use um template de PR (`.github/PULL_REQUEST_TEMPLATE.md`) para padronizar as informações exigidas.",
+      "Vincule issues relacionadas usando palavras-chave como `Closes #12` na descrição."
+    ],
+    "commonMistakes": [
+      "Escolher o branch base errado e acabar comparando contra `main` quando deveria ser um branch de release.",
+      "Esquecer de marcar o PR como rascunho quando o trabalho ainda não está pronto para review."
+    ],
+    "relatedCommands": ["gh-pull-request", "gh-pr-draft", "gh-issue-linking-keywords"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request",
+    "externalReferences": [],
+    "tags": ["github", "pull request", "criacao"],
+    "keywords": ["criar pull request", "abrir pr", "compare and pull request"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-pr-draft",
+    "category": "GitHub",
+    "subcategory": "Pull Requests",
+    "title": "Draft Pull Request",
+    "description": "PR marcado como rascunho, sinalizando que o trabalho ainda está em progresso e não deve ser mesclado nem passar por review completo até ser promovido a \"Ready for review\".",
+    "syntax": "Create draft pull request",
+    "example": "Abrir um PR cedo para compartilhar progresso e disparar CI, mas mantê-lo em modo draft até finalizar os testes.",
+    "result": "PR exibido com badge cinza \"Draft\" na lista de pull requests, bloqueando o merge até a promoção.",
+    "notes": [
+      "Draft PRs disparam os mesmos workflows de CI que PRs normais, permitindo feedback antecipado."
+    ],
+    "bestPractices": [
+      "Use drafts para compartilhar trabalho em andamento e coletar feedback preliminar sem pressão de aprovação.",
+      "Promova para \"Ready for review\" só quando o PR estiver de fato pronto para ser mesclado."
+    ],
+    "commonMistakes": [
+      "Deixar PRs prontos abertos como draft indefinidamente, escondendo-os das filas de revisão."
+    ],
+    "relatedCommands": ["gh-pr-create", "gh-pull-request"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request",
+    "externalReferences": [],
+    "tags": ["github", "pull request", "draft"],
+    "keywords": ["draft pr", "rascunho de pull request", "ready for review"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-pr-review",
+    "category": "GitHub",
+    "subcategory": "Code Review",
+    "title": "Revisar um Pull Request",
+    "description": "Processo de analisar o diff de um PR linha a linha, deixando comentários, aprovando, solicitando mudanças ou apenas comentando sem bloquear o merge.",
+    "syntax": "Files changed → selecionar linhas → Start a review → Submit review (Comment | Approve | Request changes)",
+    "example": "Revisor comenta em uma linha específica sugerindo renomear uma variável e, ao final, escolhe \"Request changes\".",
+    "result": "PR passa a exibir o status de review (aprovado, mudanças solicitadas ou comentado) na lista de checks.",
+    "notes": [
+      "\"Request changes\" bloqueia o merge quando branch protection exige aprovações, até que o revisor aprove ou o autor solicite nova revisão.",
+      "Comentários podem ser agrupados em uma única review (\"Start a review\") para não notificar o autor a cada clique."
+    ],
+    "bestPractices": [
+      "Prefira agrupar comentários em uma review única em vez de comentar linha por linha isoladamente.",
+      "Seja específico e construtivo: explique o porquê da sugestão, não apenas o quê mudar."
+    ],
+    "commonMistakes": [
+      "Aprovar um PR sem realmente ler o diff completo, apenas por pressão de tempo.",
+      "Usar \"Request changes\" para preferências estéticas triviais, travando o merge desnecessariamente."
+    ],
+    "relatedCommands": [
+      "gh-pr-suggested-changes",
+      "gh-branch-protection",
+      "gh-codeowners"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request",
+    "externalReferences": [],
+    "tags": ["github", "code review", "pull request"],
+    "keywords": ["revisar pr", "code review", "approve", "request changes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-pr-suggested-changes",
+    "category": "GitHub",
+    "subcategory": "Code Review",
+    "title": "Suggested changes (sugestões de código)",
+    "description": "Recurso de review que permite propor uma alteração exata de código diretamente em uma linha do diff, a qual o autor pode aplicar com um clique, gerando um commit automático.",
+    "syntax": "```suggestion\\n<novo código>\\n```",
+    "example": "Em um comentário de review, o revisor insere um bloco de sugestão substituindo `var x = 1` por `const x = 1`.",
+    "result": "Botão \"Commit suggestion\" aparece para o autor, criando um commit com a mudança sugerida ao ser aceito.",
+    "notes": [
+      "Várias sugestões podem ser aplicadas em lote (\"Add suggestion to batch\") e commitadas juntas."
+    ],
+    "bestPractices": [
+      "Use suggested changes para correções pequenas e objetivas (typos, formatação, nomes de variáveis).",
+      "Para mudanças estruturais maiores, prefira comentário explicativo em vez de sugestão direta de código."
+    ],
+    "commonMistakes": [
+      "Sugerir blocos grandes de código que quebram a formatação ou o contexto ao redor da linha."
+    ],
+    "relatedCommands": ["gh-pr-review"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/incorporating-feedback-in-your-pull-request",
+    "externalReferences": [],
+    "tags": ["github", "code review", "sugestao"],
+    "keywords": ["suggested changes", "sugestao de codigo", "commit suggestion"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-merge-strategy-merge-commit",
+    "category": "GitHub",
+    "subcategory": "Merge de Pull Requests",
+    "title": "Merge strategy: Create a merge commit",
+    "description": "Estratégia de merge que integra todos os commits do PR ao branch base preservando o histórico original, criando um commit de merge adicional que une as duas pontas.",
+    "syntax": "Merge pull request → Create a merge commit",
+    "example": "Mesclar um branch `feature/checkout` com 6 commits em `main`, mantendo cada commit individual visível no histórico.",
+    "result": "Novo commit de merge com dois pais é adicionado a `main`, e todos os commits do branch permanecem no log.",
+    "notes": [
+      "É a estratégia padrão do Git/GitHub e preserva o contexto completo de quando e como o trabalho foi feito."
+    ],
+    "bestPractices": [
+      "Prefira esta estratégia quando o histórico granular do branch tiver valor (ex: commits bem descritos e atômicos)."
+    ],
+    "commonMistakes": [
+      "Usar merge commit em branches com histórico bagunçado (\"wip\", \"fix\", \"fix2\"), poluindo o log de `main`."
+    ],
+    "relatedCommands": [
+      "gh-merge-strategy-squash",
+      "gh-merge-strategy-rebase",
+      "gh-pull-request"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges",
+    "externalReferences": [],
+    "tags": ["github", "merge", "pull request"],
+    "keywords": ["merge commit", "estrategia de merge", "create a merge commit"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-merge-strategy-squash",
+    "category": "GitHub",
+    "subcategory": "Merge de Pull Requests",
+    "title": "Merge strategy: Squash and merge",
+    "description": "Estratégia que combina todos os commits do PR em um único commit aplicado ao branch base, resultando em um histórico linear e limpo em `main`.",
+    "syntax": "Merge pull request → Squash and merge",
+    "example": "Um PR com 8 commits de \"wip\" é mesclado em `main` como um único commit \"feat: adiciona checkout via Pix\".",
+    "result": "Um novo commit único é adicionado ao branch base; os commits originais do PR não aparecem individualmente no histórico de `main`.",
+    "notes": [
+      "O branch de origem continua com seus commits individuais intactos até ser deletado."
+    ],
+    "bestPractices": [
+      "Use squash quando o branch tiver muitos commits intermediários de WIP que não agregam valor histórico.",
+      "Revise a mensagem do commit final gerado antes de confirmar o squash — o GitHub sugere um resumo automático."
+    ],
+    "commonMistakes": [
+      "Fazer squash em branches longos com múltiplos autores, perdendo a autoria individual dos commits.",
+      "Deixar a mensagem final genérica (ex: apenas o título do PR sem contexto)."
+    ],
+    "relatedCommands": ["gh-merge-strategy-merge-commit", "gh-merge-strategy-rebase"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squashing-and-merging-a-long-running-branch",
+    "externalReferences": [],
+    "tags": ["github", "merge", "squash"],
+    "keywords": ["squash and merge", "squash merge", "historico linear"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-merge-strategy-rebase",
+    "category": "GitHub",
+    "subcategory": "Merge de Pull Requests",
+    "title": "Merge strategy: Rebase and merge",
+    "description": "Estratégia que reaplica cada commit do PR individualmente sobre a ponta do branch base, sem criar um commit de merge, resultando em histórico linear que preserva os commits originais.",
+    "syntax": "Merge pull request → Rebase and merge",
+    "example": "Um PR com 3 commits bem descritos é reaplicado sequencialmente sobre `main`, sem gerar commit de merge.",
+    "result": "Os 3 commits aparecem individualmente no topo de `main`, em sequência linear, sem nó de merge.",
+    "notes": [
+      "Diferente do `git rebase` local, essa opção não reescreve hashes de commits já publicados fora do PR."
+    ],
+    "bestPractices": [
+      "Use quando os commits do PR já forem atômicos e bem escritos, mantendo granularidade sem poluir o histórico com merges."
+    ],
+    "commonMistakes": [
+      "Escolher rebase and merge em PRs com commits de baixa qualidade, já que cada um será preservado individualmente."
+    ],
+    "relatedCommands": ["gh-merge-strategy-squash", "gh-merge-strategy-merge-commit"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#rebasing-and-merging-your-commits",
+    "externalReferences": [],
+    "tags": ["github", "merge", "rebase"],
+    "keywords": ["rebase and merge", "historico linear", "merge sem merge commit"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-issues",
+    "category": "GitHub",
+    "subcategory": "Issues",
+    "title": "Issues",
+    "description": "Sistema de rastreamento de tarefas, bugs e melhorias do GitHub, permitindo descrever um problema ou pedido, discuti-lo em comentários e acompanhar seu status até o fechamento.",
+    "notes": [
+      "Issues podem ser atribuídas a pessoas, receber labels, milestones e ser vinculadas a um Project.",
+      "Fechar uma issue não apaga o histórico: ela continua pesquisável e pode ser reaberta a qualquer momento."
+    ],
+    "bestPractices": [
+      "Escreva títulos objetivos e descrições com passos de reprodução para bugs.",
+      "Use checklists (`- [ ]`) na descrição para acompanhar subtarefas dentro da mesma issue."
+    ],
+    "commonMistakes": [
+      "Abrir issues duplicadas por não pesquisar antes se o problema já foi reportado.",
+      "Deixar issues sem label ou milestone, dificultando priorização e triagem."
+    ],
+    "relatedCommands": ["gh-issue-templates", "gh-labels", "gh-issue-linking-keywords"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/about-issues",
+    "externalReferences": [],
+    "tags": ["github", "issues", "rastreamento"],
+    "keywords": ["issues", "bugs", "tarefas", "rastreamento de trabalho"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-issue-templates",
+    "category": "GitHub",
+    "subcategory": "Issues",
+    "title": "Issue templates",
+    "description": "Modelos pré-definidos de issue (Markdown ou formulário YAML) armazenados em `.github/ISSUE_TEMPLATE/`, que padronizam as informações exigidas ao abrir bugs, features ou dúvidas.",
+    "syntax": ".github/ISSUE_TEMPLATE/bug_report.yml",
+    "example": "name: Bug report\\ndescription: Reporte um comportamento inesperado\\nbody:\\n  - type: textarea\\n    id: repro\\n    attributes:\\n      label: Passos para reproduzir",
+    "result": "Ao clicar em \"New issue\", o usuário escolhe entre os templates disponíveis e preenche um formulário estruturado.",
+    "notes": [
+      "Templates em formato de formulário (`.yml`) permitem campos obrigatórios, dropdowns e checkboxes, diferente do Markdown puro."
+    ],
+    "bestPractices": [
+      "Crie ao menos templates para \"Bug report\" e \"Feature request\" para padronizar a qualidade das issues recebidas.",
+      "Use `config.yml` para desabilitar issues em branco e direcionar para os templates."
+    ],
+    "commonMistakes": [
+      "Criar templates longos demais, desencorajando contribuidores externos a abrir issues."
+    ],
+    "relatedCommands": ["gh-issues", "gh-labels"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository",
+    "externalReferences": [],
+    "tags": ["github", "issues", "templates"],
+    "keywords": ["issue template", "modelo de issue", "formulario de bug"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-issue-linking-keywords",
+    "category": "GitHub",
+    "subcategory": "Issues",
+    "title": "Vincular Pull Requests a Issues (closing keywords)",
+    "description": "Uso de palavras-chave especiais (Closes, Fixes, Resolves) na descrição de um commit ou PR para vincular e fechar automaticamente uma issue quando o PR é mesclado.",
+    "syntax": "Closes #<numero> | Fixes #<numero> | Resolves #<numero>",
+    "example": "## Descrição\\nCorrige o bug de timeout no login.\\n\\nCloses #128",
+    "result": "Ao mesclar o PR na branch padrão do repositório, a issue #128 é fechada automaticamente e o link fica visível na timeline de ambos.",
+    "notes": [
+      "As keywords só disparam o fechamento automático quando o PR é mesclado no branch padrão do repositório.",
+      "É possível referenciar sem fechar usando apenas `#128`, sem a palavra-chave."
+    ],
+    "bestPractices": [
+      "Use as keywords para manter rastreabilidade entre o que foi entregue e o problema original reportado."
+    ],
+    "commonMistakes": [
+      "Usar a keyword em um PR que mescla para um branch que não é o padrão, esperando o fechamento automático que não ocorre."
+    ],
+    "relatedCommands": ["gh-issues", "gh-pr-create"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue",
+    "externalReferences": [],
+    "tags": ["github", "issues", "pull request"],
+    "keywords": ["closes", "fixes", "resolves", "vincular issue e pr"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-labels",
+    "category": "GitHub",
+    "subcategory": "Organização",
+    "title": "Labels",
+    "description": "Etiquetas coloridas aplicáveis a issues e pull requests para categorizar por tipo, prioridade ou status (ex: bug, enhancement, help wanted), facilitando filtros e triagem.",
+    "syntax": "Labels → New label",
+    "example": "Criar a label \"priority: high\" com cor vermelha e aplicá-la a issues críticas.",
+    "result": "Issues/PRs passam a exibir o badge colorido da label e podem ser filtrados por `label:\"priority: high\"` na busca.",
+    "notes": [
+      "Labels podem ser criadas a partir de um repositório template e propagadas para novos repositórios."
+    ],
+    "bestPractices": [
+      "Mantenha um conjunto pequeno e consistente de labels entre repositórios da mesma organização.",
+      "Use prefixos (ex: `type:`, `priority:`) para agrupar labels relacionadas visualmente."
+    ],
+    "commonMistakes": [
+      "Criar dezenas de labels redundantes que confundem mais do que ajudam na triagem."
+    ],
+    "relatedCommands": ["gh-issues", "gh-pull-request", "gh-projects"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels",
+    "externalReferences": [],
+    "tags": ["github", "labels", "organizacao"],
+    "keywords": ["labels", "etiquetas", "categorizar issues"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-milestones",
+    "category": "GitHub",
+    "subcategory": "Organização",
+    "title": "Milestones",
+    "description": "Agrupamento de issues e pull requests em torno de um objetivo com prazo opcional, útil para planejar releases ou sprints e acompanhar o progresso percentual.",
+    "syntax": "Issues → Milestones → New milestone",
+    "example": "Criar o milestone \"v2.0\" com data de entrega e associar todas as issues necessárias para o lançamento.",
+    "result": "Barra de progresso mostra quantas issues/PRs do milestone já foram fechados em relação ao total.",
+    "notes": [
+      "Um milestone não substitui um Project: ele é mais simples e focado apenas em prazo e progresso agregado."
+    ],
+    "bestPractices": [
+      "Use milestones para releases com escopo e data definidos, e Projects para gestão contínua de fluxo de trabalho."
+    ],
+    "commonMistakes": [
+      "Deixar milestones antigos abertos indefinidamente após a release já ter sido publicada."
+    ],
+    "relatedCommands": ["gh-issues", "gh-projects", "gh-releases"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones",
+    "externalReferences": [],
+    "tags": ["github", "milestones", "planejamento"],
+    "keywords": ["milestones", "marcos", "planejamento de release"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-projects",
+    "category": "GitHub",
+    "subcategory": "Projects",
+    "title": "GitHub Projects (v2)",
+    "description": "Ferramenta de gestão de trabalho integrada ao GitHub, baseada em tabelas e quadros configuráveis, que agrega issues e PRs de um ou vários repositórios com campos customizados, views e automações.",
+    "syntax": "Organização/repositório → Projects → New project",
+    "example": "Criar um Project com view de quadro Kanban (To do / In progress / Done) e campos customizados de \"Estimativa\" e \"Sprint\".",
+    "result": "Board atualizado automaticamente conforme issues e PRs mudam de status, com filtros e agrupamentos configuráveis.",
+    "notes": [
+      "Projects v2 usa uma linguagem própria de automação (workflows) para mover itens de status automaticamente, ex: ao fechar um PR."
+    ],
+    "bestPractices": [
+      "Use campos customizados (Status, Prioridade, Estimativa) em vez de depender só de labels para planejamento.",
+      "Configure automações de workflow para mover itens automaticamente ao abrir/fechar PRs vinculados."
+    ],
+    "commonMistakes": [
+      "Manter um Project desatualizado manualmente quando automações de workflow já resolveriam a movimentação de status."
+    ],
+    "relatedCommands": ["gh-issues", "gh-labels", "gh-milestones"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects",
+    "externalReferences": [],
+    "tags": ["github", "projects", "kanban", "gestao"],
+    "keywords": ["github projects", "kanban", "gestao de tarefas", "board"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-branch-protection",
+    "category": "GitHub",
+    "subcategory": "Segurança e Governança",
+    "title": "Branch protection rules",
+    "description": "Regras configuráveis por padrão de nome de branch (ex: `main`, `release/*`) que impõem exigências antes de permitir merge, como aprovações obrigatórias, checks de CI passando e proibição de force-push.",
+    "syntax": "Settings → Branches → Add branch protection rule",
+    "example": "Proteger `main` exigindo 2 aprovações, status checks \"CI / build\" e \"CI / test\" verdes, e bloquear push direto.",
+    "result": "Tentativas de push direto ou merge sem os requisitos atendidos são rejeitadas pelo GitHub com mensagem de erro explícita.",
+    "flags": [
+      {
+        "flag": "Require a pull request before merging",
+        "description": "Impede commits diretos no branch, exigindo sempre um PR."
+      },
+      {
+        "flag": "Require approvals",
+        "description": "Define o número mínimo de aprovações necessárias para habilitar o merge."
+      },
+      {
+        "flag": "Require status checks to pass",
+        "description": "Bloqueia o merge até que os checks de CI selecionados terminem com sucesso."
+      },
+      {
+        "flag": "Do not allow bypassing the above settings",
+        "description": "Aplica as regras até para administradores do repositório."
+      }
+    ],
+    "notes": [
+      "É possível combinar branch protection com regras de repositório (rulesets) que se aplicam a múltiplos branches de uma vez."
+    ],
+    "bestPractices": [
+      "Sempre proteja o branch padrão de produção com exigência de PR, review e CI verde.",
+      "Ative \"Require branches to be up to date before merging\" para evitar merges sobre uma base desatualizada."
+    ],
+    "commonMistakes": [
+      "Permitir que administradores contornem as regras por padrão, tornando a proteção pouco eficaz.",
+      "Exigir tantas aprovações que o fluxo de entrega trava em times pequenos."
+    ],
+    "relatedCommands": ["gh-codeowners", "gh-pr-review"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+    "externalReferences": [],
+    "tags": ["github", "seguranca", "branch protection"],
+    "keywords": ["branch protection", "proteger branch", "regras de merge"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-codeowners",
+    "category": "GitHub",
+    "subcategory": "Segurança e Governança",
+    "title": "CODEOWNERS",
+    "description": "Arquivo que define quais pessoas ou times são donos de determinados caminhos do repositório, exigindo automaticamente a revisão delas em PRs que tocam esses arquivos.",
+    "syntax": "# .github/CODEOWNERS\\n<padrao-de-caminho> <@usuario-ou-@org/time>",
+    "example": "/src/payments/ @org/pagamentos-team\\n*.sql @org/dba-team\\n/docs/ @maria-docs",
+    "result": "PRs que alteram arquivos em `/src/payments/` recebem automaticamente uma solicitação de review do time `@org/pagamentos-team`.",
+    "notes": [
+      "O arquivo pode viver em `.github/CODEOWNERS`, na raiz do repositório ou em `docs/CODEOWNERS`.",
+      "Regras posteriores no arquivo têm precedência sobre regras anteriores para o mesmo caminho, como em `.gitignore`."
+    ],
+    "bestPractices": [
+      "Combine CODEOWNERS com branch protection (\"Require review from Code Owners\") para tornar a revisão obrigatória de fato.",
+      "Prefira apontar times (`@org/time`) em vez de indivíduos para reduzir gargalos quando alguém está de férias."
+    ],
+    "commonMistakes": [
+      "Apontar usuários que não têm mais acesso de escrita ao repositório, quebrando a exigência de review.",
+      "Definir regras conflitantes sem entender que a última regra que casa com o caminho é a que vale."
+    ],
+    "relatedCommands": ["gh-branch-protection", "gh-pr-review"],
+    "difficulty": "avancado",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+    "externalReferences": [],
+    "tags": ["github", "codeowners", "governanca"],
+    "keywords": ["codeowners", "donos de codigo", "review obrigatorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-cli-auth",
+    "category": "GitHub",
+    "subcategory": "GitHub CLI",
+    "title": "gh auth login",
+    "description": "Comando da GitHub CLI que autentica a máquina local com uma conta do GitHub, via navegador ou token, habilitando os demais comandos `gh` a operar sobre repositórios privados e públicos.",
+    "syntax": "gh auth login [--web] [--with-token]",
+    "example": "gh auth login --web",
+    "result": "! First copy your one-time code: XXXX-XXXX\\nOpen this link in your browser... \\n✓ Logged in as octocat",
+    "flags": [
+      {
+        "flag": "--web",
+        "description": "Autentica abrindo o fluxo OAuth no navegador padrão."
+      },
+      {
+        "flag": "--with-token",
+        "description": "Autentica lendo um token pessoal via stdin, útil em scripts e CI."
+      },
+      {
+        "flag": "--hostname",
+        "description": "Especifica o host, necessário para GitHub Enterprise Server."
+      }
+    ],
+    "notes": [
+      "Após autenticar, `gh auth status` mostra a conta ativa e o escopo do token."
+    ],
+    "bestPractices": [
+      "Em pipelines de CI, prefira `--with-token` lendo de um secret em vez do fluxo web interativo."
+    ],
+    "commonMistakes": [
+      "Rodar `gh auth login` em uma máquina compartilhada sem depois fazer `gh auth logout`, deixando sessão de outra pessoa ativa."
+    ],
+    "relatedCommands": ["gh-cli-pr", "gh-cli-repo"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "gh 2.0+",
+    "officialDocumentation": "https://cli.github.com/manual/gh_auth_login",
+    "externalReferences": [{ "label": "GitHub CLI", "url": "https://cli.github.com/" }],
+    "tags": ["github", "gh cli", "autenticacao"],
+    "keywords": ["gh auth login", "github cli", "autenticar github"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-cli-pr",
+    "category": "GitHub",
+    "subcategory": "GitHub CLI",
+    "title": "gh pr create / checkout / list",
+    "description": "Conjunto de subcomandos da GitHub CLI para criar, listar e fazer checkout de pull requests diretamente pelo terminal, sem precisar abrir o navegador.",
+    "syntax": "gh pr create [--title] [--body] [--base] | gh pr checkout <numero> | gh pr list",
+    "example": "gh pr create --title \"fix: corrige timeout no login\" --body \"Resolve #128\" --base main",
+    "result": "https://github.com/org/repo/pull/145\\nCreated pull request #145",
+    "flags": [
+      { "flag": "--title", "description": "Define o título do PR." },
+      { "flag": "--body", "description": "Define o corpo/descrição do PR." },
+      { "flag": "--base", "description": "Define o branch de destino do PR." },
+      {
+        "flag": "--web",
+        "description": "Abre a criação do PR no navegador em vez de fazer via terminal."
+      },
+      { "flag": "--draft", "description": "Cria o PR já como rascunho." }
+    ],
+    "notes": [
+      "`gh pr checkout <numero>` baixa e faz checkout local do branch de um PR, mesmo vindo de um fork externo.",
+      "`gh pr list --state all` mostra PRs abertos, fechados e mesclados."
+    ],
+    "bestPractices": [
+      "Use `gh pr create --fill` para reaproveitar automaticamente o título/corpo a partir dos commits do branch."
+    ],
+    "commonMistakes": [
+      "Esquecer de especificar `--base` em repositórios com branch padrão diferente de `main`, criando o PR contra o branch errado."
+    ],
+    "relatedCommands": ["gh-cli-auth", "gh-pr-create"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "gh 2.0+",
+    "officialDocumentation": "https://cli.github.com/manual/gh_pr_create",
+    "externalReferences": [],
+    "tags": ["github", "gh cli", "pull request"],
+    "keywords": ["gh pr create", "gh pr checkout", "gh pr list", "github cli"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-cli-issue",
+    "category": "GitHub",
+    "subcategory": "GitHub CLI",
+    "title": "gh issue create / list / view",
+    "description": "Subcomandos da GitHub CLI para criar, listar e visualizar issues do repositório atual diretamente pelo terminal.",
+    "syntax": "gh issue create [--title] [--body] [--label] | gh issue list | gh issue view <numero>",
+    "example": "gh issue create --title \"bug: crash ao abrir relatorio\" --label bug --body \"Passos para reproduzir...\"",
+    "result": "https://github.com/org/repo/issues/201\\nCreated issue #201",
+    "flags": [
+      { "flag": "--title", "description": "Define o título da issue." },
+      {
+        "flag": "--label",
+        "description": "Aplica uma ou mais labels já existentes no repositório."
+      },
+      { "flag": "--assignee", "description": "Atribui a issue a um ou mais usuários." }
+    ],
+    "notes": [
+      "`gh issue list --assignee @me` filtra rapidamente as issues atribuídas ao usuário autenticado."
+    ],
+    "bestPractices": [
+      "Combine `gh issue create` com scripts para abrir issues automaticamente a partir de alertas de monitoramento ou CI."
+    ],
+    "commonMistakes": [
+      "Tentar aplicar uma label com `--label` que ainda não existe no repositório, o que gera erro."
+    ],
+    "relatedCommands": ["gh-cli-pr", "gh-issues"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "gh 2.0+",
+    "officialDocumentation": "https://cli.github.com/manual/gh_issue_create",
+    "externalReferences": [],
+    "tags": ["github", "gh cli", "issues"],
+    "keywords": ["gh issue create", "gh issue list", "github cli issues"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-cli-repo",
+    "category": "GitHub",
+    "subcategory": "GitHub CLI",
+    "title": "gh repo clone / create / view",
+    "description": "Subcomandos da GitHub CLI para clonar, criar e inspecionar repositórios sem sair do terminal, incluindo criação a partir de um diretório local existente.",
+    "syntax": "gh repo clone <owner>/<repo> | gh repo create <nome> [--public|--private] | gh repo view [--web]",
+    "example": "gh repo create minha-api --private --source=. --push",
+    "result": "✓ Created repository org/minha-api on GitHub\\n✓ Added remote origin\\n✓ Pushed commits to origin/main",
+    "flags": [
+      { "flag": "--public", "description": "Cria o repositório como público." },
+      { "flag": "--private", "description": "Cria o repositório como privado." },
+      {
+        "flag": "--source",
+        "description": "Usa um diretório local como fonte do novo repositório remoto."
+      },
+      {
+        "flag": "--push",
+        "description": "Já envia o branch atual para o remoto recém-criado."
+      }
+    ],
+    "notes": ["`gh repo view --web` abre a página do repositório no navegador padrão."],
+    "bestPractices": [
+      "Use `gh repo create --source=. --push` para transformar um projeto local em repositório remoto em um único comando."
+    ],
+    "commonMistakes": [
+      "Criar repositórios públicos por engano ao esquecer a flag `--private` em projetos internos."
+    ],
+    "relatedCommands": ["gh-cli-auth", "gh-fork-vs-branch"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "gh 2.0+",
+    "officialDocumentation": "https://cli.github.com/manual/gh_repo_clone",
+    "externalReferences": [],
+    "tags": ["github", "gh cli", "repositorio"],
+    "keywords": ["gh repo clone", "gh repo create", "github cli repositorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-shortcut-go-to",
+    "category": "GitHub",
+    "subcategory": "Atalhos de teclado",
+    "title": "Atalhos \"g\" + <letra> (ir para seção)",
+    "description": "Atalhos de navegação de duas teclas do site do GitHub: pressionar \"g\" seguido de outra letra leva diretamente a uma seção do repositório atual (código, issues, PRs, actions, etc.).",
+    "shortcut": "g c (código) · g i (issues) · g p (pull requests) · g a (actions) · g b (branches)",
+    "syntax": "g <letra>",
+    "example": "Dentro de um repositório, pressionar \"g\" e depois \"i\" navega direto para a aba Issues.",
+    "result": "Navegação instantânea para a aba correspondente, sem precisar clicar nos menus superiores.",
+    "notes": [
+      "Os atalhos só funcionam quando o foco não está em um campo de texto ou editor."
+    ],
+    "bestPractices": [
+      "Combine com \"?\" para abrir a lista completa de atalhos disponíveis na página atual."
+    ],
+    "commonMistakes": [
+      "Tentar usar o atalho enquanto o cursor está dentro de uma caixa de comentário, o que apenas digita as letras."
+    ],
+    "relatedCommands": ["gh-shortcut-command-palette"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "officialDocumentation": "https://docs.github.com/en/get-started/accessibility/keyboard-shortcuts",
+    "externalReferences": [],
+    "tags": ["github", "atalhos", "produtividade"],
+    "keywords": ["atalhos github", "g c", "g i", "g p", "navegacao por teclado"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-shortcut-command-palette",
+    "category": "GitHub",
+    "subcategory": "Atalhos de teclado",
+    "title": "Command Palette do GitHub",
+    "description": "Paleta de comandos global do site do GitHub que permite buscar repositórios, arquivos, issues, PRs e executar ações rapidamente sem navegar pelos menus.",
+    "shortcut": "Ctrl+K (Windows/Linux) · Cmd+K (macOS)",
+    "syntax": "Ctrl+K / Cmd+K",
+    "example": "Pressionar Ctrl+K e digitar \"org/repo issues\" para pular direto para a lista de issues de um repositório específico.",
+    "result": "Painel sobreposto com busca instantânea de repositórios, arquivos, ações de navegação e comandos rápidos.",
+    "notes": [
+      "A paleta também permite alternar entre tema claro/escuro e outras ações rápidas de conta."
+    ],
+    "bestPractices": [
+      "Use a Command Palette em vez de navegar por vários cliques quando já souber o nome do repositório ou arquivo desejado."
+    ],
+    "commonMistakes": [
+      "Confundir esse atalho com a busca simples \"/\", que apenas foca a barra de pesquisa da página atual."
+    ],
+    "relatedCommands": ["gh-shortcut-go-to"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "officialDocumentation": "https://docs.github.com/en/get-started/accessibility/keyboard-shortcuts#navigating-with-the-command-palette",
+    "externalReferences": [],
+    "tags": ["github", "atalhos", "command palette"],
+    "keywords": ["command palette github", "ctrl k", "busca rapida github"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-pages",
+    "category": "GitHub",
+    "subcategory": "GitHub Pages",
+    "title": "GitHub Pages",
+    "description": "Serviço de hospedagem estática gratuita do GitHub que publica sites diretamente a partir de um branch ou pasta do repositório (ou via GitHub Actions), servindo em um domínio `github.io` ou domínio customizado.",
+    "syntax": "Settings → Pages → Source: branch/folder ou GitHub Actions",
+    "example": "Publicar a pasta `/docs` do branch `main` como site em `https://usuario.github.io/repositorio/`.",
+    "result": "Site publicado e acessível publicamente minutos após o push, com deploy automático a cada novo commit no branch configurado.",
+    "notes": [
+      "Repositórios do tipo `usuario.github.io` publicam na raiz do domínio pessoal em vez de um subcaminho.",
+      "É possível usar um workflow de GitHub Actions customizado como fonte do deploy, em vez de apenas branch/pasta."
+    ],
+    "bestPractices": [
+      "Para sites gerados por SSG (Jekyll, Hugo, VitePress), publique via GitHub Actions em vez de commitar o build no branch.",
+      "Configure um domínio customizado com o arquivo `CNAME` e habilite HTTPS forçado."
+    ],
+    "commonMistakes": [
+      "Esquecer de configurar o `base path` correto em frameworks SPA, quebrando assets ao publicar em um subcaminho `/repositorio/`."
+    ],
+    "relatedCommands": ["gha-workflow-structure"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages",
+    "externalReferences": [
+      { "label": "GitHub Pages", "url": "https://pages.github.com/" }
+    ],
+    "tags": ["github", "github pages", "hospedagem estatica"],
+    "keywords": ["github pages", "hospedar site estatico", "github io"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-releases",
+    "category": "GitHub",
+    "subcategory": "Releases",
+    "title": "Releases",
+    "description": "Marcações de versões publicadas de um repositório, baseadas em uma tag Git, com notas de lançamento, changelog automático e possibilidade de anexar binários compilados (assets).",
+    "syntax": "Releases → Draft a new release → escolher/criar tag → Generate release notes",
+    "example": "Criar a release \"v1.4.0\" a partir da tag `v1.4.0`, com notas geradas automaticamente a partir dos PRs mesclados desde a última release.",
+    "result": "Página pública de release com changelog, link de download do código-fonte (zip/tar.gz) e assets anexados manualmente.",
+    "notes": [
+      "\"Generate release notes\" agrupa PRs mesclados por labels e lista novos contribuidores automaticamente."
+    ],
+    "bestPractices": [
+      "Siga Semantic Versioning (`MAJOR.MINOR.PATCH`) nas tags para comunicar claramente o impacto de cada release.",
+      "Anexe binários/artefatos de build (assets) para consumo direto, em vez de exigir que usuários compilem o projeto."
+    ],
+    "commonMistakes": [
+      "Criar releases sem tag associada, dificultando o rastreio exato do commit que foi publicado.",
+      "Publicar uma release com changelog vazio ou genérico, sem contexto do que mudou para quem consome."
+    ],
+    "relatedCommands": ["gh-milestones", "gha-artifacts-upload-download"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+    "externalReferences": [],
+    "tags": ["github", "releases", "versionamento"],
+    "keywords": ["releases", "tags", "changelog", "semantic versioning"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-discussions",
+    "category": "GitHub",
+    "subcategory": "Discussions",
+    "title": "GitHub Discussions",
+    "description": "Fórum integrado ao repositório para conversas abertas que não se encaixam como issue ou PR: perguntas e respostas, anúncios, ideias e discussões gerais da comunidade.",
+    "syntax": "Settings → Features → Discussions (habilitar) → New discussion",
+    "example": "Criar uma categoria \"Q&A\" e marcar a resposta correta de um mantenedor como \"Answer\" em uma pergunta da comunidade.",
+    "result": "Discussão pública organizada por categorias, com upvotes, respostas aninhadas e marcação de resposta aceita em categorias Q&A.",
+    "notes": [
+      "Diferente de issues, discussions não têm estado \"aberto/fechado\" obrigatório nem são destinadas a rastrear trabalho acionável."
+    ],
+    "bestPractices": [
+      "Use Discussions para dúvidas de uso e ideias em estágio inicial, reservando Issues para bugs e trabalho acionável.",
+      "Fixe (\"pin\") discussões importantes como anúncios de releases ou FAQs recorrentes."
+    ],
+    "commonMistakes": [
+      "Usar Discussions para rastrear bugs que deveriam virar issues acionáveis, perdendo o vínculo com o fluxo de PRs."
+    ],
+    "relatedCommands": ["gh-issues"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/discussions/quickstart",
+    "externalReferences": [],
+    "tags": ["github", "discussions", "comunidade"],
+    "keywords": ["github discussions", "forum", "perguntas e respostas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-fork-vs-branch",
+    "category": "GitHub",
+    "subcategory": "Colaboração",
+    "title": "Fork",
+    "description": "Cópia completa e independente de um repositório na conta ou organização do usuário, usada para contribuir em projetos onde não se tem acesso de escrita direto, propondo mudanças via pull request.",
+    "syntax": "Fork (botão no topo do repositório) → escolher conta/organização de destino",
+    "example": "Fazer fork de `torvalds/linux` para `minha-conta/linux`, clonar localmente, criar um branch e abrir um PR de volta ao repositório original.",
+    "result": "Novo repositório independente criado na conta do usuário, mantendo referência ao repositório upstream para sincronização e PRs.",
+    "notes": [
+      "\"Sync fork\" atualiza o fork com os commits mais recentes do repositório upstream sem precisar configurar remotos manualmente."
+    ],
+    "bestPractices": [
+      "Use fork para contribuir em projetos de terceiros; use branches direto no repositório para colaboração interna com acesso de escrita.",
+      "Sincronize o fork regularmente para evitar divergência grande em relação ao upstream."
+    ],
+    "commonMistakes": [
+      "Deixar o fork desatualizado por meses e depois enfrentar dezenas de conflitos ao abrir um PR."
+    ],
+    "relatedCommands": ["gh-pr-create", "gh-cli-repo"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/get-started/quickstart/fork-a-repo",
+    "externalReferences": [],
+    "tags": ["github", "fork", "colaboracao"],
+    "keywords": ["fork", "contribuir open source", "sync fork"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

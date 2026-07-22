@@ -1,0 +1,76 @@
+[
+  {
+    "id": "linux-grep",
+    "category": "Linux",
+    "subcategory": "Busca em arquivos",
+    "title": "grep",
+    "description": "Busca por padrões de texto (literais ou regex) dentro de arquivos ou de uma entrada padrão.",
+    "syntax": "grep [opcoes] 'padrao' arquivo",
+    "example": "grep -rn \"TODO\" ./src",
+    "result": "src/utils/auth.ts:42:  // TODO: validar expiracao do token",
+    "flags": [
+      { "flag": "-r", "description": "Busca recursivamente em diretórios." },
+      { "flag": "-n", "description": "Mostra o número da linha do resultado." },
+      { "flag": "-i", "description": "Ignora diferenças entre maiúsculas/minúsculas." },
+      {
+        "flag": "-v",
+        "description": "Inverte a busca, mostrando linhas que NÃO casam com o padrão."
+      }
+    ],
+    "notes": [
+      "Combine com `|` (pipe) para filtrar a saída de outros comandos, ex: `ps aux | grep node`."
+    ],
+    "bestPractices": [
+      "Use aspas simples no padrão para evitar que o shell interprete caracteres especiais."
+    ],
+    "commonMistakes": [
+      "Esquecer `-r` ao buscar em um diretório, resultando em 'Is a directory'."
+    ],
+    "relatedCommands": ["linux-find", "linux-sed"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU grep 3+",
+    "officialDocumentation": "https://www.gnu.org/software/grep/manual/grep.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "grep", "busca"],
+    "keywords": ["grep", "buscar texto", "buscar em arquivos"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "linux-chmod",
+    "category": "Linux",
+    "subcategory": "Permissões",
+    "title": "chmod",
+    "description": "Altera as permissões de leitura, escrita e execução de arquivos e diretórios.",
+    "syntax": "chmod [modo] arquivo",
+    "example": "chmod +x deploy.sh",
+    "result": "O arquivo deploy.sh passa a ter permissão de execução para o dono, grupo e outros conforme a máscara atual.",
+    "parameters": [
+      {
+        "name": "modo",
+        "description": "Notação simbólica (u+x, g-w) ou octal (755, 644).",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Notação octal: 4=leitura, 2=escrita, 1=execução, somados por dono/grupo/outros (ex: 755 = rwxr-xr-x)."
+    ],
+    "bestPractices": [
+      "Use o modo mais restritivo possível — evite `chmod 777` em produção."
+    ],
+    "commonMistakes": [
+      "Aplicar `chmod -R 777` recursivamente para 'resolver' erro de permissão, abrindo uma falha de segurança."
+    ],
+    "relatedCommands": ["linux-chown", "linux-ls"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/chmod-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "permissoes"],
+    "keywords": ["chmod", "permissoes de arquivo", "chmod 755"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

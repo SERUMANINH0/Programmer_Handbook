@@ -1,0 +1,77 @@
+[
+  {
+    "id": "react-useeffect",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useEffect",
+    "description": "Hook que executa efeitos colaterais (side effects) após a renderização, como chamadas de API, subscrições ou manipulação direta do DOM.",
+    "syntax": "useEffect(() => { efeito }, [dependencias])",
+    "example": "useEffect(() => {\n  const id = setInterval(() => setCount(c => c + 1), 1000)\n  return () => clearInterval(id)\n}, [])",
+    "result": "O intervalo é criado na montagem do componente e limpo na desmontagem.",
+    "parameters": [
+      {
+        "name": "efeito",
+        "description": "Função executada após a renderização; pode retornar uma função de limpeza.",
+        "required": true
+      },
+      {
+        "name": "dependencias",
+        "description": "Array de valores que, ao mudar, disparam o efeito novamente.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Array de dependências vazio (`[]`) executa o efeito só uma vez, na montagem.",
+      "Omitir o array de dependências executa o efeito a cada renderização."
+    ],
+    "bestPractices": [
+      "Sempre retorne uma função de limpeza quando o efeito criar subscrições, timers ou listeners.",
+      "Liste todas as variáveis externas usadas dentro do efeito no array de dependências."
+    ],
+    "commonMistakes": [
+      "Omitir dependências usadas dentro do efeito, causando bugs de closures desatualizadas (stale closures).",
+      "Criar loops infinitos ao atualizar um estado que também está nas dependências sem condição de parada."
+    ],
+    "relatedCommands": ["react-usestate", "react-usememo"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useEffect",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "useeffect"],
+    "keywords": ["useeffect", "efeito colateral", "side effect"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "react-server-components",
+    "category": "React",
+    "subcategory": "React 19",
+    "title": "Server Components",
+    "description": "Componentes renderizados exclusivamente no servidor, sem enviar JavaScript de execução para o cliente, reduzindo o bundle e permitindo acesso direto a dados.",
+    "syntax": "// arquivo sem 'use client' no topo é Server Component por padrão (em frameworks como Next.js)",
+    "example": "export default async function Pagina() {\n  const dados = await buscarDados()\n  return <Lista itens={dados} />\n}",
+    "result": "O componente roda no servidor, busca os dados e envia HTML já pronto ao cliente.",
+    "notes": [
+      "Server Components não podem usar hooks de estado (`useState`) nem event handlers diretamente."
+    ],
+    "bestPractices": [
+      "Mantenha componentes interativos (`use client`) o mais próximos possível das folhas da árvore de componentes."
+    ],
+    "commonMistakes": [
+      "Marcar um arquivo inteiro como `use client` quando só um botão precisa de interatividade, aumentando o bundle."
+    ],
+    "relatedCommands": ["react-use-client", "nextjs-app-router"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "19+",
+    "officialDocumentation": "https://react.dev/reference/rsc/server-components",
+    "externalReferences": [],
+    "tags": ["react", "server-components", "rsc"],
+    "keywords": ["server components", "rsc", "react 19"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

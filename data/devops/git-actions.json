@@ -1,0 +1,756 @@
+[
+  {
+    "id": "gha-workflow-structure",
+    "category": "GitHub Actions",
+    "subcategory": "Fundamentos",
+    "title": "Estrutura de um workflow (YAML)",
+    "description": "Arquivo YAML em `.github/workflows/` que define quando (on), o quê (jobs) e como (steps) a automação de CI/CD deve rodar, sendo a unidade básica do GitHub Actions.",
+    "syntax": "name: <nome>\\non: <eventos>\\njobs:\\n  <job-id>:\\n    runs-on: <runner>\\n    steps:\\n      - uses: <action>\\n      - run: <comando>",
+    "example": "name: CI\\non: [push]\\njobs:\\n  build:\\n    runs-on: ubuntu-latest\\n    steps:\\n      - uses: actions/checkout@v4\\n      - run: npm test",
+    "result": "Workflow \"CI\" listado na aba Actions, disparado a cada push, executando o job \"build\" em um runner Ubuntu.",
+    "notes": [
+      "Todo arquivo `.yml` dentro de `.github/workflows/` é tratado como um workflow independente.",
+      "O nome do workflow (`name`) aparece na aba Actions; se omitido, o GitHub usa o caminho do arquivo."
+    ],
+    "bestPractices": [
+      "Nomeie workflows e jobs de forma descritiva para facilitar a leitura na aba Actions e em badges de status.",
+      "Divida workflows grandes em jobs menores e paralelos em vez de um único job sequencial gigante."
+    ],
+    "commonMistakes": [
+      "Indentação incorreta no YAML, um dos erros mais comuns que impede o workflow de sequer ser reconhecido.",
+      "Confundir `on:` (eventos que disparam) com `jobs:` (o que de fato executa)."
+    ],
+    "relatedCommands": ["gha-trigger-push", "gha-jobs-steps", "gha-runs-on"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/writing-workflows/quickstart",
+    "externalReferences": [],
+    "tags": ["github actions", "ci/cd", "yaml"],
+    "keywords": ["workflow github actions", "estrutura yaml", "ci cd"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-trigger-push",
+    "category": "GitHub Actions",
+    "subcategory": "Triggers",
+    "title": "Trigger: on push",
+    "description": "Evento que dispara o workflow sempre que commits são enviados a branches ou tags específicas do repositório.",
+    "syntax": "on:\\n  push:\\n    branches: [<branches>]\\n    paths: [<caminhos>]",
+    "example": "on:\\n  push:\\n    branches: [main, 'release/**']\\n    paths-ignore: ['docs/**']",
+    "result": "Workflow executa apenas em pushes para `main` ou branches `release/*`, ignorando mudanças exclusivas em `docs/`.",
+    "parameters": [
+      {
+        "name": "branches",
+        "description": "Lista de padrões de branch que disparam o evento.",
+        "required": false
+      },
+      {
+        "name": "tags",
+        "description": "Lista de padrões de tag que disparam o evento.",
+        "required": false
+      },
+      {
+        "name": "paths",
+        "description": "Restringe o disparo a pushes que alterem caminhos específicos.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Sem filtros, `push` dispara para qualquer branch ou tag enviada ao repositório."
+    ],
+    "bestPractices": [
+      "Use `paths`/`paths-ignore` para evitar rodar pipelines pesados quando só arquivos de documentação mudam."
+    ],
+    "commonMistakes": [
+      "Combinar `branches` e `tags` no mesmo bloco esperando que ambos sejam avaliados como \"E\", quando na verdade funcionam como \"OU\"."
+    ],
+    "relatedCommands": ["gha-trigger-pull-request", "gha-workflow-structure"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#push",
+    "externalReferences": [],
+    "tags": ["github actions", "trigger", "push"],
+    "keywords": ["on push", "trigger push", "disparar workflow"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-trigger-pull-request",
+    "category": "GitHub Actions",
+    "subcategory": "Triggers",
+    "title": "Trigger: on pull_request",
+    "description": "Evento que dispara o workflow quando um pull request é aberto, sincronizado (novo push) ou passa por outras transições, permitindo rodar CI antes do merge.",
+    "syntax": "on:\\n  pull_request:\\n    branches: [<base>]\\n    types: [opened, synchronize, reopened]",
+    "example": "on:\\n  pull_request:\\n    branches: [main]",
+    "result": "Workflow executa a cada abertura ou atualização de PR direcionado a `main`, exibindo o status como check no PR.",
+    "parameters": [
+      {
+        "name": "branches",
+        "description": "Restringe o disparo a PRs cujo branch base combine com o padrão.",
+        "required": false
+      },
+      {
+        "name": "types",
+        "description": "Tipos de evento do PR que disparam o workflow (opened, synchronize, labeled, etc.).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Workflows de `pull_request` originados de forks rodam com permissões restritas e sem acesso a secrets, por segurança.",
+      "Existe a variante `pull_request_target`, que roda com permissões do branch base mesmo para PRs de forks — deve ser usada com cautela."
+    ],
+    "bestPractices": [
+      "Use `pull_request` (não `pull_request_target`) para rodar testes de código não confiável vindo de forks externos."
+    ],
+    "commonMistakes": [
+      "Usar `pull_request_target` para rodar código do PR diretamente sem checkout controlado, abrindo brecha de segurança para exfiltração de secrets."
+    ],
+    "relatedCommands": ["gha-trigger-push", "gha-permissions-gh-token"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request",
+    "externalReferences": [],
+    "tags": ["github actions", "trigger", "pull request"],
+    "keywords": ["on pull_request", "ci em pr", "trigger pull request"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-trigger-schedule",
+    "category": "GitHub Actions",
+    "subcategory": "Triggers",
+    "title": "Trigger: on schedule",
+    "description": "Evento que dispara o workflow periodicamente com base em uma expressão cron, útil para tarefas recorrentes como limpeza de cache, relatórios ou verificações de dependências desatualizadas.",
+    "syntax": "on:\\n  schedule:\\n    - cron: '<minuto> <hora> <dia-mes> <mes> <dia-semana>'",
+    "example": "on:\\n  schedule:\\n    - cron: '0 3 * * 1'",
+    "result": "Workflow disparado toda segunda-feira às 03:00 UTC, independentemente de atividade de push ou PR.",
+    "notes": [
+      "Os horários de cron do GitHub Actions são sempre em UTC e podem sofrer atraso em períodos de alta demanda na plataforma.",
+      "Workflows agendados só continuam rodando se o repositório tiver atividade recente; repositórios muito inativos podem ter o schedule desabilitado automaticamente."
+    ],
+    "bestPractices": [
+      "Evite agendar múltiplos workflows exatamente no minuto `0` de cada hora — distribua os minutos para reduzir filas de execução."
+    ],
+    "commonMistakes": [
+      "Esquecer que o horário é em UTC e agendar tarefas no horário local errado."
+    ],
+    "relatedCommands": ["gha-trigger-workflow-dispatch"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule",
+    "externalReferences": [],
+    "tags": ["github actions", "trigger", "cron"],
+    "keywords": ["on schedule", "cron github actions", "workflow agendado"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-trigger-workflow-dispatch",
+    "category": "GitHub Actions",
+    "subcategory": "Triggers",
+    "title": "Trigger: on workflow_dispatch",
+    "description": "Evento que permite disparar manualmente um workflow pela interface do GitHub, CLI ou API, opcionalmente recebendo inputs definidos pelo autor do workflow.",
+    "syntax": "on:\\n  workflow_dispatch:\\n    inputs:\\n      <nome>:\\n        description: <texto>\\n        required: <bool>\\n        default: <valor>",
+    "example": "on:\\n  workflow_dispatch:\\n    inputs:\\n      ambiente:\\n        description: 'Ambiente de deploy'\\n        required: true\\n        default: 'staging'",
+    "result": "Botão \"Run workflow\" aparece na aba Actions, com um formulário para preencher o input \"ambiente\" antes de disparar.",
+    "notes": [
+      "Também pode ser disparado via `gh workflow run <arquivo> -f ambiente=producao` pela GitHub CLI."
+    ],
+    "bestPractices": [
+      "Use `workflow_dispatch` para pipelines de deploy manual que exigem confirmação humana antes de rodar em produção."
+    ],
+    "commonMistakes": [
+      "Definir inputs obrigatórios sem valor padrão, forçando o operador a preencher tudo manualmente mesmo em execuções simples."
+    ],
+    "relatedCommands": ["gha-trigger-schedule", "gha-workflow-structure"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_dispatch",
+    "externalReferences": [],
+    "tags": ["github actions", "trigger", "manual"],
+    "keywords": ["workflow_dispatch", "disparo manual", "run workflow"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-jobs-steps",
+    "category": "GitHub Actions",
+    "subcategory": "Fundamentos",
+    "title": "Jobs e Steps",
+    "description": "Um workflow é composto por jobs, que rodam em paralelo por padrão em runners independentes; cada job é composto por steps, executados em sequência dentro do mesmo runner e compartilhando o mesmo sistema de arquivos.",
+    "syntax": "jobs:\\n  <job-id>:\\n    runs-on: <runner>\\n    steps:\\n      - name: <nome-do-step>\\n        run: <comando>",
+    "example": "jobs:\\n  test:\\n    runs-on: ubuntu-latest\\n    steps:\\n      - uses: actions/checkout@v4\\n      - name: Instalar dependencias\\n        run: npm ci\\n      - name: Rodar testes\\n        run: npm test",
+    "result": "Job \"test\" executa os 3 steps em ordem no mesmo runner; falha em qualquer step interrompe os seguintes por padrão.",
+    "notes": [
+      "Jobs diferentes não compartilham sistema de arquivos automaticamente — é preciso usar artifacts ou cache para passar dados entre eles.",
+      "`needs:` cria dependência entre jobs, forçando execução sequencial em vez de paralela."
+    ],
+    "bestPractices": [
+      "Dê nomes descritivos (`name:`) a cada step para facilitar a leitura dos logs de execução."
+    ],
+    "commonMistakes": [
+      "Assumir que jobs paralelos compartilham arquivos gerados um pelo outro sem configurar artifacts explicitamente."
+    ],
+    "relatedCommands": [
+      "gha-workflow-structure",
+      "gha-needs-dependency",
+      "gha-artifacts-upload-download"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow",
+    "externalReferences": [],
+    "tags": ["github actions", "jobs", "steps"],
+    "keywords": ["jobs github actions", "steps", "runs-on"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-runs-on",
+    "category": "GitHub Actions",
+    "subcategory": "Fundamentos",
+    "title": "runs-on (escolha do runner)",
+    "description": "Chave que define em qual máquina virtual (runner) hospedado pelo GitHub — ou runner self-hosted — o job será executado, determinando o sistema operacional e recursos disponíveis.",
+    "syntax": "jobs:\\n  <job-id>:\\n    runs-on: <label-do-runner>",
+    "example": "jobs:\\n  build:\\n    runs-on: ubuntu-latest",
+    "result": "Job executado em uma máquina virtual Ubuntu efêmera, provisionada e destruída automaticamente pelo GitHub a cada execução.",
+    "notes": [
+      "Runners hospedados disponíveis incluem `ubuntu-latest`, `windows-latest` e `macos-latest`, cada um com custo de minutos diferente.",
+      "`runs-on` também aceita uma lista de labels para direcionar a um runner self-hosted específico."
+    ],
+    "bestPractices": [
+      "Fixe versões específicas do runner (ex: `ubuntu-22.04`) em pipelines sensíveis a mudanças de imagem, em vez de sempre `-latest`."
+    ],
+    "commonMistakes": [
+      "Usar `macos-latest` sem necessidade, consumindo muito mais minutos de cota do que um runner Linux equivalente."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-self-hosted-runners"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/choosing-the-runner-for-a-job",
+    "externalReferences": [],
+    "tags": ["github actions", "runner", "runs-on"],
+    "keywords": ["runs-on", "runner github actions", "ubuntu-latest"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-actions-checkout",
+    "category": "GitHub Actions",
+    "subcategory": "Actions da comunidade",
+    "title": "actions/checkout",
+    "description": "Action oficial mantida pelo GitHub que clona o repositório atual no runner, sendo praticamente o primeiro step de quase todo workflow que precisa acessar o código-fonte.",
+    "syntax": "- uses: actions/checkout@v4\\n  with:\\n    fetch-depth: <profundidade>\\n    ref: <branch-ou-sha>",
+    "example": "- uses: actions/checkout@v4\\n  with:\\n    fetch-depth: 0",
+    "result": "Repositório clonado na raiz do workspace do runner; com `fetch-depth: 0`, o histórico completo é baixado em vez de apenas o último commit.",
+    "parameters": [
+      {
+        "name": "fetch-depth",
+        "description": "Quantidade de commits de histórico a buscar; 0 traz o histórico completo.",
+        "required": false,
+        "defaultValue": "1"
+      },
+      {
+        "name": "ref",
+        "description": "Branch, tag ou SHA específico a ser feito checkout.",
+        "required": false
+      },
+      {
+        "name": "token",
+        "description": "Token usado para autenticar o clone, permitindo customizar permissões.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Por padrão faz um clone raso (`fetch-depth: 1`), o que pode quebrar comandos que dependem de histórico completo, como `git log` ou ferramentas de versionamento semântico."
+    ],
+    "bestPractices": [
+      "Use `fetch-depth: 0` quando o pipeline precisar de tags ou histórico completo, como em geração automática de changelog."
+    ],
+    "commonMistakes": [
+      "Esquecer o `actions/checkout` e assumir que o runner já tem o código, quando na verdade o workspace começa vazio."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-workflow-structure"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "v4",
+    "officialDocumentation": "https://github.com/actions/checkout",
+    "externalReferences": [],
+    "tags": ["github actions", "checkout", "actions"],
+    "keywords": ["actions/checkout", "clonar repositorio", "checkout action"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-matrix-builds",
+    "category": "GitHub Actions",
+    "subcategory": "Estratégias de execução",
+    "title": "Matrix builds",
+    "description": "Estratégia que gera múltiplas execuções do mesmo job variando combinações de valores (versões de linguagem, sistemas operacionais, etc.), rodando todas em paralelo automaticamente.",
+    "syntax": "strategy:\\n  matrix:\\n    <variavel>: [<valor1>, <valor2>]\\n  fail-fast: <bool>",
+    "example": "strategy:\\n  matrix:\\n    node-version: [18, 20, 22]\\n    os: [ubuntu-latest, windows-latest]",
+    "result": "6 jobs executados em paralelo (3 versões de Node x 2 sistemas operacionais), cada um usando `${{ matrix.node-version }}` e `${{ matrix.os }}`.",
+    "parameters": [
+      {
+        "name": "fail-fast",
+        "description": "Se true (padrão), cancela as demais combinações assim que uma falhar.",
+        "required": false,
+        "defaultValue": "true"
+      },
+      {
+        "name": "max-parallel",
+        "description": "Limita quantas combinações rodam simultaneamente.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`include` e `exclude` permitem adicionar ou remover combinações específicas da matriz gerada automaticamente."
+    ],
+    "bestPractices": [
+      "Use `fail-fast: false` quando quiser ver o resultado de todas as combinações mesmo se uma falhar, útil para matrizes de compatibilidade."
+    ],
+    "commonMistakes": [
+      "Criar matrizes muito grandes sem necessidade, consumindo minutos de CI desnecessariamente."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-runs-on"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs",
+    "externalReferences": [],
+    "tags": ["github actions", "matrix", "paralelismo"],
+    "keywords": ["matrix build", "matriz de build", "testes multiplas versoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-secrets",
+    "category": "GitHub Actions",
+    "subcategory": "Segurança",
+    "title": "Secrets",
+    "description": "Valores sensíveis (tokens, senhas, chaves de API) armazenados de forma criptografada no repositório, ambiente ou organização, acessíveis nos workflows via contexto `secrets` sem exibir o valor em logs.",
+    "syntax": "Settings → Secrets and variables → Actions → New repository secret\\n${{ secrets.<NOME> }}",
+    "example": "- name: Deploy\\n  env:\\n    API_KEY: ${{ secrets.API_KEY }}\\n  run: ./deploy.sh",
+    "result": "O valor de `API_KEY` fica disponível como variável de ambiente no step, mas o GitHub mascara automaticamente o valor em qualquer log que o exponha.",
+    "notes": [
+      "Secrets de ambiente (\"Environments\") podem exigir aprovação manual antes de liberar o valor para o job, útil para produção.",
+      "Secrets nunca ficam disponíveis para workflows disparados por `pull_request` vindos de forks, por segurança."
+    ],
+    "bestPractices": [
+      "Use Environments com \"required reviewers\" para secrets de produção, adicionando um gate manual antes do deploy.",
+      "Rotacione secrets periodicamente e revogue os que não são mais usados."
+    ],
+    "commonMistakes": [
+      "Fazer `echo` do valor de um secret em um step de debug, o que pode vazar o valor caso a máscara automática não cubra o formato usado.",
+      "Armazenar secrets em variáveis de ambiente do repositório (`vars`) em vez de `secrets` por engano."
+    ],
+    "relatedCommands": ["gha-env-variables", "gha-permissions-gh-token"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions",
+    "externalReferences": [],
+    "tags": ["github actions", "secrets", "seguranca"],
+    "keywords": ["secrets github actions", "variaveis sensiveis", "tokens ci"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-env-variables",
+    "category": "GitHub Actions",
+    "subcategory": "Configuração",
+    "title": "Variáveis de ambiente (env)",
+    "description": "Chave `env` disponível em nível de workflow, job ou step para definir variáveis de ambiente acessíveis nos comandos `run`, incluindo variáveis de repositório configuráveis (\"vars\") não sensíveis.",
+    "syntax": "env:\\n  <NOME>: <valor>",
+    "example": "env:\\n  NODE_ENV: production\\njobs:\\n  build:\\n    steps:\\n      - run: echo \"Rodando em $NODE_ENV\"",
+    "result": "Rodando em production",
+    "notes": [
+      "Variáveis definidas em `env` no nível do workflow ficam disponíveis para todos os jobs; no nível do job, só para aquele job.",
+      "`${{ vars.NOME }}` acessa variáveis de repositório/organização não sensíveis, diferente de `secrets`."
+    ],
+    "bestPractices": [
+      "Use `vars` para configuração não sensível compartilhada (ex: URL de um ambiente) e `secrets` apenas para dados sensíveis."
+    ],
+    "commonMistakes": [
+      "Definir a mesma variável em múltiplos níveis (workflow, job, step) sem perceber qual tem precedência sobre a outra."
+    ],
+    "relatedCommands": ["gha-secrets", "gha-expressions-contexts"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/learn-github-actions/variables",
+    "externalReferences": [],
+    "tags": ["github actions", "env", "variaveis"],
+    "keywords": ["env github actions", "variaveis de ambiente", "vars"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-cache",
+    "category": "GitHub Actions",
+    "subcategory": "Performance",
+    "title": "actions/cache",
+    "description": "Action que armazena e restaura arquivos entre execuções de workflow (dependências, builds intermediários) usando uma chave configurável, reduzindo o tempo de execução ao evitar reinstalações repetidas.",
+    "syntax": "- uses: actions/cache@v4\\n  with:\\n    path: <caminhos>\\n    key: <chave>\\n    restore-keys: <chaves-parciais>",
+    "example": "- uses: actions/cache@v4\\n  with:\\n    path: ~/.npm\\n    key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}",
+    "result": "Cache restaurado se já existir uma chave correspondente ao hash do lockfile, evitando reexecutar `npm ci` do zero.",
+    "parameters": [
+      {
+        "name": "path",
+        "description": "Caminho(s) de arquivos/diretórios a cachear.",
+        "required": true
+      },
+      {
+        "name": "key",
+        "description": "Chave única que identifica a versão do cache; muda quando o conteúdo relevante muda.",
+        "required": true
+      },
+      {
+        "name": "restore-keys",
+        "description": "Chaves alternativas usadas para restaurar um cache parcial caso a chave exata não seja encontrada.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Muitas actions de setup (`actions/setup-node`, `actions/setup-java`) já incluem uma opção `cache:` embutida que simplifica esse padrão."
+    ],
+    "bestPractices": [
+      "Inclua o hash de arquivos de lock (`hashFiles('**/package-lock.json')`) na chave, garantindo invalidação automática quando as dependências mudam."
+    ],
+    "commonMistakes": [
+      "Usar uma chave estática que nunca muda, fazendo o cache ficar desatualizado indefinidamente."
+    ],
+    "relatedCommands": ["gha-artifacts-upload-download"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "v4",
+    "officialDocumentation": "https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows",
+    "externalReferences": [],
+    "tags": ["github actions", "cache", "performance"],
+    "keywords": ["actions/cache", "cache de dependencias", "acelerar ci"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-artifacts-upload-download",
+    "category": "GitHub Actions",
+    "subcategory": "Compartilhamento de dados",
+    "title": "actions/upload-artifact e download-artifact",
+    "description": "Par de actions que permite persistir arquivos gerados em um job (builds, relatórios de teste, logs) e baixá-los em outro job do mesmo workflow ou disponibilizá-los para download manual na execução.",
+    "syntax": "- uses: actions/upload-artifact@v4\\n  with:\\n    name: <nome>\\n    path: <caminho>\\n\\n- uses: actions/download-artifact@v4\\n  with:\\n    name: <nome>",
+    "example": "- uses: actions/upload-artifact@v4\\n  with:\\n    name: build-dist\\n    path: dist/",
+    "result": "Artefato \"build-dist\" listado na página da execução do workflow, disponível para download manual e para outros jobs via `download-artifact`.",
+    "parameters": [
+      {
+        "name": "name",
+        "description": "Nome identificador do artefato.",
+        "required": true
+      },
+      {
+        "name": "path",
+        "description": "Arquivo ou diretório a ser incluído no artefato.",
+        "required": true
+      },
+      {
+        "name": "retention-days",
+        "description": "Quantos dias o artefato fica disponível antes de ser apagado automaticamente.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Artifacts são a forma correta de passar arquivos entre jobs diferentes, já que cada job roda em um runner isolado."
+    ],
+    "bestPractices": [
+      "Defina `retention-days` baixo para artefatos grandes e temporários, evitando consumo desnecessário de armazenamento."
+    ],
+    "commonMistakes": [
+      "Confundir artifacts (arquivos de build/relatórios) com cache (dependências reutilizáveis) e usar o mecanismo errado para o propósito."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-cache", "gh-releases"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "v4",
+    "officialDocumentation": "https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts",
+    "externalReferences": [],
+    "tags": ["github actions", "artifacts", "compartilhamento"],
+    "keywords": ["upload-artifact", "download-artifact", "artefatos ci"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-self-hosted-runners",
+    "category": "GitHub Actions",
+    "subcategory": "Runners",
+    "title": "Self-hosted runners",
+    "description": "Máquinas próprias (on-premises ou em nuvem privada) configuradas para executar jobs do GitHub Actions, oferecendo controle total de hardware, software pré-instalado e acesso a redes internas.",
+    "syntax": "Settings → Actions → Runners → New self-hosted runner\\nruns-on: [self-hosted, <labels>]",
+    "example": "runs-on: [self-hosted, linux, gpu]",
+    "result": "Job direcionado a qualquer runner registrado que possua todas as labels especificadas, em vez de um runner hospedado pelo GitHub.",
+    "notes": [
+      "Diferente dos runners hospedados, self-hosted runners não são efêmeros por padrão — o estado do sistema de arquivos pode persistir entre execuções."
+    ],
+    "bestPractices": [
+      "Nunca use self-hosted runners para rodar workflows de `pull_request` de repositórios públicos com forks externos sem isolamento extra, pelo risco de execução de código arbitrário.",
+      "Prefira runners efêmeros (destruídos após cada job) em ambientes que exigem isolamento forte."
+    ],
+    "commonMistakes": [
+      "Registrar um self-hosted runner em um repositório público sem restringir quem pode abrir PRs, expondo a máquina a código malicioso."
+    ],
+    "relatedCommands": ["gha-runs-on"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners",
+    "externalReferences": [],
+    "tags": ["github actions", "self-hosted", "runners"],
+    "keywords": ["self-hosted runner", "runner proprio", "runner privado"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-reusable-workflows",
+    "category": "GitHub Actions",
+    "subcategory": "Reutilização",
+    "title": "Reusable workflows",
+    "description": "Workflows completos definidos com o trigger `workflow_call`, que podem ser invocados por outros workflows (do mesmo repositório ou de outros), recebendo inputs e secrets e evitando duplicação de pipelines.",
+    "syntax": "# workflow chamado\\non:\\n  workflow_call:\\n    inputs:\\n      <nome>: {type: string}\\n    secrets:\\n      <nome>: {required: true}\\n\\n# workflow chamador\\njobs:\\n  chamar:\\n    uses: <org>/<repo>/.github/workflows/<arquivo>.yml@<ref>\\n    with:\\n      <nome>: <valor>\\n    secrets: inherit",
+    "example": "jobs:\\n  build:\\n    uses: minha-org/workflows-compartilhados/.github/workflows/build-node.yml@main\\n    with:\\n      node-version: '20'\\n    secrets: inherit",
+    "result": "O job \"build\" executa todos os jobs definidos no workflow reutilizável referenciado, recebendo o input `node-version` e repassando todos os secrets do chamador.",
+    "notes": [
+      "`secrets: inherit` repassa automaticamente todos os secrets do workflow chamador, evitando listá-los um a um."
+    ],
+    "bestPractices": [
+      "Centralize pipelines de build/deploy repetidos entre vários repositórios em um único reusable workflow versionado."
+    ],
+    "commonMistakes": [
+      "Referenciar o workflow reutilizável por `@main` em produção, ficando exposto a mudanças inesperadas — prefira fixar em uma tag ou SHA."
+    ],
+    "relatedCommands": ["gha-composite-actions", "gha-workflow-structure"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-workflows/reusing-workflows",
+    "externalReferences": [],
+    "tags": ["github actions", "reusable workflow", "reutilizacao"],
+    "keywords": ["reusable workflow", "workflow_call", "workflow reutilizavel"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-composite-actions",
+    "category": "GitHub Actions",
+    "subcategory": "Reutilização",
+    "title": "Composite actions",
+    "description": "Actions customizadas definidas em um arquivo `action.yml` que agrupam múltiplos steps em uma única unidade reutilizável, invocada com `uses:` como qualquer outra action.",
+    "syntax": "# action.yml\\nname: <nome>\\ninputs:\\n  <nome>: {required: true}\\nruns:\\n  using: composite\\n  steps:\\n    - run: <comando>\\n      shell: bash",
+    "example": "runs:\\n  using: composite\\n  steps:\\n    - run: npm ci\\n      shell: bash\\n    - run: npm run build\\n      shell: bash",
+    "result": "Ao referenciar a action composta com `uses: ./.github/actions/build`, todos os steps internos executam em sequência no job chamador.",
+    "notes": [
+      "Diferente de reusable workflows, composite actions não criam jobs próprios: eles rodam como um bloco de steps dentro do job que os chama.",
+      "Todo step de `run` em uma composite action exige a chave `shell:` explícita."
+    ],
+    "bestPractices": [
+      "Use composite actions para encapsular uma sequência de steps repetida (ex: setup + lint + build) dentro do mesmo repositório ou organização."
+    ],
+    "commonMistakes": [
+      "Esquecer `shell: bash` em steps de `run`, o que causa erro de validação da composite action."
+    ],
+    "relatedCommands": ["gha-reusable-workflows", "gha-jobs-steps"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/creating-actions/creating-a-composite-action",
+    "externalReferences": [],
+    "tags": ["github actions", "composite action", "reutilizacao"],
+    "keywords": ["composite action", "action.yml", "acao customizada"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-permissions-gh-token",
+    "category": "GitHub Actions",
+    "subcategory": "Segurança",
+    "title": "permissions e GITHUB_TOKEN",
+    "description": "Token temporário (`GITHUB_TOKEN`) gerado automaticamente pelo GitHub para cada execução de workflow, cujo escopo de permissões pode e deve ser restringido explicitamente com a chave `permissions`.",
+    "syntax": "permissions:\\n  contents: <read|write|none>\\n  pull-requests: <read|write|none>",
+    "example": "permissions:\\n  contents: read\\n  pull-requests: write",
+    "result": "O `GITHUB_TOKEN` da execução só consegue ler conteúdo do repositório e comentar/gerenciar pull requests, nada além disso.",
+    "notes": [
+      "Se `permissions` não for definido no workflow, o token usa o padrão configurado na organização/repositório, que pode ser mais permissivo do que o necessário.",
+      "O `GITHUB_TOKEN` expira automaticamente ao fim da execução do job."
+    ],
+    "bestPractices": [
+      "Defina `permissions` explicitamente no nível do workflow com o mínimo necessário (princípio do menor privilégio)."
+    ],
+    "commonMistakes": [
+      "Deixar o padrão `permissions: write-all` implícito em organizações antigas, dando ao token mais acesso do que o workflow realmente precisa."
+    ],
+    "relatedCommands": ["gha-secrets", "gha-trigger-pull-request"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/security-guides/automatic-token-authentication",
+    "externalReferences": [],
+    "tags": ["github actions", "seguranca", "permissions"],
+    "keywords": ["github_token", "permissions github actions", "menor privilegio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-conditional-if",
+    "category": "GitHub Actions",
+    "subcategory": "Controle de fluxo",
+    "title": "Condicionais com if",
+    "description": "Chave `if` disponível em jobs e steps que avalia uma expressão para decidir se aquele job/step deve executar, permitindo lógica condicional baseada em contexto, resultado de steps anteriores ou branch.",
+    "syntax": "if: <expressao>",
+    "example": "- name: Notificar falha\\n  if: failure()\\n  run: ./notify.sh",
+    "result": "O step \"Notificar falha\" só executa quando algum step anterior no job falhou; em execuções bem-sucedidas, ele é pulado (skipped).",
+    "notes": [
+      "Funções especiais como `success()`, `failure()`, `always()` e `cancelled()` controlam a execução mesmo após falhas anteriores no job."
+    ],
+    "bestPractices": [
+      "Use `if: always()` em steps de limpeza (cleanup) que precisam rodar independentemente do resultado dos steps anteriores."
+    ],
+    "commonMistakes": [
+      "Esquecer que, por padrão, um step só roda se todos os anteriores tiverem sucesso — sem `if: always()` ou `if: failure()`, steps de notificação de erro nunca são executados."
+    ],
+    "relatedCommands": ["gha-expressions-contexts", "gha-needs-dependency"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-conditions-to-control-job-execution",
+    "externalReferences": [],
+    "tags": ["github actions", "condicional", "controle de fluxo"],
+    "keywords": ["if github actions", "condicoes", "failure success always"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-needs-dependency",
+    "category": "GitHub Actions",
+    "subcategory": "Controle de fluxo",
+    "title": "needs (dependência entre jobs)",
+    "description": "Chave que declara que um job depende da conclusão de um ou mais outros jobs, forçando ordem de execução em vez do paralelismo padrão entre jobs.",
+    "syntax": "jobs:\\n  <job-b>:\\n    needs: [<job-a>]",
+    "example": "jobs:\\n  build:\\n    runs-on: ubuntu-latest\\n    steps: [...]\\n  deploy:\\n    needs: build\\n    runs-on: ubuntu-latest\\n    steps: [...]",
+    "result": "O job \"deploy\" só inicia após o job \"build\" terminar com sucesso; se \"build\" falhar, \"deploy\" é automaticamente pulado.",
+    "notes": [
+      "É possível acessar outputs de um job dependido via `needs.<job-id>.outputs.<nome>`."
+    ],
+    "bestPractices": [
+      "Use `needs` para modelar pipelines em etapas (build → test → deploy) mantendo o restante dos jobs paralelo sempre que possível."
+    ],
+    "commonMistakes": [
+      "Encadear `needs` em excesso, transformando um workflow que poderia ser paralelo em uma sequência totalmente linear e mais lenta."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-conditional-if"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow#defining-prerequisite-jobs",
+    "externalReferences": [],
+    "tags": ["github actions", "needs", "dependencia de jobs"],
+    "keywords": ["needs github actions", "ordem de jobs", "dependencia entre jobs"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-concurrency",
+    "category": "GitHub Actions",
+    "subcategory": "Controle de fluxo",
+    "title": "concurrency",
+    "description": "Chave que agrupa execuções de workflow sob um grupo nomeado, garantindo que apenas uma execução daquele grupo rode por vez e, opcionalmente, cancelando execuções anteriores em andamento.",
+    "syntax": "concurrency:\\n  group: <nome-do-grupo>\\n  cancel-in-progress: <bool>",
+    "example": "concurrency:\\n  group: deploy-producao-${{ github.ref }}\\n  cancel-in-progress: true",
+    "result": "Ao disparar um novo deploy para o mesmo branch antes do anterior terminar, a execução em andamento é cancelada e substituída pela mais recente.",
+    "parameters": [
+      {
+        "name": "group",
+        "description": "Identificador único do grupo de concorrência, geralmente combinando nome do workflow e ref.",
+        "required": true
+      },
+      {
+        "name": "cancel-in-progress",
+        "description": "Se true, cancela execuções em andamento do mesmo grupo ao iniciar uma nova.",
+        "required": false,
+        "defaultValue": "false"
+      }
+    ],
+    "notes": [
+      "Muito usado em PRs para cancelar automaticamente builds de commits antigos quando um novo push chega no mesmo branch."
+    ],
+    "bestPractices": [
+      "Use `cancel-in-progress: true` em workflows de CI de PR para economizar minutos, evitando rodar CI de commits já obsoletos."
+    ],
+    "commonMistakes": [
+      "Usar `cancel-in-progress: true` em pipelines de deploy sem cuidado, cancelando um deploy real em andamento no meio da execução."
+    ],
+    "relatedCommands": ["gha-trigger-pull-request", "gha-jobs-steps"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-concurrency",
+    "externalReferences": [],
+    "tags": ["github actions", "concurrency", "cancelamento"],
+    "keywords": ["concurrency github actions", "cancelar execucao", "cancel-in-progress"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-expressions-contexts",
+    "category": "GitHub Actions",
+    "subcategory": "Fundamentos",
+    "title": "Expressões e contextos (${{ }})",
+    "description": "Sintaxe `${{ expressao }}` usada para avaliar valores dinâmicos dentro do YAML, acessando contextos predefinidos como `github`, `env`, `secrets`, `matrix`, `steps` e `needs`.",
+    "syntax": "${{ <contexto>.<propriedade> }}",
+    "example": "run: echo \"Branch atual: ${{ github.ref_name }}, autor: ${{ github.actor }}\"",
+    "result": "Branch atual: main, autor: octocat",
+    "notes": [
+      "O contexto `steps.<step-id>.outputs.<nome>` permite que um step leia o resultado produzido por um step anterior no mesmo job.",
+      "Funções embutidas como `contains()`, `startsWith()` e `format()` podem ser combinadas dentro de expressões."
+    ],
+    "bestPractices": [
+      "Use `github.event_name` e `github.ref` para tornar um mesmo workflow adaptável a múltiplos triggers, em vez de duplicar arquivos."
+    ],
+    "commonMistakes": [
+      "Tentar usar `${{ }}` dentro de um `run:` de shell esperando escaping automático, sem considerar que o valor é interpolado como texto puro antes da execução, um vetor conhecido de script injection."
+    ],
+    "relatedCommands": ["gha-env-variables", "gha-conditional-if"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/learn-github-actions/expressions",
+    "externalReferences": [],
+    "tags": ["github actions", "expressoes", "contextos"],
+    "keywords": ["expressoes github actions", "contextos", "github.ref", "github.actor"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-marketplace",
+    "category": "GitHub Actions",
+    "subcategory": "Actions da comunidade",
+    "title": "GitHub Marketplace (actions de terceiros)",
+    "description": "Catálogo público de actions reutilizáveis publicadas pela comunidade e por fornecedores, referenciáveis via `uses: <owner>/<repo>@<versao>` para adicionar funcionalidades prontas a um workflow.",
+    "syntax": "- uses: <owner>/<repo>@<tag-ou-sha>",
+    "example": "- uses: docker/build-push-action@v6\\n  with:\\n    push: true\\n    tags: minhaorg/minhaapp:latest",
+    "result": "Step executa a action de terceiro, que constrói e publica uma imagem Docker conforme os parâmetros informados em `with`.",
+    "notes": [
+      "Actions podem ser referenciadas por tag (`@v4`), branch (`@main`) ou SHA completo do commit, sendo o SHA a opção mais segura contra alterações no código da action."
+    ],
+    "bestPractices": [
+      "Fixe actions de terceiros por SHA de commit em pipelines sensíveis, e use ferramentas como Dependabot para atualizar essas referências com segurança."
+    ],
+    "commonMistakes": [
+      "Usar actions de terceiros pouco mantidas ou desconhecidas em pipelines com acesso a secrets sensíveis, sem revisar o código-fonte da action."
+    ],
+    "relatedCommands": ["gha-actions-checkout", "gha-composite-actions"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions",
+    "externalReferences": [
+      {
+        "label": "GitHub Marketplace",
+        "url": "https://github.com/marketplace?type=actions"
+      }
+    ],
+    "tags": ["github actions", "marketplace", "actions terceiros"],
+    "keywords": [
+      "github marketplace",
+      "actions de terceiros",
+      "docker build-push-action"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

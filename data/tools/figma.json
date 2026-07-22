@@ -1,0 +1,427 @@
+[
+  {
+    "id": "figma-tool-move",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Move (mover/selecionar)",
+    "description": "Ferramenta padrão de seleção e movimentação de objetos no canvas, usada para escolher, arrastar e redimensionar elementos.",
+    "syntax": "V",
+    "shortcut": "V",
+    "example": "Pressionar V para voltar à ferramenta de seleção após usar a ferramenta de retângulo (R).",
+    "result": "O cursor volta ao modo de seleção padrão, permitindo clicar e arrastar objetos no canvas.",
+    "bestPractices": [
+      "Pressione Esc ou V para retornar rapidamente à ferramenta Move após usar qualquer outra ferramenta de desenho."
+    ],
+    "relatedCommands": ["figma-tool-rectangle", "figma-tool-frame"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-the-canvas",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["v", "move tool", "ferramenta mover", "selecionar"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-tool-frame",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Frame",
+    "description": "Cria um frame (contêiner de layout), a unidade básica para telas, artboards e componentes responsivos no Figma.",
+    "syntax": "F",
+    "shortcut": "F",
+    "example": "Pressionar F e escolher um preset como 'iPhone 14' no painel direito para criar rapidamente um frame com as dimensões corretas.",
+    "result": "Um novo frame é criado no canvas, pronto para receber elementos de design.",
+    "notes": [
+      "Frames podem ser aninhados uns dentro dos outros e suportam Auto Layout diretamente."
+    ],
+    "bestPractices": [
+      "Use Frames em vez de Groups para telas e seções principais, pois eles suportam clipping, Auto Layout e constraints."
+    ],
+    "relatedCommands": ["figma-tool-move", "figma-auto-layout"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041539473-Create-dynamic-designs-with-auto-layout",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["f", "frame tool", "ferramenta frame", "artboard"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-tool-rectangle",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Rectangle",
+    "description": "Desenha retângulos e quadrados no canvas, usados como base para botões, cards, backgrounds e outros elementos retangulares.",
+    "syntax": "R",
+    "shortcut": "R",
+    "example": "Pressionar R e arrastar no canvas para desenhar um retângulo; segurar Shift enquanto arrasta para forçar um quadrado perfeito.",
+    "result": "Um novo retângulo é criado com as dimensões do arraste, editável via painel de propriedades à direita.",
+    "relatedCommands": ["figma-tool-ellipse", "figma-tool-move"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041003654-Adjust-corner-radius-and-smoothing",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["r", "rectangle tool", "ferramenta retangulo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-tool-ellipse",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Ellipse",
+    "description": "Desenha elipses e círculos no canvas, comumente usados para avatares, ícones circulares e indicadores.",
+    "syntax": "O",
+    "shortcut": "O",
+    "example": "Pressionar O e arrastar segurando Shift para desenhar um círculo perfeito para um avatar de usuário.",
+    "result": "Uma nova elipse é criada com as dimensões do arraste.",
+    "relatedCommands": ["figma-tool-rectangle"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040451373-Adjust-shapes",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["o", "ellipse tool", "ferramenta elipse", "circulo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-tool-text",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Text",
+    "description": "Cria uma camada de texto no canvas, permitindo digitar e estilizar conteúdo textual.",
+    "syntax": "T",
+    "shortcut": "T",
+    "example": "Pressionar T e clicar no canvas para criar um texto de título, depois ajustar fonte e tamanho no painel direito.",
+    "result": "Uma nova camada de texto é criada no ponto clicado, pronta para digitação imediata.",
+    "notes": [
+      "Clicar e arrastar com a ferramenta Text ativa cria uma caixa de texto de largura fixa, útil para parágrafos."
+    ],
+    "relatedCommands": ["figma-tool-move"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039956634-Add-and-style-text",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["t", "text tool", "ferramenta texto"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-tool-pen",
+    "category": "Figma",
+    "subcategory": "Ferramentas",
+    "title": "Ferramenta Pen (caneta)",
+    "description": "Desenha formas vetoriais customizadas usando pontos de ancoragem e curvas Bézier, para ícones e ilustrações personalizadas.",
+    "syntax": "P",
+    "shortcut": "P",
+    "example": "Pressionar P e clicar em sequência de pontos para criar um ícone customizado, fechando o caminho ao clicar no ponto inicial.",
+    "result": "Um novo objeto vetorial é criado seguindo os pontos e curvas desenhados.",
+    "notes": [
+      "Segure Shift enquanto desenha para restringir ângulos a múltiplos de 45 graus."
+    ],
+    "relatedCommands": ["figma-tool-rectangle"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040451373-Create-and-edit-vector-networks",
+    "externalReferences": [],
+    "tags": ["figma", "ferramentas", "atalhos"],
+    "keywords": ["p", "pen tool", "ferramenta caneta", "vetor"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-auto-layout",
+    "category": "Figma",
+    "subcategory": "Layout",
+    "title": "Auto Layout",
+    "description": "Sistema de layout responsivo que organiza automaticamente o espaçamento, alinhamento e redimensionamento dos elementos dentro de um frame, semelhante a flexbox.",
+    "syntax": "Shift+A (aplicar Auto Layout à seleção)",
+    "shortcut": "Shift+A",
+    "example": "Selecionar um botão com ícone e texto e pressionar Shift+A para transformá-lo em um frame com Auto Layout, ajustando padding e espaçamento automaticamente.",
+    "result": "O frame passa a se redimensionar e reorganizar automaticamente conforme o conteúdo interno muda.",
+    "parameters": [
+      {
+        "name": "Direction",
+        "description": "Direção do empilhamento dos elementos: horizontal ou vertical.",
+        "required": false
+      },
+      {
+        "name": "Spacing",
+        "description": "Espaço entre os elementos filhos do Auto Layout.",
+        "required": false,
+        "defaultValue": "0"
+      },
+      {
+        "name": "Padding",
+        "description": "Espaçamento interno entre a borda do frame e seus elementos filhos.",
+        "required": false,
+        "defaultValue": "0"
+      },
+      {
+        "name": "Resizing",
+        "description": "Comportamento de redimensionamento: Fixed, Hug contents ou Fill container.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Auto Layout suporta 'wrap' para quebrar itens em múltiplas linhas quando não cabem na largura disponível."
+    ],
+    "bestPractices": [
+      "Use Auto Layout em todo componente reutilizável (botões, cards, listas) para garantir que ele se adapte a conteúdo dinâmico."
+    ],
+    "commonMistakes": [
+      "Usar dimensões fixas (Fixed) em elementos que deveriam crescer com o conteúdo (Hug contents), quebrando o layout ao traduzir textos maiores."
+    ],
+    "relatedCommands": ["figma-tool-frame", "figma-components"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041539473-Create-dynamic-designs-with-auto-layout",
+    "externalReferences": [],
+    "tags": ["figma", "layout", "auto layout"],
+    "keywords": ["shift a", "auto layout", "layout automatico"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-components",
+    "category": "Figma",
+    "subcategory": "Componentes",
+    "title": "Criar Componente (Create Component)",
+    "description": "Transforma uma seleção em um componente principal reutilizável, que pode ser instanciado várias vezes mantendo consistência visual.",
+    "syntax": "Ctrl+Alt+K (Windows) | Cmd+Option+K (Mac)",
+    "shortcut": "Ctrl+Alt+K",
+    "example": "Selecionar um botão finalizado e pressionar Ctrl+Alt+K para transformá-lo em componente, permitindo criar instâncias dele em outras telas.",
+    "result": "O elemento selecionado vira um Main Component (ícone de diamante roxo), e alterações nele se propagam para todas as instâncias.",
+    "bestPractices": [
+      "Centralize todos os Main Components em uma página ou arquivo de biblioteca dedicado, em vez de espalhá-los pelas telas do projeto."
+    ],
+    "commonMistakes": [
+      "Editar diretamente uma instância de componente quando a alteração deveria ser feita no componente principal para se propagar a todas as instâncias."
+    ],
+    "relatedCommands": ["figma-variants", "figma-auto-layout"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038663994-Guide-to-components-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "componentes", "design system"],
+    "keywords": ["ctrl alt k", "create component", "criar componente"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-variants",
+    "category": "Figma",
+    "subcategory": "Componentes",
+    "title": "Variants (variantes de componente)",
+    "description": "Agrupa múltiplos componentes relacionados (como estados de um botão: default, hover, disabled) em um único componente com propriedades selecionáveis.",
+    "syntax": "Selecionar componentes > botão direito > Combine as Variants",
+    "example": "Combinar os componentes 'Button/Default', 'Button/Hover' e 'Button/Disabled' em um único componente com a propriedade 'State'.",
+    "result": "Um Component Set é criado, permitindo trocar entre estados usando o painel de propriedades na aba Design, sem trocar de instância.",
+    "notes": [
+      "Propriedades de Variants funcionam como um switch/enum: cada combinação de valores gera uma variante distinta dentro do Component Set."
+    ],
+    "bestPractices": [
+      "Nomeie as propriedades das Variants de forma consistente (Size, State, Type) para facilitar buscas e uso por outros designers."
+    ],
+    "relatedCommands": ["figma-components"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360056440594-Guide-to-components-in-Figma#Variants",
+    "externalReferences": [],
+    "tags": ["figma", "componentes", "variants"],
+    "keywords": ["variants", "variantes de componente", "component set"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-zoom-to-fit",
+    "category": "Figma",
+    "subcategory": "Navegação no Canvas",
+    "title": "Zoom to Fit (ajustar zoom à seleção/tela)",
+    "description": "Ajusta automaticamente o nível de zoom e a posição do canvas para exibir toda a seleção atual (ou todo o conteúdo, se nada estiver selecionado).",
+    "syntax": "Shift+1 (zoom to fit) | Shift+2 (zoom to selection)",
+    "shortcut": "Shift+1",
+    "example": "Pressionar Shift+2 após selecionar um frame específico para centralizá-lo e ajustar o zoom exatamente ao seu tamanho.",
+    "result": "O canvas é reenquadrado e o zoom ajustado para mostrar a seleção (ou todo o conteúdo) por completo.",
+    "bestPractices": [
+      "Use Shift+2 constantemente ao alternar entre frames distantes em vez de rolar e dar zoom manualmente."
+    ],
+    "relatedCommands": ["figma-navigate-canvas"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040328273-Zoom-pan-scroll-and-rotate",
+    "externalReferences": [],
+    "tags": ["figma", "navegacao", "atalhos"],
+    "keywords": ["shift 1", "shift 2", "zoom to fit", "zoom to selection"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-navigate-canvas",
+    "category": "Figma",
+    "subcategory": "Navegação no Canvas",
+    "title": "Navegar pelo canvas (pan e zoom)",
+    "description": "Move a visualização pelo canvas infinito do Figma e ajusta o zoom para inspecionar detalhes ou ver o layout geral.",
+    "syntax": "Espaço + Arrastar (pan) | Ctrl+Scroll (zoom) | Scroll (pan vertical)",
+    "shortcut": "Ctrl+Scroll",
+    "example": "Segurar Espaço e arrastar com o mouse para navegar rapidamente até outra área do canvas sem perder o zoom atual.",
+    "result": "A visualização se move conforme o arraste, mantendo a posição relativa dos elementos.",
+    "notes": [
+      "Ctrl+0 (Zoom to 100%) e Ctrl+1 (Zoom to fit) são atalhos complementares úteis para resetar a visualização."
+    ],
+    "relatedCommands": ["figma-zoom-to-fit"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040328273-Zoom-pan-scroll-and-rotate",
+    "externalReferences": [],
+    "tags": ["figma", "navegacao", "atalhos"],
+    "keywords": ["pan", "zoom", "navegar canvas", "espaco arrastar"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-group-selection",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Agrupar seleção (Group Selection)",
+    "description": "Agrupa os objetos selecionados em um Group, permitindo movê-los, ocultá-los ou aplicar efeitos em conjunto sem virar um Frame.",
+    "syntax": "Ctrl+G (Windows/Linux) | Cmd+G (Mac)",
+    "shortcut": "Ctrl+G",
+    "example": "Selecionar um ícone e um texto próximos e pressionar Ctrl+G para agrupá-los antes de duplicar o conjunto.",
+    "result": "Um novo Group é criado contendo os objetos selecionados, exibido como uma única camada no painel Layers.",
+    "notes": ["Ctrl+Shift+G desagrupa a seleção atual (Ungroup)."],
+    "bestPractices": [
+      "Prefira Frames com Auto Layout em vez de Groups simples para elementos que precisam de comportamento responsivo."
+    ],
+    "relatedCommands": ["figma-tool-frame"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039832054-Frames-groups-and-sections",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "atalhos"],
+    "keywords": ["ctrl g", "group selection", "agrupar"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-copy-paste-properties",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Copiar/Colar propriedades (Copy/Paste Properties)",
+    "description": "Copia apenas os estilos (cor, tipografia, efeitos) de um objeto e aplica em outro, sem duplicar a camada inteira.",
+    "syntax": "Ctrl+Alt+C (copiar propriedades) | Ctrl+Alt+V (colar propriedades)",
+    "shortcut": "Ctrl+Alt+C",
+    "example": "Copiar as propriedades de um texto já estilizado com Ctrl+Alt+C e colá-las em outro texto com Ctrl+Alt+V para replicar a formatação.",
+    "result": "O objeto de destino recebe os mesmos estilos visuais do objeto copiado, mantendo seu próprio conteúdo e posição.",
+    "bestPractices": [
+      "Use Copy/Paste Properties para replicar rapidamente um estilo pontual sem precisar criar um Style compartilhado."
+    ],
+    "relatedCommands": ["figma-group-selection"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-the-canvas",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "atalhos"],
+    "keywords": ["ctrl alt c", "copy properties", "colar propriedades"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-plugin-autoflow",
+    "category": "Figma",
+    "subcategory": "Plugins",
+    "title": "Plugin: Autoflow",
+    "description": "Plugin essencial que desenha automaticamente setas de fluxo entre frames, facilitando a documentação de user flows e jornadas de navegação.",
+    "syntax": "Menu Plugins > Autoflow",
+    "example": "Selecionar dois frames em sequência (tela de login e tela de home) e rodar o Autoflow para desenhar a seta de transição entre eles.",
+    "result": "Uma seta estilizada é desenhada conectando os frames selecionados, indicando o fluxo de navegação.",
+    "bestPractices": [
+      "Use Autoflow para documentar fluxos de usuário antes de handoff para desenvolvimento, facilitando o entendimento da navegação."
+    ],
+    "relatedCommands": ["figma-plugin-unsplash"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360042532714-Use-plugins-in-files",
+    "externalReferences": [
+      {
+        "label": "Autoflow no Figma Community",
+        "url": "https://www.figma.com/community/plugin/733902567457592893/autoflow"
+      }
+    ],
+    "tags": ["figma", "plugins", "user flow"],
+    "keywords": ["autoflow", "plugin fluxo", "user flow figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-plugin-unsplash",
+    "category": "Figma",
+    "subcategory": "Plugins",
+    "title": "Plugin: Unsplash",
+    "description": "Plugin que permite buscar e inserir imagens de banco gratuito diretamente como preenchimento de objetos, sem sair do Figma.",
+    "syntax": "Menu Plugins > Unsplash",
+    "example": "Selecionar um retângulo de placeholder e rodar o plugin Unsplash para buscar 'office' e preencher o retângulo com uma foto real.",
+    "result": "A imagem escolhida é aplicada como fill do objeto selecionado, em alta resolução e com crédito automático ao fotógrafo.",
+    "bestPractices": [
+      "Use imagens reais do Unsplash em protótipos de apresentação para dar uma noção mais fiel do resultado final ao cliente."
+    ],
+    "relatedCommands": ["figma-plugin-autoflow"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360042532714-Use-plugins-in-files",
+    "externalReferences": [
+      {
+        "label": "Unsplash no Figma Community",
+        "url": "https://www.figma.com/community/plugin/738454987945278229/unsplash"
+      }
+    ],
+    "tags": ["figma", "plugins", "imagens"],
+    "keywords": ["unsplash", "plugin imagens", "banco de imagens figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-comment-mode",
+    "category": "Figma",
+    "subcategory": "Colaboração",
+    "title": "Modo de comentário (Comment)",
+    "description": "Alterna para o modo de comentário, permitindo deixar feedback anexado a um ponto específico do design para colaboração assíncrona.",
+    "syntax": "C",
+    "shortcut": "C",
+    "example": "Pressionar C e clicar em um botão do protótipo para deixar o comentário 'Aumentar o contraste desse botão'.",
+    "result": "Um marcador de comentário numerado é criado no ponto clicado, visível para todos com acesso ao arquivo.",
+    "bestPractices": [
+      "Use @menções dentro dos comentários para notificar diretamente a pessoa responsável por resolver o ponto levantado."
+    ],
+    "relatedCommands": ["figma-tool-move"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041068594-Comment-on-files",
+    "externalReferences": [],
+    "tags": ["figma", "colaboracao", "atalhos"],
+    "keywords": ["c", "comment mode", "modo comentario"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

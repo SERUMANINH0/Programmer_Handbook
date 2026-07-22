@@ -1,0 +1,60 @@
+[
+  {
+    "id": "vscode-command-palette",
+    "category": "VS Code",
+    "subcategory": "Produtividade",
+    "title": "Command Palette",
+    "description": "Painel central que dá acesso rápido a todos os comandos, configurações e ações disponíveis no VS Code, sem precisar navegar por menus.",
+    "syntax": "Ctrl+Shift+P (Windows/Linux) | Cmd+Shift+P (Mac)",
+    "shortcut": "Ctrl+Shift+P",
+    "example": "Abrir a paleta e digitar \"Format Document\" para formatar o arquivo atual sem atalho decorado.",
+    "result": "Lista filtrada de comandos correspondentes ao texto digitado, executável com Enter.",
+    "notes": [
+      "Ctrl+P (sem Shift) abre a busca rápida de arquivos; Ctrl+Shift+P abre a busca de comandos."
+    ],
+    "bestPractices": [
+      "Aprenda a buscar ações pelo nome em vez de decorar atalhos — a Command Palette é mais rápida para comandos usados raramente."
+    ],
+    "commonMistakes": ["Confundir Ctrl+P (arquivos) com Ctrl+Shift+P (comandos)."],
+    "relatedCommands": ["vscode-quick-open", "vscode-multi-cursor"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "produtividade"],
+    "keywords": ["command palette", "paleta de comandos", "ctrl shift p"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "vscode-multi-cursor",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Multi-cursor (múltiplos cursores)",
+    "description": "Permite editar várias partes do arquivo simultaneamente, posicionando vários cursores ao mesmo tempo.",
+    "syntax": "Alt+Click (adiciona cursor) | Ctrl+D (seleciona próxima ocorrência) | Ctrl+Alt+↑/↓ (cursor acima/abaixo)",
+    "shortcut": "Ctrl+D",
+    "example": "Selecionar uma variável e pressionar Ctrl+D repetidamente para selecionar todas as ocorrências e renomear ao mesmo tempo.",
+    "result": "Todas as ocorrências selecionadas são editadas simultaneamente conforme você digita.",
+    "notes": [
+      "`Ctrl+Shift+L` seleciona todas as ocorrências do texto selecionado de uma só vez no arquivo."
+    ],
+    "bestPractices": [
+      "Use multi-cursor para renomear variáveis locais rapidamente sem abrir o refactor completo."
+    ],
+    "commonMistakes": [
+      "Usar multi-cursor para renomear um símbolo que também é referenciado em outros arquivos (nesse caso, use 'Rename Symbol' — F2)."
+    ],
+    "relatedCommands": ["vscode-command-palette"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_multiple-selections-multicursor",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["multi cursor", "multiplos cursores", "ctrl d vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

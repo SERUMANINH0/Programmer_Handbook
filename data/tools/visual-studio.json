@@ -1,0 +1,545 @@
+[
+  {
+    "id": "vs-start-debugging",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Iniciar depuração (Start Debugging)",
+    "description": "Compila o projeto de inicialização e inicia a execução anexando o depurador, parando automaticamente em qualquer breakpoint definido.",
+    "syntax": "F5",
+    "shortcut": "F5",
+    "example": "Pressionar F5 com um breakpoint em um método de controller para inspecionar variáveis quando a requisição chegar.",
+    "result": "A aplicação é compilada, executada e pausada no primeiro breakpoint atingido.",
+    "notes": [
+      "Ctrl+F5 executa sem anexar o depurador (Start Without Debugging), útil quando você só quer rodar a aplicação rapidamente."
+    ],
+    "bestPractices": [
+      "Use Ctrl+F5 em vez de F5 quando não precisar inspecionar variáveis — a inicialização é mais rápida."
+    ],
+    "commonMistakes": [
+      "Deixar breakpoints esquecidos em código de produção antes de publicar."
+    ],
+    "relatedCommands": ["vs-step-into", "vs-step-over", "vs-toggle-breakpoint"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/debugger-feature-tour",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["f5", "iniciar depuracao", "start debugging", "rodar aplicacao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-toggle-breakpoint",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Alternar breakpoint (Toggle Breakpoint)",
+    "description": "Adiciona ou remove um ponto de interrupção na linha atual do editor, pausando a execução do programa quando o depurador passar por ela.",
+    "syntax": "F9",
+    "shortcut": "F9",
+    "example": "Posicionar o cursor em uma linha suspeita de bug e pressionar F9 para pausar a execução ali durante a depuração.",
+    "result": "Um círculo vermelho aparece na margem esquerda indicando o breakpoint ativo.",
+    "notes": [
+      "Clique com o botão direito no breakpoint para configurar condições (Condition), contagem de hits (Hit Count) ou ações (Actions/Tracepoints)."
+    ],
+    "bestPractices": [
+      "Use breakpoints condicionais em vez de breakpoints simples dentro de loops grandes para evitar paradas desnecessárias."
+    ],
+    "commonMistakes": [
+      "Deixar dezenas de breakpoints ativos espalhados pelo projeto, dificultando a depuração focada."
+    ],
+    "relatedCommands": ["vs-start-debugging", "vs-step-into"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/using-breakpoints",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["f9", "breakpoint", "ponto de interrupcao", "toggle breakpoint"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-step-over",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Step Over (executar próxima linha)",
+    "description": "Executa a linha atual sem entrar em chamadas de método, avançando para a próxima linha no mesmo nível de execução.",
+    "syntax": "F10",
+    "shortcut": "F10",
+    "example": "Estando parado em uma linha que chama um método já validado, pressionar F10 para pular sua execução interna e ir direto para a próxima linha.",
+    "result": "O depurador executa o método chamado internamente sem parar dentro dele e avança para a linha seguinte.",
+    "notes": ["Diferente de F11 (Step Into), que entra dentro do método chamado."],
+    "bestPractices": [
+      "Use Step Over para métodos que você já sabe que funcionam corretamente, economizando tempo de depuração."
+    ],
+    "commonMistakes": [
+      "Confundir F10 (Step Over) com F11 (Step Into) e acabar entrando em código de bibliotecas externas sem querer."
+    ],
+    "relatedCommands": ["vs-step-into", "vs-step-out"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/navigating-through-code-with-the-debugger",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["f10", "step over", "proxima linha"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-step-into",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Step Into (entrar no método)",
+    "description": "Entra dentro do método chamado na linha atual, permitindo depurar linha a linha o código interno dessa chamada.",
+    "syntax": "F11",
+    "shortcut": "F11",
+    "example": "Parado em uma linha que chama CalcularDesconto(), pressionar F11 para entrar dentro do método e inspecionar sua lógica interna.",
+    "result": "O depurador move a execução para a primeira linha dentro do método chamado.",
+    "notes": ["Shift+F11 (Step Out) sai do método atual e retorna para quem o chamou."],
+    "bestPractices": [
+      "Combine Step Into com 'Just My Code' desabilitado apenas quando precisar depurar bibliotecas de terceiros."
+    ],
+    "commonMistakes": [
+      "Usar Step Into em métodos de frameworks (como do .NET) sem necessidade, poluindo a pilha de chamadas visitada."
+    ],
+    "relatedCommands": ["vs-step-over", "vs-step-out"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/navigating-through-code-with-the-debugger",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["f11", "step into", "entrar no metodo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-step-out",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Step Out (sair do método)",
+    "description": "Finaliza a execução do método atual e retorna ao ponto de chamada, parando logo após o retorno.",
+    "syntax": "Shift+F11",
+    "shortcut": "Shift+F11",
+    "example": "Estando dentro de um método auxiliar que já foi suficientemente inspecionado, pressionar Shift+F11 para voltar rapidamente ao chamador.",
+    "result": "A execução do método atual é concluída e o depurador para na linha seguinte à chamada, no método chamador.",
+    "bestPractices": [
+      "Use Step Out para sair rapidamente de métodos utilitários pequenos depois de confirmar seu comportamento."
+    ],
+    "relatedCommands": ["vs-step-into", "vs-step-over"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/navigating-through-code-with-the-debugger",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["shift f11", "step out", "sair do metodo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-go-to-definition",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "Ir para Definição (Go to Definition)",
+    "description": "Navega diretamente para o local onde o símbolo (classe, método, variável) sob o cursor foi declarado.",
+    "syntax": "F12",
+    "shortcut": "F12",
+    "example": "Posicionar o cursor em uma chamada de método e pressionar F12 para abrir o arquivo onde o método é implementado.",
+    "result": "O editor abre (ou foca) o arquivo e a linha exata da definição do símbolo.",
+    "notes": [
+      "Ctrl+F12 vai para a implementação quando o símbolo é uma interface ou método abstrato.",
+      "Alt+F12 abre a definição em uma janela 'Peek Definition' sem sair do arquivo atual."
+    ],
+    "bestPractices": [
+      "Prefira Alt+F12 (Peek Definition) quando quiser apenas consultar rapidamente sem perder o contexto do arquivo atual."
+    ],
+    "commonMistakes": [
+      "Usar F12 repetidamente para navegação profunda sem usar Ctrl+- para voltar ao ponto anterior."
+    ],
+    "relatedCommands": [
+      "vs-peek-definition",
+      "vs-navigate-backward",
+      "vs-find-all-references"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/go-to-definition",
+    "externalReferences": [],
+    "tags": ["visual studio", "navegacao", "atalhos"],
+    "keywords": ["f12", "go to definition", "ir para definicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-peek-definition",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "Peek Definition (visualizar definição em popup)",
+    "description": "Abre uma janela inline mostrando a definição do símbolo sob o cursor, sem navegar para outro arquivo ou perder o contexto atual.",
+    "syntax": "Alt+F12",
+    "shortcut": "Alt+F12",
+    "example": "Posicionar o cursor em um tipo importado e pressionar Alt+F12 para conferir rapidamente suas propriedades sem sair do método atual.",
+    "result": "Um painel flutuante exibe o código da definição, editável diretamente ali com Esc para fechar.",
+    "bestPractices": [
+      "Use Peek Definition para revisões rápidas e Go to Definition (F12) quando for realmente editar o arquivo alvo."
+    ],
+    "relatedCommands": ["vs-go-to-definition"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/go-to-definition#peek-definition",
+    "externalReferences": [],
+    "tags": ["visual studio", "navegacao", "atalhos"],
+    "keywords": ["alt f12", "peek definition", "visualizar definicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-find-all-references",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "Localizar Todas as Referências (Find All References)",
+    "description": "Lista todos os locais no projeto ou solução onde um símbolo é utilizado, facilitando avaliar o impacto de uma mudança.",
+    "syntax": "Shift+F12",
+    "shortcut": "Shift+F12",
+    "example": "Pressionar Shift+F12 sobre um método público antes de alterar sua assinatura, para ver todos os pontos que precisarão ser ajustados.",
+    "result": "Uma janela 'Find Symbol Results' lista arquivo, linha e trecho de código de cada referência encontrada.",
+    "bestPractices": [
+      "Sempre confira as referências antes de alterar assinaturas de métodos públicos ou APIs compartilhadas entre projetos."
+    ],
+    "relatedCommands": ["vs-go-to-definition", "vs-rename-symbol"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/find-all-references",
+    "externalReferences": [],
+    "tags": ["visual studio", "navegacao", "atalhos"],
+    "keywords": ["shift f12", "find all references", "localizar referencias"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-navigate-backward",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "Navegar para trás / para frente",
+    "description": "Move o cursor entre os últimos pontos de navegação visitados no código, como um histórico de 'voltar' e 'avançar' de navegador.",
+    "syntax": "Ctrl+- (voltar) | Ctrl+Shift+- (avançar)",
+    "shortcut": "Ctrl+-",
+    "example": "Após usar F12 várias vezes para seguir chamadas de método, pressionar Ctrl+- repetidamente para retornar ao arquivo original.",
+    "result": "O cursor retorna à posição exata onde estava antes da última navegação.",
+    "bestPractices": [
+      "Combine com Go to Definition (F12) para explorar código com segurança, sabendo que sempre pode voltar rapidamente."
+    ],
+    "relatedCommands": ["vs-go-to-definition"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/finding-your-way-around-the-ide",
+    "externalReferences": [],
+    "tags": ["visual studio", "navegacao", "atalhos"],
+    "keywords": ["ctrl -", "navigate backward", "voltar navegacao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-navigate-to",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "Navigate To (busca rápida de tudo)",
+    "description": "Abre uma caixa de busca unificada para localizar arquivos, tipos, membros e símbolos em toda a solução digitando parte do nome.",
+    "syntax": "Ctrl+,",
+    "shortcut": "Ctrl+,",
+    "example": "Pressionar Ctrl+, e digitar 'UserService' para abrir diretamente a classe correspondente, mesmo sem saber em qual projeto ela está.",
+    "result": "Uma lista filtrada em tempo real exibe arquivos e símbolos correspondentes, navegável com as setas e Enter.",
+    "notes": [
+      "Suporta busca por camelCase, por exemplo digitar 'GDT' pode encontrar 'GetDataTable'."
+    ],
+    "bestPractices": [
+      "Use Ctrl+, em vez do Solution Explorer para localizar arquivos em soluções grandes com muitos projetos."
+    ],
+    "relatedCommands": ["vs-go-to-definition"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/go-to-all",
+    "externalReferences": [],
+    "tags": ["visual studio", "navegacao", "atalhos"],
+    "keywords": ["ctrl ,", "navigate to", "go to all", "busca rapida"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-rename-symbol",
+    "category": "Visual Studio",
+    "subcategory": "Refactoring",
+    "title": "Renomear símbolo (Rename)",
+    "description": "Renomeia uma variável, método, classe ou propriedade em todas as suas ocorrências no projeto de forma segura e consistente.",
+    "syntax": "Ctrl+R, Ctrl+R",
+    "shortcut": "Ctrl+R, Ctrl+R",
+    "example": "Posicionar o cursor no nome de um método e pressionar Ctrl+R, Ctrl+R para renomeá-lo, atualizando automaticamente todas as chamadas.",
+    "result": "Todas as referências ao símbolo no projeto são atualizadas com o novo nome escolhido.",
+    "notes": [
+      "F2 também aciona o rename symbol em versões mais recentes do Visual Studio."
+    ],
+    "bestPractices": [
+      "Prefira Rename em vez de 'find and replace' textual — ele entende o contexto sintático e evita substituições incorretas."
+    ],
+    "commonMistakes": [
+      "Usar busca e substituição de texto simples para renomear símbolos, o que pode alterar strings ou comentários indevidamente."
+    ],
+    "relatedCommands": ["vs-find-all-references", "vs-extract-method"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/reference/rename",
+    "externalReferences": [],
+    "tags": ["visual studio", "refactoring", "atalhos"],
+    "keywords": ["ctrl r r", "rename symbol", "renomear simbolo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-extract-method",
+    "category": "Visual Studio",
+    "subcategory": "Refactoring",
+    "title": "Extrair método (Extract Method)",
+    "description": "Extrai um trecho de código selecionado para um novo método nomeado, substituindo o trecho original por uma chamada a esse método.",
+    "syntax": "Ctrl+R, Ctrl+M",
+    "shortcut": "Ctrl+R, Ctrl+M",
+    "example": "Selecionar um bloco de validações repetido dentro de um método longo e pressionar Ctrl+R, Ctrl+M para extraí-lo como ValidarPedido().",
+    "result": "Um novo método é criado com o código selecionado, e a chamada a ele substitui o trecho original.",
+    "bestPractices": [
+      "Use Extract Method para reduzir métodos longos e melhorar a legibilidade e a testabilidade do código."
+    ],
+    "relatedCommands": ["vs-rename-symbol", "vs-quick-actions"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/reference/extract-method",
+    "externalReferences": [],
+    "tags": ["visual studio", "refactoring", "atalhos"],
+    "keywords": ["ctrl r m", "extract method", "extrair metodo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-quick-actions",
+    "category": "Visual Studio",
+    "subcategory": "Refactoring",
+    "title": "Quick Actions and Refactorings (lâmpada)",
+    "description": "Exibe sugestões contextuais de correções rápidas e refatorações disponíveis para o código onde o cursor está posicionado.",
+    "syntax": "Ctrl+.",
+    "shortcut": "Ctrl+.",
+    "example": "Posicionar o cursor em um tipo não importado e pressionar Ctrl+. para adicionar automaticamente o using necessário.",
+    "result": "Um menu de sugestões aparece, como adicionar using, gerar construtor, implementar interface ou simplificar expressão.",
+    "notes": [
+      "Também acessível clicando no ícone de lâmpada amarela que aparece na margem esquerda do editor."
+    ],
+    "bestPractices": [
+      "Revise sempre a sugestão antes de aplicar — nem toda sugestão automática é a melhor solução para o contexto do código."
+    ],
+    "relatedCommands": ["vs-extract-method", "vs-rename-symbol"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/quick-actions",
+    "externalReferences": [],
+    "tags": ["visual studio", "refactoring", "atalhos"],
+    "keywords": ["ctrl .", "quick actions", "lampada", "refatoracoes rapidas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-solution-explorer",
+    "category": "Visual Studio",
+    "subcategory": "Solution Explorer",
+    "title": "Solution Explorer (Ctrl+Alt+L)",
+    "description": "Painel lateral que exibe a estrutura hierárquica da solução, com seus projetos, pastas, arquivos e dependências.",
+    "syntax": "Ctrl+Alt+L",
+    "shortcut": "Ctrl+Alt+L",
+    "example": "Pressionar Ctrl+Alt+L para trazer o foco ao Solution Explorer e navegar pela árvore de projetos usando as setas do teclado.",
+    "result": "O painel Solution Explorer ganha foco, permitindo navegação por teclado entre projetos e arquivos.",
+    "notes": [
+      "O botão 'Sync with Active Document' (ícone de mira) localiza automaticamente o arquivo aberto na árvore."
+    ],
+    "bestPractices": [
+      "Ative 'Track Active Item in Solution Explorer' nas opções para manter o arquivo atual sempre sincronizado na árvore."
+    ],
+    "relatedCommands": ["vs-navigate-to"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/use-solution-explorer",
+    "externalReferences": [],
+    "tags": ["visual studio", "solution explorer", "atalhos"],
+    "keywords": ["ctrl alt l", "solution explorer", "arvore de solucao"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-nuget-package-manager",
+    "category": "Visual Studio",
+    "subcategory": "NuGet",
+    "title": "Gerenciar Pacotes NuGet (NuGet Package Manager)",
+    "description": "Interface gráfica para instalar, atualizar e remover pacotes NuGet de um projeto ou de toda a solução, incluindo resolução de dependências.",
+    "syntax": "Botão direito no projeto > Manage NuGet Packages...",
+    "example": "Abrir o gerenciador, buscar 'Newtonsoft.Json' na aba Browse e clicar em Install para adicionar o pacote ao projeto selecionado.",
+    "result": "O pacote e suas dependências são baixados e referenciados no arquivo .csproj do projeto.",
+    "notes": [
+      "A aba 'Consolidate' ajuda a unificar versões de um mesmo pacote quando a solução tem múltiplos projetos."
+    ],
+    "bestPractices": [
+      "Prefira o Package Manager Console (Install-Package) para scripts reprodutíveis em pipelines de automação."
+    ],
+    "commonMistakes": [
+      "Instalar versões diferentes do mesmo pacote em projetos distintos da mesma solução, causando conflitos em tempo de build."
+    ],
+    "relatedCommands": ["vs-package-manager-console"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio",
+    "externalReferences": [],
+    "tags": ["visual studio", "nuget", "pacotes"],
+    "keywords": ["nuget", "gerenciar pacotes", "package manager"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-package-manager-console",
+    "category": "Visual Studio",
+    "subcategory": "NuGet",
+    "title": "Package Manager Console",
+    "description": "Console PowerShell integrado ao Visual Studio para instalar, atualizar e remover pacotes NuGet via comandos como Install-Package e Update-Package.",
+    "syntax": "Install-Package <nome> -Version <versão> | Update-Package <nome> | Uninstall-Package <nome>",
+    "example": "Install-Package Serilog -Version 3.1.1",
+    "result": "O pacote Serilog na versão especificada é instalado no projeto atualmente selecionado no console.",
+    "parameters": [
+      {
+        "name": "-ProjectName",
+        "description": "Especifica em qual projeto da solução o comando deve ser aplicado.",
+        "required": false
+      },
+      {
+        "name": "-Version",
+        "description": "Define a versão exata do pacote a instalar.",
+        "required": false
+      }
+    ],
+    "notes": ["Acessível via Tools > NuGet Package Manager > Package Manager Console."],
+    "bestPractices": [
+      "Use o console para automatizar instalação de múltiplos pacotes em scripts de configuração de ambiente."
+    ],
+    "relatedCommands": ["vs-nuget-package-manager"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/nuget/reference/package-manager-console",
+    "externalReferences": [],
+    "tags": ["visual studio", "nuget", "console"],
+    "keywords": ["package manager console", "install-package", "powershell nuget"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-comment-selection",
+    "category": "Visual Studio",
+    "subcategory": "Edição",
+    "title": "Comentar/Descomentar seleção",
+    "description": "Adiciona ou remove marcadores de comentário de linha nas linhas selecionadas, agilizando a desativação temporária de trechos de código.",
+    "syntax": "Ctrl+K, Ctrl+C (comentar) | Ctrl+K, Ctrl+U (descomentar)",
+    "shortcut": "Ctrl+K, Ctrl+C",
+    "example": "Selecionar três linhas de código e pressionar Ctrl+K, Ctrl+C para comentá-las de uma só vez durante um teste.",
+    "result": "Cada linha selecionada recebe o prefixo de comentário da linguagem (// em C#, por exemplo).",
+    "relatedCommands": ["vs-quick-actions"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio",
+    "externalReferences": [],
+    "tags": ["visual studio", "edicao", "atalhos"],
+    "keywords": ["ctrl k ctrl c", "comentar codigo", "comment selection"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-format-document",
+    "category": "Visual Studio",
+    "subcategory": "Edição",
+    "title": "Formatar documento (Format Document)",
+    "description": "Reindenta e formata todo o arquivo atual de acordo com as regras de estilo configuradas no editor.",
+    "syntax": "Ctrl+K, Ctrl+D",
+    "shortcut": "Ctrl+K, Ctrl+D",
+    "example": "Pressionar Ctrl+K, Ctrl+D após colar código copiado de outro lugar para ajustar a indentação ao padrão do projeto.",
+    "result": "O arquivo inteiro é reformatado conforme as regras de EditorConfig ou opções de formatação do Visual Studio.",
+    "bestPractices": [
+      "Configure um arquivo .editorconfig no repositório para garantir formatação consistente entre todos os desenvolvedores da equipe."
+    ],
+    "relatedCommands": ["vs-comment-selection"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/code-styles-and-code-cleanup",
+    "externalReferences": [],
+    "tags": ["visual studio", "edicao", "atalhos"],
+    "keywords": ["ctrl k ctrl d", "format document", "formatar documento"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-duplicate-line",
+    "category": "Visual Studio",
+    "subcategory": "Edição",
+    "title": "Duplicar linha",
+    "description": "Copia a linha atual (ou seleção) e insere a cópia imediatamente abaixo, sem precisar copiar e colar manualmente.",
+    "syntax": "Ctrl+E, Ctrl+V (Duplicate Line) — via IDE ou extensões",
+    "shortcut": "Ctrl+E, Ctrl+V",
+    "example": "Posicionar o cursor em uma linha de propriedade de uma classe e usar o atalho para duplicá-la rapidamente antes de renomear.",
+    "result": "Uma cópia idêntica da linha aparece logo abaixo da original.",
+    "notes": [
+      "O atalho padrão pode variar conforme a versão e o esquema de teclas ativo (Default, Visual Studio 6, etc.)."
+    ],
+    "relatedCommands": ["vs-format-document"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio",
+    "externalReferences": [],
+    "tags": ["visual studio", "edicao", "atalhos"],
+    "keywords": ["duplicar linha", "duplicate line", "ctrl e ctrl v"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-run-to-cursor",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Executar até o cursor (Run to Cursor)",
+    "description": "Executa o programa em depuração até a linha onde o cursor está posicionado, sem precisar criar um breakpoint permanente.",
+    "syntax": "Ctrl+F10",
+    "shortcut": "Ctrl+F10",
+    "example": "Durante uma sessão de debug, posicionar o cursor em uma linha adiante e pressionar Ctrl+F10 para pular diretamente até ela.",
+    "result": "A execução avança e pausa exatamente na linha onde o cursor estava, sem afetar breakpoints existentes.",
+    "notes": [
+      "Também disponível clicando com o botão direito na linha e escolhendo 'Run to Cursor'."
+    ],
+    "bestPractices": [
+      "Use Run to Cursor para pular rapidamente trechos já validados sem poluir o código com breakpoints temporários."
+    ],
+    "relatedCommands": ["vs-toggle-breakpoint", "vs-step-over"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/using-breakpoints#run-to-cursor",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "atalhos"],
+    "keywords": ["ctrl f10", "run to cursor", "executar ate o cursor"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

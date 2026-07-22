@@ -1,0 +1,1198 @@
+[
+  {
+    "id": "k8s-intro-architecture",
+    "category": "Kubernetes",
+    "subcategory": "Fundamentos",
+    "title": "Arquitetura do Kubernetes",
+    "description": "Kubernetes é um orquestrador de containers que gerencia um cluster composto por um control plane (cérebro do cluster) e nodes (máquinas que executam as cargas de trabalho).",
+    "notes": [
+      "Control plane: kube-apiserver (porta de entrada da API), etcd (banco de dados chave-valor do estado do cluster), kube-scheduler (decide em qual node cada Pod roda) e kube-controller-manager (reconcilia o estado desejado com o real).",
+      "Node: kubelet (agente que garante que os containers descritos nos Pods estão rodando), kube-proxy (regras de rede/roteamento) e o container runtime (containerd, CRI-O, etc.)."
+    ],
+    "bestPractices": [
+      "Entenda o modelo declarativo: você descreve o estado desejado em manifests e os controllers do control plane trabalham continuamente para convergir o estado real até ele."
+    ],
+    "commonMistakes": [
+      "Tratar o Kubernetes como uma ferramenta imperativa (\"rodar um comando e pronto\") em vez de reconciliação contínua entre estado desejado e estado real."
+    ],
+    "relatedCommands": ["k8s-pod", "k8s-deployment", "k8s-kubectl-get"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/overview/components/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "arquitetura", "control-plane"],
+    "keywords": [
+      "arquitetura kubernetes",
+      "control plane",
+      "kubelet",
+      "etcd",
+      "kube-apiserver"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-pod",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "Pod",
+    "description": "Menor unidade de deploy do Kubernetes: um ou mais containers que compartilham rede (mesmo IP) e, opcionalmente, volumes, sempre agendados juntos no mesmo node.",
+    "syntax": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: <nome>\nspec:\n  containers:\n    - name: <nome-container>\n      image: <imagem>",
+    "example": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: api-debug\nspec:\n  containers:\n    - name: api\n      image: minha-api:1.0\n      ports:\n        - containerPort: 3000",
+    "result": "Cria um único Pod chamado api-debug rodando um container da imagem minha-api:1.0.",
+    "notes": [
+      "Pods são efêmeros e normalmente não são criados diretamente em produção — usa-se um controller (Deployment, StatefulSet, Job) que gerencia Pods para você."
+    ],
+    "bestPractices": [
+      "Use Pods isolados apenas para debug rápido ou testes pontuais; para cargas reais, gerencie-os via Deployment ou outro controller."
+    ],
+    "commonMistakes": [
+      "Criar Pods \"nus\" (sem controller) em produção: se o Pod morrer ou o node falhar, nada o recria automaticamente."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-kubectl-apply", "k8s-labels-selectors"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/pods/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "pod", "workloads"],
+    "keywords": ["pod kubernetes", "o que e um pod", "container kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-deployment",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "Deployment",
+    "description": "Controller que gerencia um conjunto de réplicas de Pods idênticos, garantindo que o número desejado esteja sempre rodando e permitindo atualizações e rollbacks controlados (rolling updates).",
+    "syntax": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: <nome>\nspec:\n  replicas: <n>\n  selector:\n    matchLabels:\n      app: <label>\n  template:\n    metadata:\n      labels:\n        app: <label>\n    spec:\n      containers:\n        - name: <nome>\n          image: <imagem>",
+    "example": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: api\n  template:\n    metadata:\n      labels:\n        app: api\n    spec:\n      containers:\n        - name: api\n          image: minha-api:1.2\n          ports:\n            - containerPort: 3000",
+    "result": "Mantém 3 réplicas do Pod da aplicação `api` sempre rodando, recriando automaticamente qualquer réplica que falhar.",
+    "notes": [
+      "O `selector.matchLabels` deve corresponder exatamente aos `labels` definidos em `template.metadata.labels`, senão o Deployment não conseguirá gerenciar seus próprios Pods."
+    ],
+    "bestPractices": [
+      "Defina `resources.requests` e `resources.limits` no container e use probes de liveness/readiness para que o Deployment saiba quando substituir uma réplica com problema."
+    ],
+    "commonMistakes": [
+      "Editar Pods gerados por um Deployment diretamente — qualquer alteração manual é revertida na próxima reconciliação do controller."
+    ],
+    "relatedCommands": [
+      "k8s-pod",
+      "k8s-rolling-update",
+      "k8s-kubectl-rollout",
+      "k8s-hpa"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "deployment", "workloads"],
+    "keywords": ["deployment kubernetes", "replicas", "rolling update"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-service",
+    "category": "Kubernetes",
+    "subcategory": "Networking",
+    "title": "Service",
+    "description": "Abstração que expõe um conjunto de Pods (selecionados por labels) sob um nome e IP estáveis, balanceando o tráfego entre as réplicas mesmo quando Pods são recriados com IPs novos.",
+    "syntax": "apiVersion: v1\nkind: Service\nmetadata:\n  name: <nome>\nspec:\n  type: ClusterIP | NodePort | LoadBalancer\n  selector:\n    app: <label>\n  ports:\n    - port: <porta-do-service>\n      targetPort: <porta-do-container>",
+    "example": "apiVersion: v1\nkind: Service\nmetadata:\n  name: api\nspec:\n  type: ClusterIP\n  selector:\n    app: api\n  ports:\n    - port: 80\n      targetPort: 3000",
+    "result": "Cria um Service interno acessível como `api` (DNS interno do cluster) na porta 80, roteando para a porta 3000 de qualquer Pod com o label `app: api`.",
+    "parameters": [
+      {
+        "name": "ClusterIP",
+        "description": "Expõe o serviço apenas dentro do cluster (padrão)."
+      },
+      {
+        "name": "NodePort",
+        "description": "Expõe uma porta fixa em todos os nodes do cluster."
+      },
+      {
+        "name": "LoadBalancer",
+        "description": "Provisiona um load balancer externo (geralmente via cloud provider)."
+      }
+    ],
+    "notes": [
+      "O Service encontra seus Pods dinamicamente via `selector`, não por referência direta a nomes de Pod."
+    ],
+    "bestPractices": [
+      "Use `ClusterIP` para comunicação interna entre serviços e reserve `LoadBalancer`/Ingress para tráfego externo."
+    ],
+    "commonMistakes": [
+      "Definir um `selector` que não corresponde a nenhum label de Pod existente, resultando em um Service sem endpoints (0 Pods atrás dele)."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-ingress", "k8s-labels-selectors"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/services-networking/service/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "service", "networking"],
+    "keywords": ["service kubernetes", "clusterip", "nodeport", "loadbalancer"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-ingress",
+    "category": "Kubernetes",
+    "subcategory": "Networking",
+    "title": "Ingress",
+    "description": "Recurso que gerencia acesso HTTP/HTTPS externo ao cluster, roteando requisições para diferentes Services com base em hostname e path, exigindo um Ingress Controller instalado (ex: NGINX, Traefik).",
+    "syntax": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: <nome>\nspec:\n  rules:\n    - host: <dominio>\n      http:\n        paths:\n          - path: <caminho>\n            pathType: Prefix\n            backend:\n              service:\n                name: <service>\n                port:\n                  number: <porta>",
+    "example": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: app-ingress\nspec:\n  rules:\n    - host: app.exemplo.com\n      http:\n        paths:\n          - path: /\n            pathType: Prefix\n            backend:\n              service:\n                name: api\n                port:\n                  number: 80",
+    "result": "Requisições para app.exemplo.com são roteadas pelo Ingress Controller até o Service `api` na porta 80.",
+    "notes": [
+      "Sem um Ingress Controller instalado no cluster, o recurso Ingress fica apenas registrado na API sem efeito nenhum no tráfego real."
+    ],
+    "bestPractices": [
+      "Centralize TLS/HTTPS no Ingress (via annotations/cert-manager) em vez de configurar certificados individualmente em cada serviço."
+    ],
+    "commonMistakes": [
+      "Criar um Ingress esperando que ele funcione \"do nada\", sem verificar se há um Ingress Controller rodando no cluster."
+    ],
+    "relatedCommands": ["k8s-service", "k8s-kubectl-apply"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/services-networking/ingress/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "ingress", "networking"],
+    "keywords": [
+      "ingress kubernetes",
+      "ingress controller",
+      "roteamento http kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-configmap",
+    "category": "Kubernetes",
+    "subcategory": "Configuração",
+    "title": "ConfigMap",
+    "description": "Armazena dados de configuração não sensíveis (variáveis, arquivos de config) como pares chave-valor, desacoplando configuração da imagem do container.",
+    "syntax": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: <nome>\ndata:\n  <chave>: <valor>",
+    "example": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: api-config\ndata:\n  LOG_LEVEL: \"info\"\n  FEATURE_FLAG_X: \"true\"\n---\n# uso no Pod\nenvFrom:\n  - configMapRef:\n      name: api-config",
+    "result": "As chaves do ConfigMap `api-config` ficam disponíveis como variáveis de ambiente dentro do container que referenciar `envFrom.configMapRef`.",
+    "notes": [
+      "ConfigMaps também podem ser montados como arquivos dentro de um volume, úteis para arquivos de configuração completos (nginx.conf, application.yaml)."
+    ],
+    "bestPractices": [
+      "Use ConfigMap para tudo que é configuração não sensível e reserve Secret apenas para dados sensíveis (senhas, tokens, chaves)."
+    ],
+    "commonMistakes": [
+      "Guardar senhas ou tokens dentro de um ConfigMap, que não tem nenhuma proteção adicional de segurança (ao contrário do Secret)."
+    ],
+    "relatedCommands": ["k8s-secret", "k8s-deployment"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/configmap/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "configmap", "configuracao"],
+    "keywords": [
+      "configmap kubernetes",
+      "configuracao kubernetes",
+      "variaveis de ambiente kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-secret",
+    "category": "Kubernetes",
+    "subcategory": "Configuração",
+    "title": "Secret",
+    "description": "Armazena dados sensíveis (senhas, tokens, chaves de API, certificados) de forma um pouco mais protegida que um ConfigMap: valores são codificados em base64 e podem ser restritos por RBAC.",
+    "syntax": "apiVersion: v1\nkind: Secret\nmetadata:\n  name: <nome>\ntype: Opaque\ndata:\n  <chave>: <valor-em-base64>",
+    "example": "apiVersion: v1\nkind: Secret\nmetadata:\n  name: db-credentials\ntype: Opaque\nstringData:\n  DATABASE_PASSWORD: \"segredo123\"",
+    "result": "Cria um Secret com a senha do banco, disponível para os Pods via `envFrom.secretRef` ou montagem como volume.",
+    "notes": [
+      "`stringData` aceita valores em texto puro e o Kubernetes converte para base64 automaticamente ao salvar; `data` exige que o valor já venha codificado.",
+      "Base64 não é criptografia — qualquer pessoa com acesso de leitura ao Secret consegue decodificar o valor facilmente."
+    ],
+    "bestPractices": [
+      "Em produção, habilite encryption at rest no etcd e/ou use um gerenciador de segredos externo (Vault, AWS Secrets Manager, cert-manager) integrado via CSI driver."
+    ],
+    "commonMistakes": [
+      "Acreditar que um Secret é \"criptografado\" só por estar em base64, e versionar o manifesto de Secret em texto puro no Git."
+    ],
+    "relatedCommands": ["k8s-configmap", "k8s-deployment"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/secret/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "secret", "seguranca"],
+    "keywords": ["secret kubernetes", "dados sensiveis kubernetes", "base64 kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-namespace",
+    "category": "Kubernetes",
+    "subcategory": "Organização",
+    "title": "Namespace",
+    "description": "Mecanismo de particionamento lógico de um cluster, permitindo agrupar e isolar recursos (por time, ambiente ou projeto) e aplicar cotas e políticas por namespace.",
+    "syntax": "kubectl create namespace <nome>\n\napiVersion: v1\nkind: Namespace\nmetadata:\n  name: <nome>",
+    "example": "kubectl create namespace staging\nkubectl apply -f deployment.yaml -n staging",
+    "result": "Cria o namespace `staging` e aplica o manifesto de Deployment dentro dele, isolado dos recursos de outros namespaces.",
+    "notes": [
+      "Namespaces padrão do cluster: `default`, `kube-system` (componentes internos do Kubernetes) e `kube-public`.",
+      "Nomes de recursos precisam ser únicos apenas dentro do mesmo namespace, não no cluster inteiro."
+    ],
+    "bestPractices": [
+      "Separe ambientes (dev/staging/prod) ou times por namespace e combine com ResourceQuotas e RBAC para isolar recursos e permissões."
+    ],
+    "commonMistakes": [
+      "Esquecer de especificar `-n <namespace>` e aplicar/consultar recursos sempre no namespace `default` sem perceber."
+    ],
+    "relatedCommands": ["k8s-namespace-scoping", "k8s-kubectl-get"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "namespace", "organizacao"],
+    "keywords": [
+      "namespace kubernetes",
+      "isolar recursos kubernetes",
+      "kubectl namespace"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-labels-selectors",
+    "category": "Kubernetes",
+    "subcategory": "Organização",
+    "title": "Labels e Selectors",
+    "description": "Labels são pares chave-valor anexados a objetos para identificá-los; Selectors são consultas sobre labels usadas por Services, Deployments e comandos kubectl para agrupar e filtrar recursos.",
+    "syntax": "metadata:\n  labels:\n    <chave>: <valor>\n\nkubectl get pods -l <chave>=<valor>",
+    "example": "metadata:\n  labels:\n    app: api\n    env: production\n    tier: backend\n\nkubectl get pods -l app=api,env=production",
+    "result": "Lista apenas os Pods que possuem simultaneamente os labels `app=api` e `env=production`.",
+    "notes": [
+      "Selectors podem ser de igualdade (`app=api`) ou baseados em conjunto (`in`, `notin`, `exists`), usados em `matchExpressions`."
+    ],
+    "bestPractices": [
+      "Padronize um conjunto mínimo de labels em todos os recursos (ex: `app`, `env`, `tier`, `version`) para facilitar filtros e dashboards de observabilidade."
+    ],
+    "commonMistakes": [
+      "Alterar labels usados por um `selector` de Service ou Deployment já em produção, desconectando acidentalmente os Pods do recurso que os gerencia."
+    ],
+    "relatedCommands": ["k8s-pod", "k8s-service", "k8s-kubectl-get"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "labels", "selectors"],
+    "keywords": [
+      "labels kubernetes",
+      "selectors kubernetes",
+      "filtrar recursos kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-get",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl get",
+    "description": "Lista recursos do cluster (Pods, Deployments, Services, etc.) com informações resumidas de status.",
+    "syntax": "kubectl get <recurso> [nome] [opcoes]",
+    "example": "kubectl get pods -n producao -o wide",
+    "result": "Lista todos os Pods do namespace `producao` com colunas extras como IP e node onde cada Pod está agendado.",
+    "flags": [
+      { "flag": "-n", "description": "Especifica o namespace a consultar." },
+      { "flag": "-o wide", "description": "Exibe colunas adicionais (IP, node)." },
+      {
+        "flag": "-o yaml",
+        "description": "Exibe o manifesto completo do recurso em YAML."
+      },
+      { "flag": "-l", "description": "Filtra recursos por label selector." },
+      {
+        "flag": "-A / --all-namespaces",
+        "description": "Lista o recurso em todos os namespaces."
+      }
+    ],
+    "notes": [
+      "Aceita abreviações comuns: `po` (pods), `deploy` (deployments), `svc` (services), `ns` (namespaces)."
+    ],
+    "bestPractices": [
+      "Use `kubectl get <recurso> -o yaml` para inspecionar o manifesto completo já aplicado, incluindo campos preenchidos automaticamente pelo cluster."
+    ],
+    "commonMistakes": [
+      "Rodar `kubectl get pods` sem `-n` ou `-A` e concluir erroneamente que um Pod \"não existe\" quando na verdade está em outro namespace."
+    ],
+    "relatedCommands": [
+      "k8s-kubectl-describe",
+      "k8s-namespace-scoping",
+      "k8s-labels-selectors"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "get"],
+    "keywords": ["kubectl get", "listar pods", "listar recursos kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-describe",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl describe",
+    "description": "Exibe informações detalhadas de um recurso específico, incluindo eventos recentes, essencial para diagnosticar por que um Pod não sobe ou um Service não roteia corretamente.",
+    "syntax": "kubectl describe <recurso> <nome> [opcoes]",
+    "example": "kubectl describe pod api-7d4f9c6b8-x2z9k -n producao",
+    "result": "Mostra spec completa, status das condições (Ready, Scheduled), containers, volumes e a seção Events com o histórico de agendamento, pulls de imagem e falhas.",
+    "notes": [
+      "A seção `Events` no final da saída costuma conter a causa raiz de problemas como falha de agendamento, erro de pull de imagem ou falha de probe."
+    ],
+    "bestPractices": [
+      "Sempre olhe primeiro a seção `Events` de `kubectl describe pod` ao investigar um Pod com problema, antes de partir para logs."
+    ],
+    "commonMistakes": [
+      "Ignorar os Events e ir direto para `kubectl logs`, perdendo informações de erros que ocorrem antes do container sequer iniciar (ex: ImagePullBackOff)."
+    ],
+    "relatedCommands": [
+      "k8s-kubectl-get",
+      "k8s-kubectl-logs",
+      "k8s-troubleshooting-crashloop",
+      "k8s-troubleshooting-pending"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "describe"],
+    "keywords": ["kubectl describe", "eventos pod kubernetes", "diagnosticar pod"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-apply",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl apply",
+    "description": "Cria ou atualiza recursos no cluster de forma declarativa a partir de arquivos de manifesto, comparando o estado desejado com o atual e aplicando apenas as diferenças.",
+    "syntax": "kubectl apply -f <arquivo-ou-diretorio> [opcoes]",
+    "example": "kubectl apply -f ./k8s/ --recursive",
+    "result": "Aplica todos os manifestos YAML dentro da pasta `k8s/` (e subpastas), criando recursos novos e atualizando os já existentes.",
+    "flags": [
+      { "flag": "-f", "description": "Arquivo ou diretório de manifestos a aplicar." },
+      {
+        "flag": "--dry-run=client",
+        "description": "Simula a aplicação sem alterar o cluster."
+      },
+      { "flag": "--recursive", "description": "Processa subdiretórios também." }
+    ],
+    "notes": [
+      "Diferente de `kubectl create`, o `apply` é idempotente: pode ser executado repetidamente com o mesmo arquivo sem gerar erro de recurso já existente."
+    ],
+    "bestPractices": [
+      "Versione os manifestos e aplique sempre via `apply -f` a partir do Git (GitOps), evitando alterações manuais diretas no cluster com `kubectl edit`."
+    ],
+    "commonMistakes": [
+      "Misturar `kubectl apply` (declarativo) com edições manuais via `kubectl edit` no mesmo recurso, causando divergência entre o manifesto versionado e o estado real do cluster."
+    ],
+    "relatedCommands": ["k8s-kubectl-get", "k8s-kubectl-delete", "k8s-rolling-update"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "apply"],
+    "keywords": ["kubectl apply", "aplicar manifesto kubernetes", "gitops kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-delete",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl delete",
+    "description": "Remove recursos do cluster, seja por nome, por arquivo de manifesto ou por label selector.",
+    "syntax": "kubectl delete <recurso> <nome> [opcoes]",
+    "example": "kubectl delete deployment api -n producao\nkubectl delete -f deployment.yaml\nkubectl delete pods -l app=api",
+    "result": "Remove o Deployment `api` e, por consequência (via cascade), os Pods e ReplicaSets que ele gerenciava.",
+    "flags": [
+      {
+        "flag": "-f",
+        "description": "Remove os recursos descritos em um arquivo de manifesto."
+      },
+      {
+        "flag": "-l",
+        "description": "Remove todos os recursos que combinam com o label selector."
+      },
+      {
+        "flag": "--grace-period",
+        "description": "Define o tempo de espera antes do término forçado (SIGKILL)."
+      }
+    ],
+    "notes": [
+      "Deletar um Deployment remove em cascata os ReplicaSets e Pods associados a ele por padrão."
+    ],
+    "bestPractices": [
+      "Prefira `kubectl delete -f <arquivo>` (mesmo arquivo usado no apply) em vez de deletar por nome manualmente, mantendo o fluxo declarativo consistente."
+    ],
+    "commonMistakes": [
+      "Rodar `kubectl delete pods -l app=api` esperando \"parar\" a aplicação, sem perceber que o Deployment recria os Pods imediatamente (o correto seria deletar o Deployment ou escalar para 0 réplicas)."
+    ],
+    "relatedCommands": ["k8s-kubectl-apply", "k8s-deployment"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "delete"],
+    "keywords": ["kubectl delete", "remover recurso kubernetes", "deletar pod"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-logs",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl logs",
+    "description": "Exibe a saída padrão (stdout/stderr) de um container dentro de um Pod, essencial para depurar comportamento da aplicação em execução.",
+    "syntax": "kubectl logs <pod> [-c <container>] [opcoes]",
+    "example": "kubectl logs -f api-7d4f9c6b8-x2z9k --previous",
+    "result": "Mostra os logs do container anterior (antes do último restart) e continua acompanhando a saída atual em tempo real.",
+    "flags": [
+      { "flag": "-f", "description": "Segue a saída em tempo real (follow)." },
+      {
+        "flag": "-c",
+        "description": "Especifica o container quando o Pod tem mais de um."
+      },
+      {
+        "flag": "--previous",
+        "description": "Mostra os logs da execução anterior do container (útil após um crash/restart)."
+      },
+      { "flag": "--tail", "description": "Limita a quantidade de linhas retornadas." }
+    ],
+    "notes": [
+      "Em Pods com múltiplos containers, é obrigatório especificar `-c <container>` para evitar ambiguidade."
+    ],
+    "bestPractices": [
+      "Use `--previous` sempre que investigar um Pod que já reiniciou (`RESTARTS > 0`), pois os logs do container atual podem não conter a causa da falha anterior."
+    ],
+    "commonMistakes": [
+      "Investigar apenas os logs do container atual após um CrashLoopBackOff, sem checar `--previous`, e não encontrar o stack trace do erro que causou o crash anterior."
+    ],
+    "relatedCommands": ["k8s-kubectl-describe", "k8s-troubleshooting-crashloop"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "logs"],
+    "keywords": ["kubectl logs", "ver logs pod", "logs kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-exec",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl exec",
+    "description": "Executa um comando dentro de um container já em execução em um Pod, útil para abrir um shell interativo e inspecionar o ambiente.",
+    "syntax": "kubectl exec [-it] <pod> [-c <container>] -- <comando>",
+    "example": "kubectl exec -it api-7d4f9c6b8-x2z9k -- sh",
+    "result": "Abre um shell interativo dentro do container principal do Pod especificado.",
+    "flags": [
+      { "flag": "-it", "description": "Aloca terminal interativo (TTY + stdin)." },
+      {
+        "flag": "-c",
+        "description": "Especifica o container-alvo em Pods multi-container."
+      },
+      {
+        "flag": "--",
+        "description": "Separa as flags do kubectl do comando a ser executado dentro do container."
+      }
+    ],
+    "notes": [
+      "Requer que o container tenha o binário do comando desejado instalado (ex: imagens `distroless` não têm shell disponível)."
+    ],
+    "bestPractices": [
+      "Use `kubectl exec` apenas para diagnóstico pontual; evite depender dele como parte de fluxos operacionais recorrentes."
+    ],
+    "commonMistakes": [
+      "Tentar rodar `kubectl exec -it <pod> -- sh` em imagens distroless/scratch e receber erro de \"executable file not found\"."
+    ],
+    "relatedCommands": ["k8s-kubectl-logs", "k8s-kubectl-port-forward"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "exec"],
+    "keywords": ["kubectl exec", "shell no pod", "entrar no container kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-port-forward",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl port-forward",
+    "description": "Cria um túnel temporário entre uma porta local e uma porta de um Pod (ou Service), permitindo acessar uma aplicação do cluster diretamente da máquina local sem expor um Service externo.",
+    "syntax": "kubectl port-forward <pod-ou-service> <porta-local>:<porta-remota>",
+    "example": "kubectl port-forward svc/api 8080:80",
+    "result": "Redireciona `localhost:8080` para a porta 80 do Service `api` dentro do cluster, válido enquanto o comando estiver rodando.",
+    "notes": [
+      "O túnel dura apenas enquanto o processo `kubectl port-forward` está em execução no terminal (não é permanente)."
+    ],
+    "bestPractices": [
+      "Use `port-forward` para depurar rapidamente um serviço interno sem precisar criar um Ingress ou Service do tipo LoadBalancer temporário."
+    ],
+    "commonMistakes": [
+      "Usar `port-forward` como solução de acesso permanente em produção, quando o caso de uso pede um Ingress ou Service adequado."
+    ],
+    "relatedCommands": ["k8s-kubectl-exec", "k8s-service"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#port-forward",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "port-forward"],
+    "keywords": [
+      "kubectl port-forward",
+      "acessar servico kubernetes local",
+      "tunel kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-liveness-probe",
+    "category": "Kubernetes",
+    "subcategory": "Probes",
+    "title": "Liveness Probe",
+    "description": "Verifica periodicamente se o container ainda está \"vivo\"; se falhar repetidamente, o kubelet mata e reinicia o container automaticamente.",
+    "syntax": "livenessProbe:\n  httpGet:\n    path: <caminho>\n    port: <porta>\n  initialDelaySeconds: <n>\n  periodSeconds: <n>\n  failureThreshold: <n>",
+    "example": "livenessProbe:\n  httpGet:\n    path: /health/live\n    port: 3000\n  initialDelaySeconds: 10\n  periodSeconds: 10\n  failureThreshold: 3",
+    "result": "Após 3 falhas consecutivas de /health/live (verificadas a cada 10s, começando 10s após o start), o kubelet reinicia o container.",
+    "notes": [
+      "Uma liveness probe deve verificar apenas se o processo está travado/deadlocked, não dependências externas (banco, fila) — isso é papel da readiness probe."
+    ],
+    "bestPractices": [
+      "Mantenha o endpoint de liveness extremamente simples e rápido, sem checar dependências externas, para evitar reinícios em cascata quando uma dependência externa cai."
+    ],
+    "commonMistakes": [
+      "Fazer a liveness probe checar o banco de dados: se o banco cair, todos os Pods da aplicação são reiniciados em loop mesmo estando saudáveis, agravando o incidente."
+    ],
+    "relatedCommands": ["k8s-readiness-probe", "k8s-startup-probe", "k8s-deployment"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "probes", "liveness"],
+    "keywords": [
+      "liveness probe kubernetes",
+      "healthcheck kubernetes",
+      "reiniciar container kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-readiness-probe",
+    "category": "Kubernetes",
+    "subcategory": "Probes",
+    "title": "Readiness Probe",
+    "description": "Verifica se o container está pronto para receber tráfego; enquanto falhar, o Pod é removido dos endpoints do Service, mas não é reiniciado.",
+    "syntax": "readinessProbe:\n  httpGet:\n    path: <caminho>\n    port: <porta>\n  periodSeconds: <n>\n  failureThreshold: <n>",
+    "example": "readinessProbe:\n  httpGet:\n    path: /health/ready\n    port: 3000\n  periodSeconds: 5\n  failureThreshold: 2",
+    "result": "Se /health/ready falhar 2 vezes seguidas, o Pod deixa de receber tráfego do Service até voltar a responder com sucesso, sem ser reiniciado.",
+    "notes": [
+      "Diferente da liveness probe, a readiness probe pode (e deve) checar dependências externas críticas para atender requisições, como conexão de banco."
+    ],
+    "bestPractices": [
+      "Use a readiness probe para remover temporariamente da rotação Pods que perderam conexão com uma dependência, evitando enviar tráfego para instâncias degradadas."
+    ],
+    "commonMistakes": [
+      "Não configurar readiness probe: o Kubernetes assume o Pod pronto assim que ele inicia, mesmo que a aplicação ainda esteja carregando dependências, causando erros 5xx durante o boot."
+    ],
+    "relatedCommands": ["k8s-liveness-probe", "k8s-service", "k8s-rolling-update"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "probes", "readiness"],
+    "keywords": [
+      "readiness probe kubernetes",
+      "pod pronto para trafego",
+      "remover pod do service"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-startup-probe",
+    "category": "Kubernetes",
+    "subcategory": "Probes",
+    "title": "Startup Probe",
+    "description": "Protege aplicações com boot lento: enquanto a startup probe não passar, liveness e readiness probes ficam desativadas, evitando que o container seja morto antes de terminar de iniciar.",
+    "syntax": "startupProbe:\n  httpGet:\n    path: <caminho>\n    port: <porta>\n  failureThreshold: <n>\n  periodSeconds: <n>",
+    "example": "startupProbe:\n  httpGet:\n    path: /health/live\n    port: 3000\n  failureThreshold: 30\n  periodSeconds: 10",
+    "result": "Dá até 300 segundos (30 tentativas x 10s) para a aplicação iniciar antes que a liveness probe passe a valer e possa reiniciar o container.",
+    "notes": [
+      "É especialmente útil para aplicações legadas ou com processos de warm-up longos, evitando ter que aumentar `initialDelaySeconds` da liveness probe para todos os cenários."
+    ],
+    "bestPractices": [
+      "Prefira `startupProbe` a um `initialDelaySeconds` muito alto na liveness probe: assim que a aplicação inicia mais rápido em uma versão futura, o comportamento de restart continua responsivo."
+    ],
+    "commonMistakes": [
+      "Configurar `initialDelaySeconds` altíssimo na liveness probe para acomodar boot lento, atrasando a detecção de travamentos reais em execuções normais."
+    ],
+    "relatedCommands": ["k8s-liveness-probe", "k8s-readiness-probe"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "probes", "startup"],
+    "keywords": [
+      "startup probe kubernetes",
+      "boot lento kubernetes",
+      "initialDelaySeconds"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-hpa",
+    "category": "Kubernetes",
+    "subcategory": "Escalonamento",
+    "title": "Horizontal Pod Autoscaler (HPA)",
+    "description": "Ajusta automaticamente o número de réplicas de um Deployment (ou outro workload escalável) com base em métricas observadas, como uso de CPU/memória ou métricas customizadas.",
+    "syntax": "kubectl autoscale deployment <nome> --min=<n> --max=<n> --cpu-percent=<n>\n\napiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler",
+    "example": "kubectl autoscale deployment api --min=2 --max=10 --cpu-percent=70",
+    "result": "Cria um HPA que mantém o uso médio de CPU dos Pods do Deployment `api` em torno de 70%, variando entre 2 e 10 réplicas conforme a carga.",
+    "notes": [
+      "Requer o metrics-server instalado no cluster para coletar métricas de CPU/memória usadas pelo HPA baseado em recursos."
+    ],
+    "bestPractices": [
+      "Defina `resources.requests` de CPU/memória nos containers — o HPA calcula percentuais de uso com base nesses requests, e sem eles o autoscaling não funciona corretamente."
+    ],
+    "commonMistakes": [
+      "Configurar um HPA sem definir `requests` de CPU no container, fazendo o cálculo de porcentagem de uso ficar incorreto ou o HPA simplesmente não funcionar."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-resource-requests-limits"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "hpa", "escalonamento"],
+    "keywords": ["hpa kubernetes", "autoscaling kubernetes", "escalonamento horizontal"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-helm-intro",
+    "category": "Kubernetes",
+    "subcategory": "Helm",
+    "title": "Helm: conceitos básicos (charts, releases, values)",
+    "description": "Helm é o gerenciador de pacotes do Kubernetes: empacota um conjunto de manifests parametrizáveis (chart), permite instalar múltiplas instâncias configuradas (releases) e sobrescrever parâmetros via values.yaml.",
+    "notes": [
+      "Chart: pacote com templates de manifests Kubernetes e um `values.yaml` com os valores padrão dos parâmetros.",
+      "Release: uma instância instalada de um chart em um cluster, com um nome e um histórico de revisões próprios.",
+      "Values: arquivo (ou flags `--set`) que sobrescreve os valores padrão do chart para customizar a instalação."
+    ],
+    "bestPractices": [
+      "Use `helm template` para renderizar os manifests localmente e revisar o YAML final antes de instalar/atualizar um release em produção."
+    ],
+    "commonMistakes": [
+      "Editar diretamente os recursos gerados por um release Helm via `kubectl edit`, perdendo a sincronia entre o chart/values e o estado real do cluster."
+    ],
+    "relatedCommands": ["k8s-helm-install", "k8s-kubectl-apply"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://helm.sh/docs/topics/charts/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "helm", "charts"],
+    "keywords": ["helm kubernetes", "chart helm", "values.yaml", "helm release"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-helm-install",
+    "category": "Kubernetes",
+    "subcategory": "Helm",
+    "title": "helm install / upgrade",
+    "description": "Instala um novo release a partir de um chart ou atualiza um release existente com novos valores/versão de chart, mantendo um histórico navegável de revisões.",
+    "syntax": "helm install <release> <chart> [opcoes]\nhelm upgrade <release> <chart> [opcoes]",
+    "example": "helm upgrade --install api ./charts/api -f values.prod.yaml --namespace producao",
+    "result": "Instala o release `api` (ou atualiza, se já existir) usando o chart local `./charts/api` combinado com os valores de `values.prod.yaml`, no namespace `producao`.",
+    "flags": [
+      {
+        "flag": "--install",
+        "description": "Instala o release caso ele ainda não exista (usado junto com upgrade)."
+      },
+      {
+        "flag": "-f",
+        "description": "Arquivo de values a mesclar com os valores padrão do chart."
+      },
+      {
+        "flag": "--set",
+        "description": "Sobrescreve um valor específico via linha de comando."
+      },
+      { "flag": "--namespace", "description": "Namespace onde o release será instalado." }
+    ],
+    "notes": [
+      "`helm upgrade --install` é o padrão usado em pipelines de CI/CD, pois funciona tanto na primeira instalação quanto em atualizações subsequentes."
+    ],
+    "bestPractices": [
+      "Use `helm rollback <release> <revisao>` para reverter rapidamente um upgrade problemático, aproveitando o histórico de revisões do Helm."
+    ],
+    "commonMistakes": [
+      "Rodar `helm install` repetidamente em pipelines sem `--install`/checagem de existência, causando erro de \"release already exists\" nos deploys seguintes."
+    ],
+    "relatedCommands": ["k8s-helm-intro", "k8s-rolling-update"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "version": "Helm 3",
+    "officialDocumentation": "https://helm.sh/docs/helm/helm_upgrade/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "helm", "deploy"],
+    "keywords": ["helm install", "helm upgrade", "deploy helm kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-troubleshooting-crashloop",
+    "category": "Kubernetes",
+    "subcategory": "Troubleshooting",
+    "title": "Troubleshooting: CrashLoopBackOff",
+    "description": "Status indicando que o container está iniciando, falhando e sendo reiniciado repetidamente, com backoff exponencial entre as tentativas.",
+    "notes": [
+      "Causas comuns: erro de aplicação logo no boot, falha de liveness probe configurada de forma agressiva demais, falta de uma variável de ambiente obrigatória, ou processo principal do container encerrando sozinho (código de saída 0 em um container que deveria rodar continuamente)."
+    ],
+    "bestPractices": [
+      "Investigue nesta ordem: `kubectl describe pod` (seção Events e Last State/Reason), depois `kubectl logs --previous` para ver a causa do último crash antes do restart atual."
+    ],
+    "commonMistakes": [
+      "Focar apenas em aumentar `failureThreshold`/`periodSeconds` das probes sem investigar a causa raiz do crash da aplicação."
+    ],
+    "relatedCommands": ["k8s-kubectl-describe", "k8s-kubectl-logs", "k8s-liveness-probe"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "troubleshooting", "crashloopbackoff"],
+    "keywords": [
+      "crashloopbackoff",
+      "pod reiniciando kubernetes",
+      "troubleshooting kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-troubleshooting-pending",
+    "category": "Kubernetes",
+    "subcategory": "Troubleshooting",
+    "title": "Troubleshooting: Pod preso em Pending",
+    "description": "Status indicando que o Pod foi aceito pela API mas ainda não foi agendado em nenhum node, geralmente por falta de recursos disponíveis ou restrições de agendamento.",
+    "notes": [
+      "Causas comuns: nenhum node com CPU/memória suficiente para atender os `requests` do Pod, `nodeSelector`/`affinity` que nenhum node satisfaz, taints sem toleration correspondente, ou PVC pendente sem PersistentVolume disponível."
+    ],
+    "bestPractices": [
+      "Rode `kubectl describe pod` e leia a mensagem em Events (geralmente do scheduler, ex: \"0/3 nodes are available: insufficient cpu\") para identificar exatamente qual restrição está impedindo o agendamento."
+    ],
+    "commonMistakes": [
+      "Aumentar o número de réplicas de um Deployment para tentar \"forçar\" o agendamento, sem antes verificar se o cluster tem capacidade real disponível."
+    ],
+    "relatedCommands": [
+      "k8s-kubectl-describe",
+      "k8s-resource-requests-limits",
+      "k8s-taints-tolerations"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "troubleshooting", "pending"],
+    "keywords": [
+      "pod pending kubernetes",
+      "pod nao agendado",
+      "troubleshooting scheduler"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-statefulset",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "StatefulSet",
+    "description": "Controller para aplicações com estado que precisam de identidade de rede estável, nomes previsíveis e armazenamento persistente individual por réplica (ex: bancos de dados, filas distribuídas).",
+    "syntax": "apiVersion: apps/v1\nkind: StatefulSet\nmetadata:\n  name: <nome>\nspec:\n  serviceName: <headless-service>\n  replicas: <n>\n  volumeClaimTemplates: [...]",
+    "example": "apiVersion: apps/v1\nkind: StatefulSet\nmetadata:\n  name: postgres\nspec:\n  serviceName: postgres\n  replicas: 3\n  volumeClaimTemplates:\n    - metadata:\n        name: data\n      spec:\n        accessModes: [\"ReadWriteOnce\"]\n        resources:\n          requests:\n            storage: 10Gi",
+    "result": "Cria três Pods com nomes previsíveis (postgres-0, postgres-1, postgres-2), cada um com seu próprio PersistentVolumeClaim de 10Gi, preservado mesmo se o Pod for recriado.",
+    "notes": [
+      "Diferente do Deployment, os Pods de um StatefulSet são criados/atualizados/removidos em ordem sequencial e mantêm nome e volume estáveis entre reagendamentos."
+    ],
+    "bestPractices": [
+      "Use StatefulSet apenas quando a aplicação realmente exige identidade estável ou armazenamento por réplica; para apps stateless, um Deployment é mais simples e flexível."
+    ],
+    "commonMistakes": [
+      "Usar StatefulSet para uma aplicação stateless comum, complicando o deploy sem necessidade real de identidade estável."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-persistent-volume"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "statefulset", "workloads"],
+    "keywords": [
+      "statefulset kubernetes",
+      "aplicacao com estado kubernetes",
+      "volumeClaimTemplates"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-daemonset",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "DaemonSet",
+    "description": "Garante que uma cópia de um Pod específico rode em todos os nodes do cluster (ou em um subconjunto filtrado), comum para agentes de infraestrutura como coleta de logs e monitoramento.",
+    "syntax": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: <nome>\nspec:\n  selector:\n    matchLabels:\n      app: <label>\n  template: {...}",
+    "example": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: node-log-agent\nspec:\n  selector:\n    matchLabels:\n      app: log-agent\n  template:\n    metadata:\n      labels:\n        app: log-agent\n    spec:\n      containers:\n        - name: agent\n          image: fluent-bit:2.2",
+    "result": "Um Pod do agente de logs é criado automaticamente em cada node do cluster, inclusive em novos nodes adicionados depois.",
+    "notes": [
+      "Ferramentas comuns implementadas como DaemonSet: coletores de log (Fluent Bit, Fluentd), agentes de monitoramento (node-exporter) e plugins de rede/CNI."
+    ],
+    "bestPractices": [
+      "Use `nodeSelector`/`tolerations` no DaemonSet quando quiser rodar o agente apenas em um subconjunto de nodes (ex: apenas nodes com GPU)."
+    ],
+    "commonMistakes": [
+      "Usar um Deployment com muitas réplicas tentando \"cobrir\" todos os nodes, em vez de um DaemonSet, perdendo a garantia de exatamente um Pod por node."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-taints-tolerations"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "daemonset", "workloads"],
+    "keywords": ["daemonset kubernetes", "agente por node", "pod em todos os nodes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-job-cronjob",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "Jobs e CronJobs",
+    "description": "Job executa uma tarefa até a conclusão bem-sucedida (não fica rodando indefinidamente); CronJob agenda Jobs para rodar periodicamente conforme uma expressão cron.",
+    "syntax": "apiVersion: batch/v1\nkind: Job\nspec:\n  template: {...}\n\napiVersion: batch/v1\nkind: CronJob\nspec:\n  schedule: \"<expressao-cron>\"\n  jobTemplate: {...}",
+    "example": "apiVersion: batch/v1\nkind: CronJob\nmetadata:\n  name: backup-diario\nspec:\n  schedule: \"0 3 * * *\"\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          containers:\n            - name: backup\n              image: minha-ferramenta-backup:1.0\n          restartPolicy: OnFailure",
+    "result": "Todos os dias às 3h, o cluster cria automaticamente um novo Job que executa a rotina de backup até completar (ou falhar).",
+    "notes": [
+      "`restartPolicy` em Jobs deve ser `OnFailure` ou `Never` (nunca `Always`, que é exclusivo de workloads de longa duração)."
+    ],
+    "bestPractices": [
+      "Configure `backoffLimit` no Job e `concurrencyPolicy` no CronJob (`Forbid` ou `Replace`) para controlar retentativas e evitar execuções sobrepostas de uma tarefa que ainda está rodando."
+    ],
+    "commonMistakes": [
+      "Deixar o `concurrencyPolicy` padrão (`Allow`) em um CronJob cuja execução pode demorar mais que o intervalo do schedule, acumulando execuções concorrentes indesejadas."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-kubectl-apply"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "job", "cronjob"],
+    "keywords": ["job kubernetes", "cronjob kubernetes", "tarefa agendada kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-resource-requests-limits",
+    "category": "Kubernetes",
+    "subcategory": "Recursos",
+    "title": "Resource requests e limits",
+    "description": "Definem, por container, a quantidade de CPU/memória reservada (request, usada pelo scheduler para decidir em qual node colocar o Pod) e o teto máximo permitido (limit).",
+    "syntax": "resources:\n  requests:\n    cpu: <valor>\n    memory: <valor>\n  limits:\n    cpu: <valor>\n    memory: <valor>",
+    "example": "resources:\n  requests:\n    cpu: \"250m\"\n    memory: \"256Mi\"\n  limits:\n    cpu: \"500m\"\n    memory: \"512Mi\"",
+    "result": "O scheduler só coloca o Pod em um node com pelo menos 250m de CPU e 256Mi de memória livres; o container é limitado a no máximo 500m de CPU e 512Mi de memória em uso.",
+    "notes": [
+      "Ultrapassar o `limit` de memória causa OOMKill do container; ultrapassar o `limit` de CPU apenas causa throttling (o processo não é morto)."
+    ],
+    "bestPractices": [
+      "Defina requests e limits em todos os containers de produção; sem eles, o HPA baseado em CPU não funciona corretamente e o scheduler pode sobrecarregar nodes."
+    ],
+    "commonMistakes": [
+      "Definir `limits` de memória muito baixos em relação ao uso real da aplicação, causando OOMKill recorrente e reinícios constantes."
+    ],
+    "relatedCommands": ["k8s-hpa", "k8s-troubleshooting-pending"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "resources", "requests-limits"],
+    "keywords": [
+      "resource requests kubernetes",
+      "resource limits kubernetes",
+      "oomkill",
+      "cpu throttling"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-rolling-update",
+    "category": "Kubernetes",
+    "subcategory": "Deploy",
+    "title": "Rolling Update",
+    "description": "Estratégia padrão de atualização de um Deployment: substitui Pods da versão antiga por Pods da nova versão gradualmente, mantendo a aplicação disponível durante o processo.",
+    "syntax": "spec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: <n-ou-%>\n      maxUnavailable: <n-ou-%>",
+    "example": "spec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0",
+    "result": "Durante a atualização, o Deployment pode criar 1 Pod extra temporário (maxSurge) e nunca deixa nenhuma réplica indisponível (maxUnavailable: 0), garantindo zero downtime.",
+    "notes": [
+      "O rolling update só avança para o próximo Pod quando o Pod anterior passa na readiness probe, tornando as probes essenciais para deploys seguros."
+    ],
+    "bestPractices": [
+      "Use `maxUnavailable: 0` em serviços críticos para garantir que a capacidade nunca caia durante o deploy, ajustando `maxSurge` conforme a capacidade extra disponível no cluster."
+    ],
+    "commonMistakes": [
+      "Fazer rolling update sem readiness probe configurada: o Kubernetes considera o Pod pronto assim que ele inicia, podendo direcionar tráfego para uma versão nova ainda não totalmente inicializada."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-readiness-probe", "k8s-kubectl-rollout"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment",
+    "externalReferences": [],
+    "tags": ["kubernetes", "rolling-update", "deploy"],
+    "keywords": [
+      "rolling update kubernetes",
+      "deploy sem downtime",
+      "maxSurge maxUnavailable"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-kubectl-rollout",
+    "category": "Kubernetes",
+    "subcategory": "Deploy",
+    "title": "kubectl rollout (status, undo, history)",
+    "description": "Comandos para acompanhar o progresso de um rollout em andamento, consultar o histórico de revisões de um Deployment e reverter para uma versão anterior em caso de problema.",
+    "syntax": "kubectl rollout status deployment/<nome>\nkubectl rollout history deployment/<nome>\nkubectl rollout undo deployment/<nome> [--to-revision=<n>]",
+    "example": "kubectl rollout undo deployment/api --to-revision=3",
+    "result": "Reverte o Deployment `api` para o estado exato da revisão 3, criando um novo rollout que restaura a versão anterior.",
+    "notes": [
+      "O histórico de revisões (`rollout history`) só é mantido para as últimas N revisões definidas em `spec.revisionHistoryLimit` (padrão 10)."
+    ],
+    "bestPractices": [
+      "Acompanhe todo deploy em produção com `kubectl rollout status deployment/<nome>` no pipeline de CI/CD, falhando o pipeline se o rollout não completar dentro do timeout."
+    ],
+    "commonMistakes": [
+      "Não monitorar `rollout status` no CI/CD, deixando o pipeline reportar sucesso mesmo quando o Deployment ficou travado esperando Pods novos ficarem prontos."
+    ],
+    "relatedCommands": ["k8s-rolling-update", "k8s-deployment"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#rollout",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "rollout"],
+    "keywords": [
+      "kubectl rollout status",
+      "kubectl rollout undo",
+      "reverter deploy kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-persistent-volume",
+    "category": "Kubernetes",
+    "subcategory": "Armazenamento",
+    "title": "PersistentVolume e PersistentVolumeClaim",
+    "description": "PersistentVolume (PV) representa um pedaço de armazenamento provisionado no cluster; PersistentVolumeClaim (PVC) é a solicitação de um Pod por armazenamento, que o Kubernetes casa (bind) com um PV compatível.",
+    "syntax": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: <nome>\nspec:\n  accessModes: [\"ReadWriteOnce\"]\n  resources:\n    requests:\n      storage: <tamanho>\n  storageClassName: <classe>",
+    "example": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: dados-app\nspec:\n  accessModes:\n    - ReadWriteOnce\n  resources:\n    requests:\n      storage: 5Gi\n  storageClassName: standard",
+    "result": "Solicita 5Gi de armazenamento; um StorageClass com provisionamento dinâmico cria automaticamente um PV compatível e o vincula a este PVC.",
+    "notes": [
+      "Com StorageClasses de provisionamento dinâmico (comum em clouds), não é necessário criar PVs manualmente — eles são gerados sob demanda a partir do PVC."
+    ],
+    "bestPractices": [
+      "Escolha o `accessMode` adequado à necessidade real: `ReadWriteOnce` para a maioria dos casos, `ReadWriteMany` apenas quando múltiplos Pods realmente precisam escrever no mesmo volume simultaneamente."
+    ],
+    "commonMistakes": [
+      "Pedir `ReadWriteMany` sem verificar se o StorageClass/provisionador do cluster realmente suporta esse modo de acesso, deixando o PVC preso em `Pending`."
+    ],
+    "relatedCommands": ["k8s-statefulset", "k8s-troubleshooting-pending"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "storage", "pvc"],
+    "keywords": [
+      "persistentvolume kubernetes",
+      "persistentvolumeclaim",
+      "pvc kubernetes",
+      "storageclass"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-context-kubeconfig",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubeconfig e contexts",
+    "description": "O arquivo kubeconfig (padrão `~/.kube/config`) armazena credenciais e endereços de um ou mais clusters; um context combina cluster, usuário e namespace padrão, permitindo alternar rapidamente entre ambientes.",
+    "syntax": "kubectl config get-contexts\nkubectl config use-context <nome>\nkubectl config set-context --current --namespace=<ns>",
+    "example": "kubectl config use-context producao-cluster\nkubectl config set-context --current --namespace=app",
+    "result": "Passa a apontar todos os próximos comandos `kubectl` para o cluster `producao-cluster`, usando `app` como namespace padrão.",
+    "notes": [
+      "Múltiplos kubeconfigs podem ser combinados via a variável de ambiente `KUBECONFIG` apontando para vários arquivos separados por `:` (Linux/macOS) ou `;` (Windows)."
+    ],
+    "bestPractices": [
+      "Confirme sempre o contexto ativo (`kubectl config current-context`) antes de rodar comandos destrutivos como `delete`, especialmente ao alternar entre clusters de staging e produção."
+    ],
+    "commonMistakes": [
+      "Rodar `kubectl delete` ou `apply` em produção por engano porque o contexto ativo ainda estava apontando para outro cluster da última sessão."
+    ],
+    "relatedCommands": ["k8s-namespace-scoping", "k8s-kubectl-get"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubeconfig", "context"],
+    "keywords": [
+      "kubeconfig",
+      "kubectl context",
+      "trocar de cluster kubernetes",
+      "use-context"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-namespace-scoping",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "Escopo de namespace em comandos kubectl",
+    "description": "A maioria dos comandos kubectl opera sobre um único namespace por vez (o `default`, salvo configuração em contrário), e é necessário usar `-n`/`--namespace` ou `-A`/`--all-namespaces` para mudar esse escopo.",
+    "syntax": "kubectl <comando> -n <namespace>\nkubectl <comando> -A",
+    "example": "kubectl get pods -n producao\nkubectl get pods -A | grep api",
+    "result": "O primeiro comando lista Pods apenas do namespace `producao`; o segundo lista Pods de todos os namespaces e filtra pelos que contêm \"api\" no nome.",
+    "notes": [
+      "Recursos com escopo de cluster (Nodes, PersistentVolumes, ClusterRoles, Namespaces) não pertencem a nenhum namespace e ignoram a flag `-n`."
+    ],
+    "bestPractices": [
+      "Defina um namespace padrão por contexto (`kubectl config set-context --current --namespace=<ns>`) para reduzir o risco de esquecer o `-n` em comandos do dia a dia."
+    ],
+    "commonMistakes": [
+      "Assumir que um recurso \"sumiu\" porque não aparece em `kubectl get`, sem lembrar que o comando estava consultando apenas o namespace `default`."
+    ],
+    "relatedCommands": ["k8s-namespace", "k8s-context-kubeconfig", "k8s-kubectl-get"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/kubectl/cheatsheet/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "namespace"],
+    "keywords": [
+      "kubectl namespace flag",
+      "escopo namespace kubernetes",
+      "-n kubectl",
+      "-A kubectl"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-taints-tolerations",
+    "category": "Kubernetes",
+    "subcategory": "Agendamento",
+    "title": "Taints e Tolerations",
+    "description": "Taints são marcas aplicadas a nodes que repelem Pods por padrão; Tolerations são declaradas nos Pods para permitir (mas não obrigar) que eles sejam agendados em nodes com determinado taint.",
+    "syntax": "kubectl taint nodes <node> <chave>=<valor>:<efeito>\n\ntolerations:\n  - key: <chave>\n    operator: Equal\n    value: <valor>\n    effect: <efeito>",
+    "example": "kubectl taint nodes node-gpu-1 workload=gpu:NoSchedule\n\n# no Pod que deve rodar nesse node\ntolerations:\n  - key: workload\n    operator: Equal\n    value: gpu\n    effect: NoSchedule",
+    "result": "Apenas Pods com a toleration correspondente conseguem ser agendados no node `node-gpu-1`; os demais Pods são automaticamente repelidos dele.",
+    "parameters": [
+      {
+        "name": "NoSchedule",
+        "description": "Impede novos Pods sem toleration de serem agendados no node."
+      },
+      {
+        "name": "PreferNoSchedule",
+        "description": "Tenta evitar, mas não garante, que Pods sem toleration sejam agendados no node."
+      },
+      {
+        "name": "NoExecute",
+        "description": "Além de impedir novo agendamento, expulsa Pods já rodando no node que não tolerem o taint."
+      }
+    ],
+    "notes": [
+      "Taints/tolerations controlam apenas quais Pods PODEM ser agendados em um node (repulsão); para forçar afinidade positiva, combine com `nodeAffinity`."
+    ],
+    "bestPractices": [
+      "Use taints para reservar nodes especializados (GPU, alta memória) para workloads específicos, evitando que cargas genéricas ocupem esses recursos por acaso."
+    ],
+    "commonMistakes": [
+      "Confundir taints/tolerations (mecanismo de repulsão) com nodeAffinity (mecanismo de atração), esperando que uma toleration por si só force o Pod a rodar naquele node."
+    ],
+    "relatedCommands": ["k8s-troubleshooting-pending", "k8s-daemonset"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "taints", "tolerations"],
+    "keywords": [
+      "taints kubernetes",
+      "tolerations kubernetes",
+      "agendamento de pods",
+      "noschedule"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-network-policy",
+    "category": "Kubernetes",
+    "subcategory": "Networking",
+    "title": "NetworkPolicy",
+    "description": "Controla o tráfego de rede permitido de/para Pods, funcionando como um firewall interno do cluster baseado em labels; requer um plugin de rede (CNI) que suporte NetworkPolicy para ter efeito.",
+    "syntax": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: <nome>\nspec:\n  podSelector:\n    matchLabels: {...}\n  policyTypes: [\"Ingress\", \"Egress\"]\n  ingress: [...]",
+    "example": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: somente-api-acessa-db\nspec:\n  podSelector:\n    matchLabels:\n      app: db\n  policyTypes:\n    - Ingress\n  ingress:\n    - from:\n        - podSelector:\n            matchLabels:\n              app: api\n      ports:\n        - port: 5432",
+    "result": "Apenas Pods com label `app: api` conseguem se conectar aos Pods com label `app: db` na porta 5432; qualquer outro tráfego de entrada é bloqueado.",
+    "notes": [
+      "Por padrão, sem nenhuma NetworkPolicy, todo tráfego entre Pods do cluster é permitido; assim que a primeira policy seleciona um Pod, o tráfego não explicitamente permitido passa a ser negado para aquele Pod."
+    ],
+    "bestPractices": [
+      "Adote um modelo \"deny by default\" criando uma NetworkPolicy que nega todo tráfego e depois libere explicitamente apenas as comunicações necessárias entre serviços."
+    ],
+    "commonMistakes": [
+      "Criar NetworkPolicies em um cluster cujo CNI não suporta a funcionalidade, dando falsa sensação de segurança enquanto o tráfego continua totalmente aberto."
+    ],
+    "relatedCommands": ["k8s-service", "k8s-labels-selectors"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "networkpolicy", "seguranca"],
+    "keywords": [
+      "networkpolicy kubernetes",
+      "firewall kubernetes",
+      "isolar trafego entre pods"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

@@ -1,0 +1,702 @@
+[
+  {
+    "id": "cmd-script-bat-basics",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Estrutura de um script batch (.bat / .cmd)",
+    "description": "Um arquivo de script batch é um arquivo de texto simples com extensão .bat ou .cmd contendo uma sequência de comandos do CMD executados em ordem, como se fossem digitados manualmente.",
+    "syntax": "@echo off\nREM corpo do script\ncomando1\ncomando2\nexit /b 0",
+    "example": "@echo off\necho Iniciando backup...\nxcopy C:\\Dados D:\\Backup /E /I /Y\necho Backup concluido!",
+    "result": "Iniciando backup...\nBackup concluido!",
+    "notes": [
+      "Não há diferença funcional relevante entre .bat e .cmd na maioria dos cenários modernos; .cmd é o padrão mais recente do Windows NT e tem pequenas diferenças de compatibilidade em versões bem antigas."
+    ],
+    "bestPractices": [
+      "Salve o arquivo com codificação compatível com o console (ANSI/OEM, ou UTF-8 sem BOM em sistemas mais novos) para evitar caracteres corrompidos em acentos."
+    ],
+    "commonMistakes": [
+      "Salvar o script em UTF-8 com BOM a partir de um editor moderno, o que faz o CMD exibir caracteres estranhos no início da execução."
+    ],
+    "relatedCommands": ["cmd-script-echo-off", "cmd-script-comments"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "windows"],
+    "keywords": ["arquivo bat", "script cmd", "batch file", "estrutura de script"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-echo-off",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "@echo off",
+    "description": "Desativa a exibição de cada comando antes de sua execução, deixando a saída do script com apenas o que é explicitamente impresso via ECHO.",
+    "syntax": "@echo off",
+    "example": "@echo off\necho Este e o unico texto exibido",
+    "result": "Este e o unico texto exibido",
+    "notes": [
+      "O `@` antes de ECHO OFF evita que até esse próprio comando apareça ecoado na tela."
+    ],
+    "bestPractices": [
+      "Use `@echo off` como primeira linha de praticamente todo script batch destinado a uso final (não debug)."
+    ],
+    "commonMistakes": [
+      "Esquecer o `@` e ver a linha `echo off` impressa na tela antes de ela ter efeito."
+    ],
+    "relatedCommands": ["cmd-script-bat-basics"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/echo",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script"],
+    "keywords": ["echo off", "desativar eco de comandos"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-comments",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Comentários (REM e ::)",
+    "description": "Duas formas de inserir comentários em scripts batch — REM e o prefixo de rótulo `::` — usadas para documentar o código sem afetar sua execução.",
+    "syntax": "REM comentário  |  :: comentário",
+    "example": "REM Este bloco faz o backup dos dados\n:: Alternativa mais compacta de comentario",
+    "result": "(nenhuma saída — ambas as linhas são ignoradas na execução)",
+    "notes": [
+      "`::` tecnicamente é interpretado como um rótulo (label) inválido, o que o CMD simplesmente ignora; por isso não deve ser usado dentro de blocos entre parênteses (ex: dentro de FOR ou IF), onde pode causar erros de sintaxe."
+    ],
+    "bestPractices": [
+      "Use REM dentro de blocos com parênteses (FOR, IF) e reserve `::` para comentários soltos no corpo principal do script."
+    ],
+    "commonMistakes": [
+      "Colocar `::` dentro de um bloco `( )` de FOR/IF, o que pode quebrar a execução do script de forma inesperada."
+    ],
+    "relatedCommands": ["cmd-script-bat-basics"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/rem",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "comentarios"],
+    "keywords": ["rem", "comentario batch", "documentar script"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-variables",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Variáveis com SET",
+    "description": "Define, remove ou exibe variáveis de ambiente dentro do script, usadas para armazenar valores textuais que podem ser reaproveitados com %variavel%.",
+    "syntax": "SET variavel=valor",
+    "example": "set NOME=Mundo\necho Ola, %NOME%!",
+    "result": "Ola, Mundo!",
+    "notes": [
+      "Por padrão, SET trata tudo como string — não há tipagem — e não deve haver espaços ao redor do `=` (ex: `set NOME = valor` inclui espaços indesejados no nome/valor)."
+    ],
+    "bestPractices": [
+      "Nunca deixe espaços antes ou depois do `=` em `set variavel=valor`."
+    ],
+    "commonMistakes": [
+      "Escrever `set NOME = Mundo` (com espaços) e descobrir que a variável criada se chama `NOME ` (com espaço no final) e o valor é ` Mundo` (com espaço no início)."
+    ],
+    "relatedCommands": [
+      "cmd-script-set-arithmetic",
+      "cmd-script-set-input",
+      "cmd-script-delayed-expansion",
+      "cmd-env-variables"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "variaveis"],
+    "keywords": ["set batch", "variavel batch", "atribuir valor"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-set-arithmetic",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "SET /A (aritmética)",
+    "description": "Realiza operações aritméticas com inteiros diretamente na linha de comando ou em scripts, atribuindo o resultado a uma variável.",
+    "syntax": "SET /A variavel=expressão",
+    "example": "set /A total=5*3+2\necho %total%",
+    "result": "17",
+    "notes": [
+      "SET /A trabalha apenas com números inteiros; divisões truncam a parte decimal (ex: `set /A r=7/2` resulta em 3)."
+    ],
+    "bestPractices": [
+      "Use parênteses na expressão para deixar explícita a ordem das operações, evitando depender só da precedência padrão."
+    ],
+    "commonMistakes": [
+      "Esperar resultado com casas decimais de uma divisão, sem perceber que SET /A trunca para inteiro."
+    ],
+    "relatedCommands": ["cmd-script-variables"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "variaveis", "aritmetica"],
+    "keywords": ["set /a", "aritmetica batch", "calculo em batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-set-input",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "SET /P (entrada do usuário)",
+    "description": "Exibe um prompt e aguarda o usuário digitar um valor, armazenando a resposta em uma variável.",
+    "syntax": "SET /P variavel=Mensagem de prompt",
+    "example": "set /P nome=Digite seu nome: \necho Ola, %nome%!",
+    "result": "Digite seu nome: Maria\nOla, Maria!",
+    "notes": [
+      "Se o usuário apenas pressionar Enter sem digitar nada, a variável mantém o valor anterior (se já existia) ou fica vazia."
+    ],
+    "bestPractices": [
+      "Sempre valide/trate o caso do usuário não digitar nada, especialmente se a variável for usada em comandos críticos depois."
+    ],
+    "commonMistakes": [
+      "Assumir que a variável sempre terá um valor válido após SET /P, sem checar entrada vazia."
+    ],
+    "relatedCommands": ["cmd-script-variables", "cmd-script-if"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "input", "interatividade"],
+    "keywords": ["set /p", "entrada do usuario batch", "ler input console"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-parameters",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Parâmetros de script (%1, %*, %~dp0)",
+    "description": "Argumentos passados na chamada do script são acessados como %1 a %9; %* representa todos de uma vez; modificadores como %~dp0 extraem partes do caminho do próprio script.",
+    "syntax": "%1 %2 ... %9 | %* | %~dp0 | %~n1 | %~x1",
+    "example": "@echo off\necho Arquivo de entrada: %1\necho Todos os argumentos: %*\necho Pasta do script: %~dp0",
+    "result": "Arquivo de entrada: entrada.txt\nTodos os argumentos: entrada.txt saida.txt\nPasta do script: C:\\Scripts\\",
+    "parameters": [
+      {
+        "name": "%1..%9",
+        "description": "Argumentos posicionais passados na chamada do script."
+      },
+      {
+        "name": "%*",
+        "description": "Todos os argumentos passados, como uma única string."
+      },
+      {
+        "name": "%~dp0",
+        "description": "Unidade e caminho da pasta onde o script está localizado."
+      }
+    ],
+    "notes": [
+      "%~dp0 é o idioma padrão para obter a pasta onde o próprio script está localizado, muito usado para referenciar arquivos relativos ao script e não ao diretório atual de execução.",
+      "Modificadores combináveis: %~n1 (nome sem extensão), %~x1 (extensão), %~f1 (caminho completo), %~s1 (nome curto 8.3)."
+    ],
+    "bestPractices": [
+      "Use %~dp0 em vez de caminhos relativos fixos sempre que o script precisar referenciar arquivos ao seu lado, independentemente de onde foi chamado."
+    ],
+    "commonMistakes": [
+      "Assumir que %1 sempre estará preenchido sem checar (`if \"%~1\"==\"\" goto :uso`) antes de usá-lo."
+    ],
+    "relatedCommands": ["cmd-script-if", "cmd-script-call-functions"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/call",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "parametros", "argumentos"],
+    "keywords": ["parametros batch", "argumentos de linha de comando", "%1", "%~dp0"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-if",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "IF (condicional)",
+    "description": "Avalia uma condição — comparação de strings, existência de arquivo/diretório, valor de ERRORLEVEL ou variável definida — e executa um comando caso ela seja verdadeira.",
+    "syntax": "IF [/I] condição comando",
+    "example": "if exist config.ini (\n  echo Configuracao encontrada\n) else (\n  echo Configuracao nao encontrada\n)",
+    "result": "Configuracao encontrada",
+    "flags": [
+      { "flag": "/I", "description": "Compara strings ignorando maiúsculas/minúsculas." },
+      { "flag": "NOT", "description": "Nega a condição avaliada." }
+    ],
+    "notes": [
+      "`IF EXIST` testa presença de arquivo ou pasta; `IF DEFINED` testa se uma variável foi definida; `IF ERRORLEVEL n` testa o código de saída do último comando."
+    ],
+    "bestPractices": [
+      "Use `IF /I` ao comparar strings vindas de entrada do usuário, para não depender da caixa exata digitada."
+    ],
+    "commonMistakes": [
+      "Comparar `%variavel%==valor` sem aspas quando a variável pode estar vazia, o que quebra a sintaxe do IF (vira apenas `==valor`)."
+    ],
+    "relatedCommands": ["cmd-script-if-else", "cmd-script-errorlevel"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/if",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "condicional"],
+    "keywords": ["if batch", "condicional cmd", "if exist", "if errorlevel"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-if-else",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "IF / ELSE e comparações numéricas",
+    "description": "Extensão do IF que permite definir um bloco alternativo (ELSE) executado quando a condição é falsa, além de operadores de comparação numérica (EQU, NEQ, LSS, LEQ, GTR, GEQ).",
+    "syntax": "IF condição (\n  comando_se_verdadeiro\n) ELSE (\n  comando_se_falso\n)",
+    "example": "set /A idade=16\nif %idade% GEQ 18 (\n  echo Maior de idade\n) else (\n  echo Menor de idade\n)",
+    "result": "Menor de idade",
+    "flags": [
+      { "flag": "EQU", "description": "Igual a." },
+      { "flag": "NEQ", "description": "Diferente de." },
+      { "flag": "LSS / LEQ", "description": "Menor que / menor ou igual a." },
+      { "flag": "GTR / GEQ", "description": "Maior que / maior ou igual a." }
+    ],
+    "notes": [
+      "O `ELSE` precisa estar na mesma linha do `)` que fecha o bloco IF, ou o CMD não reconhece a associação entre eles."
+    ],
+    "bestPractices": [
+      "Sempre alinhe o `) ELSE (` na mesma linha para evitar o erro clássico de 'ELSE inesperado' do CMD."
+    ],
+    "commonMistakes": [
+      "Quebrar `) ELSE (` em duas linhas separadas, causando erro de sintaxe ou execução incorreta do bloco."
+    ],
+    "relatedCommands": ["cmd-script-if"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/if",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "condicional"],
+    "keywords": ["if else batch", "comparacao numerica cmd", "geq leq neq"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-for-basic",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "FOR (iteração básica sobre uma lista)",
+    "description": "Percorre um conjunto de valores explícitos ou arquivos correspondentes a um padrão, executando um comando para cada item.",
+    "syntax": "FOR %%variavel IN (conjunto) DO comando",
+    "example": "for %%f in (*.txt) do echo Encontrado: %%f",
+    "result": "Encontrado: notas.txt\nEncontrado: readme.txt",
+    "notes": [
+      "Em scripts .bat, a variável de iteração usa `%%` (duplo); no Prompt de Comando interativo, usa-se apenas `%` (simples)."
+    ],
+    "bestPractices": [
+      "Use nomes de variável de uma letra só (%%f, %%i) por convenção, já que FOR não aceita nomes multi-caractere como em outras linguagens."
+    ],
+    "commonMistakes": [
+      "Usar apenas `%f` em vez de `%%f` dentro de um arquivo .bat, o que falha silenciosamente ou gera comportamento inesperado."
+    ],
+    "relatedCommands": [
+      "cmd-script-for-f",
+      "cmd-script-for-d",
+      "cmd-script-for-r",
+      "cmd-script-for-l"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/for",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "loop", "for"],
+    "keywords": ["for batch", "loop cmd", "iterar arquivos batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-for-f",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "FOR /F (parsing de arquivos e saída de comandos)",
+    "description": "Variação do FOR que processa linha a linha o conteúdo de um arquivo de texto ou a saída de outro comando, com opções para pular linhas, definir delimitador e capturar tokens específicos.",
+    "syntax": "FOR /F [\"opções\"] %%variavel IN (arquivo|'comando'|\"string\") DO comando",
+    "example": "for /F \"tokens=1,2 delims=,\" %%a in (dados.csv) do echo Nome=%%a Idade=%%b",
+    "result": "Nome=Joao Idade=32\nNome=Maria Idade=28",
+    "parameters": [
+      {
+        "name": "tokens",
+        "description": "Define quais colunas (após dividir por delims) serão capturadas nas variáveis."
+      },
+      {
+        "name": "delims",
+        "description": "Define o(s) caractere(s) delimitador(es); o padrão é espaço."
+      },
+      {
+        "name": "skip",
+        "description": "Número de linhas iniciais a ignorar (útil para pular cabeçalhos)."
+      },
+      {
+        "name": "usebackq",
+        "description": "Habilita sintaxe alternativa de aspas, útil quando o caminho contém espaços."
+      }
+    ],
+    "notes": [
+      "Parênteses simples `( )` leem de um arquivo; aspas simples `' '` executam e capturam a saída de um comando; aspas duplas `\" \"` tratam o conteúdo como string literal.",
+      "`tokens=1,2` seleciona a 1ª e a 2ª coluna após dividir por `delims`; as variáveis seguintes (%%a, %%b, ...) recebem cada token em sequência."
+    ],
+    "bestPractices": [
+      "Use `usebackq` quando precisar que aspas duplas no comando ou caminho do arquivo não conflitem com a sintaxe do FOR /F."
+    ],
+    "commonMistakes": [
+      "Esquecer `delims=` e assumir que o padrão é vírgula — o delimitador padrão do FOR /F é espaço."
+    ],
+    "relatedCommands": ["cmd-script-for-basic"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/for",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "loop", "for", "parsing"],
+    "keywords": ["for /f", "parsear arquivo batch", "ler csv batch", "tokens delims"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-for-d",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "FOR /D (iteração sobre diretórios)",
+    "description": "Percorre apenas diretórios (não arquivos) que correspondem a um padrão no nível especificado, ignorando arquivos comuns.",
+    "syntax": "FOR /D %%variavel IN (padrão) DO comando",
+    "example": "for /D %%p in (C:\\Projetos\\*) do echo Pasta: %%p",
+    "result": "Pasta: C:\\Projetos\\api\nPasta: C:\\Projetos\\frontend",
+    "notes": [
+      "FOR /D não desce recursivamente por padrão — cada %%p é apenas um subdiretório direto do padrão informado."
+    ],
+    "bestPractices": [
+      "Combine com FOR /R quando precisar tanto filtrar só diretórios quanto percorrer recursivamente toda a árvore."
+    ],
+    "commonMistakes": [
+      "Esperar que FOR /D também liste arquivos comuns, quando ele filtra exclusivamente diretórios."
+    ],
+    "relatedCommands": ["cmd-script-for-basic", "cmd-script-for-r"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/for",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "loop", "for", "diretorios"],
+    "keywords": ["for /d", "iterar pastas batch", "listar diretorios em loop"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-for-r",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "FOR /R (recursão em subpastas)",
+    "description": "Percorre recursivamente uma árvore de diretórios a partir de uma raiz, aplicando o comando a cada arquivo (ou padrão) encontrado em qualquer nível de subpasta.",
+    "syntax": "FOR /R [raiz] %%variavel IN (padrão) DO comando",
+    "example": "for /R C:\\Projetos %%f in (*.log) do del \"%%f\"",
+    "result": "Remove todos os arquivos .log encontrados em C:\\Projetos e em qualquer subpasta abaixo dela.",
+    "notes": [
+      "Se a raiz for omitida, FOR /R usa o diretório atual como ponto de partida."
+    ],
+    "bestPractices": [
+      "Sempre coloque %%f entre aspas nos comandos executados, para lidar corretamente com caminhos que contenham espaços."
+    ],
+    "commonMistakes": [
+      "Rodar um DEL ou RMDIR dentro de um FOR /R apontando para uma raiz ampla demais (ex: C:\\) por engano, afetando arquivos fora do escopo pretendido."
+    ],
+    "relatedCommands": ["cmd-script-for-basic", "cmd-script-for-d"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/for",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "loop", "for", "recursivo"],
+    "keywords": ["for /r", "loop recursivo batch", "percorrer subpastas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-for-l",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "FOR /L (loop numérico)",
+    "description": "Gera uma sequência numérica a partir de um valor inicial, um incremento (que pode ser negativo) e um valor final, executando o comando uma vez para cada número.",
+    "syntax": "FOR /L %%variavel IN (inicio,incremento,fim) DO comando",
+    "example": "for /L %%i in (1,1,5) do echo Tentativa %%i",
+    "result": "Tentativa 1\nTentativa 2\nTentativa 3\nTentativa 4\nTentativa 5",
+    "notes": [
+      "Um incremento negativo (ex: `(5,-1,1)`) faz o loop contar regressivamente."
+    ],
+    "bestPractices": [
+      "Use FOR /L para lógica de retry/tentativas em scripts, combinando com IF ERRORLEVEL para interromper o loop antecipadamente em caso de sucesso."
+    ],
+    "commonMistakes": [
+      "Definir um incremento com o sinal errado (positivo quando início > fim, ou vice-versa), fazendo o loop nunca executar."
+    ],
+    "relatedCommands": ["cmd-script-for-basic", "cmd-script-errorlevel"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/for",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "loop", "for"],
+    "keywords": ["for /l", "loop numerico batch", "contador batch", "retry batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-goto-labels",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "GOTO e rótulos (labels)",
+    "description": "Transfere a execução do script para um rótulo (label, marcado com :nome) em qualquer ponto do arquivo, permitindo criar loops manuais e desvios de fluxo.",
+    "syntax": "GOTO rótulo  ...  :rótulo",
+    "example": "set /A contador=0\n:inicio\nset /A contador+=1\necho Contagem: %contador%\nif %contador% LSS 3 goto inicio",
+    "result": "Contagem: 1\nContagem: 2\nContagem: 3",
+    "notes": [
+      "Em versões modernas do Windows, o comprimento do nome do rótulo não é mais uma limitação prática — ainda assim, nomes curtos e descritivos facilitam a leitura."
+    ],
+    "bestPractices": [
+      "Prefira FOR /L a loops manuais com GOTO sempre que o número de iterações for conhecido — é mais legível e menos propenso a loop infinito acidental."
+    ],
+    "commonMistakes": [
+      "Criar um GOTO que nunca atinge a condição de parada, gerando um loop infinito que trava o script."
+    ],
+    "relatedCommands": ["cmd-script-call-functions", "cmd-script-if"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/goto",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "goto", "labels"],
+    "keywords": ["goto batch", "rotulos cmd", "loop manual batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-call-functions",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Funções via CALL + labels",
+    "description": "Batch não tem funções nativas, mas simula esse comportamento usando CALL para invocar um rótulo como se fosse uma sub-rotina, retornando com GOTO :EOF.",
+    "syntax": "CALL :rótulo [argumentos]  ...  :rótulo\n  comandos\n  GOTO :EOF",
+    "example": "@echo off\ncall :saudacao Mundo\ngoto :fim\n\n:saudacao\necho Ola, %~1!\ngoto :EOF\n\n:fim",
+    "result": "Ola, Mundo!",
+    "notes": [
+      "`GOTO :EOF` (End Of File) é o padrão para 'retornar' de uma sub-rotina sem sair do script inteiro.",
+      "Sem CALL, um GOTO direto para o rótulo da 'função' não retornaria ao ponto de chamada, apenas continuaria a execução linearmente a partir dali."
+    ],
+    "bestPractices": [
+      "Sempre finalize cada 'função' (rótulo chamado via CALL) com `GOTO :EOF` para garantir o retorno correto ao chamador."
+    ],
+    "commonMistakes": [
+      "Usar GOTO em vez de CALL para invocar o rótulo, perdendo a capacidade de retornar ao ponto original após a execução do bloco."
+    ],
+    "relatedCommands": ["cmd-script-goto-labels", "cmd-script-parameters"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/call",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "funcoes", "call"],
+    "keywords": ["call batch", "funcao batch", "sub-rotina cmd", "goto eof"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-setlocal-endlocal",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "SETLOCAL e ENDLOCAL",
+    "description": "Cria um escopo local de variáveis de ambiente dentro do script, isolando alterações feitas por ele do ambiente do processo pai (o Prompt de Comando que o chamou).",
+    "syntax": "SETLOCAL\n  ...alterações de variáveis...\nENDLOCAL",
+    "example": "@echo off\nset ORIGINAL=valor_externo\nsetlocal\nset ORIGINAL=valor_interno\necho Dentro: %ORIGINAL%\nendlocal\necho Fora: %ORIGINAL%",
+    "result": "Dentro: valor_interno\nFora: valor_externo",
+    "notes": [
+      "Ao terminar a execução do script (implicitamente, sem ENDLOCAL explícito), o CMD já desfaz automaticamente qualquer SETLOCAL pendente."
+    ],
+    "bestPractices": [
+      "Comece scripts que alteram variáveis de ambiente com `setlocal`, evitando que essas mudanças 'vazem' para a sessão do CMD que chamou o script."
+    ],
+    "commonMistakes": [
+      "Esperar que uma variável definida dentro de um SETLOCAL fique disponível após o ENDLOCAL (ou o fim do script) correspondente."
+    ],
+    "relatedCommands": ["cmd-script-variables", "cmd-script-delayed-expansion"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/setlocal",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "setlocal", "escopo"],
+    "keywords": ["setlocal", "endlocal", "escopo de variaveis batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-delayed-expansion",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Expansão atrasada de variáveis (EnableDelayedExpansion)",
+    "description": "Por padrão, o CMD substitui todas as %variaveis% pelo valor delas antes de executar um bloco inteiro (como um FOR ou IF), o que impede ler valores atualizados dentro do próprio bloco. SETLOCAL EnableDelayedExpansion resolve isso usando !variavel! em vez de %variavel%.",
+    "syntax": "SETLOCAL ENABLEDELAYEDEXPANSION\n...\n!variavel!",
+    "example": "setlocal enabledelayedexpansion\nset total=0\nfor %%n in (1 2 3) do (\n  set /A total+=%%n\n  echo Total parcial: !total!\n)",
+    "result": "Total parcial: 1\nTotal parcial: 3\nTotal parcial: 6",
+    "notes": [
+      "Sem expansão atrasada, `echo Total parcial: %total%` dentro do mesmo FOR mostraria sempre o valor de `total` de ANTES do loop começar (0), pois o bloco inteiro é expandido de uma vez só, no momento em que é lido."
+    ],
+    "bestPractices": [
+      "Ative `enabledelayedexpansion` sempre que precisar ler o valor atualizado de uma variável dentro do mesmo bloco FOR/IF em que ela está sendo alterada."
+    ],
+    "commonMistakes": [
+      "Usar %variavel% em vez de !variavel! dentro de um bloco com expansão atrasada ativada e continuar vendo o valor 'antigo' da variável."
+    ],
+    "relatedCommands": ["cmd-script-setlocal-endlocal", "cmd-script-for-basic"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/setlocal",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "variaveis", "avancado"],
+    "keywords": ["enabledelayedexpansion", "expansao atrasada", "variavel dentro de for"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-errorlevel",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "ERRORLEVEL (tratamento de erros)",
+    "description": "Código numérico de saída retornado pelo último comando ou script executado, usado para verificar sucesso (geralmente 0) ou algum tipo específico de falha.",
+    "syntax": "IF ERRORLEVEL n comando  |  IF %ERRORLEVEL% EQU n comando",
+    "example": "xcopy C:\\Origem D:\\Destino /E /I\nif %ERRORLEVEL% NEQ 0 (\n  echo Falha ao copiar arquivos! Codigo: %ERRORLEVEL%\n  exit /b 1\n)",
+    "result": "Falha ao copiar arquivos! Codigo: 4",
+    "notes": [
+      "`IF ERRORLEVEL n` é verdadeiro se o código for MAIOR OU IGUAL a n, não apenas igual — para checar um valor exato, prefira `IF %ERRORLEVEL% EQU n`.",
+      "Nem todo comando ou programa define ERRORLEVEL de forma confiável; sempre consulte a documentação da ferramenta específica."
+    ],
+    "bestPractices": [
+      "Sempre verifique %ERRORLEVEL% imediatamente após o comando crítico, antes que outro comando (mesmo um simples IF) o sobrescreva."
+    ],
+    "commonMistakes": [
+      "Rodar um comando qualquer (até mesmo um IF de checagem) entre o comando original e a verificação de %ERRORLEVEL%, alterando o valor antes de ele ser lido."
+    ],
+    "relatedCommands": ["cmd-script-if", "cmd-script-exit"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/if",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "erros", "errorlevel"],
+    "keywords": ["errorlevel", "tratamento de erro batch", "codigo de saida"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-exit",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "EXIT /B (encerrar script com código de saída)",
+    "description": "Encerra a execução do script batch atual (sem fechar a janela do CMD, graças ao /B) e opcionalmente define o ERRORLEVEL que será retornado ao chamador.",
+    "syntax": "EXIT [/B] [código]",
+    "example": "if not exist config.ini (\n  echo Arquivo de configuracao ausente!\n  exit /b 1\n)\necho Continuando execucao normal...",
+    "result": "Arquivo de configuracao ausente!",
+    "flags": [
+      {
+        "flag": "/B",
+        "description": "Encerra apenas o script/lote atual, sem fechar a instância do cmd.exe."
+      }
+    ],
+    "notes": [
+      "Sem `/B`, EXIT fecha a janela inteira do Prompt de Comando (ou a instância do cmd.exe em execução) — dentro de um .bat chamado por outro processo isso pode encerrar mais do que o esperado.",
+      "O código de saída definido por `exit /b N` fica disponível como %ERRORLEVEL% para quem chamou o script."
+    ],
+    "bestPractices": [
+      "Use sempre `exit /b <código>` em scripts, reservando `exit` (sem /B) apenas para quando a intenção é mesmo fechar o console."
+    ],
+    "commonMistakes": [
+      "Usar `exit` sem `/b` dentro de um script chamado via CALL a partir de outro script, fechando o CMD inteiro em vez de retornar apenas ao chamador."
+    ],
+    "relatedCommands": ["cmd-script-errorlevel"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/exit",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "exit", "codigo de saida"],
+    "keywords": ["exit /b", "encerrar script batch", "codigo de retorno"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-best-practices",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Boas práticas gerais em scripts batch",
+    "description": "Conjunto de práticas recomendadas para escrever scripts batch mais robustos, legíveis e seguros, reunindo convenções comuns adotadas em scripts de produção.",
+    "syntax": "(guia de práticas — não aplicável a um único comando)",
+    "notes": [
+      "Batch scripting tem sintaxe antiga e cheia de comportamentos peculiares (parsing em duas fases, expansão de variáveis, espaços significativos); testar cada trecho isoladamente ajuda a evitar surpresas em produção."
+    ],
+    "bestPractices": [
+      "Sempre comece com `@echo off` e `setlocal` para isolar variáveis e limpar a saída.",
+      "Valide a existência de arquivos/parâmetros obrigatórios logo no início do script, encerrando com `exit /b 1` e uma mensagem clara em caso de pré-requisito ausente.",
+      "Use `%~dp0` para referenciar arquivos ao lado do script, nunca caminhos relativos que dependem de onde o script foi chamado.",
+      "Prefira nomes de variáveis em MAIÚSCULAS para diferenciá-las visualmente de comandos e rótulos."
+    ],
+    "commonMistakes": [
+      "Concatenar caminhos manualmente sem padronizar barras invertidas, gerando barras duplicadas ou espaços indesejados.",
+      "Não tratar espaços em caminhos, esquecendo aspas ao redor de %1, %~dp0 ou variáveis que podem conter espaços.",
+      "Depender de comportamento não documentado que muda entre versões do Windows, em vez de testar em ambientes reais."
+    ],
+    "relatedCommands": [
+      "cmd-script-bat-basics",
+      "cmd-script-parameters",
+      "cmd-script-errorlevel"
+    ],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "boas praticas"],
+    "keywords": ["boas praticas batch", "convencoes de script cmd", "armadilhas batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

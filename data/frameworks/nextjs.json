@@ -1,0 +1,63 @@
+[
+  {
+    "id": "nextjs-app-router",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "App Router",
+    "description": "Sistema de roteamento baseado em pastas dentro de app/, com suporte nativo a Server Components, layouts aninhados e streaming.",
+    "syntax": "app/<rota>/page.tsx",
+    "example": "app/produtos/[id]/page.tsx  → /produtos/123",
+    "result": "Cada pasta vira um segmento de rota; `page.tsx` define o conteúdo público daquele segmento.",
+    "notes": [
+      "`layout.tsx` compartilha UI entre rotas irmãs sem perder estado ao navegar.",
+      "Arquivos especiais: `loading.tsx`, `error.tsx`, `not-found.tsx` controlam estados da rota."
+    ],
+    "bestPractices": [
+      "Busque dados diretamente em Server Components ao invés de criar API routes desnecessárias."
+    ],
+    "commonMistakes": [
+      "Misturar App Router e Pages Router na mesma rota, causando conflitos de resolução."
+    ],
+    "relatedCommands": ["react-server-components", "nextjs-metadata"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app",
+    "externalReferences": [],
+    "tags": ["nextjs", "app-router", "roteamento"],
+    "keywords": ["app router", "roteamento nextjs", "page.tsx"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "nextjs-metadata-api",
+    "category": "Next.js",
+    "subcategory": "SEO",
+    "title": "Metadata API",
+    "description": "API declarativa para definir title, description, Open Graph e outras tags <head> por rota, com suporte estático e dinâmico.",
+    "syntax": "export const metadata: Metadata = { title, description }\n// ou\nexport async function generateMetadata({ params }) { ... }",
+    "example": "export const metadata: Metadata = {\n  title: \"Programmer Handbook\",\n  description: \"A maior referência gratuita para programadores\",\n}",
+    "result": "O Next.js injeta automaticamente as tags <title> e <meta> correspondentes no <head>.",
+    "notes": [
+      "`generateMetadata` permite metadata dinâmica baseada em dados carregados na própria rota."
+    ],
+    "bestPractices": [
+      "Defina metadata padrão no layout raiz e sobrescreva apenas o necessário em rotas filhas."
+    ],
+    "commonMistakes": [
+      "Duplicar tags <head> manualmente com `next/head` (API do Pages Router) dentro do App Router."
+    ],
+    "relatedCommands": ["nextjs-app-router"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13.2+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/functions/generate-metadata",
+    "externalReferences": [],
+    "tags": ["nextjs", "seo", "metadata"],
+    "keywords": ["metadata api", "seo nextjs", "open graph"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

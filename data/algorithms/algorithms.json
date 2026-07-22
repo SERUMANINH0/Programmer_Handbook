@@ -1,0 +1,61 @@
+[
+  {
+    "id": "algo-binary-search",
+    "category": "Algoritmos",
+    "subcategory": "Busca",
+    "title": "Busca binária",
+    "description": "Encontra a posição de um valor em um array ordenado dividindo repetidamente o intervalo de busca pela metade.",
+    "syntax": "function buscaBinaria(array, alvo) { ... }",
+    "example": "function buscaBinaria(arr, alvo) {\n  let ini = 0, fim = arr.length - 1\n  while (ini <= fim) {\n    const meio = Math.floor((ini + fim) / 2)\n    if (arr[meio] === alvo) return meio\n    if (arr[meio] < alvo) ini = meio + 1\n    else fim = meio - 1\n  }\n  return -1\n}",
+    "result": "Retorna o índice do elemento encontrado, ou -1 se não existir no array.",
+    "returns": "Índice (number) do elemento, ou -1 quando não encontrado.",
+    "notes": [
+      "Complexidade de tempo O(log n) — exige que o array esteja previamente ordenado."
+    ],
+    "bestPractices": [
+      "Prefira busca binária a busca linear sempre que os dados já estiverem ordenados e a coleção for grande."
+    ],
+    "commonMistakes": [
+      "Aplicar busca binária em um array não ordenado, o que produz resultados incorretos silenciosamente."
+    ],
+    "relatedCommands": ["algo-linear-search", "algo-quicksort"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Binary_search_algorithm",
+    "externalReferences": [],
+    "tags": ["algoritmos", "busca", "binary-search"],
+    "keywords": ["busca binaria", "binary search", "complexidade log n"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "algo-big-o-notation",
+    "category": "Algoritmos",
+    "subcategory": "Complexidade",
+    "title": "Notação Big O",
+    "description": "Notação matemática usada para descrever como o tempo de execução (ou uso de memória) de um algoritmo cresce em relação ao tamanho da entrada.",
+    "syntax": "O(1), O(log n), O(n), O(n log n), O(n²), O(2ⁿ)",
+    "example": "Acessar um elemento de array por índice é O(1); percorrer todo o array é O(n); dois loops aninhados sobre o mesmo array são O(n²).",
+    "result": "Permite comparar algoritmos de forma independente de hardware, focando no crescimento assintótico.",
+    "notes": [
+      "Big O descreve o pior caso (worst case) por padrão; existem também notações para caso médio (Θ) e melhor caso (Ω)."
+    ],
+    "bestPractices": [
+      "Ao revisar código, identifique loops aninhados e chamadas recursivas para estimar a complexidade antes de otimizar prematuramente."
+    ],
+    "commonMistakes": [
+      "Confundir O(n) com o número exato de operações — Big O descreve a taxa de crescimento, não um valor absoluto."
+    ],
+    "relatedCommands": ["algo-binary-search"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Big_O_notation",
+    "externalReferences": [],
+    "tags": ["algoritmos", "complexidade", "big-o"],
+    "keywords": ["big o", "notacao big o", "complexidade de algoritmos"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

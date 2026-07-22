@@ -1,0 +1,60 @@
+[
+  {
+    "id": "py-list-comprehension",
+    "category": "Python",
+    "subcategory": "Estruturas de dados",
+    "title": "List comprehension",
+    "description": "Sintaxe compacta para criar listas a partir de iteráveis, opcionalmente aplicando transformação e filtro.",
+    "syntax": "[expressao for item in iteravel if condicao]",
+    "example": "quadrados_pares = [n**2 for n in range(10) if n % 2 == 0]",
+    "result": "[0, 4, 16, 36, 64]",
+    "notes": ["Também existem dict e set comprehensions com sintaxe análoga usando {} ."],
+    "bestPractices": [
+      "Prefira list comprehension a `for` + `append()` quando a lógica couber em uma linha legível."
+    ],
+    "commonMistakes": [
+      "Aninhar comprehensions muito complexas, sacrificando legibilidade — nesse caso um loop explícito é melhor."
+    ],
+    "relatedCommands": ["py-generator-expression", "py-map-filter"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions",
+    "externalReferences": [],
+    "tags": ["python", "list", "comprehension"],
+    "keywords": ["list comprehension", "compreensao de lista"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "py-context-manager-with",
+    "category": "Python",
+    "subcategory": "Gerenciamento de recursos",
+    "title": "Context manager (with)",
+    "description": "Garante que recursos (arquivos, conexões, locks) sejam liberados corretamente, mesmo em caso de exceção.",
+    "syntax": "with expressao as variavel:\n    bloco",
+    "example": "with open(\"dados.txt\") as arquivo:\n    conteudo = arquivo.read()",
+    "result": "O arquivo é fechado automaticamente ao sair do bloco `with`, mesmo se ocorrer exceção.",
+    "notes": [
+      "Um objeto vira context manager implementando os métodos `__enter__` e `__exit__`."
+    ],
+    "bestPractices": [
+      "Use `with` sempre que abrir arquivos, sockets ou conexões de banco de dados."
+    ],
+    "commonMistakes": [
+      "Abrir arquivos com `open()` sem `with` e esquecer de chamar `close()` manualmente."
+    ],
+    "relatedCommands": ["py-try-except", "py-contextlib"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.5+",
+    "officialDocumentation": "https://docs.python.org/3/reference/compound_stmts.html#the-with-statement",
+    "externalReferences": [],
+    "tags": ["python", "context-manager", "recursos"],
+    "keywords": ["with", "context manager", "gerenciador de contexto"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "http-status-codes-4xx-5xx",
+    "category": "HTTP",
+    "subcategory": "Status codes",
+    "title": "Códigos de status 4xx e 5xx",
+    "description": "Faixas de código HTTP que indicam erro: 4xx representa erro do cliente (requisição inválida) e 5xx representa erro do servidor.",
+    "syntax": "HTTP/1.1 <codigo> <mensagem>",
+    "example": "HTTP/1.1 404 Not Found\nHTTP/1.1 500 Internal Server Error",
+    "result": "O cliente recebe o código junto ao corpo da resposta, indicando a natureza do problema.",
+    "notes": [
+      "400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found e 429 Too Many Requests são os 4xx mais comuns.",
+      "500 Internal Server Error, 502 Bad Gateway e 503 Service Unavailable são os 5xx mais comuns."
+    ],
+    "bestPractices": [
+      "Retorne o código mais específico possível (ex: 401 para não autenticado vs 403 para autenticado sem permissão)."
+    ],
+    "commonMistakes": [
+      "Retornar 200 OK junto com um corpo indicando erro, quebrando o contrato semântico do protocolo HTTP."
+    ],
+    "relatedCommands": ["http-methods", "rest-api-design"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "HTTP/1.1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/HTTP/Status",
+    "externalReferences": [],
+    "tags": ["http", "status-code", "rede"],
+    "keywords": ["status code http", "erro 404", "erro 500"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "http-methods",
+    "category": "HTTP",
+    "subcategory": "Métodos",
+    "title": "Métodos HTTP (verbos)",
+    "description": "Verbos que indicam a ação desejada sobre um recurso: GET (ler), POST (criar), PUT/PATCH (atualizar), DELETE (remover).",
+    "syntax": "<METODO> /caminho HTTP/1.1",
+    "example": "GET /usuarios/42 HTTP/1.1\nPOST /usuarios HTTP/1.1",
+    "result": "O servidor interpreta o verbo para decidir qual operação executar sobre o recurso indicado na URL.",
+    "notes": [
+      "GET e HEAD devem ser idempotentes e seguros (sem efeitos colaterais).",
+      "PUT substitui o recurso inteiro; PATCH aplica uma modificação parcial."
+    ],
+    "bestPractices": [
+      "Use os verbos conforme a semântica HTTP para manter APIs RESTful previsíveis."
+    ],
+    "commonMistakes": [
+      "Usar GET para operações que alteram estado no servidor (ex: `GET /excluir-usuario/42`)."
+    ],
+    "relatedCommands": ["http-status-codes-4xx-5xx", "rest-api-design"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "HTTP/1.1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/HTTP/Methods",
+    "externalReferences": [],
+    "tags": ["http", "metodos", "rest"],
+    "keywords": ["metodos http", "get post put delete", "verbos http"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

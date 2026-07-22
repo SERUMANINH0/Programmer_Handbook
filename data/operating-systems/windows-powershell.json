@@ -1,0 +1,68 @@
+[
+  {
+    "id": "powershell-get-childitem",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Get-ChildItem",
+    "description": "Lista arquivos e subdiretórios de um caminho, equivalente ao `ls`/`dir`, com suporte a filtros avançados.",
+    "syntax": "Get-ChildItem [-Path] <caminho> [-Recurse] [-Filter <padrao>]",
+    "example": "Get-ChildItem -Path . -Recurse -Filter *.log",
+    "result": "Lista todos os arquivos .log encontrados recursivamente a partir do diretório atual.",
+    "aliases": ["ls", "dir", "gci"],
+    "flags": [
+      { "flag": "-Recurse", "description": "Percorre subdiretórios recursivamente." },
+      {
+        "flag": "-Filter",
+        "description": "Filtra por padrão de nome (mais rápido que Where-Object)."
+      }
+    ],
+    "notes": [
+      "`-Filter` é processado pelo provider e é mais performático que `| Where-Object` para grandes volumes."
+    ],
+    "bestPractices": [
+      "Prefira `-Filter` a `Where-Object` quando o filtro for simples, por performance."
+    ],
+    "commonMistakes": [
+      "Usar o alias `ls`/`dir` em scripts pensando que o comportamento é idêntico ao Bash/CMD original."
+    ],
+    "relatedCommands": ["powershell-remove-item", "powershell-copy-item"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/get-childitem",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": ["get-childitem", "listar arquivos powershell", "ls powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "powershell-pipeline-object",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Pipeline de objetos",
+    "description": "Diferente do CMD/Bash (que encadeiam texto puro), o pipeline do PowerShell passa objetos .NET completos entre comandos, preservando tipo e propriedades.",
+    "syntax": "Comando1 | Comando2",
+    "example": "Get-Process | Where-Object { $_.CPU -gt 100 } | Sort-Object CPU -Descending",
+    "result": "Lista de processos filtrados por uso de CPU e ordenados, mantendo todas as propriedades do objeto Process.",
+    "notes": [
+      "Use `Get-Member` após qualquer comando para inspecionar as propriedades e métodos disponíveis no objeto retornado."
+    ],
+    "bestPractices": [
+      "Aproveite `Select-Object`, `Where-Object` e `Sort-Object` para manipular dados sem parsear texto manualmente."
+    ],
+    "commonMistakes": [
+      "Tentar tratar a saída como texto puro (ex: usando regex) quando já existem propriedades estruturadas disponíveis."
+    ],
+    "relatedCommands": ["powershell-get-childitem"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/scripting/learn/understanding-the-powershell-pipeline",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "pipeline"],
+    "keywords": ["pipeline powershell", "objetos powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

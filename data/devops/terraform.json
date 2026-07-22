@@ -1,0 +1,976 @@
+[
+  {
+    "id": "tf-file-structure",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Estrutura de arquivos .tf",
+    "description": "Terraform organiza a infraestrutura em arquivos de texto com extensão .tf (ou .tf.json), escritos em HCL (HashiCorp Configuration Language), lidos em conjunto a partir de um mesmo diretório.",
+    "syntax": "main.tf        # recursos principais\nvariables.tf   # declaração de variáveis de entrada\noutputs.tf     # valores exportados após o apply\nproviders.tf   # configuração de providers\nterraform.tfvars # valores das variáveis (não versionar se contiver segredos)",
+    "example": "# main.tf\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-0123456789abcdef0\"\n  instance_type = \"t3.micro\"\n}",
+    "result": "Terraform lê todos os arquivos .tf do diretório como um único módulo lógico, independente de como o código está dividido entre arquivos.",
+    "notes": [
+      "A divisão em múltiplos arquivos (main.tf, variables.tf, outputs.tf) é uma convenção da comunidade, não uma exigência da ferramenta.",
+      "Terraform processa arquivos em ordem alfabética apenas para leitura; a ordem de criação real dos recursos é determinada pelo grafo de dependências."
+    ],
+    "bestPractices": [
+      "Mantenha uma convenção de nomes consistente entre módulos e projetos para facilitar a navegação do time.",
+      "Separe variáveis sensíveis em arquivos `.auto.tfvars` ignorados pelo Git ou use um backend de segredos (Vault, SSM)."
+    ],
+    "commonMistakes": [
+      "Colocar credenciais ou segredos diretamente em arquivos .tf versionados no repositório."
+    ],
+    "relatedCommands": ["tf-variables-outputs", "tf-cmd-init"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/files",
+    "externalReferences": [],
+    "tags": ["terraform", "hcl", "iac", "fundamentos"],
+    "keywords": ["estrutura terraform", "arquivos .tf", "hcl terraform"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-provider-block",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Bloco provider",
+    "description": "Configura um provider — o plugin que traduz a configuração declarativa do Terraform em chamadas de API de uma plataforma específica (AWS, Azure, GCP, Kubernetes etc.).",
+    "syntax": "provider \"<nome>\" {\n  <argumentos-de-configuracao>\n}",
+    "example": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 5.0\"\n    }\n  }\n}\n\nprovider \"aws\" {\n  region = \"sa-east-1\"\n}",
+    "result": "O Terraform baixa o plugin do provider AWS (versão compatível com ~> 5.0) durante o `terraform init` e o usa para gerenciar recursos `aws_*`.",
+    "parameters": [
+      {
+        "name": "source",
+        "description": "Endereço do provider no registry (ex: hashicorp/aws).",
+        "required": true
+      },
+      {
+        "name": "version",
+        "description": "Restrição de versão do provider (recomendado sempre fixar uma faixa).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Um mesmo provider pode ter múltiplas configurações via `alias`, útil para gerenciar múltiplas regiões ou contas na mesma configuração.",
+      "As credenciais de acesso ao provider geralmente vêm de variáveis de ambiente ou perfis, não devem ficar hardcoded no bloco provider."
+    ],
+    "bestPractices": [
+      "Sempre fixe uma versão do provider (`required_providers`) para evitar quebras inesperadas em atualizações automáticas.",
+      "Use `alias` para multi-região/multi-conta em vez de duplicar módulos inteiros."
+    ],
+    "commonMistakes": [
+      "Não fixar a versão do provider, permitindo que uma major version nova quebre a configuração silenciosamente em um `terraform init -upgrade`."
+    ],
+    "relatedCommands": ["tf-file-structure", "tf-cmd-init"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/providers/configuration",
+    "externalReferences": [],
+    "tags": ["terraform", "provider", "hcl"],
+    "keywords": [
+      "terraform provider",
+      "required_providers",
+      "configurar provider terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-resource-block",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Bloco resource",
+    "description": "Declara um recurso de infraestrutura gerenciado pelo Terraform (ex: uma VM, um bucket, uma rede), sendo o bloco mais fundamental da linguagem.",
+    "syntax": "resource \"<tipo>\" \"<nome-local>\" {\n  <argumento> = <valor>\n}",
+    "example": "resource \"aws_s3_bucket\" \"assets\" {\n  bucket = \"meu-app-assets-prod\"\n\n  tags = {\n    Ambiente = \"producao\"\n  }\n}",
+    "result": "Ao rodar `terraform apply`, o bucket 'meu-app-assets-prod' é criado (ou atualizado) na AWS conforme os argumentos declarados.",
+    "notes": [
+      "O par (tipo, nome-local) forma o endereço do recurso (ex: aws_s3_bucket.assets), usado em referências e comandos como `terraform state`.",
+      "O nome local é apenas um identificador dentro da configuração Terraform; não precisa coincidir com o nome real do recurso na nuvem."
+    ],
+    "bestPractices": [
+      "Use nomes locais descritivos e consistentes (ex: `web`, `db_primary`) em vez de nomes genéricos como `this` em excesso, quando isso prejudicar a legibilidade.",
+      "Referencie atributos de outros recursos (`aws_vpc.main.id`) em vez de valores fixos, deixando o Terraform inferir a ordem de criação."
+    ],
+    "commonMistakes": [
+      "Renomear o nome local de um recurso já aplicado sem usar `moved` ou `terraform state mv`, fazendo o Terraform planejar destruir e recriar o recurso."
+    ],
+    "relatedCommands": ["tf-provider-block", "tf-state-mv", "tf-cmd-plan"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/resources/syntax",
+    "externalReferences": [],
+    "tags": ["terraform", "resource", "hcl"],
+    "keywords": [
+      "terraform resource",
+      "bloco resource terraform",
+      "declarar recurso terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-variables-outputs",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Variables e Outputs",
+    "description": "Variables (variable) parametrizam a configuração com valores de entrada; outputs (output) expõem valores calculados ou atributos de recursos para uso externo (CLI, módulos pai, outros sistemas).",
+    "syntax": "variable \"<nome>\" {\n  type        = <tipo>\n  description = \"<descricao>\"\n  default     = <valor-padrao>\n}\n\noutput \"<nome>\" {\n  value = <expressao>\n}",
+    "example": "variable \"instance_type\" {\n  type        = string\n  description = \"Tipo da instância EC2\"\n  default     = \"t3.micro\"\n}\n\noutput \"instance_public_ip\" {\n  value = aws_instance.web.public_ip\n}",
+    "result": "$ terraform apply\n...\nOutputs:\ninstance_public_ip = \"18.230.10.5\"",
+    "parameters": [
+      {
+        "name": "type",
+        "description": "Tipo esperado da variável (string, number, bool, list, map, object).",
+        "required": false
+      },
+      {
+        "name": "default",
+        "description": "Valor usado quando nenhum é fornecido explicitamente.",
+        "required": false
+      },
+      {
+        "name": "sensitive",
+        "description": "Quando true, oculta o valor nos logs e no output da CLI.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Variáveis podem ser passadas via `-var`, arquivos `.tfvars`, variáveis de ambiente `TF_VAR_<nome>` ou valores padrão.",
+      "Outputs de um módulo filho só ficam acessíveis ao módulo pai se forem declarados explicitamente com `output`."
+    ],
+    "bestPractices": [
+      "Declare `type` e `description` em toda variável pública de um módulo reutilizável, documentando o contrato de uso.",
+      "Marque outputs e variáveis com dados sensíveis (senhas, tokens) com `sensitive = true`."
+    ],
+    "commonMistakes": [
+      "Não marcar uma variável ou output sensível como `sensitive`, expondo segredos no output do `terraform plan/apply` ou em logs de CI."
+    ],
+    "relatedCommands": ["tf-file-structure", "tf-modules-intro"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/values/variables",
+    "externalReferences": [
+      {
+        "label": "Outputs",
+        "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+      }
+    ],
+    "tags": ["terraform", "variables", "outputs", "hcl"],
+    "keywords": [
+      "terraform variable",
+      "terraform output",
+      "variaveis terraform",
+      "tfvars"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-init",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform init",
+    "description": "Inicializa um diretório de trabalho Terraform: baixa providers e módulos declarados, e configura o backend do state.",
+    "syntax": "terraform init [-upgrade] [-reconfigure]",
+    "example": "terraform init -upgrade",
+    "result": "Initializing the backend...\nInitializing provider plugins...\n- Installing hashicorp/aws v5.42.0...\nTerraform has been successfully initialized!",
+    "flags": [
+      {
+        "flag": "-upgrade",
+        "description": "Atualiza providers e módulos para as versões mais recentes permitidas pelas restrições de versão."
+      },
+      {
+        "flag": "-reconfigure",
+        "description": "Reconfigura o backend do zero, ignorando o estado de configuração anterior (útil ao trocar de backend)."
+      },
+      {
+        "flag": "-migrate-state",
+        "description": "Migra o state existente para um novo backend durante a reconfiguração."
+      }
+    ],
+    "notes": [
+      "Deve ser executado antes de qualquer outro comando em um diretório novo ou após alterar providers/módulos/backend.",
+      "Cria a pasta `.terraform/` (não deve ser versionada) e o arquivo `.terraform.lock.hcl` (deve ser versionado)."
+    ],
+    "bestPractices": [
+      "Versione o arquivo `.terraform.lock.hcl` no Git para garantir que toda a equipe e o CI usem exatamente as mesmas versões de provider.",
+      "Rode `terraform init` novamente sempre que adicionar um novo provider ou módulo à configuração."
+    ],
+    "commonMistakes": [
+      "Ignorar o arquivo `.terraform.lock.hcl` no `.gitignore`, causando divergência de versões de provider entre máquinas diferentes."
+    ],
+    "relatedCommands": ["tf-provider-block", "tf-cmd-plan", "tf-backend-remote"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/init",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "init"],
+    "keywords": ["terraform init", "inicializar terraform", "terraform init upgrade"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-plan",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform plan",
+    "description": "Calcula e exibe o plano de execução: o que o Terraform faria (criar, atualizar, destruir) para levar a infraestrutura real ao estado descrito na configuração, sem aplicar nenhuma mudança.",
+    "syntax": "terraform plan [-out <arquivo>] [-var-file <arquivo>] [-destroy]",
+    "example": "terraform plan -out plano.tfplan -var-file prod.tfvars",
+    "result": "Terraform will perform the following actions:\n\n  # aws_instance.web will be created\n  + resource \"aws_instance\" \"web\" { ... }\n\nPlan: 1 to add, 0 to change, 0 to destroy.",
+    "flags": [
+      {
+        "flag": "-out",
+        "description": "Salva o plano calculado em um arquivo binário, para aplicar exatamente esse plano depois com `terraform apply <arquivo>`."
+      },
+      {
+        "flag": "-var-file",
+        "description": "Carrega valores de variáveis de um arquivo .tfvars específico."
+      },
+      {
+        "flag": "-destroy",
+        "description": "Calcula um plano de destruição de todos os recursos gerenciados, sem executá-lo."
+      }
+    ],
+    "notes": [
+      "O plano é uma simulação baseada no state atual e na configuração; mudanças feitas fora do Terraform (drift) podem não ser totalmente capturadas até um `refresh`.",
+      "Símbolos no output: `+` cria, `-` destrói, `~` atualiza in-place, `-/+` destrói e recria."
+    ],
+    "bestPractices": [
+      "Sempre revise o plano linha a linha antes de aplicar em ambientes de produção, prestando atenção especial a `-/+` (destroy and recreate).",
+      "Salve o plano com `-out` em pipelines de CI/CD e aplique exatamente esse arquivo, evitando divergência entre o que foi revisado e o que é aplicado."
+    ],
+    "commonMistakes": [
+      "Aplicar mudanças direto com `terraform apply` sem revisar um `plan` anterior, arriscando destruir recursos inesperadamente."
+    ],
+    "relatedCommands": ["tf-cmd-init", "tf-cmd-apply"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "plan"],
+    "keywords": ["terraform plan", "plano terraform", "terraform plan -out"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-apply",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform apply",
+    "description": "Aplica as mudanças necessárias para atingir o estado desejado descrito na configuração, criando, atualizando ou destruindo recursos conforme o plano calculado.",
+    "syntax": "terraform apply [<arquivo-de-plano>] [-auto-approve] [-var-file <arquivo>]",
+    "example": "terraform apply plano.tfplan",
+    "result": "aws_instance.web: Creating...\naws_instance.web: Creation complete after 42s [id=i-0abc123def456]\n\nApply complete! Resources: 1 added, 0 changed, 0 destroyed.",
+    "flags": [
+      {
+        "flag": "-auto-approve",
+        "description": "Aplica sem pedir confirmação interativa. Use com cautela, tipicamente só em pipelines automatizados já validados."
+      },
+      {
+        "flag": "-var-file",
+        "description": "Carrega valores de variáveis de um arquivo .tfvars específico."
+      }
+    ],
+    "notes": [
+      "Ao passar um arquivo de plano salvo (gerado com `plan -out`), o apply executa exatamente aquele plano, sem recalcular.",
+      "Sem um arquivo de plano, `apply` calcula um novo plano internamente e pede confirmação antes de prosseguir."
+    ],
+    "bestPractices": [
+      "Em produção, use o fluxo `plan -out` seguido de `apply <arquivo>` para garantir que o que foi revisado é exatamente o que será aplicado.",
+      "Restrinja quem pode rodar `apply -auto-approve` em produção; prefira aprovação manual ou revisão de PR antes do apply automatizado."
+    ],
+    "commonMistakes": [
+      "Usar `-auto-approve` rotineiramente em ambientes de produção sem um processo de revisão prévio do plano."
+    ],
+    "relatedCommands": ["tf-cmd-plan", "tf-cmd-destroy"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/apply",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "apply"],
+    "keywords": ["terraform apply", "aplicar terraform", "terraform apply auto-approve"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-destroy",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform destroy",
+    "description": "Remove todos os recursos gerenciados pela configuração atual do Terraform (ou um subconjunto, com -target), conforme registrado no state.",
+    "syntax": "terraform destroy [-target <endereco-do-recurso>] [-auto-approve]",
+    "example": "terraform destroy -target aws_instance.web",
+    "result": "aws_instance.web: Destroying... [id=i-0abc123def456]\naws_instance.web: Destruction complete after 12s\n\nDestroy complete! Resources: 1 destroyed.",
+    "flags": [
+      {
+        "flag": "-target",
+        "description": "Restringe a destruição a um recurso ou módulo específico, em vez de tudo que está no state."
+      },
+      {
+        "flag": "-auto-approve",
+        "description": "Pula a confirmação interativa antes de destruir."
+      }
+    ],
+    "notes": [
+      "É uma operação irreversível para a maioria dos provedores; dados não salvos fora do Terraform (backups externos, snapshots) não são recuperados automaticamente.",
+      "`-target` é útil para destruir recursos pontuais, mas deve ser usado com cautela pois pode deixar o state e a configuração inconsistentes entre si."
+    ],
+    "bestPractices": [
+      "Sempre rode `terraform plan -destroy` antes para revisar exatamente o que será removido.",
+      "Em ambientes compartilhados, restrinja permissão de `destroy` via política de CI/CD ou revisão obrigatória de PR."
+    ],
+    "commonMistakes": [
+      "Rodar `terraform destroy` no diretório errado (ambiente de produção em vez de dev), destruindo recursos críticos por engano."
+    ],
+    "relatedCommands": ["tf-cmd-apply", "tf-cmd-plan"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/destroy",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "destroy"],
+    "keywords": [
+      "terraform destroy",
+      "destruir infraestrutura terraform",
+      "terraform destroy target"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-fmt-validate",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform fmt e terraform validate",
+    "description": "`fmt` reformata arquivos .tf para o estilo canônico do Terraform; `validate` verifica se a configuração é sintaticamente válida e internamente consistente, sem acessar providers remotos.",
+    "syntax": "terraform fmt [-recursive] [-check]\nterraform validate",
+    "example": "terraform fmt -recursive\nterraform validate",
+    "result": "main.tf\nvariables.tf\n\nSuccess! The configuration is valid.",
+    "flags": [
+      {
+        "flag": "-recursive",
+        "description": "Aplica o fmt em subdiretórios também, não apenas no diretório atual."
+      },
+      {
+        "flag": "-check",
+        "description": "Não reescreve os arquivos; apenas retorna código de saída não-zero se algo estiver fora do padrão (útil em CI)."
+      }
+    ],
+    "notes": [
+      "`validate` não requer credenciais de provider nem conexão com a internet além do necessário para os schemas já baixados em `init`.",
+      "`validate` não detecta erros que dependem de dados reais da infraestrutura (isso só aparece em `plan`)."
+    ],
+    "bestPractices": [
+      "Rode `terraform fmt -check` e `terraform validate` como etapas obrigatórias no pipeline de CI, antes de qualquer `plan`.",
+      "Configure o editor (ex: extensão oficial do VS Code) para rodar `fmt` automaticamente ao salvar."
+    ],
+    "commonMistakes": [
+      "Commitar código não formatado, gerando diffs de PR ruidosos quando alguém roda `fmt` depois em um commit não relacionado."
+    ],
+    "relatedCommands": ["tf-cmd-init", "tf-cmd-plan"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/fmt",
+    "externalReferences": [
+      {
+        "label": "terraform validate",
+        "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+      }
+    ],
+    "tags": ["terraform", "cli", "fmt", "validate"],
+    "keywords": [
+      "terraform fmt",
+      "terraform validate",
+      "formatar terraform",
+      "validar terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-state-overview",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "Terraform State: conceito e propósito",
+    "description": "O state (arquivo terraform.tfstate) é o mapeamento que o Terraform mantém entre a configuração declarada e os recursos reais já provisionados, permitindo detectar diffs e planejar mudanças.",
+    "syntax": "terraform.tfstate  # arquivo JSON gerado e mantido pelo Terraform",
+    "example": "{\n  \"version\": 4,\n  \"resources\": [\n    {\n      \"type\": \"aws_instance\",\n      \"name\": \"web\",\n      \"instances\": [{ \"attributes\": { \"id\": \"i-0abc123def456\" } }]\n    }\n  ]\n}",
+    "result": "O Terraform usa esse arquivo para saber que 'aws_instance.web' já existe com o id 'i-0abc123def456', evitando recriar o recurso a cada apply.",
+    "notes": [
+      "Sem o state, o Terraform não tem como saber quais recursos já existem, tratando tudo como novo em cada execução.",
+      "O state pode conter dados sensíveis (senhas, chaves) em texto plano dentro dos atributos dos recursos."
+    ],
+    "bestPractices": [
+      "Nunca versione o `terraform.tfstate` em texto plano no Git; use um backend remoto com criptografia.",
+      "Trate o arquivo de state com o mesmo nível de segurança de um cofre de segredos."
+    ],
+    "commonMistakes": [
+      "Editar o arquivo `terraform.tfstate` manualmente em vez de usar os subcomandos `terraform state`, corrompendo a estrutura interna."
+    ],
+    "relatedCommands": ["tf-backend-remote", "tf-state-mv", "tf-state-locking"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/state",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "iac"],
+    "keywords": ["terraform state", "terraform.tfstate", "o que e o state terraform"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-backend-remote",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "Backends remotos de state",
+    "description": "Configuração que define onde o state é armazenado (local por padrão) e, opcionalmente, como o locking é feito. Backends remotos (S3, Azure Storage, GCS, Terraform Cloud) permitem colaboração segura em equipe.",
+    "syntax": "terraform {\n  backend \"<tipo>\" {\n    <argumentos-do-backend>\n  }\n}",
+    "example": "terraform {\n  backend \"s3\" {\n    bucket         = \"minha-empresa-tfstate\"\n    key            = \"app-prod/terraform.tfstate\"\n    region         = \"sa-east-1\"\n    dynamodb_table = \"tf-state-locks\"\n    encrypt        = true\n  }\n}",
+    "result": "Initializing the backend...\nSuccessfully configured the backend \"s3\"! Terraform will automatically use this backend unless the backend configuration changes.",
+    "parameters": [
+      {
+        "name": "bucket",
+        "description": "Bucket S3 onde o state será armazenado (exemplo para o backend S3).",
+        "required": true
+      },
+      {
+        "name": "key",
+        "description": "Caminho/nome do arquivo de state dentro do bucket.",
+        "required": true
+      },
+      {
+        "name": "dynamodb_table",
+        "description": "Tabela DynamoDB usada para locking distribuído, evitando execuções concorrentes.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Sem um backend remoto, o state fica apenas na máquina local de quem rodou o apply, inviabilizando trabalho em equipe.",
+      "Cada backend tem seu próprio mecanismo de locking (ex: DynamoDB para S3, lease blob para Azure Storage)."
+    ],
+    "bestPractices": [
+      "Habilite criptografia em repouso (`encrypt = true`) e versionamento no bucket/container que armazena o state.",
+      "Use um backend com locking nativo para evitar que dois `apply` concorrentes corrompam o state."
+    ],
+    "commonMistakes": [
+      "Usar backend local em projetos de equipe, levando a states divergentes entre máquinas e conflitos de infraestrutura."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-state-locking", "tf-cmd-init"],
+    "difficulty": "avancado",
+    "platform": ["agnostic", "cloud"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/backend",
+    "externalReferences": [
+      {
+        "label": "Backend S3",
+        "url": "https://developer.hashicorp.com/terraform/language/backend/s3"
+      }
+    ],
+    "tags": ["terraform", "state", "backend", "iac"],
+    "keywords": [
+      "terraform backend",
+      "backend remoto terraform",
+      "state remoto s3",
+      "terraform cloud backend"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-state-locking",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "State locking",
+    "description": "Mecanismo que impede execuções concorrentes de `plan`/`apply` sobre o mesmo state, evitando corrupção de dados quando duas pessoas ou pipelines rodam Terraform simultaneamente.",
+    "syntax": "N/A (comportamento automático de backends que suportam locking; sem flag necessária na maioria dos casos)",
+    "example": "$ terraform apply\nError: Error acquiring the state lock\n\nLock Info:\n  ID:        1234abcd-...\n  Path:      app-prod/terraform.tfstate\n  Operation: OperationTypeApply\n  Who:       ci-runner@pipeline-42",
+    "result": "A segunda execução concorrente é bloqueada até a primeira liberar o lock (ou até ele expirar/ser removido manualmente).",
+    "notes": [
+      "Nem todo backend suporta locking automático; verifique a documentação do backend escolhido.",
+      "Em caso de falha que deixa um lock 'travado' indevidamente, é possível forçar a liberação com `terraform force-unlock <lock-id>`."
+    ],
+    "bestPractices": [
+      "Só use `force-unlock` após confirmar que nenhuma outra operação está realmente em andamento, para evitar corromper o state.",
+      "Prefira backends com locking nativo (S3+DynamoDB, Terraform Cloud, Azure Storage) em qualquer ambiente com mais de uma pessoa/pipeline."
+    ],
+    "commonMistakes": [
+      "Usar `force-unlock` como primeira reação a um erro de lock, sem verificar se outra execução (ex: um pipeline de CI ainda rodando) está de fato ativa."
+    ],
+    "relatedCommands": ["tf-backend-remote", "tf-state-overview"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/state/locking",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "locking"],
+    "keywords": [
+      "terraform state locking",
+      "force-unlock terraform",
+      "lock state terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-state-mv",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "terraform state mv",
+    "description": "Renomeia ou move um recurso dentro do state sem destruí-lo e recriá-lo na infraestrutura real, útil ao refatorar nomes de recursos ou mover recursos entre módulos.",
+    "syntax": "terraform state mv <endereco-origem> <endereco-destino>",
+    "example": "terraform state mv aws_instance.web aws_instance.web_server",
+    "result": "Move \"aws_instance.web\" to \"aws_instance.web_server\"\nSuccessfully moved 1 object(s).",
+    "notes": [
+      "Deve ser executado junto com a atualização correspondente no arquivo .tf, para que a configuração e o state fiquem consistentes.",
+      "Desde o Terraform 1.1+, o bloco `moved` no código permite declarar esse tipo de refatoração de forma versionada, sem depender de rodar o comando manualmente em cada ambiente."
+    ],
+    "bestPractices": [
+      "Prefira o bloco `moved {}` no código a `terraform state mv` manual, pois o bloco fica documentado e versionado junto com a configuração.",
+      "Sempre faça backup do state (ou use um backend com versionamento) antes de manipular o state diretamente."
+    ],
+    "commonMistakes": [
+      "Renomear um recurso apenas no código .tf sem mover no state (ou sem bloco `moved`), fazendo o Terraform planejar destruir o recurso antigo e criar um novo."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/state/mv",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "refatoracao"],
+    "keywords": [
+      "terraform state mv",
+      "renomear recurso terraform",
+      "mover recurso state terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-state-import",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "terraform import",
+    "description": "Importa um recurso que já existe na infraestrutura real (criado manualmente ou por outra ferramenta) para dentro do state do Terraform, associando-o a um bloco resource já declarado no código.",
+    "syntax": "terraform import <endereco-do-recurso> <id-do-recurso-real>",
+    "example": "terraform import aws_s3_bucket.assets meu-app-assets-prod",
+    "result": "aws_s3_bucket.assets: Importing from ID \"meu-app-assets-prod\"...\naws_s3_bucket.assets: Import complete!\n\nImport successful!",
+    "notes": [
+      "É necessário já existir um bloco `resource` correspondente escrito no código .tf antes de importar; o import não gera o código automaticamente (em versões anteriores ao bloco `import {}`).",
+      "Desde o Terraform 1.5+, o bloco declarativo `import {}` permite planejar e revisar a importação via `terraform plan` antes de aplicá-la."
+    ],
+    "bestPractices": [
+      "Após importar, rode `terraform plan` imediatamente para conferir se a configuração escrita bate exatamente com o estado real do recurso, evitando mudanças não intencionais no próximo apply.",
+      "Prefira o bloco `import {}` (declarativo) ao comando `terraform import` legado, pois permite revisão via plan antes da aplicação."
+    ],
+    "commonMistakes": [
+      "Importar um recurso e assumir que o código .tf já está correto, sem revisar o `plan` seguinte, aplicando mudanças não intencionais no recurso real."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.5+ (bloco import)",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/import",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "import"],
+    "keywords": [
+      "terraform import",
+      "importar recurso existente terraform",
+      "bloco import terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-modules-intro",
+    "category": "Terraform",
+    "subcategory": "Modules",
+    "title": "Modules: introdução",
+    "description": "Um módulo é um conjunto reutilizável de arquivos .tf agrupados em um diretório (local ou remoto), usado para encapsular e reaproveitar padrões de infraestrutura entre projetos e ambientes.",
+    "syntax": "module \"<nome-local>\" {\n  source = \"<caminho-ou-registry>\"\n  <variaveis-de-entrada> = <valor>\n}",
+    "example": "module \"vpc\" {\n  source  = \"terraform-aws-modules/vpc/aws\"\n  version = \"~> 5.0\"\n\n  name = \"vpc-app-prod\"\n  cidr = \"10.0.0.0/16\"\n}",
+    "result": "O módulo cria toda a estrutura de VPC (subnets, route tables, internet gateway etc.) encapsulada, expondo apenas as variáveis de entrada e outputs definidos por ele.",
+    "parameters": [
+      {
+        "name": "source",
+        "description": "Origem do módulo: caminho local (./modules/vpc), Registry do Terraform, Git, ou outros protocolos suportados.",
+        "required": true
+      },
+      {
+        "name": "version",
+        "description": "Restrição de versão do módulo, aplicável quando a origem é um registry.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Todo diretório raiz de uma configuração Terraform já é, tecnicamente, o 'módulo raiz'; módulos filhos são chamados dentro dele via bloco `module`.",
+      "Módulos não compartilham state entre si automaticamente; todos os recursos, mesmo de módulos diferentes, ficam no mesmo state (a menos que se use múltiplos workspaces/backends)."
+    ],
+    "bestPractices": [
+      "Extraia um módulo quando o mesmo padrão de recursos se repetir em 2+ lugares (ambientes, projetos), não antes disso.",
+      "Publique módulos internos em um registry privado ou repositório Git versionado com tags semânticas, em vez de copiar e colar código entre projetos."
+    ],
+    "commonMistakes": [
+      "Criar módulos excessivamente genéricos e configuráveis cedo demais, tornando-os mais difíceis de entender e manter do que o código duplicado que tentavam evitar."
+    ],
+    "relatedCommands": ["tf-variables-outputs", "tf-resource-block"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/modules",
+    "externalReferences": [
+      { "label": "Terraform Registry", "url": "https://registry.terraform.io/" }
+    ],
+    "tags": ["terraform", "modules", "reuso"],
+    "keywords": ["terraform module", "modulos terraform", "reutilizar codigo terraform"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-workspaces",
+    "category": "Terraform",
+    "subcategory": "Workspaces",
+    "title": "Terraform Workspaces",
+    "description": "Mecanismo nativo para manter múltiplos states isolados a partir da mesma configuração, geralmente usado para separar ambientes (dev, staging, prod) sem duplicar código.",
+    "syntax": "terraform workspace new <nome>\nterraform workspace select <nome>\nterraform workspace list",
+    "example": "terraform workspace new staging\nterraform workspace select staging\nterraform apply -var-file staging.tfvars",
+    "result": "Created and switched to workspace \"staging\"!\n\nYou're now on a new, empty workspace. Workspaces isolate their state,\nso if you run \"terraform plan\" Terraform will not see any existing state\nfor this configuration.",
+    "notes": [
+      "Cada workspace tem seu próprio arquivo de state, mas compartilha a mesma configuração .tf e o mesmo backend.",
+      "O nome do workspace atual pode ser referenciado no código via `terraform.workspace`, permitindo pequenas variações condicionais (ex: nomes de recursos por ambiente)."
+    ],
+    "bestPractices": [
+      "Use workspaces para variações de um mesmo ambiente lógico (ex: réplicas de teste efêmeras), mas considere diretórios/repositórios separados por ambiente quando as diferenças de configuração entre dev/staging/prod forem grandes.",
+      "Documente claramente em qual workspace cada pipeline de CI/CD deve operar, evitando aplicar em produção por engano."
+    ],
+    "commonMistakes": [
+      "Assumir que workspaces isolam completamente ambientes de produção e não-produção, quando na prática eles compartilham a mesma configuração e o mesmo backend, aumentando o risco de erro humano."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-backend-remote"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/state/workspaces",
+    "externalReferences": [],
+    "tags": ["terraform", "workspaces", "ambientes"],
+    "keywords": [
+      "terraform workspace",
+      "workspaces terraform",
+      "ambientes terraform dev staging prod"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-cmd-output",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform output",
+    "description": "Exibe os valores dos outputs definidos na configuração, lendo diretamente do state atual (sem necessidade de rodar apply novamente).",
+    "syntax": "terraform output [<nome-do-output>] [-json] [-raw]",
+    "example": "terraform output -json instance_public_ip",
+    "result": "\"18.230.10.5\"",
+    "flags": [
+      {
+        "flag": "-json",
+        "description": "Retorna os outputs em formato JSON, útil para consumir em scripts."
+      },
+      {
+        "flag": "-raw",
+        "description": "Retorna o valor de um único output como string crua, sem aspas/formatação JSON (apenas para tipos string)."
+      }
+    ],
+    "notes": [
+      "Outputs marcados como `sensitive` aparecem ocultos por padrão no terminal, mas continuam visíveis com `-json`, portanto o comando de saída deve ser tratado com o mesmo cuidado que o próprio state."
+    ],
+    "bestPractices": [
+      "Use `terraform output -json` para integrar valores da infraestrutura provisionada a outros scripts/pipelines, em vez de fazer parsing manual do texto de `apply`."
+    ],
+    "commonMistakes": [
+      "Expor o resultado de `terraform output -json` em logs de CI públicos quando ele contém outputs sensíveis."
+    ],
+    "relatedCommands": ["tf-variables-outputs", "tf-state-overview"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/output",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "output"],
+    "keywords": ["terraform output", "ver outputs terraform", "terraform output json"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-lifecycle-meta-argument",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Meta-argumento lifecycle",
+    "description": "Bloco especial dentro de um `resource` que ajusta o comportamento padrão do Terraform quanto à criação, atualização e destruição daquele recurso específico.",
+    "syntax": "resource \"<tipo>\" \"<nome>\" {\n  lifecycle {\n    create_before_destroy = <bool>\n    prevent_destroy        = <bool>\n    ignore_changes         = [<atributos>]\n  }\n}",
+    "example": "resource \"aws_instance\" \"web\" {\n  ami           = \"ami-0123456789abcdef0\"\n  instance_type = \"t3.micro\"\n\n  lifecycle {\n    create_before_destroy = true\n    prevent_destroy        = true\n    ignore_changes         = [tags]\n  }\n}",
+    "result": "Ao recriar o recurso, uma nova instância é criada antes da antiga ser destruída (evitando downtime); tentativas de destruir o recurso são bloqueadas; mudanças manuais em 'tags' feitas fora do Terraform não geram diff no plan.",
+    "parameters": [
+      {
+        "name": "create_before_destroy",
+        "description": "Cria o recurso substituto antes de destruir o antigo, reduzindo downtime em recriações.",
+        "required": false
+      },
+      {
+        "name": "prevent_destroy",
+        "description": "Impede que o `apply`/`destroy` destrua esse recurso, retornando erro caso o plano exija isso.",
+        "required": false
+      },
+      {
+        "name": "ignore_changes",
+        "description": "Lista de atributos que o Terraform deve ignorar ao comparar configuração com o estado real.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`prevent_destroy = true` não impede a destruição do recurso por outros meios (ex: manualmente no console), apenas bloqueia operações via Terraform."
+    ],
+    "bestPractices": [
+      "Use `prevent_destroy` em recursos críticos e de difícil recuperação (bancos de dados, buckets com dados históricos).",
+      "Use `ignore_changes` com moderação e apenas para atributos legitimamente gerenciados fora do Terraform, para não mascarar drift real."
+    ],
+    "commonMistakes": [
+      "Abusar de `ignore_changes = [all]` para 'silenciar' diffs incômodos, escondendo divergências reais entre configuração e infraestrutura."
+    ],
+    "relatedCommands": ["tf-resource-block", "tf-cmd-plan"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle",
+    "externalReferences": [],
+    "tags": ["terraform", "lifecycle", "hcl"],
+    "keywords": [
+      "terraform lifecycle",
+      "prevent_destroy",
+      "create_before_destroy",
+      "ignore_changes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-drift-detection",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "Drift: divergência entre state e infraestrutura real",
+    "description": "Drift ocorre quando a infraestrutura real é alterada por fora do Terraform (console, CLI do provedor, outro processo), fazendo o state ficar desatualizado em relação ao mundo real.",
+    "syntax": "terraform plan -refresh-only [-out <arquivo>]\nterraform apply -refresh-only",
+    "example": "terraform plan -refresh-only",
+    "result": "aws_instance.web: Refreshing state... [id=i-0abc123def456]\n\nNote: Objects have changed outside of Terraform\n\n  # aws_instance.web has changed\n  ~ instance_type = \"t3.micro\" -> \"t3.small\"",
+    "notes": [
+      "`-refresh-only` atualiza apenas o state para refletir a realidade, sem propor mudanças na infraestrutura — útil para diagnosticar drift antes de decidir o que fazer.",
+      "Um `plan`/`apply` normal (sem -refresh-only) já faz um refresh implícito por padrão antes de calcular o plano."
+    ],
+    "bestPractices": [
+      "Rode `terraform plan -refresh-only` periodicamente (ou em pipeline agendado) para detectar mudanças manuais feitas fora do Terraform.",
+      "Trate qualquer drift detectado como um sinal de processo: investigue quem/o que mudou o recurso manualmente e reforce o uso exclusivo do Terraform para aquele ambiente."
+    ],
+    "commonMistakes": [
+      "Ignorar avisos de drift recorrentes, deixando o state cada vez mais distante da realidade até um `apply` causar uma mudança destrutiva inesperada."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-cmd-plan"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 0.15+",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/plan#refresh-only-mode",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "drift"],
+    "keywords": [
+      "terraform drift",
+      "refresh-only terraform",
+      "divergencia state terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-data-sources",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Data sources",
+    "description": "Bloco `data` que consulta informações de recursos já existentes (gerenciados ou não pelo Terraform), tornando-as disponíveis como valores somente leitura na configuração.",
+    "syntax": "data \"<tipo>\" \"<nome-local>\" {\n  <argumentos-de-filtro>\n}",
+    "example": "data \"aws_ami\" \"ubuntu\" {\n  most_recent = true\n  owners      = [\"099720109477\"]\n\n  filter {\n    name   = \"name\"\n    values = [\"ubuntu/images/hvm-ssd/ubuntu-jammy-*\"]\n  }\n}\n\nresource \"aws_instance\" \"web\" {\n  ami           = data.aws_ami.ubuntu.id\n  instance_type = \"t3.micro\"\n}",
+    "result": "O Terraform consulta a AWS a cada plan/apply para descobrir o ID da AMI Ubuntu mais recente que casa com o filtro, sem que o Terraform gerencie o ciclo de vida dessa AMI.",
+    "notes": [
+      "Diferente de `resource`, um `data source` nunca cria, atualiza ou destrói nada — apenas lê informações existentes.",
+      "Dados de um data source são reconsultados a cada plan, podendo gerar mudanças no plano se o resultado da consulta mudar (ex: uma AMI mais nova ficar disponível)."
+    ],
+    "bestPractices": [
+      "Use data sources para referenciar recursos criados fora do Terraform (ex: uma VPC compartilhada gerenciada por outra equipe) em vez de hardcodar IDs.",
+      "Fixe filtros específicos o suficiente para evitar que o data source retorne resultados diferentes entre execuções (ex: 'most_recent' pode mudar o resultado ao longo do tempo)."
+    ],
+    "commonMistakes": [
+      "Usar `most_recent = true` sem filtros suficientemente restritivos, causando mudanças inesperadas de AMI/imagem em applies futuros."
+    ],
+    "relatedCommands": ["tf-resource-block", "tf-provider-block"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/data-sources",
+    "externalReferences": [],
+    "tags": ["terraform", "data-source", "hcl"],
+    "keywords": [
+      "terraform data source",
+      "bloco data terraform",
+      "consultar recurso existente terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-tfvars-precedence",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Ordem de precedência de variáveis",
+    "description": "Terraform aceita valores de variáveis de múltiplas fontes simultaneamente; existe uma ordem definida de precedência quando a mesma variável recebe valores de mais de uma origem.",
+    "syntax": "1. -var e -var-file na linha de comando (o último declarado vence entre eles)\n2. *.auto.tfvars / *.auto.tfvars.json (ordem alfabética)\n3. terraform.tfvars.json\n4. terraform.tfvars\n5. Variáveis de ambiente TF_VAR_<nome>\n6. default declarado no bloco variable (menor precedência)",
+    "example": "# terraform.tfvars\ninstance_type = \"t3.micro\"\n\n# execução:\n# terraform apply -var instance_type=t3.small\n# resultado: instance_type = t3.small (linha de comando vence sobre o arquivo)",
+    "result": "O valor final usado é t3.small, pois -var na linha de comando tem precedência mais alta que terraform.tfvars.",
+    "notes": [
+      "Essa ordem é frequentemente confundida; na dúvida, o mais seguro é rodar `terraform plan` e conferir o valor efetivo antes do apply."
+    ],
+    "bestPractices": [
+      "Padronize como a equipe define variáveis (ex: sempre via `-var-file` por ambiente) para reduzir a chance de um valor inesperado vencer por precedência.",
+      "Evite depender de `TF_VAR_*` para valores críticos em pipelines de CI sem documentar claramente essa dependência."
+    ],
+    "commonMistakes": [
+      "Definir o mesmo valor em `terraform.tfvars` e em uma variável de ambiente `TF_VAR_*` diferente, causando confusão sobre qual valor está realmente sendo aplicado."
+    ],
+    "relatedCommands": ["tf-variables-outputs", "tf-cmd-plan"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/values/variables#variable-definition-precedence",
+    "externalReferences": [],
+    "tags": ["terraform", "variables", "tfvars"],
+    "keywords": [
+      "precedencia variaveis terraform",
+      "tfvars precedence",
+      "tf_var ordem de prioridade"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-best-practices-state-management",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "Boas práticas de gerenciamento de state",
+    "description": "Conjunto de recomendações para manter o state do Terraform seguro, íntegro e utilizável em equipe ao longo do tempo, evitando os erros mais comuns que levam a corrupção ou perda de infraestrutura gerenciada.",
+    "syntax": "N/A (conjunto de práticas, não um comando específico)",
+    "example": "N/A",
+    "result": "N/A",
+    "notes": [
+      "State corrompido ou perdido é uma das causas mais comuns de incidentes graves em times que usam Terraform sem backend remoto adequado."
+    ],
+    "bestPractices": [
+      "Use sempre um backend remoto com locking (S3+DynamoDB, Azure Storage, GCS, Terraform Cloud) para qualquer projeto com mais de uma pessoa envolvida.",
+      "Habilite versionamento no armazenamento do backend (ex: versionamento de bucket) para poder reverter a uma versão anterior do state em caso de erro.",
+      "Nunca edite o arquivo de state manualmente; use os subcomandos `terraform state` (list, mv, rm, show) para qualquer manipulação.",
+      "Separe states por ambiente (dev/staging/prod) e, quando fizer sentido, por domínio/serviço, reduzindo o raio de impacto de um erro.",
+      "Restrinja quem tem acesso de escrita ao backend de state e às credenciais de provider usadas pelo Terraform, tratando-as como acesso privilegiado.",
+      "Faça backup do state antes de operações de risco (import, state mv, upgrade de versão major do Terraform ou de providers)."
+    ],
+    "commonMistakes": [
+      "Manter um único state gigante para toda a organização, tornando qualquer `plan`/`apply` lento e o raio de impacto de um erro muito grande.",
+      "Compartilhar o arquivo de state por e-mail, chat ou pasta de rede não controlada, sem locking nem controle de acesso."
+    ],
+    "relatedCommands": ["tf-backend-remote", "tf-state-locking", "tf-workspaces"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/state",
+    "externalReferences": [
+      {
+        "label": "Terraform Cloud",
+        "url": "https://developer.hashicorp.com/terraform/cloud-docs"
+      }
+    ],
+    "tags": ["terraform", "state", "boas-praticas"],
+    "keywords": [
+      "boas praticas terraform state",
+      "gerenciamento de state terraform",
+      "state management terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-count-for-each",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Meta-argumentos count e for_each",
+    "description": "Permitem criar múltiplas instâncias do mesmo bloco resource ou module a partir de uma única declaração, iterando sobre um número (count) ou uma coleção (for_each).",
+    "syntax": "resource \"<tipo>\" \"<nome>\" {\n  count = <numero>\n  # ou\n  for_each = <mapa-ou-set>\n}",
+    "example": "variable \"buckets\" {\n  type    = set(string)\n  default = [\"logs\", \"backups\", \"assets\"]\n}\n\nresource \"aws_s3_bucket\" \"buckets\" {\n  for_each = var.buckets\n  bucket   = \"meu-app-${each.key}\"\n}",
+    "result": "Três buckets são criados: meu-app-logs, meu-app-backups e meu-app-assets, cada um endereçável individualmente como aws_s3_bucket.buckets[\"logs\"], etc.",
+    "notes": [
+      "Com `count`, os recursos são endereçados por índice numérico (`resource[0]`, `resource[1]`); remover um item do meio da lista pode reordenar índices e causar recriação de recursos não relacionados.",
+      "Com `for_each`, os recursos são endereçados pela chave do mapa/set, o que é mais estável a mudanças na coleção de entrada."
+    ],
+    "bestPractices": [
+      "Prefira `for_each` a `count` sempre que os itens tiverem identidade própria (nomes, chaves), evitando o problema de reindexação do `count`.",
+      "Use `count` apenas para repetições simples e homogêneas onde a ordem/índice realmente não importa (ex: N réplicas idênticas)."
+    ],
+    "commonMistakes": [
+      "Usar `count` com uma lista que pode ter itens removidos do meio, causando recriação inesperada de recursos que deveriam permanecer intactos."
+    ],
+    "relatedCommands": ["tf-resource-block", "tf-variables-outputs"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 0.12+",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each",
+    "externalReferences": [
+      {
+        "label": "count",
+        "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+      }
+    ],
+    "tags": ["terraform", "count", "for_each", "hcl"],
+    "keywords": [
+      "terraform count",
+      "terraform for_each",
+      "criar multiplos recursos terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

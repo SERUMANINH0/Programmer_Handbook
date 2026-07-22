@@ -1,0 +1,579 @@
+[
+  {
+    "id": "gitlab-ci-yml-structure",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Estrutura do .gitlab-ci.yml",
+    "description": "Arquivo YAML na raiz do repositório que define o pipeline de CI/CD do GitLab: estágios, jobs, scripts e regras de execução, processado automaticamente pelo GitLab Runner a cada evento configurado.",
+    "syntax": "stages:\\n  - <estagio1>\\n  - <estagio2>\\n\\n<job-id>:\\n  stage: <estagio>\\n  script:\\n    - <comando>",
+    "example": "stages:\\n  - build\\n  - test\\n\\nbuild-job:\\n  stage: build\\n  script:\\n    - echo \"Compilando...\"\\n\\ntest-job:\\n  stage: test\\n  script:\\n    - echo \"Rodando testes...\"",
+    "result": "Pipeline com dois estágios sequenciais (build → test), cada um exibido como uma coluna na visualização de pipeline do GitLab.",
+    "notes": [
+      "Sem a chave `stages`, o GitLab assume os estágios padrão: `.pre`, `build`, `test`, `deploy`, `.post`.",
+      "É possível dividir a configuração em múltiplos arquivos usando `include`, mantendo o `.gitlab-ci.yml` principal mais enxuto."
+    ],
+    "bestPractices": [
+      "Valide o arquivo com o editor de pipeline do GitLab (CI/CD → Editor) antes de commitar, evitando erros de sintaxe."
+    ],
+    "commonMistakes": [
+      "Indentação incorreta no YAML, causando falha de parsing do pipeline inteiro antes mesmo de iniciar qualquer job."
+    ],
+    "relatedCommands": ["gitlab-stages", "gitlab-jobs"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/",
+    "externalReferences": [],
+    "tags": ["gitlab", "ci/cd", "yaml"],
+    "keywords": ["gitlab-ci.yml", "pipeline gitlab", "ci cd gitlab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-stages",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Stages",
+    "description": "Agrupamento lógico e sequencial de jobs dentro de um pipeline: todos os jobs de um mesmo stage rodam em paralelo, e um stage só começa depois que o anterior termina com sucesso.",
+    "syntax": "stages:\\n  - <nome-do-stage>",
+    "example": "stages:\\n  - build\\n  - test\\n  - deploy",
+    "result": "Pipeline visual com 3 colunas (build, test, deploy); jobs do stage \"test\" só iniciam após todos os jobs de \"build\" concluírem com sucesso.",
+    "notes": [
+      "Jobs sem `stage` definido caem automaticamente no stage `test` por padrão."
+    ],
+    "bestPractices": [
+      "Nomeie stages de forma que reflitam o fluxo real de entrega (ex: build, test, security-scan, deploy) para facilitar leitura do pipeline."
+    ],
+    "commonMistakes": [
+      "Definir um job com `stage` referenciando um nome que não está na lista `stages`, causando erro de configuração do pipeline."
+    ],
+    "relatedCommands": ["gitlab-ci-yml-structure", "gitlab-jobs"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/#stages",
+    "externalReferences": [],
+    "tags": ["gitlab", "stages", "pipeline"],
+    "keywords": ["stages gitlab", "estagios de pipeline", "build test deploy"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-jobs",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Jobs",
+    "description": "Unidade básica de execução de um pipeline GitLab: define um `script` a rodar, em qual `stage`, com quais regras, imagem de container, cache e artifacts associados.",
+    "syntax": "<job-id>:\\n  stage: <stage>\\n  image: <imagem>\\n  script:\\n    - <comando>",
+    "example": "unit-tests:\\n  stage: test\\n  image: node:20\\n  script:\\n    - npm ci\\n    - npm test",
+    "result": "Job \"unit-tests\" executado em um container `node:20`, listado na coluna \"test\" do pipeline com seu próprio log e status.",
+    "notes": [
+      "O nome do job (chave YAML) não pode começar com ponto (`.`) — nomes com ponto são reservados para templates ocultos (\"hidden jobs\")."
+    ],
+    "bestPractices": [
+      "Use `image:` específica por job para garantir reprodutibilidade, em vez de depender apenas da imagem padrão do runner."
+    ],
+    "commonMistakes": [
+      "Esquecer que cada `script` roda em um shell novo por linha de comando — variáveis definidas em uma linha via `export` não sobrevivem entre jobs diferentes sem artifacts/cache."
+    ],
+    "relatedCommands": ["gitlab-stages", "gitlab-artifacts", "gitlab-rules-only-except"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/jobs/",
+    "externalReferences": [],
+    "tags": ["gitlab", "jobs", "pipeline"],
+    "keywords": ["jobs gitlab ci", "script gitlab", "image gitlab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-merge-request",
+    "category": "GitLab",
+    "subcategory": "Merge Requests",
+    "title": "Merge Request (MR)",
+    "description": "Equivalente do GitLab ao pull request: proposta de integrar um branch de origem a um branch de destino, com diff, discussão em threads, pipeline de CI e regras de aprovação antes do merge.",
+    "syntax": "Merge requests → New merge request → escolher branch de origem/destino",
+    "example": "Abrir MR de `feature/checkout` para `main`, disparando automaticamente o pipeline de CI configurado no `.gitlab-ci.yml`.",
+    "result": "MR criado com número (ex: !58), diff completo, pipeline de validação e caixa de discussão para comentários e aprovações.",
+    "notes": [
+      "GitLab permite \"squash commits\" e \"delete source branch\" como opções marcáveis diretamente na tela de merge do MR."
+    ],
+    "bestPractices": [
+      "Ative \"Delete source branch when merge request is accepted\" para manter o repositório limpo de branches obsoletos."
+    ],
+    "commonMistakes": [
+      "Deixar MRs abertos por muito tempo sem rebase/atualização, acumulando conflitos com o branch de destino."
+    ],
+    "relatedCommands": [
+      "gitlab-merge-request-approval-rules",
+      "gitlab-protected-branches"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/merge_requests/",
+    "externalReferences": [],
+    "tags": ["gitlab", "merge request", "colaboracao"],
+    "keywords": ["merge request", "mr gitlab", "pull request do gitlab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-merge-request-approval-rules",
+    "category": "GitLab",
+    "subcategory": "Merge Requests",
+    "title": "Approval rules (regras de aprovação)",
+    "description": "Regras configuráveis que exigem um número mínimo de aprovações de pessoas ou grupos específicos antes de um merge request poder ser mesclado, disponíveis nos planos pagos do GitLab.",
+    "syntax": "Settings → Merge requests → Merge request approvals → Add approval rule",
+    "example": "Criar a regra \"Segurança\" exigindo 1 aprovação do grupo `security-team` para qualquer MR que altere arquivos em `/auth/`.",
+    "result": "MRs que tocam `/auth/` ficam bloqueados para merge até que alguém do grupo `security-team` aprove explicitamente.",
+    "notes": [
+      "É possível combinar múltiplas regras (ex: aprovação de código + aprovação de segurança) no mesmo MR."
+    ],
+    "bestPractices": [
+      "Combine approval rules com \"Code Owners\" (arquivo `CODEOWNERS`) para exigir revisão automática dos donos de cada área do código."
+    ],
+    "commonMistakes": [
+      "Configurar regras de aprovação tão rígidas que travam o fluxo de entrega em times pequenos com poucos aprovadores disponíveis."
+    ],
+    "relatedCommands": ["gitlab-merge-request", "gitlab-protected-branches"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/merge_requests/approvals/rules/",
+    "externalReferences": [],
+    "tags": ["gitlab", "merge request", "aprovacao"],
+    "keywords": ["approval rules", "regras de aprovacao gitlab", "code owners gitlab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-runner",
+    "category": "GitLab",
+    "subcategory": "GitLab Runner",
+    "title": "GitLab Runner",
+    "description": "Agente responsável por executar os jobs definidos no `.gitlab-ci.yml`, podendo ser um runner compartilhado (fornecido pelo GitLab.com) ou um runner próprio instalado em infraestrutura da equipe.",
+    "syntax": "gitlab-runner register --url <url> --token <token> --executor <executor>",
+    "example": "gitlab-runner register --url https://gitlab.com/ --token glrt-xxxxxxx --executor docker --docker-image alpine:latest",
+    "result": "Runner registrado e disponível para o projeto/grupo, aparecendo em Settings → CI/CD → Runners como \"online\".",
+    "flags": [
+      {
+        "flag": "--executor",
+        "description": "Define como o job será executado: shell, docker, docker+machine, kubernetes, etc."
+      },
+      {
+        "flag": "--docker-image",
+        "description": "Imagem padrão usada quando o executor é docker e o job não especifica outra."
+      },
+      {
+        "flag": "--tag-list",
+        "description": "Define tags que permitem direcionar jobs específicos para este runner."
+      }
+    ],
+    "notes": [
+      "Runners compartilhados do GitLab.com têm cota de minutos gratuitos por mês, renovada mensalmente conforme o plano."
+    ],
+    "bestPractices": [
+      "Use o executor `docker` para isolamento consistente entre execuções, evitando efeitos colaterais de execuções anteriores."
+    ],
+    "commonMistakes": [
+      "Registrar um runner sem tags em um projeto que exige tags específicas nos jobs, fazendo os jobs ficarem presos em \"pending\" indefinidamente."
+    ],
+    "relatedCommands": ["gitlab-runner-tags", "gitlab-ci-yml-structure"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/runner/",
+    "externalReferences": [],
+    "tags": ["gitlab", "runner", "ci/cd"],
+    "keywords": ["gitlab runner", "registrar runner", "executor docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-runner-tags",
+    "category": "GitLab",
+    "subcategory": "GitLab Runner",
+    "title": "Tags de runner",
+    "description": "Rótulos atribuídos a um runner na hora do registro, usados nos jobs (chave `tags:`) para garantir que apenas runners com determinada capacidade (ex: gpu, docker, windows) executem aquele job.",
+    "syntax": "<job-id>:\\n  tags:\\n    - <tag>",
+    "example": "deploy-producao:\\n  stage: deploy\\n  tags:\\n    - producao\\n    - shell\\n  script:\\n    - ./deploy.sh",
+    "result": "O job só é agendado em runners que possuam simultaneamente as tags \"producao\" e \"shell\"; sem runner compatível, o job fica preso em \"pending\".",
+    "notes": [
+      "Se um job não tiver `tags:` e o projeto tiver \"Ative os runners compartilhados\" desmarcado, ele pode nunca ser executado."
+    ],
+    "bestPractices": [
+      "Documente as tags disponíveis por ambiente (staging, produção, gpu) para evitar jobs travados por falta de runner compatível."
+    ],
+    "commonMistakes": [
+      "Usar uma tag com erro de digitação que não corresponde a nenhum runner registrado, deixando o job pendente sem mensagem de erro clara."
+    ],
+    "relatedCommands": ["gitlab-runner", "gitlab-jobs"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/runners/configure_runners/",
+    "externalReferences": [],
+    "tags": ["gitlab", "runner", "tags"],
+    "keywords": ["tags de runner", "gitlab runner tags", "runner pending"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-pages",
+    "category": "GitLab",
+    "subcategory": "GitLab Pages",
+    "title": "GitLab Pages",
+    "description": "Serviço de hospedagem de sites estáticos integrado ao GitLab, publicado a partir de um job especial chamado `pages` dentro do pipeline de CI/CD, servindo em um domínio `gitlab.io` ou domínio customizado.",
+    "syntax": "pages:\\n  stage: deploy\\n  script:\\n    - <comando-de-build>\\n  artifacts:\\n    paths:\\n      - public",
+    "example": "pages:\\n  stage: deploy\\n  script:\\n    - npm run build\\n    - mv dist public\\n  artifacts:\\n    paths:\\n      - public",
+    "result": "Site publicado em `https://<usuario>.gitlab.io/<projeto>/` após o job `pages` concluir com sucesso, usando o conteúdo da pasta `public` como artifact.",
+    "notes": [
+      "O job precisa se chamar exatamente `pages` e o diretório publicado precisa se chamar `public` para o GitLab reconhecer o deploy."
+    ],
+    "bestPractices": [
+      "Restrinja o job `pages` a rodar apenas no branch padrão (`rules: if: $CI_COMMIT_BRANCH == \"main\"`) para evitar publicações acidentais de branches de feature."
+    ],
+    "commonMistakes": [
+      "Nomear a pasta de saída do build com outro nome que não `public`, fazendo o deploy do GitLab Pages falhar silenciosamente."
+    ],
+    "relatedCommands": ["gitlab-ci-yml-structure", "gitlab-artifacts"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/pages/",
+    "externalReferences": [],
+    "tags": ["gitlab", "gitlab pages", "hospedagem estatica"],
+    "keywords": ["gitlab pages", "hospedar site gitlab", "public folder"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-protected-branches",
+    "category": "GitLab",
+    "subcategory": "Segurança e Governança",
+    "title": "Protected branches",
+    "description": "Configuração que restringe quem pode fazer push direto ou merge em um branch (ex: `main`), definindo permissões separadas para \"Allowed to merge\" e \"Allowed to push and merge\" por papel ou pessoa.",
+    "syntax": "Settings → Repository → Protected branches → Add protected branch",
+    "example": "Proteger `main` com \"Allowed to push and merge: No one\" e \"Allowed to merge: Maintainers\", forçando todo merge a passar por MR aprovado.",
+    "result": "Push direto ao branch `main` é rejeitado pelo servidor GitLab; apenas merges via MR por Maintainers são permitidos.",
+    "notes": [
+      "Também é possível proteger tags (\"Protected tags\"), impedindo que sejam recriadas ou apagadas por qualquer pessoa."
+    ],
+    "bestPractices": [
+      "Combine protected branches com approval rules e pipelines obrigatórios passando (\"Pipelines must succeed\") para máxima segurança do branch principal."
+    ],
+    "commonMistakes": [
+      "Deixar \"Allowed to push\" liberado para o papel \"Developer\" em `main`, permitindo push direto sem passar por revisão."
+    ],
+    "relatedCommands": ["gitlab-merge-request-approval-rules", "gitlab-merge-request"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/repository/branches/protected/",
+    "externalReferences": [],
+    "tags": ["gitlab", "seguranca", "protected branches"],
+    "keywords": ["protected branches gitlab", "proteger branch", "allowed to merge"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-variables-ci-cd",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Variáveis de CI/CD",
+    "description": "Variáveis configuráveis em nível de projeto, grupo ou instância (Settings → CI/CD → Variables), acessíveis nos jobs como variáveis de ambiente, com opção de marcá-las como \"Protected\" e/ou \"Masked\".",
+    "syntax": "Settings → CI/CD → Variables → Add variable\\n$<NOME_DA_VARIAVEL>",
+    "example": "deploy:\\n  script:\\n    - curl -H \"Authorization: Bearer $DEPLOY_TOKEN\" https://api.exemplo.com/deploy",
+    "result": "O valor de `DEPLOY_TOKEN` é injetado como variável de ambiente no job, mascarado nos logs se a opção \"Masked\" estiver habilitada.",
+    "flags": [
+      {
+        "flag": "Protected",
+        "description": "A variável só fica disponível em pipelines rodando em branches ou tags protegidas."
+      },
+      {
+        "flag": "Masked",
+        "description": "Oculta o valor da variável nos logs do job, exibindo apenas asteriscos."
+      }
+    ],
+    "notes": [
+      "Variáveis predefinidas do GitLab (`$CI_COMMIT_SHA`, `$CI_PROJECT_NAME`, `$CI_PIPELINE_ID`, etc.) já ficam disponíveis automaticamente em todo job."
+    ],
+    "bestPractices": [
+      "Marque toda variável sensível como \"Protected\" e \"Masked\" para reduzir o risco de exposição em branches não confiáveis."
+    ],
+    "commonMistakes": [
+      "Tentar mascarar uma variável cujo valor contém quebras de linha ou caracteres que não atendem aos requisitos de mascaramento, o que o GitLab recusa."
+    ],
+    "relatedCommands": ["gitlab-jobs", "gitlab-protected-branches"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/variables/",
+    "externalReferences": [],
+    "tags": ["gitlab", "variaveis", "ci/cd"],
+    "keywords": ["variaveis gitlab ci", "masked variable", "protected variable"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-artifacts",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Artifacts",
+    "description": "Arquivos ou diretórios gerados por um job e preservados após sua execução, disponíveis para download manual, para jobs de stages seguintes e, no caso de `pages`, para publicação do site.",
+    "syntax": "<job-id>:\\n  script:\\n    - <comando>\\n  artifacts:\\n    paths:\\n      - <caminho>\\n    expire_in: <duracao>",
+    "example": "build-job:\\n  script:\\n    - npm run build\\n  artifacts:\\n    paths:\\n      - dist/\\n    expire_in: 1 week",
+    "result": "A pasta `dist/` fica disponível para download na página do job e acessível a jobs de stages posteriores automaticamente.",
+    "parameters": [
+      {
+        "name": "paths",
+        "description": "Lista de arquivos/diretórios a preservar como artifact.",
+        "required": true
+      },
+      {
+        "name": "expire_in",
+        "description": "Tempo até o artifact ser apagado automaticamente.",
+        "required": false,
+        "defaultValue": "30 dias"
+      },
+      {
+        "name": "reports",
+        "description": "Marca o artifact como um relatório especial (ex: junit, coverage) que o GitLab interpreta na UI.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Diferente do cache, artifacts são passados automaticamente entre jobs de stages diferentes no mesmo pipeline, sem configuração extra."
+    ],
+    "bestPractices": [
+      "Defina `expire_in` para artifacts temporários, evitando acúmulo de armazenamento desnecessário no projeto."
+    ],
+    "commonMistakes": [
+      "Confundir artifacts com cache: artifacts existem para compartilhar resultados de build entre stages, cache existe para acelerar reexecuções (ex: dependências)."
+    ],
+    "relatedCommands": ["gitlab-jobs", "gitlab-cache", "gitlab-pages"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/#artifacts",
+    "externalReferences": [],
+    "tags": ["gitlab", "artifacts", "pipeline"],
+    "keywords": ["artifacts gitlab", "expire_in", "compartilhar arquivos entre jobs"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-cache",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Cache",
+    "description": "Mecanismo que reaproveita arquivos entre execuções de pipeline (tipicamente dependências como `node_modules` ou `.m2`) identificados por uma chave, reduzindo o tempo de instalação em execuções subsequentes.",
+    "syntax": "<job-id>:\\n  cache:\\n    key: <chave>\\n    paths:\\n      - <caminho>",
+    "example": "test-job:\\n  cache:\\n    key:\\n      files:\\n        - package-lock.json\\n    paths:\\n      - node_modules/",
+    "result": "O cache de `node_modules/` é restaurado automaticamente quando o hash de `package-lock.json` já foi visto em uma execução anterior.",
+    "parameters": [
+      {
+        "name": "key",
+        "description": "Identificador do cache; pode ser fixo, por branch ou baseado em hash de arquivos.",
+        "required": true
+      },
+      {
+        "name": "paths",
+        "description": "Diretórios/arquivos a incluir no cache.",
+        "required": true
+      },
+      {
+        "name": "policy",
+        "description": "Define se o job apenas lê (pull), apenas grava (push) ou faz ambos (pull-push, padrão) no cache.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Cache é armazenado por runner (ou compartilhado, dependendo da configuração de storage), diferente de artifacts que ficam centralizados no GitLab."
+    ],
+    "bestPractices": [
+      "Use `policy: pull` em jobs que só precisam ler o cache (ex: testes), reservando `push` para o job responsável por instalar as dependências."
+    ],
+    "commonMistakes": [
+      "Usar uma `key` genérica compartilhada entre branches muito diferentes, causando cache inconsistente entre pipelines paralelos."
+    ],
+    "relatedCommands": ["gitlab-artifacts", "gitlab-jobs"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/caching/",
+    "externalReferences": [],
+    "tags": ["gitlab", "cache", "performance"],
+    "keywords": ["cache gitlab ci", "acelerar pipeline", "node_modules cache"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-rules-only-except",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "rules (condições de execução de job)",
+    "description": "Chave moderna para controlar se, quando e como um job executa, substituindo as antigas `only`/`except` com uma sintaxe mais expressiva baseada em condições, variáveis e mudanças de arquivo.",
+    "syntax": "<job-id>:\\n  rules:\\n    - if: <condicao>\\n      when: <momento>\\n    - changes:\\n        - <caminho>",
+    "example": "deploy-producao:\\n  stage: deploy\\n  rules:\\n    - if: '$CI_COMMIT_BRANCH == \"main\"'\\n      when: manual",
+    "result": "O job \"deploy-producao\" só aparece disponível (como ação manual) em pipelines do branch `main`; em outros branches, ele nem é criado.",
+    "parameters": [
+      {
+        "name": "if",
+        "description": "Expressão condicional avaliada com variáveis de CI para decidir se o job entra no pipeline.",
+        "required": false
+      },
+      {
+        "name": "when",
+        "description": "Define o momento de execução: on_success (padrão), manual, always, never, delayed.",
+        "required": false
+      },
+      {
+        "name": "changes",
+        "description": "Restringe a execução a pipelines onde os arquivos listados foram alterados.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`only`/`except` ainda funcionam por compatibilidade, mas a documentação oficial recomenda `rules` para todo pipeline novo."
+    ],
+    "bestPractices": [
+      "Use `when: manual` em jobs de deploy para produção, exigindo um clique explícito em vez de execução automática."
+    ],
+    "commonMistakes": [
+      "Misturar `rules` com `only`/`except` no mesmo job, o que o GitLab rejeita por serem mecanismos mutuamente exclusivos."
+    ],
+    "relatedCommands": ["gitlab-jobs", "gitlab-variables-ci-cd"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/#rules",
+    "externalReferences": [],
+    "tags": ["gitlab", "rules", "pipeline"],
+    "keywords": ["rules gitlab ci", "only except", "when manual"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-cli-glab-install",
+    "category": "GitLab",
+    "subcategory": "GitLab CLI",
+    "title": "glab auth login",
+    "description": "Comando inicial da GitLab CLI (`glab`) que autentica a máquina local com uma conta ou token do GitLab, habilitando os demais comandos a operar sobre projetos, MRs e issues via terminal.",
+    "syntax": "glab auth login",
+    "example": "glab auth login --hostname gitlab.com",
+    "result": "? What is your preferred protocol for Git operations? HTTPS\\n✓ Logged in as usuario",
+    "flags": [
+      {
+        "flag": "--hostname",
+        "description": "Define a instância GitLab a autenticar, necessário para instâncias self-managed."
+      },
+      {
+        "flag": "--token",
+        "description": "Autentica passando um token de acesso pessoal diretamente, útil em scripts e CI."
+      }
+    ],
+    "notes": ["`glab auth status` mostra a conta ativa e a instância configurada."],
+    "bestPractices": [
+      "Em ambientes de CI, prefira `--token` lendo de uma variável protegida em vez do fluxo interativo."
+    ],
+    "commonMistakes": [
+      "Esquecer de especificar `--hostname` ao usar uma instância GitLab self-managed, fazendo o `glab` tentar autenticar contra gitlab.com por padrão."
+    ],
+    "relatedCommands": ["gitlab-cli-glab-mr"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "officialDocumentation": "https://docs.gitlab.com/editor_extensions/gitlab_cli/",
+    "externalReferences": [
+      { "label": "glab no GitHub", "url": "https://gitlab.com/gitlab-org/cli" }
+    ],
+    "tags": ["gitlab", "glab", "cli"],
+    "keywords": ["glab auth login", "gitlab cli", "autenticar glab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-cli-glab-mr",
+    "category": "GitLab",
+    "subcategory": "GitLab CLI",
+    "title": "glab mr create / list / merge",
+    "description": "Subcomandos da GitLab CLI para criar, listar e mesclar merge requests diretamente do terminal, sem precisar abrir o navegador.",
+    "syntax": "glab mr create [--title] [--description] [--target-branch] | glab mr list | glab mr merge <id>",
+    "example": "glab mr create --title \"fix: corrige validacao de cpf\" --description \"Resolve #45\" --target-branch main",
+    "result": "✓ Merge request created: https://gitlab.com/org/repo/-/merge_requests/58",
+    "flags": [
+      { "flag": "--title", "description": "Define o título do merge request." },
+      {
+        "flag": "--target-branch",
+        "description": "Define o branch de destino do merge request."
+      },
+      {
+        "flag": "--squash",
+        "description": "Habilita squash automático dos commits ao mesclar."
+      }
+    ],
+    "notes": [
+      "`glab mr checkout <id>` baixa e faz checkout local do branch de um MR existente."
+    ],
+    "bestPractices": [
+      "Use `glab mr create --fill` para reaproveitar automaticamente título e descrição a partir do último commit do branch."
+    ],
+    "commonMistakes": [
+      "Esquecer `--target-branch` em projetos cujo branch padrão não é `main`, criando o MR contra o branch errado."
+    ],
+    "relatedCommands": ["gitlab-cli-glab-install", "gitlab-merge-request"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "officialDocumentation": "https://docs.gitlab.com/editor_extensions/gitlab_cli/",
+    "externalReferences": [],
+    "tags": ["gitlab", "glab", "merge request"],
+    "keywords": ["glab mr create", "glab mr merge", "gitlab cli merge request"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-environments-deployments",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Environments e Deployments",
+    "description": "Recurso que registra em quais ambientes (staging, produção, review apps) um job de deploy publicou código, permitindo rastrear histórico de deploys e fazer rollback pela interface do GitLab.",
+    "syntax": "<job-id>:\\n  stage: deploy\\n  environment:\\n    name: <nome-do-ambiente>\\n    url: <url>",
+    "example": "deploy-staging:\\n  stage: deploy\\n  environment:\\n    name: staging\\n    url: https://staging.exemplo.com\\n  script:\\n    - ./deploy.sh staging",
+    "result": "Página Deployments → Environments passa a listar \"staging\" com histórico de deploys, link direto para a URL e botão de rollback para uma versão anterior.",
+    "notes": [
+      "Environments com nome dinâmico (ex: `review/$CI_COMMIT_REF_SLUG`) são a base das \"Review Apps\", ambientes efêmeros por branch/MR."
+    ],
+    "bestPractices": [
+      "Configure Review Apps para MRs, dando a revisores um ambiente real para testar a mudança antes do merge."
+    ],
+    "commonMistakes": [
+      "Não configurar `on_stop` para ambientes dinâmicos, deixando Review Apps órfãos rodando indefinidamente após o MR ser fechado."
+    ],
+    "relatedCommands": ["gitlab-jobs", "gitlab-rules-only-except"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/environments/",
+    "externalReferences": [],
+    "tags": ["gitlab", "environments", "deploy"],
+    "keywords": ["environments gitlab", "review apps", "rollback deploy"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-pipeline-schedules",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Pipeline Schedules",
+    "description": "Configuração que dispara pipelines automaticamente em intervalos definidos por expressão cron, útil para builds noturnos, limpeza periódica ou verificação de dependências desatualizadas.",
+    "syntax": "CI/CD → Schedules → New schedule → definir cron, branch/tag alvo e variáveis",
+    "example": "Criar schedule com cron `0 4 * * *` no branch `main`, passando a variável `SCHEDULE_TYPE=nightly` para o pipeline.",
+    "result": "Pipeline disparado automaticamente todo dia às 04:00 no fuso configurado, com `$SCHEDULE_TYPE` disponível nos jobs para diferenciar da execução normal.",
+    "notes": [
+      "Diferente do GitHub Actions, o GitLab permite escolher o fuso horário do schedule diretamente na interface, em vez de forçar UTC."
+    ],
+    "bestPractices": [
+      "Use `rules: if: $CI_PIPELINE_SOURCE == \"schedule\"` para rodar jobs exclusivos de builds agendados (ex: testes de regressão longos)."
+    ],
+    "commonMistakes": [
+      "Criar múltiplos schedules duplicados para o mesmo propósito, gerando pipelines redundantes e desperdiçando minutos de runner."
+    ],
+    "relatedCommands": ["gitlab-variables-ci-cd", "gitlab-rules-only-except"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/pipelines/schedules/",
+    "externalReferences": [],
+    "tags": ["gitlab", "schedules", "cron"],
+    "keywords": ["pipeline schedules", "cron gitlab", "pipeline agendado"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

@@ -1,0 +1,938 @@
+[
+  {
+    "id": "compose-intro-file",
+    "category": "Docker Compose",
+    "subcategory": "Fundamentos",
+    "title": "Estrutura do docker-compose.yml",
+    "description": "Arquivo YAML que descreve declarativamente uma aplicação multi-container: serviços, redes, volumes e suas configurações. É o ponto de entrada usado pelo comando `docker compose`.",
+    "syntax": "services:\n  <nome-do-servico>:\n    ...\nnetworks:\n  <nome-da-rede>:\n    ...\nvolumes:\n  <nome-do-volume>:\n    ...",
+    "example": "services:\n  api:\n    build: .\n    ports:\n      - \"3000:3000\"\n  db:\n    image: postgres:16\n    volumes:\n      - db-data:/var/lib/postgresql/data\n\nvolumes:\n  db-data:",
+    "result": "Define dois serviços (api e db) que juntos compõem a aplicação, além de um volume nomeado para persistir os dados do banco.",
+    "notes": [
+      "Desde a especificação Compose v2 a chave `version:` no topo do arquivo é obsoleta e pode ser omitida.",
+      "O nome do arquivo padrão é `compose.yaml` (ou `docker-compose.yml` por compatibilidade)."
+    ],
+    "bestPractices": [
+      "Mantenha um `compose.yaml` enxuto para produção e use arquivos de override para variações de ambiente."
+    ],
+    "commonMistakes": [
+      "Declarar a chave `version` com um valor incompatível com a versão do Compose instalada, gerando avisos desnecessários."
+    ],
+    "relatedCommands": [
+      "compose-services",
+      "compose-networks",
+      "compose-volumes",
+      "compose-up"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "yaml", "estrutura"],
+    "keywords": [
+      "docker-compose.yml",
+      "compose.yaml",
+      "arquivo compose",
+      "estrutura compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-services",
+    "category": "Docker Compose",
+    "subcategory": "Fundamentos",
+    "title": "services",
+    "description": "Chave de nível superior que declara cada container da aplicação, incluindo imagem/build, portas, variáveis, volumes e dependências.",
+    "syntax": "services:\n  <nome>:\n    image: <imagem>\n    build: <contexto>\n    ports: []\n    volumes: []\n    environment: []",
+    "example": "services:\n  web:\n    build:\n      context: .\n      dockerfile: Dockerfile\n    ports:\n      - \"8080:80\"\n    depends_on:\n      - api",
+    "result": "Define o serviço `web`, construído a partir de um Dockerfile local, expondo a porta 80 do container na porta 8080 do host.",
+    "parameters": [
+      { "name": "image", "description": "Imagem a ser usada; alternativa a `build`." },
+      {
+        "name": "build",
+        "description": "Contexto e Dockerfile para construir a imagem localmente."
+      },
+      { "name": "ports", "description": "Mapeamento de portas host:container." },
+      { "name": "environment", "description": "Variáveis de ambiente do container." }
+    ],
+    "notes": [
+      "Cada serviço vira, por padrão, um container único, mas pode ser escalado para múltiplas réplicas."
+    ],
+    "bestPractices": [
+      "Prefira `build` com contexto explícito em desenvolvimento e `image` fixada por tag/digest em produção."
+    ],
+    "commonMistakes": [
+      "Definir `image` e `build` ao mesmo tempo sem entender que o Compose usa `build` e marca a imagem resultante com o nome informado em `image`."
+    ],
+    "relatedCommands": [
+      "compose-intro-file",
+      "compose-environment-key",
+      "compose-depends-on"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "services", "yaml"],
+    "keywords": ["services docker compose", "definir serviço", "container compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-networks",
+    "category": "Docker Compose",
+    "subcategory": "Rede",
+    "title": "networks (top-level)",
+    "description": "Declara redes customizadas para controlar como os serviços se comunicam entre si e com o mundo externo. Por padrão, o Compose já cria uma rede bridge única para o projeto.",
+    "syntax": "networks:\n  <nome-da-rede>:\n    driver: bridge",
+    "example": "services:\n  api:\n    networks:\n      - backend\n  db:\n    networks:\n      - backend\n\nnetworks:\n  backend:\n    driver: bridge",
+    "result": "Os serviços `api` e `db` se comunicam pela rede `backend` usando o nome do serviço como hostname (ex: `db:5432`).",
+    "notes": [
+      "Serviços na mesma rede resolvem uns aos outros por DNS interno usando o nome do serviço.",
+      "Redes não declaradas explicitamente em `networks:` no serviço usam a rede padrão do projeto."
+    ],
+    "bestPractices": [
+      "Isole camadas (ex: frontend/backend/db) em redes distintas para reduzir a superfície de comunicação entre serviços que não precisam se falar."
+    ],
+    "commonMistakes": [
+      "Tentar acessar um serviço pelo `localhost` de dentro de outro container em vez de usar o nome do serviço como hostname."
+    ],
+    "relatedCommands": ["compose-intro-file", "compose-networks-service"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/networks/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "networks", "rede"],
+    "keywords": ["rede docker compose", "networks", "dns interno compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-volumes",
+    "category": "Docker Compose",
+    "subcategory": "Armazenamento",
+    "title": "volumes (top-level)",
+    "description": "Declara volumes nomeados no nível superior do arquivo, permitindo que sejam reutilizados por múltiplos serviços e persistam além do ciclo de vida dos containers.",
+    "syntax": "volumes:\n  <nome-do-volume>:\n    driver: local",
+    "example": "services:\n  db:\n    image: postgres:16\n    volumes:\n      - db-data:/var/lib/postgresql/data\n\nvolumes:\n  db-data:",
+    "result": "Cria (se não existir) o volume gerenciado `db-data` e o monta no diretório de dados do PostgreSQL, preservando os dados entre `down`/`up`.",
+    "notes": [
+      "Volumes nomeados sobrevivem a `docker compose down` (sem a flag `-v`) e a recriações de container."
+    ],
+    "bestPractices": [
+      "Use volumes nomeados para dados que precisam persistir (bancos de dados) e bind mounts para código-fonte em desenvolvimento."
+    ],
+    "commonMistakes": [
+      "Rodar `docker compose down -v` em produção por engano, apagando volumes e todos os dados persistidos."
+    ],
+    "relatedCommands": [
+      "compose-intro-file",
+      "compose-down",
+      "compose-volumes-bind-vs-named"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/volumes/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "volumes", "persistencia"],
+    "keywords": ["volumes docker compose", "persistir dados", "volume nomeado"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-up",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose up",
+    "description": "Cria e inicia todos os serviços definidos no arquivo Compose, construindo imagens quando necessário.",
+    "syntax": "docker compose up [opcoes] [servico...]",
+    "example": "docker compose up -d --build",
+    "result": "Constrói as imagens que tiverem `build:` definido e sobe todos os containers em segundo plano.",
+    "flags": [
+      { "flag": "-d", "description": "Executa em background (detached)." },
+      {
+        "flag": "--build",
+        "description": "Força reconstrução das imagens antes de subir os containers."
+      },
+      {
+        "flag": "--force-recreate",
+        "description": "Recria containers mesmo sem mudança de configuração."
+      },
+      {
+        "flag": "--no-deps",
+        "description": "Não inicia os serviços declarados em depends_on."
+      }
+    ],
+    "notes": [
+      "Sem `-d`, os logs de todos os serviços ficam anexados ao terminal atual (modo foreground)."
+    ],
+    "bestPractices": [
+      "Em desenvolvimento, use `docker compose up` sem `-d` para acompanhar logs em tempo real."
+    ],
+    "commonMistakes": [
+      "Esquecer `--build` após alterar o Dockerfile e continuar rodando a imagem antiga em cache."
+    ],
+    "relatedCommands": ["compose-down", "compose-build", "compose-logs", "compose-ps"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/up/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "up", "comando"],
+    "keywords": ["docker compose up", "subir containers", "iniciar compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-down",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose down",
+    "description": "Para e remove containers, redes e (opcionalmente) volumes criados pelo `up`.",
+    "syntax": "docker compose down [opcoes]",
+    "example": "docker compose down -v --remove-orphans",
+    "result": "Remove containers, redes, e também os volumes nomeados declarados no arquivo, além de containers órfãos de serviços removidos do compose.yaml.",
+    "flags": [
+      {
+        "flag": "-v",
+        "description": "Remove também os volumes nomeados declarados no arquivo."
+      },
+      {
+        "flag": "--remove-orphans",
+        "description": "Remove containers de serviços que não existem mais no arquivo atual."
+      },
+      {
+        "flag": "--rmi",
+        "description": "Remove as imagens usadas pelos serviços (all ou local)."
+      }
+    ],
+    "notes": [
+      "Por padrão, `down` não apaga volumes nomeados nem imagens, apenas containers e redes."
+    ],
+    "bestPractices": [
+      "Use `docker compose down` (sem `-v`) no dia a dia e reserve `-v` para resets completos do ambiente."
+    ],
+    "commonMistakes": [
+      "Usar `-v` sem verificar se há dados importantes nos volumes, causando perda irreversível."
+    ],
+    "relatedCommands": ["compose-up", "compose-volumes", "compose-stop-start"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/down/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "down", "comando"],
+    "keywords": ["docker compose down", "parar containers", "remover compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-logs",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose logs",
+    "description": "Exibe os logs agregados de um ou mais serviços do projeto, com prefixo indicando de qual serviço cada linha veio.",
+    "syntax": "docker compose logs [opcoes] [servico...]",
+    "example": "docker compose logs -f --tail=100 api",
+    "result": "Mostra as últimas 100 linhas de log do serviço `api` e continua acompanhando novas linhas em tempo real.",
+    "flags": [
+      { "flag": "-f", "description": "Segue a saída (follow), como `tail -f`." },
+      {
+        "flag": "--tail",
+        "description": "Limita a quantidade de linhas exibidas do histórico."
+      },
+      { "flag": "-t", "description": "Mostra timestamps de cada linha de log." }
+    ],
+    "notes": ["Sem informar serviço, mostra os logs de todos os serviços do projeto."],
+    "bestPractices": [
+      "Combine `-f` com `--tail` para evitar despejar todo o histórico de log ao anexar o terminal."
+    ],
+    "commonMistakes": [
+      "Confundir `docker compose logs` (agrega vários serviços) com `docker logs <container>` (um único container)."
+    ],
+    "relatedCommands": ["compose-up", "compose-ps", "compose-exec"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/logs/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "logs", "comando"],
+    "keywords": ["docker compose logs", "ver logs compose", "acompanhar logs"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-exec",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose exec",
+    "description": "Executa um comando dentro de um container de serviço já em execução, útil para abrir um shell ou rodar scripts pontuais.",
+    "syntax": "docker compose exec [opcoes] <servico> <comando>",
+    "example": "docker compose exec api sh -c \"npm run migrate\"",
+    "result": "Executa o comando de migração dentro do container do serviço `api` já em execução.",
+    "flags": [
+      {
+        "flag": "-it",
+        "description": "Aloca um pseudo-TTY interativo (padrão para shells)."
+      },
+      {
+        "flag": "-e",
+        "description": "Define variável de ambiente apenas para essa execução."
+      },
+      {
+        "flag": "-u",
+        "description": "Executa como usuário específico dentro do container."
+      }
+    ],
+    "notes": [
+      "Diferente de `docker compose run`, o `exec` requer que o container já esteja rodando."
+    ],
+    "bestPractices": [
+      "Use `docker compose exec <servico> sh` (ou `bash`, se disponível na imagem) para inspecionar o ambiente durante o desenvolvimento."
+    ],
+    "commonMistakes": [
+      "Tentar usar `exec` em um serviço que ainda não subiu, recebendo erro de container não encontrado."
+    ],
+    "relatedCommands": ["compose-up", "compose-logs", "compose-ps"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/exec/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "exec", "comando"],
+    "keywords": [
+      "docker compose exec",
+      "entrar no container compose",
+      "rodar comando compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-build",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose build",
+    "description": "Constrói (ou reconstrói) as imagens dos serviços que possuem a chave `build` no arquivo Compose, sem iniciar os containers.",
+    "syntax": "docker compose build [opcoes] [servico...]",
+    "example": "docker compose build --no-cache api",
+    "result": "Reconstrói a imagem do serviço `api` do zero, ignorando o cache de camadas do Docker.",
+    "flags": [
+      {
+        "flag": "--no-cache",
+        "description": "Ignora o cache de build e reconstrói todas as camadas."
+      },
+      {
+        "flag": "--pull",
+        "description": "Sempre tenta baixar uma versão mais nova da imagem base."
+      },
+      {
+        "flag": "--parallel",
+        "description": "Constrói múltiplos serviços em paralelo quando possível."
+      }
+    ],
+    "notes": [
+      "Serviços que só usam `image:` (sem `build:`) são ignorados por este comando."
+    ],
+    "bestPractices": [
+      "Rode `docker compose build` isoladamente em pipelines de CI para separar a etapa de build da etapa de execução de testes."
+    ],
+    "commonMistakes": [
+      "Esperar que `docker compose build` também inicie os containers — para isso é necessário `up` (com ou sem `--build`)."
+    ],
+    "relatedCommands": ["compose-up", "compose-pull"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/build/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "build", "comando"],
+    "keywords": ["docker compose build", "construir imagens compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-ps",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose ps",
+    "description": "Lista os containers do projeto atual, seu status, portas publicadas e serviço correspondente.",
+    "syntax": "docker compose ps [opcoes] [servico...]",
+    "example": "docker compose ps --all",
+    "result": "Mostra todos os containers do projeto, incluindo os parados, com status e portas mapeadas.",
+    "flags": [
+      { "flag": "--all", "description": "Inclui containers parados na listagem." },
+      {
+        "flag": "--services",
+        "description": "Lista apenas os nomes dos serviços, sem detalhes."
+      },
+      { "flag": "-q", "description": "Mostra apenas os IDs dos containers." }
+    ],
+    "notes": [
+      "Diferente de `docker ps`, este comando filtra automaticamente pelos containers do projeto Compose atual (baseado no diretório/label do projeto)."
+    ],
+    "bestPractices": [
+      "Use `docker compose ps` para verificar rapidamente o status de saúde (healthy/unhealthy) de todos os serviços."
+    ],
+    "commonMistakes": [
+      "Rodar o comando em um diretório diferente do projeto e não encontrar os containers esperados por causa do nome de projeto."
+    ],
+    "relatedCommands": ["compose-up", "compose-logs"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/ps/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "ps", "comando"],
+    "keywords": ["docker compose ps", "listar containers compose", "status compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-profiles",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "profiles",
+    "description": "Permite agrupar serviços em perfis opcionais que só sobem quando explicitamente ativados, útil para ferramentas de debug, seed de dados ou serviços usados apenas em alguns ambientes.",
+    "syntax": "services:\n  <nome>:\n    profiles: [\"<perfil>\"]",
+    "example": "services:\n  api:\n    build: .\n  adminer:\n    image: adminer\n    profiles: [\"debug\"]",
+    "result": "O serviço `adminer` só é iniciado quando o perfil `debug` é ativado explicitamente; `docker compose up` sozinho não o sobe.",
+    "notes": [
+      "Serviços sem `profiles` definido são considerados sempre ativos (perfil padrão)."
+    ],
+    "bestPractices": [
+      "Use profiles para isolar ferramentas de suporte (ex: interface de banco, mocks) que não devem subir em produção nem no `up` padrão."
+    ],
+    "commonMistakes": [
+      "Esquecer de ativar o profile com `--profile <nome>` e concluir erroneamente que o serviço está quebrado."
+    ],
+    "relatedCommands": ["compose-up", "compose-services"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2 (v1.28+)",
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/profiles/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "profiles", "yaml"],
+    "keywords": ["profiles docker compose", "perfil de serviço", "ativar profile"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-depends-on",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "depends_on",
+    "description": "Define a ordem de inicialização entre serviços e, combinado com `condition`, pode esperar que uma dependência esteja saudável antes de iniciar o serviço dependente.",
+    "syntax": "services:\n  <nome>:\n    depends_on:\n      <servico>:\n        condition: service_healthy",
+    "example": "services:\n  api:\n    depends_on:\n      db:\n        condition: service_healthy\n  db:\n    image: postgres:16\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]",
+    "result": "O container `api` só é iniciado depois que o healthcheck do `db` reportar status saudável.",
+    "notes": [
+      "Sem `condition`, `depends_on` apenas garante a ordem de start, não que o serviço dependente já esteja pronto para receber conexões."
+    ],
+    "bestPractices": [
+      "Combine `depends_on` com `condition: service_healthy` e um `healthcheck` real em vez de confiar apenas na ordem de subida dos containers."
+    ],
+    "commonMistakes": [
+      "Achar que `depends_on` sozinho garante que o banco já aceita conexões quando a aplicação inicia, causando falhas de conexão intermitentes."
+    ],
+    "relatedCommands": ["compose-healthcheck", "compose-services"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#depends_on",
+    "externalReferences": [],
+    "tags": ["docker-compose", "depends_on", "yaml"],
+    "keywords": [
+      "depends_on docker compose",
+      "ordem de inicialização",
+      "dependencia entre servicos"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-healthcheck",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "healthcheck",
+    "description": "Configura um comando que o Docker executa periodicamente dentro do container para determinar se o serviço está saudável, alimentando o status exibido em `docker compose ps` e a condição `service_healthy` em `depends_on`.",
+    "syntax": "services:\n  <nome>:\n    healthcheck:\n      test: [\"CMD-SHELL\", \"<comando>\"]\n      interval: 30s\n      timeout: 5s\n      retries: 3\n      start_period: 10s",
+    "example": "services:\n  api:\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:3000/health\"]\n      interval: 15s\n      timeout: 3s\n      retries: 3",
+    "result": "A cada 15 segundos o Docker chama o endpoint /health; após 3 falhas seguidas o container é marcado como `unhealthy`.",
+    "parameters": [
+      {
+        "name": "interval",
+        "description": "Intervalo entre execuções do teste.",
+        "defaultValue": "30s"
+      },
+      {
+        "name": "timeout",
+        "description": "Tempo máximo para o teste responder antes de contar como falha.",
+        "defaultValue": "30s"
+      },
+      {
+        "name": "retries",
+        "description": "Número de falhas consecutivas até marcar como unhealthy.",
+        "defaultValue": "3"
+      },
+      {
+        "name": "start_period",
+        "description": "Período de carência inicial em que falhas não contam para o contador de retries."
+      }
+    ],
+    "notes": [
+      "Sem `healthcheck` definido, o status do container é sempre considerado como \"sem health check\" (starting/none)."
+    ],
+    "bestPractices": [
+      "Use `start_period` generoso para aplicações com boot lento, evitando falsos negativos logo após o start."
+    ],
+    "commonMistakes": [
+      "Definir um healthcheck que depende de ferramentas (curl, wget) não instaladas na imagem base, fazendo o teste sempre falhar."
+    ],
+    "relatedCommands": ["compose-depends-on", "compose-ps"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#healthcheck",
+    "externalReferences": [],
+    "tags": ["docker-compose", "healthcheck", "yaml"],
+    "keywords": [
+      "healthcheck docker compose",
+      "verificar saude container",
+      "service_healthy"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-override-files",
+    "category": "Docker Compose",
+    "subcategory": "Multi-ambiente",
+    "title": "Arquivos de override (-f e compose.override.yaml)",
+    "description": "O Compose combina automaticamente `compose.yaml` com `compose.override.yaml` (se existir) e permite empilhar arquivos adicionais com múltiplas flags `-f`, útil para diferenciar configurações de dev, staging e produção.",
+    "syntax": "docker compose -f compose.yaml -f compose.prod.yaml up -d",
+    "example": "# compose.yaml (base)\nservices:\n  api:\n    build: .\n    environment:\n      - NODE_ENV=production\n\n# compose.override.yaml (aplicado automaticamente em dev)\nservices:\n  api:\n    environment:\n      - NODE_ENV=development\n    volumes:\n      - ./src:/app/src",
+    "result": "Ao rodar apenas `docker compose up`, o override de desenvolvimento é mesclado automaticamente, montando o código-fonte local e sobrescrevendo NODE_ENV.",
+    "notes": [
+      "A ordem dos arquivos passados em `-f` importa: arquivos posteriores sobrescrevem/mesclam valores dos anteriores.",
+      "Sem nenhuma flag `-f`, o Compose procura por `compose.yaml` + `compose.override.yaml` no diretório atual."
+    ],
+    "bestPractices": [
+      "Mantenha o arquivo base sem detalhes de ambiente e use `compose.override.yaml` (dev, aplicado por padrão) e um `compose.prod.yaml` explícito para produção."
+    ],
+    "commonMistakes": [
+      "Versionar segredos de produção dentro de um `compose.override.yaml` que é aplicado silenciosamente em qualquer ambiente."
+    ],
+    "relatedCommands": ["compose-intro-file", "compose-env-file", "compose-dev-vs-prod"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "override", "multi-ambiente"],
+    "keywords": [
+      "compose override",
+      "multiplos arquivos compose",
+      "compose.override.yaml",
+      "-f compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-env-file",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "Arquivo .env e interpolação de variáveis",
+    "description": "O Compose lê automaticamente um arquivo `.env` no diretório do projeto e disponibiliza suas variáveis para interpolação dentro do próprio `compose.yaml` usando a sintaxe `${VAR}`.",
+    "syntax": "# .env\nVAR=valor\n\n# compose.yaml\nservices:\n  api:\n    image: minha-api:${TAG:-latest}",
+    "example": "# .env\nPOSTGRES_PASSWORD=segredo\nAPP_PORT=3000\n\n# compose.yaml\nservices:\n  api:\n    ports:\n      - \"${APP_PORT}:3000\"\n  db:\n    image: postgres:16\n    environment:\n      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}",
+    "result": "O Compose substitui `${APP_PORT}` e `${POSTGRES_PASSWORD}` pelos valores do `.env` antes de processar o arquivo.",
+    "notes": [
+      "É possível informar um arquivo `.env` diferente com `docker compose --env-file arquivo.env up`.",
+      "Variáveis do `.env` não são automaticamente injetadas dentro do container — para isso ainda é preciso listá-las em `environment` ou `env_file` do serviço."
+    ],
+    "bestPractices": [
+      "Nunca versione o `.env` com segredos reais; use um `.env.example` como template e adicione `.env` ao `.gitignore`."
+    ],
+    "commonMistakes": [
+      "Confundir interpolação no `compose.yaml` (`${VAR}`) com a chave `env_file`, que injeta variáveis diretamente no container."
+    ],
+    "relatedCommands": ["compose-environment-key", "compose-override-files"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/environment-variables/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "env", "variaveis-de-ambiente"],
+    "keywords": [".env docker compose", "interpolacao de variaveis", "env-file compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-environment-key",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "environment (chave do serviço)",
+    "description": "Define variáveis de ambiente que serão injetadas diretamente dentro do container do serviço, seja listadas inline ou carregadas de um arquivo via `env_file`.",
+    "syntax": "services:\n  <nome>:\n    environment:\n      - CHAVE=valor\n    env_file:\n      - .env.producao",
+    "example": "services:\n  api:\n    environment:\n      - NODE_ENV=production\n      - DATABASE_URL=postgres://user:pass@db:5432/app\n    env_file:\n      - .env.secrets",
+    "result": "As variáveis listadas ficam disponíveis via `process.env` (ou equivalente) dentro do container do serviço `api`.",
+    "notes": [
+      "`environment` pode ser escrito como lista (`- CHAVE=valor`) ou como mapa (`CHAVE: valor`); ambos são válidos."
+    ],
+    "bestPractices": [
+      "Use `env_file` para segredos e listas grandes de variáveis, mantendo o `compose.yaml` legível."
+    ],
+    "commonMistakes": [
+      "Colocar segredos sensíveis diretamente em `environment` inline dentro de um arquivo versionado no Git."
+    ],
+    "relatedCommands": ["compose-env-file", "compose-services"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#environment",
+    "externalReferences": [],
+    "tags": ["docker-compose", "environment", "yaml"],
+    "keywords": ["environment docker compose", "variaveis do container", "env_file"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-restart-policy",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "restart",
+    "description": "Define a política de reinício automático do container quando ele para ou falha, sem depender de um orquestrador externo.",
+    "syntax": "services:\n  <nome>:\n    restart: <politica>",
+    "example": "services:\n  worker:\n    restart: unless-stopped",
+    "result": "O container do serviço `worker` reinicia automaticamente após falhas ou reboot do host, exceto se foi parado manualmente.",
+    "parameters": [
+      { "name": "no", "description": "Nunca reinicia automaticamente (padrão)." },
+      {
+        "name": "always",
+        "description": "Sempre reinicia, inclusive após parada manual ou reboot do host."
+      },
+      {
+        "name": "on-failure",
+        "description": "Reinicia apenas se o container sair com código de erro diferente de zero."
+      },
+      {
+        "name": "unless-stopped",
+        "description": "Reinicia sempre, exceto quando foi explicitamente parado pelo usuário."
+      }
+    ],
+    "notes": [
+      "Em ambientes orquestrados por Swarm ou Kubernetes, prefira a política de restart do orquestrador em vez desta chave."
+    ],
+    "bestPractices": [
+      "Use `unless-stopped` para serviços de longa duração em produção com Compose puro (sem orquestrador)."
+    ],
+    "commonMistakes": [
+      "Usar `restart: always` em um serviço com bug de crash loop, mascarando o problema com reinícios infinitos em vez de investigar a causa."
+    ],
+    "relatedCommands": ["compose-services", "compose-healthcheck"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#restart",
+    "externalReferences": [],
+    "tags": ["docker-compose", "restart", "yaml"],
+    "keywords": ["restart policy docker compose", "reiniciar container automaticamente"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-config",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose config",
+    "description": "Valida e renderiza a configuração final do Compose (após interpolar variáveis e mesclar arquivos de override), sem executar nenhum container.",
+    "syntax": "docker compose config [opcoes]",
+    "example": "docker compose -f compose.yaml -f compose.prod.yaml config",
+    "result": "Imprime o YAML resultante da mescla dos dois arquivos com todas as variáveis já interpoladas, útil para depurar overrides.",
+    "flags": [
+      {
+        "flag": "--quiet",
+        "description": "Apenas valida a sintaxe, sem imprimir o YAML resultante."
+      },
+      {
+        "flag": "--services",
+        "description": "Lista apenas os nomes dos serviços definidos."
+      }
+    ],
+    "notes": [
+      "É a forma mais confiável de conferir o efeito real de múltiplos arquivos `-f` combinados antes de rodar `up`."
+    ],
+    "bestPractices": [
+      "Rode `docker compose config` em pipelines de CI como passo de validação antes de aplicar mudanças em produção."
+    ],
+    "commonMistakes": [
+      "Assumir o comportamento de merge de dois arquivos de olho apenas no YAML, sem rodar `config` para confirmar o resultado real."
+    ],
+    "relatedCommands": ["compose-override-files", "compose-up"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/config/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "config", "comando"],
+    "keywords": ["docker compose config", "validar compose", "renderizar compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-stop-start",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose stop / start",
+    "description": "Para (`stop`) ou reinicia (`start`) containers já criados sem removê-los, diferente de `down`/`up` que recriam recursos.",
+    "syntax": "docker compose stop [servico...]\ndocker compose start [servico...]",
+    "example": "docker compose stop worker\ndocker compose start worker",
+    "result": "O container do serviço `worker` é parado e, depois, reiniciado preservando o mesmo container (mesmo filesystem e ID).",
+    "notes": [
+      "`stop` envia SIGTERM (e depois SIGKILL após timeout) sem remover containers, redes ou volumes."
+    ],
+    "bestPractices": [
+      "Use `stop`/`start` quando quiser pausar temporariamente um serviço sem perder o estado interno do container."
+    ],
+    "commonMistakes": [
+      "Usar `down` quando a intenção era apenas pausar temporariamente, recriando containers e perdendo estado não persistido em volume."
+    ],
+    "relatedCommands": ["compose-down", "compose-up"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/stop/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "stop", "start"],
+    "keywords": [
+      "docker compose stop",
+      "docker compose start",
+      "pausar container compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-pull",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose pull",
+    "description": "Baixa as versões mais recentes das imagens usadas pelos serviços que possuem `image:` definido, sem construir nada localmente.",
+    "syntax": "docker compose pull [servico...]",
+    "example": "docker compose pull db",
+    "result": "Atualiza a imagem local do serviço `db` para a versão mais recente correspondente à tag configurada.",
+    "notes": [
+      "Serviços que usam apenas `build:` (sem `image:` correspondente publicada) não são afetados por este comando."
+    ],
+    "bestPractices": [
+      "Rode `docker compose pull` antes de `up -d` em produção para garantir que a versão da imagem em execução é a esperada, sem depender de rebuild."
+    ],
+    "commonMistakes": [
+      "Usar tags flutuantes como `latest` em produção e presumir que `pull` sempre traz uma versão compatível com a aplicação atual."
+    ],
+    "relatedCommands": ["compose-build", "compose-up"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/pull/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "pull", "comando"],
+    "keywords": ["docker compose pull", "atualizar imagens compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-scale",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "Escalonamento de serviços (--scale e deploy.replicas)",
+    "description": "Permite rodar múltiplas réplicas de um mesmo serviço, seja via flag na linha de comando ou declarando `deploy.replicas` no arquivo.",
+    "syntax": "docker compose up -d --scale <servico>=<n>",
+    "example": "docker compose up -d --scale worker=3",
+    "result": "Sobe três containers do serviço `worker` (worker-1, worker-2, worker-3) balanceando a carga entre eles.",
+    "notes": [
+      "Serviços escalados não podem publicar uma porta fixa de host (`8080:80`) para múltiplas réplicas — use uma porta dinâmica ou um proxy reverso na frente.",
+      "A chave `deploy.replicas` no arquivo só é aplicada de fato pelo Compose ao usar `up`; em Swarm/Kubernetes o comportamento do `deploy` é mais completo."
+    ],
+    "bestPractices": [
+      "Combine escalonamento horizontal com um load balancer (ex: nginx, Traefik) na frente dos serviços replicados."
+    ],
+    "commonMistakes": [
+      "Tentar escalar um serviço que publica porta fixa de host e receber erro de conflito de porta ao subir a segunda réplica."
+    ],
+    "relatedCommands": ["compose-up", "compose-services"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/deploy/#replicas",
+    "externalReferences": [],
+    "tags": ["docker-compose", "scale", "replicas"],
+    "keywords": ["escalar servico compose", "--scale docker compose", "replicas compose"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-networks-service",
+    "category": "Docker Compose",
+    "subcategory": "Rede",
+    "title": "Configuração de rede por serviço (aliases e múltiplas redes)",
+    "description": "Um serviço pode participar de múltiplas redes simultaneamente e definir apelidos (aliases) adicionais de DNS dentro de cada rede.",
+    "syntax": "services:\n  <nome>:\n    networks:\n      <rede>:\n        aliases:\n          - <apelido>",
+    "example": "services:\n  api:\n    networks:\n      backend:\n        aliases:\n          - api-interna\n      frontend: {}\n\nnetworks:\n  backend:\n  frontend:",
+    "result": "O serviço `api` fica acessível pelo nome `api`, `api-interna` na rede `backend`, e também participa da rede `frontend` para se comunicar com o serviço de UI.",
+    "notes": [
+      "Um serviço conectado a múltiplas redes tem uma interface e IP distintos em cada uma delas."
+    ],
+    "bestPractices": [
+      "Use múltiplas redes para expor um serviço \"gateway\" tanto para a camada pública quanto para a camada interna, sem expor os demais serviços internos publicamente."
+    ],
+    "commonMistakes": [
+      "Esperar que aliases funcionem entre redes diferentes — um alias só é resolvido por outros containers da mesma rede."
+    ],
+    "relatedCommands": ["compose-networks"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#networks",
+    "externalReferences": [],
+    "tags": ["docker-compose", "networks", "aliases"],
+    "keywords": [
+      "aliases rede docker compose",
+      "multiplas redes compose",
+      "dns alias container"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-volumes-bind-vs-named",
+    "category": "Docker Compose",
+    "subcategory": "Armazenamento",
+    "title": "Bind mount vs volume nomeado",
+    "description": "Compara as duas formas principais de montar armazenamento em um serviço: bind mounts (apontam para um caminho do host) e volumes nomeados (gerenciados pelo Docker).",
+    "syntax": "services:\n  <nome>:\n    volumes:\n      - ./caminho-local:/caminho/no/container   # bind mount\n      - nome-do-volume:/caminho/no/container    # volume nomeado",
+    "example": "services:\n  api:\n    volumes:\n      - ./src:/app/src        # bind mount: reflete edições locais instantaneamente\n  db:\n    volumes:\n      - db-data:/var/lib/postgresql/data  # volume nomeado: gerenciado pelo Docker\n\nvolumes:\n  db-data:",
+    "result": "Alterações no código local em `./src` aparecem imediatamente dentro do container `api`; os dados do `db` ficam isolados e gerenciados pelo Docker em `db-data`.",
+    "notes": [
+      "Bind mounts dependem da estrutura de diretórios do host e podem se comportar de forma diferente entre Linux, macOS e Windows (especialmente em performance de I/O)."
+    ],
+    "bestPractices": [
+      "Use bind mounts para hot-reload de código em desenvolvimento e volumes nomeados para dados que precisam de portabilidade e desempenho consistente (bancos de dados)."
+    ],
+    "commonMistakes": [
+      "Usar bind mount do código-fonte também em produção, criando dependência do sistema de arquivos do host que não existe em outro ambiente de deploy."
+    ],
+    "relatedCommands": ["compose-volumes", "compose-dev-vs-prod"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#volumes",
+    "externalReferences": [],
+    "tags": ["docker-compose", "volumes", "bind-mount"],
+    "keywords": [
+      "bind mount vs volume",
+      "volume nomeado docker compose",
+      "montar diretorio local"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-dev-vs-prod",
+    "category": "Docker Compose",
+    "subcategory": "Boas práticas",
+    "title": "Boas práticas: Compose em desenvolvimento vs produção",
+    "description": "Resume as diferenças de configuração recomendadas ao usar Docker Compose como ambiente de desenvolvimento local versus como orquestrador leve de produção.",
+    "notes": [
+      "Em dev: bind mounts do código-fonte, hot-reload, portas expostas livremente, `NODE_ENV=development`, containers com ferramentas extras de debug.",
+      "Em produção: imagens imutáveis já construídas e versionadas (sem bind mount de código), variáveis sensíveis via secrets/gerenciador externo, `restart: unless-stopped`, healthchecks obrigatórios, sem portas de debug expostas."
+    ],
+    "bestPractices": [
+      "Trate o `compose.yaml` como a base comum e use overrides (`compose.override.yaml` para dev, `compose.prod.yaml` para produção) em vez de condicionais dentro de um único arquivo.",
+      "Em produção, prefira orquestradores dedicados (Kubernetes, ECS, Nomad) quando a aplicação crescer além do que um único host com Compose consegue suportar com segurança."
+    ],
+    "commonMistakes": [
+      "Usar o mesmo `compose.yaml` de desenvolvimento diretamente em produção, com bind mounts de código e sem healthchecks nem políticas de restart."
+    ],
+    "relatedCommands": [
+      "compose-override-files",
+      "compose-volumes-bind-vs-named",
+      "compose-healthcheck",
+      "compose-restart-policy"
+    ],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/production/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "boas-praticas", "producao"],
+    "keywords": [
+      "docker compose producao",
+      "compose dev vs prod",
+      "boas praticas docker compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-watch",
+    "category": "Docker Compose",
+    "subcategory": "Desenvolvimento",
+    "title": "Docker Compose Watch (develop.watch)",
+    "description": "Recurso que monitora arquivos locais e sincroniza ou reconstrói automaticamente o serviço correspondente quando o código muda, substituindo scripts manuais de hot-reload baseados em bind mount.",
+    "syntax": "services:\n  <nome>:\n    develop:\n      watch:\n        - path: <caminho>\n          action: sync | rebuild | sync+restart\n          target: <caminho-no-container>",
+    "example": "services:\n  api:\n    build: .\n    develop:\n      watch:\n        - path: ./src\n          action: sync\n          target: /app/src\n        - path: package.json\n          action: rebuild",
+    "result": "Ao rodar `docker compose watch`, alterações em `./src` são sincronizadas diretamente no container sem restart; já mudanças em `package.json` disparam uma reconstrução completa da imagem.",
+    "flags": [
+      {
+        "flag": "sync",
+        "description": "Copia os arquivos alterados diretamente para dentro do container, sem rebuild."
+      },
+      {
+        "flag": "rebuild",
+        "description": "Reconstrói a imagem e recria o container quando o arquivo/caminho muda."
+      },
+      {
+        "flag": "sync+restart",
+        "description": "Sincroniza os arquivos e reinicia o container (sem rebuild completo)."
+      }
+    ],
+    "notes": [
+      "É iniciado com o comando `docker compose watch`, que pode ser usado em conjunto com `up` para já subir os serviços."
+    ],
+    "bestPractices": [
+      "Use `action: sync` para arquivos de código interpretado (JS, Python) e `action: rebuild` apenas para arquivos que afetam a instalação de dependências (package.json, requirements.txt)."
+    ],
+    "commonMistakes": [
+      "Configurar `sync` para arquivos que exigem reinstalação de dependências, deixando o container com código atualizado mas dependências desatualizadas."
+    ],
+    "relatedCommands": ["compose-up", "compose-volumes-bind-vs-named"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2.22+",
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/file-watch/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "watch", "hot-reload"],
+    "keywords": ["docker compose watch", "hot reload docker compose", "develop.watch"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

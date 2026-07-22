@@ -1,0 +1,462 @@
+[
+  {
+    "id": "wt-overview",
+    "category": "Windows Terminal",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Windows Terminal — visão geral",
+    "description": "Aplicativo de terminal moderno da Microsoft, open source, que hospeda múltiplos shells (PowerShell, CMD, WSL, Azure Cloud Shell) em abas e painéis, com suporte a temas, fontes com ligaduras, GPU rendering e configuração via JSON.",
+    "notes": [
+      "Vem pré-instalado a partir do Windows 11 e é instalável via Microsoft Store ou winget em versões anteriores.",
+      "É definido como terminal padrão do sistema em Configurações > Privacidade e segurança > Para desenvolvedores > Terminal."
+    ],
+    "relatedCommands": ["wt-settings-json", "wt-command-line-wt-exe"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/",
+    "externalReferences": [
+      {
+        "label": "Repositório oficial no GitHub",
+        "url": "https://github.com/microsoft/terminal"
+      }
+    ],
+    "tags": ["windows-terminal", "terminal", "windows"],
+    "keywords": ["windows terminal", "terminal moderno windows", "wt.exe"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-new-tab",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Shift + T — nova aba",
+    "description": "Abre uma nova aba usando o perfil padrão configurado. Segurar Alt ao clicar no botão '+' (ou usar o menu suspenso da seta) permite escolher um perfil específico para a nova aba.",
+    "shortcut": "Ctrl + Shift + T",
+    "relatedCommands": ["wt-shortcut-close-tab", "wt-shortcut-next-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/user-interface#tabs",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "abas"],
+    "keywords": ["nova aba windows terminal", "ctrl shift t"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-close-tab",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Shift + W — fechar aba/painel",
+    "description": "Fecha a aba ativa; se a aba tiver múltiplos painéis, fecha apenas o painel em foco. Por padrão exibe uma confirmação se houver um processo em execução.",
+    "shortcut": "Ctrl + Shift + W",
+    "notes": [
+      "A confirmação de fechamento pode ser desabilitada na configuração `\"confirmCloseAllTabs\"` do settings.json."
+    ],
+    "relatedCommands": ["wt-shortcut-new-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/panes",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "abas", "paineis"],
+    "keywords": ["fechar aba windows terminal", "ctrl shift w"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-next-tab",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Tab / Ctrl + Shift + Tab — alternar abas",
+    "description": "Move o foco para a próxima aba (Ctrl + Tab) ou para a aba anterior (Ctrl + Shift + Tab). Ctrl + Alt + número vai direto para a aba na posição correspondente.",
+    "shortcut": "Ctrl + Tab",
+    "notes": [
+      "`Ctrl + Alt + 1` a `Ctrl + Alt + 9` navegam diretamente para a aba pela posição."
+    ],
+    "relatedCommands": ["wt-shortcut-new-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/user-interface#tabs",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "abas"],
+    "keywords": ["alternar abas windows terminal", "ctrl tab"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-split-pane-vertical",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Alt + Shift + + — dividir painel verticalmente",
+    "description": "Divide o painel atual em duas colunas lado a lado, executando o mesmo perfil padrão no novo painel. Também acessível pelo menu suspenso da seta ao lado do '+' na barra de abas.",
+    "shortcut": "Alt + Shift + +",
+    "relatedCommands": [
+      "wt-shortcut-split-pane-horizontal",
+      "wt-shortcut-move-focus-pane"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/panes",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "paineis", "split"],
+    "keywords": ["dividir painel windows terminal", "split pane vertical"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-split-pane-horizontal",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Alt + Shift + - — dividir painel horizontalmente",
+    "description": "Divide o painel atual em duas linhas empilhadas (uma acima da outra), útil para acompanhar logs enquanto executa comandos na mesma tela.",
+    "shortcut": "Alt + Shift + -",
+    "relatedCommands": ["wt-shortcut-split-pane-vertical", "wt-shortcut-move-focus-pane"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/panes",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "paineis", "split"],
+    "keywords": ["dividir painel horizontal", "split pane horizontal"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-move-focus-pane",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Alt + Seta — mover foco entre painéis",
+    "description": "Move o foco do teclado para o painel adjacente na direção da seta pressionada (esquerda, direita, cima ou baixo), sem precisar usar o mouse.",
+    "shortcut": "Alt + Seta",
+    "notes": [
+      "Segurar Alt + Shift + Seta redimensiona o painel em foco na direção indicada, em vez de mover o foco."
+    ],
+    "relatedCommands": ["wt-shortcut-split-pane-vertical", "wt-shortcut-close-tab"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/panes",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "paineis"],
+    "keywords": ["mover foco entre paineis", "navegar entre paineis terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-command-palette",
+    "category": "Windows Terminal",
+    "subcategory": "Paleta de comandos",
+    "title": "Ctrl + Shift + P — Paleta de Comandos",
+    "description": "Abre a Paleta de Comandos, uma busca rápida para executar qualquer ação disponível no terminal (abrir configurações, trocar tema, dividir painel, mudar perfil) sem precisar decorar todos os atalhos.",
+    "shortcut": "Ctrl + Shift + P",
+    "bestPractices": [
+      "Use a paleta para descobrir novos atalhos: cada ação listada mostra sua combinação de teclas correspondente, se houver."
+    ],
+    "relatedCommands": ["wt-settings-json"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/command-palette",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "paleta de comandos"],
+    "keywords": ["paleta de comandos windows terminal", "command palette"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-open-settings",
+    "category": "Windows Terminal",
+    "subcategory": "Configuração",
+    "title": "Ctrl + , — abrir Configurações",
+    "description": "Abre a interface gráfica de Configurações do Windows Terminal. Segurar Shift ao clicar no ícone de configurações (ou usar Ctrl + Shift + ,) abre diretamente o arquivo settings.json no editor de texto padrão.",
+    "shortcut": "Ctrl + ,",
+    "relatedCommands": ["wt-settings-json"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/startup",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "configuracoes"],
+    "keywords": ["abrir configuracoes windows terminal", "ctrl virgula"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-settings-json",
+    "category": "Windows Terminal",
+    "subcategory": "Configuração",
+    "title": "settings.json — arquivo de configuração",
+    "description": "Arquivo JSON que controla todo o comportamento do Windows Terminal: perfis, esquemas de cores, atalhos de teclado (keybindings), aparência e ações. Pode ser editado diretamente ou através da interface gráfica de Configurações.",
+    "syntax": "%LOCALAPPDATA%\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\settings.json",
+    "example": "{\n  \"defaultProfile\": \"{574e775e-4f2a-5b96-ac1e-a2962a402336}\",\n  \"profiles\": { \"defaults\": { \"fontSize\": 11 }, \"list\": [] },\n  \"schemes\": [],\n  \"actions\": []\n}",
+    "notes": [
+      "O arquivo também está acessível pelo atalho `wt --settings` ou pelo botão de configurações segurando Shift.",
+      "Existe um `settings.json` (editável pelo usuário) e um `defaults.json` (somente leitura, mantido pela Microsoft) que serve de base — as configurações do usuário sobrescrevem os defaults."
+    ],
+    "bestPractices": [
+      "Faça backup do settings.json antes de edições grandes, já que um JSON inválido faz o Terminal ignorar a configuração customizada e usar apenas os defaults.",
+      "Use o campo `\"$schema\"` no topo do arquivo para ganhar autocomplete e validação no VS Code."
+    ],
+    "commonMistakes": [
+      "Deixar uma vírgula sobrando ou faltando, invalidando o JSON e revertendo silenciosamente para as configurações padrão."
+    ],
+    "relatedCommands": ["wt-profile-config", "wt-color-scheme", "wt-keybindings"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/startup",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "configuracao", "json"],
+    "keywords": [
+      "settings.json windows terminal",
+      "configurar windows terminal",
+      "arquivo de configuracao terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-profile-config",
+    "category": "Windows Terminal",
+    "subcategory": "Perfis",
+    "title": "Perfis (profiles) — configurar um shell",
+    "description": "Cada shell ou distribuição (PowerShell, CMD, WSL, Git Bash, Azure Cloud Shell) é representado por um objeto de perfil dentro de `profiles.list`, com propriedades próprias de comando, ícone, diretório inicial e aparência.",
+    "syntax": "{ \"guid\": \"{...}\", \"name\": \"...\", \"commandline\": \"...\", \"startingDirectory\": \"...\", \"icon\": \"...\" }",
+    "example": "{\n  \"guid\": \"{2c4de342-38b7-51cf-b940-2309a097f518}\",\n  \"name\": \"Ubuntu\",\n  \"source\": \"Windows.Terminal.Wsl\",\n  \"startingDirectory\": \"//wsl$/Ubuntu/home/usuario\"\n}",
+    "parameters": [
+      {
+        "name": "guid",
+        "description": "Identificador único do perfil, usado para referenciá-lo em `defaultProfile` e nos keybindings.",
+        "required": true
+      },
+      {
+        "name": "commandline",
+        "description": "Executável e argumentos usados para iniciar o shell (não aplicável a perfis dinâmicos como WSL).",
+        "required": false
+      },
+      {
+        "name": "startingDirectory",
+        "description": "Diretório onde o shell abre por padrão.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Perfis de distribuições WSL e do PowerShell são gerados dinamicamente pelo Terminal; para customizá-los, basta criar uma entrada em `profiles.list` usando o mesmo `guid`."
+    ],
+    "relatedCommands": ["wt-settings-json", "wt-wsl-integration"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/profile-general",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "perfis", "configuracao"],
+    "keywords": [
+      "perfil windows terminal",
+      "profiles settings.json",
+      "configurar shell terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-color-scheme",
+    "category": "Windows Terminal",
+    "subcategory": "Temas e aparência",
+    "title": "Esquemas de cores (color schemes)",
+    "description": "Objetos definidos no array `schemes` do settings.json que especificam as 16 cores ANSI, além de foreground, background, cursor e cor de seleção. Um perfil referencia um esquema pelo campo `\"colorScheme\"`.",
+    "syntax": "\"colorScheme\": \"Nome do Esquema\"",
+    "example": "{\n  \"name\": \"Dracula\",\n  \"background\": \"#282A36\",\n  \"foreground\": \"#F8F8F2\",\n  \"cursorColor\": \"#F8F8F0\",\n  \"black\": \"#000000\",\n  \"brightBlack\": \"#4D4D4D\"\n}",
+    "notes": [
+      "Esquemas populares (Dracula, Solarized, One Half Dark/Light, Campbell) podem ser importados prontos de repositórios como o windowsterminalthemes.dev."
+    ],
+    "bestPractices": [
+      "Use `\"backgroundImage\"` e `\"opacity\"` no perfil, combinados com o efeito `\"useAcrylic\"`, para transparência com desfoque no fundo."
+    ],
+    "relatedCommands": ["wt-settings-json", "wt-profile-config"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/color-schemes",
+    "externalReferences": [
+      {
+        "label": "Windows Terminal Themes (galeria da comunidade)",
+        "url": "https://windowsterminalthemes.dev/"
+      }
+    ],
+    "tags": ["windows-terminal", "temas", "cores", "aparencia"],
+    "keywords": ["temas windows terminal", "color scheme", "cores do terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-keybindings",
+    "category": "Windows Terminal",
+    "subcategory": "Configuração",
+    "title": "Personalizar atalhos (actions/keybindings)",
+    "description": "Array `\"actions\"` do settings.json que mapeia combinações de teclas para comandos internos do Terminal (novo painel, mudar perfil, colar, redimensionar, etc.), permitindo remapear ou criar atalhos próprios.",
+    "syntax": "{ \"command\": { \"action\": \"<acao>\", ...argumentos }, \"keys\": \"<combinacao>\" }",
+    "example": "{ \"command\": { \"action\": \"splitPane\", \"split\": \"auto\", \"splitMode\": \"duplicate\" }, \"keys\": \"alt+shift+d\" }",
+    "notes": [
+      "Ações comuns incluem `newTab`, `closeTab`, `splitPane`, `moveFocus`, `copy`, `paste`, `find` e `renameTab`.",
+      "Definir uma nova ação para uma combinação já usada sobrescreve o atalho padrão."
+    ],
+    "relatedCommands": ["wt-settings-json"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/actions",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "keybindings", "configuracao"],
+    "keywords": [
+      "personalizar atalhos windows terminal",
+      "keybindings",
+      "remapear teclas terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-wsl-integration",
+    "category": "Windows Terminal",
+    "subcategory": "Integração com WSL",
+    "title": "Integração com WSL (Windows Subsystem for Linux)",
+    "description": "O Windows Terminal detecta automaticamente distribuições WSL instaladas e cria um perfil para cada uma, permitindo abrir um shell Linux completo (bash, zsh) lado a lado com PowerShell ou CMD na mesma janela.",
+    "notes": [
+      "O caminho de rede `\\\\wsl$\\<distro>\\` (ou `\\\\wsl.localhost\\<distro>\\`) permite acessar arquivos do Linux a partir do Explorador de Arquivos do Windows.",
+      "Comando `wsl.exe` no PowerShell/CMD entra na distro padrão; `wsl -d <distro>` escolhe uma específica; `wsl --list --verbose` lista as instaladas com versão (WSL1/WSL2)."
+    ],
+    "bestPractices": [
+      "Mantenha os arquivos de projeto dentro do sistema de arquivos Linux (`/home/...`) em vez de `/mnt/c/...` para melhor performance de I/O no WSL2."
+    ],
+    "relatedCommands": ["wt-profile-config"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/wsl/setup/environment#set-up-windows-terminal",
+    "externalReferences": [
+      {
+        "label": "Documentação do WSL",
+        "url": "https://learn.microsoft.com/windows/wsl/"
+      }
+    ],
+    "tags": ["windows-terminal", "wsl", "linux", "integracao"],
+    "keywords": [
+      "windows terminal wsl",
+      "abrir wsl no terminal",
+      "distro linux windows terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-command-line-wt-exe",
+    "category": "Windows Terminal",
+    "subcategory": "Linha de comando",
+    "title": "wt.exe — argumentos de linha de comando",
+    "description": "O executável `wt.exe` aceita argumentos para abrir o Terminal já com abas, painéis e diretórios específicos configurados, útil para atalhos personalizados ou scripts de inicialização de ambiente de trabalho.",
+    "syntax": "wt [nova-aba|split-pane] [-p <perfil>] [-d <diretorio>] [; ...]",
+    "example": "wt -d C:\\Projetos ; split-pane -V -d C:\\Projetos ; split-pane -H -p \"Ubuntu\"",
+    "result": "Abre o Windows Terminal com duas colunas usando o perfil padrão em C:\\Projetos, e a coluna direita dividida horizontalmente com um painel extra rodando o perfil Ubuntu.",
+    "parameters": [
+      {
+        "name": "-p",
+        "description": "Especifica o perfil a ser usado (por nome ou GUID).",
+        "required": false
+      },
+      {
+        "name": "-d",
+        "description": "Define o diretório inicial da nova aba/painel.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "O `;` separa múltiplos subcomandos na mesma invocação, permitindo montar layouts complexos com uma única linha."
+    ],
+    "bestPractices": [
+      "Salve combinações de `wt` usadas com frequência como atalhos na área de trabalho para abrir o ambiente de trabalho completo com um clique."
+    ],
+    "relatedCommands": ["wt-profile-config", "wt-overview"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/command-line-arguments",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "linha de comando", "wt.exe"],
+    "keywords": [
+      "wt.exe argumentos",
+      "abrir windows terminal por comando",
+      "wt command line"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-zoom-in-out",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Shift + / e Ctrl + - — aumentar e diminuir zoom",
+    "description": "Ctrl + Shift + Sinal de mais (ou roda do mouse + Ctrl) aumenta o tamanho da fonte de todos os painéis; Ctrl + - (ou roda do mouse + Ctrl para baixo) diminui, útil para apresentações e telas de alta densidade.",
+    "shortcut": "Ctrl + Scroll",
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/#default-keybindings",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "zoom", "fonte"],
+    "keywords": [
+      "aumentar fonte windows terminal",
+      "zoom terminal",
+      "diminuir fonte terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-find",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Shift + F — buscar no buffer do terminal",
+    "description": "Abre uma caixa de busca sobre o painel ativo, permitindo procurar texto em todo o histórico de saída (scrollback) do terminal, com opção de correspondência exata ou regex.",
+    "shortcut": "Ctrl + Shift + F",
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/#default-keybindings",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "busca"],
+    "keywords": [
+      "buscar no terminal",
+      "find windows terminal",
+      "pesquisar historico terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-shortcut-mark-mode",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Ctrl + Shift + M — Modo de marcação (Mark Mode)",
+    "description": "Ativa o Mark Mode, que permite selecionar e copiar texto do buffer do terminal usando apenas o teclado (setas, Shift+setas), sem precisar do mouse — semelhante ao modo visual do Vim.",
+    "shortcut": "Ctrl + Shift + M",
+    "notes": ["Pressione Esc para sair do Mark Mode."],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/user-interface#mark-mode",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "atalhos", "selecao de texto"],
+    "keywords": [
+      "mark mode windows terminal",
+      "copiar texto sem mouse terminal",
+      "selecao por teclado"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-quake-mode",
+    "category": "Windows Terminal",
+    "subcategory": "Configuração",
+    "title": "Modo Quake — terminal suspenso (dropdown)",
+    "description": "Modo de janela que faz o Terminal deslizar do topo da tela ao ser acionado (semelhante ao console de jogos estilo Quake), acessível por padrão via Win + ` (acento grave), permitindo alternar visibilidade rapidamente.",
+    "shortcut": "Win + `",
+    "notes": [
+      "Configurável através da ação global `\"toggleFullscreen\"`/`\"quakeMode\"` e do parâmetro `\"launchMode\": \"focus\"` no perfil correspondente na settings.json."
+    ],
+    "relatedCommands": ["wt-keybindings"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/tips-and-tricks#quake-mode",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "quake mode", "produtividade"],
+    "keywords": ["quake mode windows terminal", "terminal suspenso", "win acento grave"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

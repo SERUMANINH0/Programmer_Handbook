@@ -1,0 +1,940 @@
+[
+  {
+    "id": "azure-cli-login",
+    "category": "Azure",
+    "subcategory": "Azure CLI",
+    "title": "az login",
+    "description": "Autentica a Azure CLI na sua conta Microsoft/Azure AD, abrindo o navegador para o fluxo de login interativo.",
+    "syntax": "az login [--use-device-code] [--tenant <tenant-id>]",
+    "example": "az login --tenant contoso.onmicrosoft.com",
+    "result": "[\n  {\n    \"cloudName\": \"AzureCloud\",\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\n    \"isDefault\": true,\n    \"name\": \"Assinatura Principal\",\n    \"tenantId\": \"11111111-1111-1111-1111-111111111111\",\n    \"user\": { \"name\": \"usuario@contoso.com\", \"type\": \"user\" }\n  }\n]",
+    "flags": [
+      {
+        "flag": "--use-device-code",
+        "description": "Usa fluxo de código de dispositivo, útil em ambientes sem navegador (servidores, SSH)."
+      },
+      {
+        "flag": "--tenant",
+        "description": "Especifica o tenant do Azure AD/Entra ID a ser usado no login."
+      },
+      {
+        "flag": "--service-principal",
+        "description": "Autentica usando um service principal em vez de conta de usuário."
+      }
+    ],
+    "notes": [
+      "Após o login, a CLI armazena o token localmente e lista as assinaturas (subscriptions) acessíveis.",
+      "Use `az account set --subscription <id>` para trocar a assinatura ativa quando há mais de uma."
+    ],
+    "bestPractices": [
+      "Em pipelines de CI/CD, prefira login via service principal com `--service-principal` e client secret/certificado armazenados em segredo.",
+      "Use `az logout` ao final de sessões em máquinas compartilhadas."
+    ],
+    "commonMistakes": [
+      "Assumir que o login seleciona automaticamente a assinatura correta quando a conta tem acesso a várias."
+    ],
+    "relatedCommands": ["azure-cli-account-set", "azure-rbac-role-assignment"],
+    "difficulty": "iniciante",
+    "platform": ["cloud", "linux", "windows", "macos"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/reference-index?view=azure-cli-latest#az-login",
+    "externalReferences": [],
+    "tags": ["azure", "cli", "autenticacao"],
+    "keywords": ["az login", "autenticar azure", "login azure cli"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-cli-account-set",
+    "category": "Azure",
+    "subcategory": "Azure CLI",
+    "title": "az account set",
+    "description": "Define qual assinatura (subscription) do Azure será usada como padrão para os próximos comandos da CLI.",
+    "syntax": "az account set --subscription <nome-ou-id>",
+    "example": "az account set --subscription \"Assinatura Producao\"",
+    "result": "Nenhuma saída no console em caso de sucesso; comandos subsequentes passam a usar essa assinatura.",
+    "parameters": [
+      {
+        "name": "--subscription",
+        "description": "Nome ou ID da assinatura a ser definida como ativa.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Use `az account list --output table` para ver todas as assinaturas disponíveis antes de trocar."
+    ],
+    "bestPractices": [
+      "Confirme a assinatura ativa com `az account show` antes de executar comandos destrutivos."
+    ],
+    "commonMistakes": [
+      "Executar `az group delete` ou similar sem verificar a assinatura ativa, afetando o ambiente errado."
+    ],
+    "relatedCommands": ["azure-cli-login", "azure-group-create"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/account?view=azure-cli-latest#az-account-set",
+    "externalReferences": [],
+    "tags": ["azure", "cli", "subscription"],
+    "keywords": ["az account set", "trocar assinatura azure", "subscription azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-group-create",
+    "category": "Azure",
+    "subcategory": "Resource Groups",
+    "title": "az group create",
+    "description": "Cria um Resource Group, o contêiner lógico que agrupa recursos relacionados do Azure (VMs, storage, redes etc.) para gestão e cobrança conjuntas.",
+    "syntax": "az group create --name <nome> --location <regiao>",
+    "example": "az group create --name rg-app-prod --location brazilsouth",
+    "result": "{\n  \"id\": \"/subscriptions/.../resourceGroups/rg-app-prod\",\n  \"location\": \"brazilsouth\",\n  \"name\": \"rg-app-prod\",\n  \"properties\": { \"provisioningState\": \"Succeeded\" }\n}",
+    "parameters": [
+      {
+        "name": "--name",
+        "description": "Nome único do resource group dentro da assinatura.",
+        "required": true
+      },
+      {
+        "name": "--location",
+        "description": "Região do Azure onde os metadados do grupo serão armazenados (ex: brazilsouth, eastus).",
+        "required": true
+      },
+      {
+        "name": "--tags",
+        "description": "Tags no formato chave=valor para organização e cobrança.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Todo recurso do Azure precisa pertencer a exatamente um Resource Group.",
+      "A localização do grupo não obriga os recursos dentro dele a estarem na mesma região."
+    ],
+    "bestPractices": [
+      "Adote uma convenção de nomes consistente (ex: rg-<app>-<ambiente>) para facilitar governança.",
+      "Use tags (--tags) para custo, ambiente e responsável desde a criação."
+    ],
+    "commonMistakes": [
+      "Criar um Resource Group por recurso individual, dificultando a gestão do ciclo de vida da aplicação como um todo."
+    ],
+    "relatedCommands": ["azure-cli-account-set", "azure-group-delete", "azure-vm-create"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/group?view=azure-cli-latest#az-group-create",
+    "externalReferences": [],
+    "tags": ["azure", "resource-group", "cli"],
+    "keywords": ["az group create", "criar resource group", "grupo de recursos azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-group-delete",
+    "category": "Azure",
+    "subcategory": "Resource Groups",
+    "title": "az group delete",
+    "description": "Remove um Resource Group e, por padrão, todos os recursos contidos nele. Operação destrutiva e irreversível.",
+    "syntax": "az group delete --name <nome> [--yes] [--no-wait]",
+    "example": "az group delete --name rg-app-teste --yes --no-wait",
+    "result": "Nenhuma saída imediata; a exclusão dos recursos ocorre de forma assíncrona no backend do Azure.",
+    "flags": [
+      { "flag": "--yes", "description": "Suprime o prompt de confirmação interativa." },
+      {
+        "flag": "--no-wait",
+        "description": "Retorna imediatamente sem esperar a exclusão completar (operação assíncrona)."
+      }
+    ],
+    "notes": [
+      "Todos os recursos dentro do grupo são excluídos junto, sem opção de recuperação padrão."
+    ],
+    "bestPractices": [
+      "Sempre revise `az resource list --resource-group <nome>` antes de deletar um grupo em produção.",
+      "Use locks de recurso (`az lock create`) em grupos críticos para evitar exclusões acidentais."
+    ],
+    "commonMistakes": [
+      "Usar `--yes` em scripts automatizados sem validar previamente o nome do grupo, apagando o ambiente errado."
+    ],
+    "relatedCommands": ["azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/group?view=azure-cli-latest#az-group-delete",
+    "externalReferences": [],
+    "tags": ["azure", "resource-group", "cli"],
+    "keywords": [
+      "az group delete",
+      "deletar resource group",
+      "remover grupo de recursos"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-vm-create",
+    "category": "Azure",
+    "subcategory": "Compute",
+    "title": "az vm create",
+    "description": "Cria uma máquina virtual (VM) no Azure, incluindo rede, disco e regras de acesso básicas, em um único comando.",
+    "syntax": "az vm create --resource-group <rg> --name <nome> --image <imagem> [--admin-username <user>] [--generate-ssh-keys]",
+    "example": "az vm create --resource-group rg-app-prod --name vm-web01 --image Ubuntu2204 --admin-username azureuser --generate-ssh-keys",
+    "result": "{\n  \"fqdns\": \"\",\n  \"privateIpAddress\": \"10.0.0.4\",\n  \"publicIpAddress\": \"20.201.10.5\",\n  \"resourceGroup\": \"rg-app-prod\"\n}",
+    "parameters": [
+      {
+        "name": "--resource-group",
+        "description": "Resource Group onde a VM será criada.",
+        "required": true
+      },
+      { "name": "--name", "description": "Nome da VM.", "required": true },
+      {
+        "name": "--image",
+        "description": "Imagem base do SO (ex: Ubuntu2204, Win2022Datacenter).",
+        "required": true
+      },
+      {
+        "name": "--size",
+        "description": "SKU da VM (ex: Standard_B2s). Se omitido, usa um tamanho padrão.",
+        "required": false
+      },
+      {
+        "name": "--generate-ssh-keys",
+        "description": "Gera automaticamente um par de chaves SSH caso não exista.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Por padrão, o comando também cria VNet, subnet, IP público, NSG e disco, caso não existam recursos indicados explicitamente."
+    ],
+    "bestPractices": [
+      "Especifique `--vnet-name` e `--subnet` explicitamente em ambientes com topologia de rede já definida, evitando recursos duplicados.",
+      "Prefira autenticação por chave SSH (`--generate-ssh-keys` ou `--ssh-key-values`) em vez de senha."
+    ],
+    "commonMistakes": [
+      "Não restringir o NSG criado automaticamente, deixando portas de administração (22/3389) abertas para a internet."
+    ],
+    "relatedCommands": ["azure-group-create", "azure-rbac-role-assignment"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/vm?view=azure-cli-latest#az-vm-create",
+    "externalReferences": [],
+    "tags": ["azure", "vm", "compute", "cli"],
+    "keywords": ["az vm create", "criar maquina virtual azure", "vm azure cli"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-webapp-up",
+    "category": "Azure",
+    "subcategory": "App Service",
+    "title": "az webapp up",
+    "description": "Implanta rapidamente uma aplicação web no Azure App Service, criando automaticamente Resource Group, App Service Plan e Web App caso não existam.",
+    "syntax": "az webapp up --name <nome-app> [--runtime <runtime>] [--sku <sku>] [--location <regiao>]",
+    "example": "az webapp up --name meuapp-webapi --runtime \"NODE:20-lts\" --sku B1 --location brazilsouth",
+    "result": "Você pode acessar sua aplicação em https://meuapp-webapi.azurewebsites.net",
+    "parameters": [
+      {
+        "name": "--name",
+        "description": "Nome globalmente único do Web App (define o subdomínio .azurewebsites.net).",
+        "required": true
+      },
+      {
+        "name": "--runtime",
+        "description": "Stack de execução (ex: NODE:20-lts, PYTHON:3.12, DOTNETCORE:8.0).",
+        "required": false
+      },
+      {
+        "name": "--sku",
+        "description": "Nível de preço do App Service Plan (ex: F1, B1, P1v3).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Executado dentro da pasta do projeto, o comando detecta a stack automaticamente na maioria dos casos.",
+      "Ideal para prototipagem rápida; para produção, prefira templates (Bicep/ARM) versionados."
+    ],
+    "bestPractices": [
+      "Após o primeiro deploy com `up`, migre a configuração para IaC (Bicep/Terraform) para reprodutibilidade.",
+      "Use slots de deploy (`az webapp deployment slot`) para releases sem downtime."
+    ],
+    "commonMistakes": [
+      "Usar o SKU gratuito (F1) em cargas de produção, que tem limites de CPU e sem SLA."
+    ],
+    "relatedCommands": [
+      "azure-webapp-config-appsettings",
+      "azure-webapp-deployment-slot"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/webapp?view=azure-cli-latest#az-webapp-up",
+    "externalReferences": [],
+    "tags": ["azure", "app-service", "webapp", "cli"],
+    "keywords": ["az webapp up", "deploy app service", "publicar site azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-webapp-config-appsettings",
+    "category": "Azure",
+    "subcategory": "App Service",
+    "title": "az webapp config appsettings set",
+    "description": "Define variáveis de ambiente (application settings) para um App Service, usadas pela aplicação em tempo de execução.",
+    "syntax": "az webapp config appsettings set --resource-group <rg> --name <app> --settings <chave=valor> [<chave2=valor2> ...]",
+    "example": "az webapp config appsettings set --resource-group rg-app-prod --name meuapp-webapi --settings NODE_ENV=production DB_CONNECTION=\"@Microsoft.KeyVault(...)\"",
+    "result": "[\n  { \"name\": \"NODE_ENV\", \"value\": \"production\", \"slotSetting\": false },\n  { \"name\": \"DB_CONNECTION\", \"value\": \"...\", \"slotSetting\": false }\n]",
+    "parameters": [
+      {
+        "name": "--settings",
+        "description": "Lista de pares chave=valor a definir ou atualizar.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Alterar app settings reinicia o App Service.",
+      "Valores sensíveis devem referenciar o Azure Key Vault em vez de serem gravados em texto puro."
+    ],
+    "bestPractices": [
+      "Use referências de Key Vault (`@Microsoft.KeyVault(SecretUri=...)`) para segredos e strings de conexão.",
+      "Marque configurações específicas de slot com `--slot-settings` quando usar deployment slots."
+    ],
+    "commonMistakes": [
+      "Gravar segredos diretamente como texto puro nas app settings em vez de usar Key Vault."
+    ],
+    "relatedCommands": ["azure-webapp-up", "azure-keyvault-secret-set"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/webapp/config/appsettings?view=azure-cli-latest#az-webapp-config-appsettings-set",
+    "externalReferences": [],
+    "tags": ["azure", "app-service", "configuracao"],
+    "keywords": [
+      "app settings azure",
+      "variaveis de ambiente app service",
+      "az webapp config appsettings"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-webapp-deployment-slot",
+    "category": "Azure",
+    "subcategory": "App Service",
+    "title": "Deployment slots do App Service",
+    "description": "Ambientes de staging dentro do mesmo App Service que permitem testar uma nova versão antes de trocá-la (swap) com a produção, sem downtime.",
+    "syntax": "az webapp deployment slot create --resource-group <rg> --name <app> --slot <slot-name>",
+    "example": "az webapp deployment slot create --resource-group rg-app-prod --name meuapp-webapi --slot staging\naz webapp deployment slot swap --resource-group rg-app-prod --name meuapp-webapi --slot staging --target-slot production",
+    "result": "O slot 'staging' recebe o deploy da nova versão; após o swap, o tráfego de produção passa a apontar para o código antes em staging.",
+    "notes": [
+      "Slots compartilham o mesmo App Service Plan, mas têm configurações e domínios distintos.",
+      "Disponível apenas em SKUs Standard ou superiores."
+    ],
+    "bestPractices": [
+      "Use \"swap com validação\" (deploy no slot, testes manuais/automatizados, depois swap) para reduzir risco de releases.",
+      "Marque app settings que não devem trocar de slot (ex: connection string de produção) como 'slot setting'."
+    ],
+    "commonMistakes": [
+      "Esquecer que variáveis de ambiente não marcadas como slot setting são trocadas junto no swap, causando configuração incorreta."
+    ],
+    "relatedCommands": ["azure-webapp-up", "azure-webapp-config-appsettings"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/azure/app-service/deploy-staging-slots",
+    "externalReferences": [],
+    "tags": ["azure", "app-service", "deploy", "slots"],
+    "keywords": ["deployment slot azure", "swap slot", "staging app service"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-functions-core-tools",
+    "category": "Azure",
+    "subcategory": "Azure Functions",
+    "title": "Azure Functions Core Tools (func)",
+    "description": "CLI para criar, executar localmente e publicar Azure Functions, o serviço serverless de execução de código orientado a eventos do Azure.",
+    "syntax": "func init <pasta> --worker-runtime <runtime>\nfunc new --name <nome-funcao> --template <template>\nfunc start",
+    "example": "func init minha-func --worker-runtime node --language typescript\ncd minha-func\nfunc new --name HttpTrigger1 --template \"HTTP trigger\"\nfunc start",
+    "result": "Functions:\n\n        HttpTrigger1: [GET,POST] http://localhost:7071/api/HttpTrigger1\n\nFor detailed output, run func with --verbose flag.",
+    "parameters": [
+      {
+        "name": "--worker-runtime",
+        "description": "Runtime da função (node, python, dotnet, java, powershell).",
+        "required": true
+      },
+      {
+        "name": "--template",
+        "description": "Template de gatilho (HTTP trigger, Timer trigger, Blob trigger etc.).",
+        "required": true
+      }
+    ],
+    "notes": [
+      "`func start` executa as funções localmente com o Azure Functions runtime emulado, útil para debug antes do deploy.",
+      "O deploy para o Azure é feito com `func azure functionapp publish <nome-app>`."
+    ],
+    "bestPractices": [
+      "Versione o arquivo `host.json` e `local.settings.json.example` (sem segredos) junto do código.",
+      "Use planos de consumo (Consumption Plan) para cargas esporádicas e Premium/Dedicado para cargas constantes ou com necessidade de VNet."
+    ],
+    "commonMistakes": [
+      "Commitar o arquivo `local.settings.json` com segredos reais no controle de versão."
+    ],
+    "relatedCommands": ["azure-webapp-up", "azure-storage-blob-upload"],
+    "difficulty": "intermediario",
+    "platform": ["cloud", "linux", "windows", "macos"],
+    "version": "Core Tools v4",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-functions/functions-run-local",
+    "externalReferences": [],
+    "tags": ["azure", "functions", "serverless"],
+    "keywords": ["azure functions core tools", "func start", "criar function app"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-functions-triggers-bindings",
+    "category": "Azure",
+    "subcategory": "Azure Functions",
+    "title": "Triggers e bindings em Azure Functions",
+    "description": "Triggers definem o evento que dispara a execução de uma função (HTTP, Timer, Blob, Queue etc.); bindings conectam entradas e saídas da função a serviços do Azure sem código de integração manual.",
+    "syntax": "function.json (v3) ou atributos/decorators no código (v4): trigger obrigatório + bindings de entrada/saída opcionais.",
+    "example": "// Timer trigger (Node.js v4)\napp.timer('limparCache', {\n  schedule: '0 */5 * * * *',\n  handler: async (myTimer, context) => {\n    context.log('Executando limpeza agendada');\n  }\n});",
+    "result": "A função é executada automaticamente a cada 5 minutos, conforme a expressão CRON definida no schedule.",
+    "notes": [
+      "Cada função tem exatamente um trigger, mas pode ter múltiplos bindings de entrada e saída.",
+      "Bindings existem para Blob Storage, Queue Storage, Cosmos DB, Event Hubs, Service Bus, entre outros."
+    ],
+    "bestPractices": [
+      "Prefira bindings declarativos a chamadas manuais de SDK quando possível, reduzindo código boilerplate.",
+      "Use Managed Identity para autenticar bindings em serviços do Azure em vez de connection strings fixas."
+    ],
+    "commonMistakes": [
+      "Confundir trigger (o que inicia a execução) com binding de entrada (dado adicional que a função consome), levando a configurações duplicadas."
+    ],
+    "relatedCommands": ["azure-functions-core-tools"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-functions/functions-triggers-bindings",
+    "externalReferences": [],
+    "tags": ["azure", "functions", "serverless", "eventos"],
+    "keywords": ["azure functions trigger", "bindings azure functions", "timer trigger"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-storage-account-create",
+    "category": "Azure",
+    "subcategory": "Storage",
+    "title": "az storage account create",
+    "description": "Cria uma Storage Account, o recurso que hospeda Blob, File, Queue e Table Storage no Azure.",
+    "syntax": "az storage account create --name <nome> --resource-group <rg> --location <regiao> --sku <sku>",
+    "example": "az storage account create --name stappprodbr --resource-group rg-app-prod --location brazilsouth --sku Standard_LRS",
+    "result": "{\n  \"name\": \"stappprodbr\",\n  \"primaryEndpoints\": { \"blob\": \"https://stappprodbr.blob.core.windows.net/\" },\n  \"provisioningState\": \"Succeeded\"\n}",
+    "parameters": [
+      {
+        "name": "--name",
+        "description": "Nome globalmente único (apenas letras minúsculas e números, 3-24 caracteres).",
+        "required": true
+      },
+      {
+        "name": "--sku",
+        "description": "Nível de redundância (Standard_LRS, Standard_GRS, Standard_ZRS, Premium_LRS).",
+        "required": true
+      },
+      {
+        "name": "--kind",
+        "description": "Tipo de conta (StorageV2 é o recomendado atualmente).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "O nome da storage account compõe a URL pública dos endpoints (ex: https://<nome>.blob.core.windows.net)."
+    ],
+    "bestPractices": [
+      "Escolha o SKU de redundância conforme a criticidade dos dados: GRS/RA-GRS para recuperação de desastre entre regiões.",
+      "Desative acesso público a blobs por padrão (`--allow-blob-public-access false`) e libere container a container conforme necessário."
+    ],
+    "commonMistakes": [
+      "Usar Standard_LRS (redundância apenas local) para dados críticos que precisam de tolerância a falha regional."
+    ],
+    "relatedCommands": ["azure-group-create", "azure-storage-blob-upload"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/storage/account?view=azure-cli-latest#az-storage-account-create",
+    "externalReferences": [],
+    "tags": ["azure", "storage", "cli"],
+    "keywords": [
+      "az storage account create",
+      "criar storage account",
+      "conta de armazenamento azure"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-storage-blob-upload",
+    "category": "Azure",
+    "subcategory": "Storage",
+    "title": "az storage blob upload",
+    "description": "Envia um arquivo local para um container de Blob Storage no Azure.",
+    "syntax": "az storage blob upload --account-name <conta> --container-name <container> --name <blob-name> --file <caminho-local>",
+    "example": "az storage blob upload --account-name stappprodbr --container-name assets --name logo.png --file ./logo.png --auth-mode login",
+    "result": "{\n  \"etag\": \"\\\"0x8DA1B2C3D4E5F6A\\\"\",\n  \"lastModified\": \"2026-07-22T10:00:00+00:00\"\n}",
+    "parameters": [
+      {
+        "name": "--account-name",
+        "description": "Nome da storage account de destino.",
+        "required": true
+      },
+      {
+        "name": "--container-name",
+        "description": "Nome do container onde o blob será armazenado.",
+        "required": true
+      },
+      {
+        "name": "--file",
+        "description": "Caminho do arquivo local a ser enviado.",
+        "required": true
+      },
+      {
+        "name": "--auth-mode",
+        "description": "Modo de autenticação (login usa a identidade do Azure AD/Entra atual em vez de chave de acesso).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Use `az storage blob upload-batch` para enviar diretórios inteiros de uma vez."
+    ],
+    "bestPractices": [
+      "Prefira `--auth-mode login` com RBAC a usar chaves de acesso (account keys) fixas embutidas em scripts.",
+      "Defina políticas de ciclo de vida (lifecycle management) para mover blobs antigos para tiers mais baratos (Cool/Archive)."
+    ],
+    "commonMistakes": [
+      "Embutir a chave de acesso da storage account diretamente em scripts versionados no Git."
+    ],
+    "relatedCommands": ["azure-storage-account-create", "azure-rbac-role-assignment"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/storage/blob?view=azure-cli-latest#az-storage-blob-upload",
+    "externalReferences": [],
+    "tags": ["azure", "storage", "blob", "cli"],
+    "keywords": [
+      "az storage blob upload",
+      "upload blob azure",
+      "enviar arquivo blob storage"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-storage-blob-tiers",
+    "category": "Azure",
+    "subcategory": "Storage",
+    "title": "Camadas de acesso do Blob Storage (Hot, Cool, Archive)",
+    "description": "Níveis de tier que balanceiam custo de armazenamento e custo/latência de acesso para blobs, permitindo otimizar gastos conforme a frequência de uso dos dados.",
+    "syntax": "az storage blob set-tier --account-name <conta> --container-name <container> --name <blob> --tier <Hot|Cool|Archive>",
+    "example": "az storage blob set-tier --account-name stappprodbr --container-name backups --name backup-2025.zip --tier Archive",
+    "result": "Nenhuma saída em caso de sucesso; o blob passa a ser cobrado pela tarifa Archive, com custo de leitura e tempo de reidratação mais altos.",
+    "notes": [
+      "Hot: acesso frequente, maior custo de armazenamento e menor custo de acesso.",
+      "Cool: acesso pouco frequente (mínimo 30 dias), custo de armazenamento menor.",
+      "Archive: dados raramente acessados, custo de armazenamento mínimo, mas reidratação pode levar horas."
+    ],
+    "bestPractices": [
+      "Automatize a transição de tiers com políticas de lifecycle management baseadas na idade do blob.",
+      "Planeje o tempo de reidratação do tier Archive antes de mover dados que podem precisar de acesso rápido."
+    ],
+    "commonMistakes": [
+      "Mover logs ou backups recentes direto para Archive e depois precisar deles com urgência, enfrentando alta latência de reidratação."
+    ],
+    "relatedCommands": ["azure-storage-blob-upload", "azure-storage-account-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/storage/blobs/access-tiers-overview",
+    "externalReferences": [],
+    "tags": ["azure", "storage", "blob", "custos"],
+    "keywords": [
+      "blob storage tiers",
+      "hot cool archive",
+      "camadas de acesso azure storage"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-ad-entra-overview",
+    "category": "Azure",
+    "subcategory": "Azure AD / Entra ID",
+    "title": "Microsoft Entra ID (Azure AD): conceitos básicos",
+    "description": "Serviço de identidade e gerenciamento de acesso da Microsoft (antigo Azure Active Directory), responsável por autenticação de usuários, aplicações e dispositivos no Azure e em serviços integrados.",
+    "syntax": "N/A (serviço gerenciado, configurado via Portal, CLI ou Graph API)",
+    "example": "az ad user list --output table\naz ad app create --display-name \"minha-api\"",
+    "result": "Lista de usuários do tenant ou criação de um App Registration com um Application (client) ID gerado.",
+    "notes": [
+      "Um tenant do Entra ID representa uma organização; cada assinatura do Azure está associada a um tenant.",
+      "App Registrations representam aplicações que precisam se autenticar (via OAuth2/OpenID Connect) contra o Entra ID.",
+      "Managed Identities eliminam a necessidade de gerenciar credenciais para recursos do Azure acessarem outros serviços."
+    ],
+    "bestPractices": [
+      "Prefira Managed Identity a credenciais de App Registration quando o recurso que precisa autenticar roda dentro do Azure.",
+      "Habilite MFA (autenticação multifator) para todas as contas com privilégios administrativos."
+    ],
+    "commonMistakes": [
+      "Confundir 'Azure AD' (identidade) com 'Active Directory Domain Services' tradicional (diretório local baseado em LDAP), que são produtos distintos."
+    ],
+    "relatedCommands": ["azure-rbac-role-assignment", "azure-cli-login"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/entra/fundamentals/whatis",
+    "externalReferences": [],
+    "tags": ["azure", "entra-id", "identidade", "seguranca"],
+    "keywords": ["azure ad", "entra id", "identidade azure", "app registration"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-rbac-role-assignment",
+    "category": "Azure",
+    "subcategory": "RBAC",
+    "title": "Azure RBAC: atribuição de papéis (role assignment)",
+    "description": "Controle de acesso baseado em papéis (Role-Based Access Control) que define quais ações um usuário, grupo, service principal ou managed identity pode executar sobre um escopo de recursos (assinatura, resource group ou recurso individual).",
+    "syntax": "az role assignment create --assignee <id-ou-email> --role <papel> --scope <escopo>",
+    "example": "az role assignment create --assignee usuario@contoso.com --role \"Contributor\" --scope \"/subscriptions/<sub-id>/resourceGroups/rg-app-prod\"",
+    "result": "{\n  \"principalId\": \"...\",\n  \"roleDefinitionName\": \"Contributor\",\n  \"scope\": \"/subscriptions/.../resourceGroups/rg-app-prod\"\n}",
+    "parameters": [
+      {
+        "name": "--assignee",
+        "description": "Identidade que receberá o papel (e-mail, object ID ou application ID).",
+        "required": true
+      },
+      {
+        "name": "--role",
+        "description": "Papel a atribuir (ex: Owner, Contributor, Reader, ou um papel customizado).",
+        "required": true
+      },
+      {
+        "name": "--scope",
+        "description": "Escopo de aplicação do papel: assinatura, resource group ou recurso específico.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Papéis são herdados: uma atribuição no nível de assinatura se aplica a todos os resource groups e recursos abaixo dela.",
+      "Papéis internos comuns: Owner (controle total, inclusive gerenciar acesso), Contributor (gerenciar recursos, sem gerenciar acesso), Reader (somente leitura)."
+    ],
+    "bestPractices": [
+      "Atribua papéis no menor escopo possível (recurso > resource group > assinatura) em vez de sempre usar a assinatura inteira.",
+      "Prefira grupos do Entra ID a atribuir papéis diretamente a usuários individuais, facilitando auditoria e manutenção."
+    ],
+    "commonMistakes": [
+      "Atribuir o papel 'Owner' quando 'Contributor' já seria suficiente, concedendo permissão desnecessária de gerenciar acesso de outros usuários."
+    ],
+    "relatedCommands": ["azure-ad-entra-overview", "azure-group-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/role-based-access-control/role-assignments-cli",
+    "externalReferences": [],
+    "tags": ["azure", "rbac", "seguranca", "iam"],
+    "keywords": [
+      "azure rbac",
+      "role assignment",
+      "atribuir papel azure",
+      "controle de acesso azure"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-arm-template-intro",
+    "category": "Azure",
+    "subcategory": "Infraestrutura como código",
+    "title": "ARM Templates: introdução",
+    "description": "Templates JSON declarativos nativos do Azure Resource Manager que descrevem a infraestrutura desejada, permitindo provisionamento repetível e versionado.",
+    "syntax": "az deployment group create --resource-group <rg> --template-file <arquivo.json> --parameters <arquivo.parameters.json>",
+    "example": "az deployment group create --resource-group rg-app-prod --template-file main.json --parameters @main.parameters.json",
+    "result": "{\n  \"properties\": { \"provisioningState\": \"Succeeded\" },\n  \"resourceGroup\": \"rg-app-prod\"\n}",
+    "notes": [
+      "Um template ARM tem seções: parameters, variables, resources e outputs.",
+      "Deployments podem ser incrementais (padrão, só adiciona/atualiza) ou completos (remove recursos não presentes no template)."
+    ],
+    "bestPractices": [
+      "Para novos projetos, prefira Bicep em vez de ARM JSON puro: a sintaxe é mais enxuta e compila para o mesmo ARM template.",
+      "Use `az deployment group what-if` para pré-visualizar mudanças antes de aplicar um deployment."
+    ],
+    "commonMistakes": [
+      "Usar o modo de deployment 'Complete' sem entender que ele remove recursos existentes no grupo que não estão descritos no template."
+    ],
+    "relatedCommands": ["azure-bicep-intro", "azure-group-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-resource-manager/templates/overview",
+    "externalReferences": [],
+    "tags": ["azure", "arm-templates", "iac"],
+    "keywords": ["arm template", "azure resource manager", "deploy template azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-bicep-intro",
+    "category": "Azure",
+    "subcategory": "Infraestrutura como código",
+    "title": "Bicep: introdução",
+    "description": "Linguagem declarativa de domínio específico (DSL) da Microsoft para descrever recursos do Azure, com sintaxe mais simples e legível que ARM JSON, e que compila diretamente para ARM templates.",
+    "syntax": "resource <nome-simbolico> '<tipo>@<versao-api>' = {\n  name: '<nome>'\n  location: <regiao>\n  properties: { ... }\n}",
+    "example": "resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {\n  name: 'stappprodbr'\n  location: 'brazilsouth'\n  sku: { name: 'Standard_LRS' }\n  kind: 'StorageV2'\n}\n\n// Deploy:\n// az deployment group create --resource-group rg-app-prod --template-file main.bicep",
+    "result": "Resource criado no Azure e ARM template equivalente gerado internamente pelo compilador Bicep (bicep build).",
+    "notes": [
+      "Bicep não introduz nenhum conceito novo no Azure; é apenas uma camada de sintaxe sobre ARM.",
+      "Arquivos .bicep podem ser convertidos para .json com `az bicep build` e vice-versa com `az bicep decompile`."
+    ],
+    "bestPractices": [
+      "Modularize templates grandes usando módulos Bicep (`module` keyword) para reuso entre projetos.",
+      "Use o Bicep linter (nativo no VS Code com a extensão oficial) para detectar erros antes do deploy."
+    ],
+    "commonMistakes": [
+      "Copiar blocos de configuração inteiros entre arquivos .bicep em vez de extrair um módulo reutilizável."
+    ],
+    "relatedCommands": ["azure-arm-template-intro"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "Bicep CLI 0.2x+",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-resource-manager/bicep/overview",
+    "externalReferences": [
+      { "label": "Bicep Playground", "url": "https://aka.ms/bicepdemo" }
+    ],
+    "tags": ["azure", "bicep", "iac"],
+    "keywords": ["bicep azure", "infraestrutura como codigo azure", "bicep template"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-keyvault-secret-set",
+    "category": "Azure",
+    "subcategory": "Segurança",
+    "title": "az keyvault secret set",
+    "description": "Armazena um segredo (senha, connection string, chave de API) de forma criptografada em um Azure Key Vault, centralizando o gerenciamento de credenciais sensíveis.",
+    "syntax": "az keyvault secret set --vault-name <cofre> --name <nome-segredo> --value <valor>",
+    "example": "az keyvault secret set --vault-name kv-app-prod --name DbConnectionString --value \"Server=...;Password=...;\"",
+    "result": "{\n  \"id\": \"https://kv-app-prod.vault.azure.net/secrets/DbConnectionString/abc123\",\n  \"attributes\": { \"enabled\": true }\n}",
+    "parameters": [
+      {
+        "name": "--vault-name",
+        "description": "Nome do Key Vault onde o segredo será armazenado.",
+        "required": true
+      },
+      {
+        "name": "--name",
+        "description": "Nome identificador do segredo.",
+        "required": true
+      },
+      {
+        "name": "--value",
+        "description": "Valor do segredo (evite passar em texto puro no histórico do shell; prefira --file em produção).",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Cada alteração de um segredo cria uma nova versão; versões antigas continuam acessíveis por padrão até serem desabilitadas."
+    ],
+    "bestPractices": [
+      "Conceda acesso ao Key Vault via Azure RBAC ou Access Policies seguindo o menor privilégio, nunca liberando 'get/list' para todos.",
+      "Configure Managed Identity nos serviços consumidores (App Service, Functions, VM) para ler segredos sem armazenar credenciais."
+    ],
+    "commonMistakes": [
+      "Passar o valor do segredo diretamente na linha de comando em terminais compartilhados, deixando-o no histórico do shell."
+    ],
+    "relatedCommands": ["azure-webapp-config-appsettings", "azure-rbac-role-assignment"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/keyvault/secret?view=azure-cli-latest#az-keyvault-secret-set",
+    "externalReferences": [],
+    "tags": ["azure", "key-vault", "seguranca", "segredos"],
+    "keywords": ["azure key vault", "armazenar segredo azure", "az keyvault secret set"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-monitor-log-analytics",
+    "category": "Azure",
+    "subcategory": "Monitoramento",
+    "title": "Azure Monitor e Log Analytics",
+    "description": "Conjunto de serviços do Azure para coletar, analisar e alertar sobre métricas e logs de recursos, incluindo o Log Analytics Workspace para consultas via KQL (Kusto Query Language).",
+    "syntax": "az monitor log-analytics query --workspace <workspace-id> --analytics-query \"<consulta-KQL>\"",
+    "example": "az monitor log-analytics query --workspace 00000000-0000-0000-0000-000000000000 --analytics-query \"AppRequests | where TimeGenerated > ago(1h) | summarize count() by ResultCode\"",
+    "result": "[\n  { \"ResultCode\": \"200\", \"count_\": 542 },\n  { \"ResultCode\": \"500\", \"count_\": 3 }\n]",
+    "notes": [
+      "Application Insights (parte do Azure Monitor) coleta telemetria de aplicações: requisições, dependências, exceções e métricas customizadas.",
+      "Alertas podem ser configurados sobre métricas (CPU, memória) ou sobre resultados de consultas de log."
+    ],
+    "bestPractices": [
+      "Centralize logs de múltiplos recursos em um único Log Analytics Workspace por ambiente para correlacionar eventos.",
+      "Configure alertas com ações automatizadas (Action Groups) para reduzir tempo de resposta a incidentes."
+    ],
+    "commonMistakes": [
+      "Não definir política de retenção de logs, gerando custos crescentes com dados antigos raramente consultados."
+    ],
+    "relatedCommands": ["azure-webapp-up"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-monitor/overview",
+    "externalReferences": [],
+    "tags": ["azure", "monitoramento", "log-analytics", "observabilidade"],
+    "keywords": ["azure monitor", "log analytics", "kql", "application insights"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-vnet-subnet-overview",
+    "category": "Azure",
+    "subcategory": "Rede",
+    "title": "Virtual Network (VNet) e Subnets",
+    "description": "Uma Virtual Network isola e segmenta a rede privada de recursos do Azure (VMs, App Service com integração de VNet, bancos de dados); subnets dividem a VNet em blocos de endereços menores.",
+    "syntax": "az network vnet create --resource-group <rg> --name <vnet> --address-prefix <cidr> --subnet-name <subnet> --subnet-prefix <cidr-subnet>",
+    "example": "az network vnet create --resource-group rg-app-prod --name vnet-app --address-prefix 10.0.0.0/16 --subnet-name subnet-web --subnet-prefix 10.0.1.0/24",
+    "result": "{\n  \"newVNet\": {\n    \"addressSpace\": { \"addressPrefixes\": [\"10.0.0.0/16\"] },\n    \"subnets\": [{ \"name\": \"subnet-web\", \"addressPrefix\": \"10.0.1.0/24\" }]\n  }\n}",
+    "notes": [
+      "Network Security Groups (NSGs) controlam tráfego de entrada/saída em nível de subnet ou interface de rede.",
+      "VNet Peering conecta duas VNets (mesma região ou entre regiões) permitindo comunicação privada entre elas."
+    ],
+    "bestPractices": [
+      "Planeje o espaço de endereçamento (CIDR) com folga desde o início; redimensionar uma VNet em produção é custoso.",
+      "Separe subnets por camada/função (web, aplicação, dados) para aplicar NSGs granulares."
+    ],
+    "commonMistakes": [
+      "Criar VNets com blocos CIDR sobrepostos entre ambientes que depois precisam de peering ou VPN, impedindo a conexão."
+    ],
+    "relatedCommands": ["azure-vm-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview",
+    "externalReferences": [],
+    "tags": ["azure", "rede", "vnet", "subnet"],
+    "keywords": ["virtual network azure", "vnet", "subnet azure", "nsg"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-cost-management",
+    "category": "Azure",
+    "subcategory": "Custos",
+    "title": "Azure Cost Management + Billing",
+    "description": "Conjunto de ferramentas para monitorar, analisar e otimizar gastos com recursos do Azure, incluindo orçamentos (budgets) e alertas de custo.",
+    "syntax": "az consumption budget create --budget-name <nome> --amount <valor> --resource-group <rg> --time-grain Monthly --start-date <data> --end-date <data>",
+    "example": "az consumption budget create --budget-name orcamento-app-prod --amount 500 --resource-group rg-app-prod --time-grain Monthly --start-date 2026-07-01 --end-date 2027-07-01",
+    "result": "{\n  \"amount\": 500,\n  \"category\": \"Cost\",\n  \"name\": \"orcamento-app-prod\",\n  \"timeGrain\": \"Monthly\"\n}",
+    "notes": [
+      "Advisor do Azure fornece recomendações automáticas de redução de custo (ex: VMs subutilizadas, discos não anexados).",
+      "Reserved Instances e Savings Plans reduzem custo de compute em troca de compromisso de uso por 1 ou 3 anos."
+    ],
+    "bestPractices": [
+      "Configure alertas de orçamento em múltiplos limiares (ex: 50%, 80%, 100%) para agir antes de estourar o teto definido.",
+      "Use tags de custo consistentes em todos os recursos para gerar relatórios por projeto/time/ambiente."
+    ],
+    "commonMistakes": [
+      "Deixar recursos de teste (VMs, App Service Plans) ativos após o uso, gerando custo contínuo sem necessidade."
+    ],
+    "relatedCommands": ["azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management",
+    "externalReferences": [],
+    "tags": ["azure", "custos", "billing", "financas"],
+    "keywords": [
+      "azure cost management",
+      "orcamento azure",
+      "budget azure",
+      "otimizar custos azure"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-managed-identity",
+    "category": "Azure",
+    "subcategory": "Segurança",
+    "title": "Managed Identity",
+    "description": "Identidade gerenciada automaticamente pelo Azure Entra ID que permite a um recurso (VM, App Service, Function) se autenticar em outros serviços do Azure sem armazenar credenciais no código ou configuração.",
+    "syntax": "az webapp identity assign --resource-group <rg> --name <app>",
+    "example": "az webapp identity assign --resource-group rg-app-prod --name meuapp-webapi\naz role assignment create --assignee <principal-id-gerado> --role \"Storage Blob Data Reader\" --scope <id-storage-account>",
+    "result": "{\n  \"principalId\": \"22222222-2222-2222-2222-222222222222\",\n  \"tenantId\": \"11111111-1111-1111-1111-111111111111\",\n  \"type\": \"SystemAssigned\"\n}",
+    "notes": [
+      "System-assigned: ciclo de vida atrelado ao recurso (criada e removida junto com ele).",
+      "User-assigned: identidade independente que pode ser compartilhada entre múltiplos recursos."
+    ],
+    "bestPractices": [
+      "Prefira Managed Identity a Service Principal com secret sempre que o recurso consumidor rodar dentro do Azure.",
+      "Combine Managed Identity com RBAC de escopo mínimo (ex: acesso só ao container específico do storage)."
+    ],
+    "commonMistakes": [
+      "Continuar usando connection strings com chave de acesso mesmo após habilitar Managed Identity, sem migrar de fato a autenticação."
+    ],
+    "relatedCommands": ["azure-rbac-role-assignment", "azure-keyvault-secret-set"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview",
+    "externalReferences": [],
+    "tags": ["azure", "managed-identity", "seguranca", "iam"],
+    "keywords": [
+      "managed identity azure",
+      "identidade gerenciada",
+      "system assigned identity"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-storage-sync-cli",
+    "category": "Azure",
+    "subcategory": "Storage",
+    "title": "az storage blob sync",
+    "description": "Sincroniza o conteúdo de um diretório local com um container de Blob Storage, enviando apenas arquivos novos ou modificados.",
+    "syntax": "az storage blob sync --account-name <conta> --container <container> --source <pasta-local> [--destination <prefixo>]",
+    "example": "az storage blob sync --account-name stappprodbr --container assets --source ./dist --auth-mode login",
+    "result": "Uploading ./dist/index.html to assets/index.html\nUploading ./dist/app.js to assets/app.js\nFinished [#############################] 100.0000%",
+    "parameters": [
+      {
+        "name": "--source",
+        "description": "Diretório local de origem.",
+        "required": true
+      },
+      {
+        "name": "--container",
+        "description": "Container de destino no Blob Storage.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "Diferente de `az storage blob upload-batch`, o sync compara timestamps/hash para evitar reenviar arquivos inalterados."
+    ],
+    "bestPractices": [
+      "Combine com um CDN (Azure Front Door/CDN) na frente do container para servir assets estáticos com cache."
+    ],
+    "commonMistakes": [
+      "Sincronizar diretamente para um container com acesso público sem revisar antes se algum arquivo sensível está na pasta local."
+    ],
+    "relatedCommands": ["azure-storage-blob-upload", "azure-storage-account-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/storage/blob?view=azure-cli-latest#az-storage-blob-sync",
+    "externalReferences": [],
+    "tags": ["azure", "storage", "blob", "cli"],
+    "keywords": [
+      "az storage blob sync",
+      "sincronizar blob storage",
+      "deploy estatico azure"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

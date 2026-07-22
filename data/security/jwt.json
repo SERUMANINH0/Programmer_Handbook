@@ -1,0 +1,62 @@
+[
+  {
+    "id": "jwt-structure",
+    "category": "JWT",
+    "subcategory": "Fundamentos",
+    "title": "Estrutura de um JWT",
+    "description": "Um JSON Web Token é composto por três partes separadas por ponto: Header (algoritmo), Payload (claims/dados) e Signature (assinatura de verificação).",
+    "syntax": "<header>.<payload>.<signature>",
+    "example": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiQW5hIn0.4f8h2...",
+    "result": "Header e Payload são apenas Base64Url (legíveis por qualquer um); somente a Signature garante integridade.",
+    "notes": [
+      "JWT não é criptografado por padrão — nunca coloque dados sensíveis (senha, dados pessoais) no payload."
+    ],
+    "bestPractices": [
+      "Sempre valide a assinatura no servidor antes de confiar em qualquer claim do payload.",
+      "Defina um tempo de expiração curto (`exp`) e use refresh tokens para sessões longas."
+    ],
+    "commonMistakes": [
+      "Confiar no conteúdo do payload sem verificar a assinatura, permitindo que um token forjado seja aceito.",
+      "Armazenar o JWT em localStorage sem considerar o risco de XSS (cookies httpOnly costumam ser mais seguros)."
+    ],
+    "relatedCommands": ["jwt-verify-signature", "oauth-flows"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "RFC 7519",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519",
+    "externalReferences": [{ "label": "jwt.io — Debugger", "url": "https://jwt.io" }],
+    "tags": ["jwt", "seguranca", "autenticacao"],
+    "keywords": ["jwt", "json web token", "estrutura jwt"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "jwt-verify-signature",
+    "category": "JWT",
+    "subcategory": "Validação",
+    "title": "Verificação de assinatura",
+    "description": "Processo pelo qual o servidor recalcula a assinatura do token com sua chave secreta (ou chave pública, em algoritmos assimétricos) e compara com a assinatura recebida para garantir que o token não foi alterado.",
+    "syntax": "HMACSHA256(base64UrlEncode(header) + \".\" + base64UrlEncode(payload), chave_secreta)",
+    "example": "const payload = jwt.verify(token, process.env.JWT_SECRET)",
+    "result": "Lança uma exceção (ex: `JsonWebTokenError`) se a assinatura for inválida ou o token estiver expirado.",
+    "notes": [
+      "Algoritmos comuns: HS256 (chave simétrica compartilhada) e RS256 (par de chaves pública/privada)."
+    ],
+    "bestPractices": [
+      "Nunca aceite o algoritmo declarado no header do próprio token sem restringi-lo explicitamente no código de verificação (mitiga o ataque 'alg: none')."
+    ],
+    "commonMistakes": [
+      "Deixar a biblioteca decidir o algoritmo dinamicamente com base no header do token recebido, abrindo brecha para ataques de downgrade de algoritmo."
+    ],
+    "relatedCommands": ["jwt-structure"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "RFC 7519",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519#section-7.2",
+    "externalReferences": [],
+    "tags": ["jwt", "seguranca", "validacao"],
+    "keywords": ["verificar assinatura jwt", "jwt verify", "hs256 rs256"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

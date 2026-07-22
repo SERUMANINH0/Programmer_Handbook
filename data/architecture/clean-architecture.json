@@ -1,0 +1,58 @@
+[
+  {
+    "id": "clean-arch-dependency-rule",
+    "category": "Clean Architecture",
+    "subcategory": "Princípios",
+    "title": "Regra da Dependência",
+    "description": "Dependências de código-fonte só podem apontar para dentro, das camadas externas (UI, banco, frameworks) em direção às camadas internas (regras de negócio). Nenhum código de uma camada interna pode saber algo sobre uma camada externa.",
+    "syntax": "Entities ← Use Cases ← Interface Adapters ← Frameworks/Drivers",
+    "example": "Um Use Case depende de uma interface `UserRepository`; a implementação concreta com Postgres fica em uma camada externa que implementa essa interface.",
+    "result": "Regras de negócio permanecem testáveis e independentes de banco de dados, UI ou frameworks específicos.",
+    "notes": [
+      "Inversão de dependência (o 'D' do SOLID) é o mecanismo usado para respeitar essa regra."
+    ],
+    "bestPractices": [
+      "Defina interfaces (ports) na camada de domínio/aplicação e implemente-as (adapters) nas camadas externas."
+    ],
+    "commonMistakes": [
+      "Importar um ORM ou client HTTP diretamente dentro de uma entidade de domínio ou de um caso de uso."
+    ],
+    "relatedCommands": ["solid-dependency-inversion", "design-patterns-repository"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "solid"],
+    "keywords": ["regra da dependencia", "dependency rule", "clean architecture"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "clean-arch-use-case",
+    "category": "Clean Architecture",
+    "subcategory": "Camadas",
+    "title": "Use Case (caso de uso)",
+    "description": "Camada que orquestra as regras de negócio específicas da aplicação, coordenando entidades e portas (interfaces) sem conhecer detalhes de infraestrutura.",
+    "syntax": "class CriarPedidoUseCase {\n  constructor(private repo: PedidoRepository) {}\n  execute(input) { ... }\n}",
+    "example": "class RegistrarUsuarioUseCase {\n  constructor(private usuarios: UsuarioRepository) {}\n  async execute({ email, senha }) {\n    const usuario = Usuario.criar(email, senha)\n    await this.usuarios.salvar(usuario)\n    return usuario\n  }\n}",
+    "result": "A lógica de registro de usuário pode ser testada isoladamente, injetando um repositório fake em memória.",
+    "notes": ["Também chamado de 'Interactor' em algumas variações da nomenclatura."],
+    "bestPractices": [
+      "Um caso de uso deve representar uma única ação/intenção do usuário do sistema."
+    ],
+    "commonMistakes": [
+      "Colocar lógica de apresentação (formatação de resposta HTTP, por exemplo) dentro do caso de uso."
+    ],
+    "relatedCommands": ["clean-arch-dependency-rule"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "use-case"],
+    "keywords": ["use case", "caso de uso", "interactor"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "id": "js-array-reduce",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.reduce()",
+    "description": "Executa uma função redutora sobre cada elemento do array, acumulando um único valor de retorno.",
+    "syntax": "array.reduce((acumulador, atual, indice, array) => { ... }, valorInicial)",
+    "example": "const total = [10, 20, 30].reduce((acc, val) => acc + val, 0)",
+    "result": "60",
+    "parameters": [
+      {
+        "name": "callback",
+        "description": "Função executada em cada elemento.",
+        "required": true
+      },
+      {
+        "name": "valorInicial",
+        "description": "Valor inicial do acumulador.",
+        "required": false,
+        "defaultValue": "primeiro elemento do array"
+      }
+    ],
+    "returns": "O valor final acumulado após percorrer todo o array.",
+    "notes": [
+      "Sem `valorInicial`, o primeiro elemento vira o acumulador inicial e a iteração começa do segundo item."
+    ],
+    "bestPractices": [
+      "Sempre forneça um valor inicial explícito para evitar comportamento inesperado em arrays vazios."
+    ],
+    "commonMistakes": [
+      "Chamar `reduce` em array vazio sem valor inicial, o que lança TypeError."
+    ],
+    "relatedCommands": ["js-array-map", "js-array-filter"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "reduce", "functional"],
+    "keywords": ["reduce", "acumulador", "somar array"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "js-async-await",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "async / await",
+    "description": "Sintaxe que permite escrever código assíncrono baseado em Promises de forma sequencial e legível.",
+    "syntax": "async function nome() {\n  const resultado = await promessa\n}",
+    "example": "async function buscarUsuario(id) {\n  const res = await fetch(`/api/users/${id}`)\n  return res.json()\n}",
+    "result": "Retorna uma Promise que resolve com o JSON da resposta.",
+    "returns": "Uma Promise que resolve com o valor de retorno da função, ou rejeita se uma exceção não for tratada.",
+    "notes": [
+      "`await` só pode ser usado dentro de uma função marcada como `async` (ou no top-level de módulos ES)."
+    ],
+    "bestPractices": [
+      "Envolva `await` em try/catch para tratar rejeições de forma explícita.",
+      "Use `Promise.all` para paralelizar chamadas independentes em vez de `await` sequencial."
+    ],
+    "commonMistakes": [
+      "Usar `await` dentro de um loop `forEach` (não bloqueia, roda tudo em paralelo sem esperar).",
+      "Não tratar erros, deixando `UnhandledPromiseRejection` estourar em produção."
+    ],
+    "relatedCommands": ["js-promise", "js-fetch"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2017+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function",
+    "externalReferences": [],
+    "tags": ["javascript", "async", "promise"],
+    "keywords": ["async await", "assincrono", "promise"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

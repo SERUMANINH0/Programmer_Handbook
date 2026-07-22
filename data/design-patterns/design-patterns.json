@@ -1,0 +1,58 @@
+[
+  {
+    "id": "pattern-singleton",
+    "category": "Design Patterns",
+    "subcategory": "Padrões criacionais",
+    "title": "Singleton",
+    "description": "Garante que uma classe tenha apenas uma única instância durante todo o ciclo de vida da aplicação, fornecendo um ponto de acesso global a ela.",
+    "syntax": "class Singleton {\n  private static instance: Singleton\n  static getInstance() { ... }\n}",
+    "example": "class ConexaoBanco {\n  private static instance: ConexaoBanco\n  private constructor() {}\n  static getInstance() {\n    if (!ConexaoBanco.instance) {\n      ConexaoBanco.instance = new ConexaoBanco()\n    }\n    return ConexaoBanco.instance\n  }\n}",
+    "result": "Toda chamada a `ConexaoBanco.getInstance()` retorna sempre a mesma instância.",
+    "notes": ["Muito usado para conexões de banco, loggers e configuração global."],
+    "bestPractices": [
+      "Considere alternativas como injeção de dependência antes de usar Singleton — ele dificulta testes por criar estado global."
+    ],
+    "commonMistakes": [
+      "Usar Singleton para guardar estado mutável compartilhado entre requisições em um servidor, causando vazamento de dados entre usuários."
+    ],
+    "relatedCommands": ["pattern-factory", "solid-dependency-inversion"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/singleton",
+    "externalReferences": [],
+    "tags": ["design-patterns", "singleton", "criacional"],
+    "keywords": ["singleton", "padrao singleton", "instancia unica"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "pattern-strategy",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Strategy",
+    "description": "Define uma família de algoritmos intercambiáveis, encapsulando cada um e permitindo trocá-los em tempo de execução sem alterar o código cliente.",
+    "syntax": "interface Estrategia { executar(dados): resultado }\nclass Contexto { constructor(private estrategia: Estrategia) {} }",
+    "example": "interface EstrategiaFrete {\n  calcular(peso: number): number\n}\nclass FreteExpresso implements EstrategiaFrete {\n  calcular(peso: number) { return peso * 2.5 }\n}\nclass Carrinho {\n  constructor(private frete: EstrategiaFrete) {}\n  calcularTotal(peso: number) { return this.frete.calcular(peso) }\n}",
+    "result": "Trocar `FreteExpresso` por `FreteEconomico` altera o cálculo sem modificar a classe `Carrinho`.",
+    "notes": [
+      "Evita cadeias longas de `if/else` ou `switch` baseadas em tipo de comportamento."
+    ],
+    "bestPractices": [
+      "Use quando várias variações de um mesmo algoritmo precisam coexistir e ser escolhidas dinamicamente."
+    ],
+    "commonMistakes": [
+      "Criar uma estratégia para cada pequena variação, gerando complexidade desnecessária para casos simples."
+    ],
+    "relatedCommands": ["pattern-singleton", "solid-open-closed"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/strategy",
+    "externalReferences": [],
+    "tags": ["design-patterns", "strategy", "comportamental"],
+    "keywords": ["strategy pattern", "padrao strategy", "algoritmos intercambiaveis"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]

@@ -1,0 +1,1189 @@
+[
+  {
+    "id": "cmd-dir",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "dir",
+    "description": "Lista arquivos e subpastas do diretório atual ou de um caminho especificado, com opções de formatação e filtro.",
+    "syntax": "DIR [unidade:][caminho][nome_arquivo] [/A[[:]atributos]] [/O[[:]ordem]] [/S] [/B] [/W]",
+    "example": "dir C:\\Projetos /S /B *.json",
+    "result": "Lista, em formato compacto (só caminho completo), todos os arquivos .json encontrados recursivamente a partir de C:\\Projetos.",
+    "flags": [
+      { "flag": "/A", "description": "Filtra por atributos (ex: /A:H mostra ocultos)." },
+      { "flag": "/S", "description": "Percorre também as subpastas." },
+      {
+        "flag": "/B",
+        "description": "Formato enxuto (bare), sem cabeçalho nem detalhes."
+      },
+      {
+        "flag": "/O",
+        "description": "Ordena a listagem (ex: /O:D por data, /O:N por nome)."
+      }
+    ],
+    "notes": [
+      "Sem parâmetros, DIR lista o diretório atual usando o formato padrão com data, hora, tamanho e nome."
+    ],
+    "bestPractices": [
+      "Combine /B com redirecionamento (>) para gerar listas de arquivos que podem ser processadas por outros comandos ou scripts."
+    ],
+    "commonMistakes": [
+      "Confundir /O:D (ordena por data) com /O:N (ordena por nome), gerando listagens na ordem errada."
+    ],
+    "relatedCommands": ["cmd-cd", "cmd-tree", "cmd-findstr"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/dir",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "navegacao"],
+    "keywords": ["dir", "listar arquivos", "listar diretorio", "ls windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-cd",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "cd (chdir)",
+    "description": "Exibe ou altera o diretório de trabalho atual do Prompt de Comando.",
+    "syntax": "CD [/D] [unidade:][caminho]",
+    "example": "cd /D D:\\Projetos\\api",
+    "result": "Muda o diretório atual para D:\\Projetos\\api, trocando inclusive de unidade.",
+    "aliases": ["chdir"],
+    "flags": [
+      { "flag": "/D", "description": "Troca também a unidade atual, não só o caminho." }
+    ],
+    "notes": ["Sem argumentos, `cd` sozinho exibe o diretório atual em vez de navegar."],
+    "bestPractices": [
+      "Use `cd /D` sempre que precisar trocar de unidade (ex: de C: para D:) na mesma chamada."
+    ],
+    "commonMistakes": [
+      "Digitar apenas `cd D:\\pasta` estando em outra unidade e o diretório atual não mudar, porque cada unidade mantém seu próprio 'diretório atual'."
+    ],
+    "relatedCommands": ["cmd-dir", "cmd-mkdir"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/cd",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "navegacao"],
+    "keywords": ["cd", "chdir", "mudar diretorio", "trocar pasta"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-copy",
+    "category": "CMD",
+    "subcategory": "Cópia e movimentação",
+    "title": "copy",
+    "description": "Copia um ou mais arquivos de um local para outro, podendo também concatenar arquivos de texto.",
+    "syntax": "COPY [/Y] origem [+ origem2 ...] destino",
+    "example": "copy /Y relatorio.txt D:\\Backup\\",
+    "result": "Copia relatorio.txt para D:\\Backup\\, sobrescrevendo sem perguntar caso já exista um arquivo com o mesmo nome.",
+    "flags": [
+      { "flag": "/Y", "description": "Sobrescreve arquivos existentes sem confirmar." },
+      { "flag": "/-Y", "description": "Força a confirmação antes de sobrescrever." }
+    ],
+    "notes": [
+      "Usar `+` entre arquivos de origem concatena o conteúdo deles em um único arquivo de destino."
+    ],
+    "bestPractices": [
+      "Para cópias de pastas inteiras ou com necessidade de robustez, prefira XCOPY ou ROBOCOPY em vez de COPY."
+    ],
+    "commonMistakes": [
+      "Esquecer que COPY não copia subpastas por padrão, apenas arquivos do nível especificado."
+    ],
+    "relatedCommands": ["cmd-xcopy", "cmd-robocopy", "cmd-move"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/copy",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "copia"],
+    "keywords": ["copy", "copiar arquivo", "duplicar arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-xcopy",
+    "category": "CMD",
+    "subcategory": "Cópia e movimentação",
+    "title": "xcopy",
+    "description": "Copia arquivos e estruturas de diretórios inteiras, incluindo subpastas, com mais opções que o COPY.",
+    "syntax": "XCOPY origem destino [/S] [/E] [/I] [/Y]",
+    "example": "xcopy C:\\Projeto D:\\Backup\\Projeto /E /I /Y",
+    "result": "Copia C:\\Projeto inteiro (incluindo subpastas vazias) para D:\\Backup\\Projeto, criando o destino como diretório sem perguntar.",
+    "flags": [
+      {
+        "flag": "/S",
+        "description": "Copia diretórios e subdiretórios, exceto os vazios."
+      },
+      {
+        "flag": "/E",
+        "description": "Copia diretórios e subdiretórios, incluindo os vazios."
+      },
+      {
+        "flag": "/I",
+        "description": "Assume que o destino é um diretório quando a origem tem múltiplos arquivos."
+      }
+    ],
+    "notes": [
+      "Considerado legado: a Microsoft recomenda ROBOCOPY para cópias robustas e scripts de backup."
+    ],
+    "bestPractices": [
+      "Sempre use /I quando o destino não existir ainda, para evitar que o XCOPY pergunte se é arquivo ou pasta."
+    ],
+    "commonMistakes": [
+      "Esquecer /E e perder as subpastas vazias em uma cópia de estrutura completa."
+    ],
+    "relatedCommands": ["cmd-copy", "cmd-robocopy"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/xcopy",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "copia"],
+    "keywords": ["xcopy", "copiar pastas", "copiar diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-robocopy",
+    "category": "CMD",
+    "subcategory": "Cópia e movimentação",
+    "title": "robocopy (Robust File Copy)",
+    "description": "Ferramenta avançada de cópia de arquivos e diretórios, com suporte a espelhamento, retomada de falhas, multithreading e log detalhado.",
+    "syntax": "ROBOCOPY origem destino [arquivo [...]] [opções]",
+    "example": "robocopy C:\\Dados D:\\Backup\\Dados /MIR /R:3 /W:5 /LOG:backup.log",
+    "result": "Espelha C:\\Dados em D:\\Backup\\Dados (removendo no destino o que não existe mais na origem), tentando novamente 3 vezes com 5s de espera em caso de falha, gravando log em backup.log.",
+    "flags": [
+      {
+        "flag": "/MIR",
+        "description": "Espelha a árvore de origem no destino, apagando extras que só existem no destino."
+      },
+      {
+        "flag": "/R:n",
+        "description": "Número de tentativas em caso de falha (padrão é 1 milhão)."
+      },
+      { "flag": "/W:n", "description": "Tempo de espera em segundos entre tentativas." },
+      {
+        "flag": "/MT",
+        "description": "Copia múltiplos arquivos em paralelo (multithread)."
+      }
+    ],
+    "notes": [
+      "Código de retorno do ROBOCOPY não segue o padrão de 0=sucesso; valores de 0 a 7 geralmente indicam sucesso parcial ou total, exigindo checagem cuidadosa em scripts."
+    ],
+    "bestPractices": [
+      "Use /MIR com cautela: ele apaga no destino qualquer arquivo que não exista mais na origem."
+    ],
+    "commonMistakes": [
+      "Tratar qualquer ERRORLEVEL diferente de 0 como falha, quando na verdade ROBOCOPY usa bitmask e valores baixos (1, 2, 3) costumam indicar sucesso."
+    ],
+    "relatedCommands": ["cmd-xcopy", "cmd-copy"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Windows Vista+ / Windows Server 2008+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/robocopy",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "copia", "backup"],
+    "keywords": ["robocopy", "espelhar pastas", "sincronizar arquivos", "backup windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-del",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "del (erase)",
+    "description": "Exclui um ou mais arquivos, com opções para forçar remoção de arquivos somente leitura e ocultos.",
+    "syntax": "DEL [/F] [/Q] [/S] [/A[:atributos]] arquivo",
+    "example": "del /F /Q *.tmp",
+    "result": "Remove todos os arquivos .tmp do diretório atual sem confirmação (/Q) e mesmo que sejam somente leitura (/F).",
+    "aliases": ["erase"],
+    "flags": [
+      { "flag": "/F", "description": "Força a exclusão de arquivos somente leitura." },
+      { "flag": "/Q", "description": "Modo silencioso, sem pedir confirmação." },
+      {
+        "flag": "/S",
+        "description": "Exclui arquivos correspondentes também nas subpastas."
+      }
+    ],
+    "notes": [
+      "DEL não move para a Lixeira: a exclusão via linha de comando é permanente."
+    ],
+    "bestPractices": [
+      "Teste primeiro com `dir` usando o mesmo padrão de curinga antes de rodar `del`, para conferir exatamente quais arquivos serão afetados."
+    ],
+    "commonMistakes": [
+      "Usar `/S` sem revisar o caminho e apagar arquivos em subpastas inesperadas."
+    ],
+    "relatedCommands": ["cmd-rmdir", "cmd-attrib"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/del",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos"],
+    "keywords": ["del", "erase", "apagar arquivo", "excluir arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-mkdir",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "mkdir (md)",
+    "description": "Cria um novo diretório, incluindo automaticamente todos os diretórios intermediários necessários no caminho.",
+    "syntax": "MKDIR caminho",
+    "example": "mkdir C:\\Projetos\\api\\src\\controllers",
+    "result": "Cria a árvore completa de pastas Projetos, api, src e controllers, caso ainda não existam.",
+    "aliases": ["md"],
+    "notes": [
+      "Diferente de alguns sistemas Unix, o MKDIR do Windows já cria diretórios intermediários por padrão, sem precisar de uma flag equivalente a `-p`."
+    ],
+    "bestPractices": [
+      "Combine com `2>nul` em scripts para ignorar o erro caso a pasta já exista."
+    ],
+    "commonMistakes": [
+      "Tentar criar uma pasta com nome já existente e tratar o erro resultante como falha crítica no script."
+    ],
+    "relatedCommands": ["cmd-rmdir", "cmd-cd"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/mkdir",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "diretorios"],
+    "keywords": ["mkdir", "md", "criar pasta", "criar diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-rmdir",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "rmdir (rd)",
+    "description": "Remove um diretório vazio ou, com a opção /S, uma árvore inteira de diretórios e arquivos.",
+    "syntax": "RMDIR [/S] [/Q] caminho",
+    "example": "rmdir /S /Q C:\\Temp\\build",
+    "result": "Remove C:\\Temp\\build e todo o seu conteúdo (arquivos e subpastas) sem pedir confirmação.",
+    "aliases": ["rd"],
+    "flags": [
+      { "flag": "/S", "description": "Remove a árvore inteira, não só uma pasta vazia." },
+      {
+        "flag": "/Q",
+        "description": "Modo silencioso, sem pedir confirmação quando usado com /S."
+      }
+    ],
+    "notes": ["Sem /S, RMDIR só funciona em diretórios vazios."],
+    "bestPractices": [
+      "Sempre confira o caminho com `dir` antes de rodar `rmdir /S /Q`, já que a exclusão é irreversível."
+    ],
+    "commonMistakes": [
+      "Rodar `/S /Q` num caminho errado (ex: com uma variável de ambiente vazia) e apagar o diretório atual inteiro."
+    ],
+    "relatedCommands": ["cmd-del", "cmd-mkdir"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/rmdir",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "diretorios"],
+    "keywords": ["rmdir", "rd", "apagar pasta", "remover diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-ren",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "ren (rename)",
+    "description": "Renomeia arquivos ou pastas, sem movê-los para outro diretório.",
+    "syntax": "REN nome_atual novo_nome",
+    "example": "ren relatorio_v1.txt relatorio_final.txt",
+    "result": "Renomeia relatorio_v1.txt para relatorio_final.txt no mesmo diretório.",
+    "aliases": ["rename"],
+    "notes": [
+      "REN aceita curingas para renomear múltiplos arquivos de uma vez, ex: `ren *.txt *.bak`."
+    ],
+    "commonMistakes": [
+      "Tentar usar REN para mover um arquivo para outra pasta — para isso é preciso usar MOVE ou COPY."
+    ],
+    "relatedCommands": ["cmd-move", "cmd-copy"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/ren",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos"],
+    "keywords": ["ren", "rename", "renomear arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-move",
+    "category": "CMD",
+    "subcategory": "Cópia e movimentação",
+    "title": "move",
+    "description": "Move arquivos entre diretórios e também pode ser usado para renomear diretórios.",
+    "syntax": "MOVE [/Y] origem destino",
+    "example": "move /Y C:\\Downloads\\instalador.exe D:\\Setups\\",
+    "result": "Move o arquivo instalador.exe para D:\\Setups\\, sobrescrevendo se já existir um arquivo de mesmo nome.",
+    "flags": [
+      {
+        "flag": "/Y",
+        "description": "Sobrescreve arquivos existentes no destino sem confirmar."
+      }
+    ],
+    "notes": [
+      "Quando origem e destino estão na mesma unidade, MOVE é praticamente instantâneo (apenas atualiza a entrada no sistema de arquivos)."
+    ],
+    "commonMistakes": [
+      "Mover arquivos entre unidades diferentes (ex: C: para D:) esperando a mesma velocidade de uma renomeação — nesse caso o conteúdo é de fato copiado e depois apagado da origem."
+    ],
+    "relatedCommands": ["cmd-copy", "cmd-ren"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/move",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "copia"],
+    "keywords": ["move", "mover arquivo", "mover pasta"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-type",
+    "category": "CMD",
+    "subcategory": "Visualização e busca de texto",
+    "title": "type",
+    "description": "Exibe o conteúdo de um ou mais arquivos de texto diretamente no console.",
+    "syntax": "TYPE arquivo",
+    "example": "type C:\\logs\\app.log",
+    "result": "Imprime todo o conteúdo de app.log na tela.",
+    "notes": [
+      "Para arquivos grandes, combine com MORE (`type app.log | more`) para paginar a saída."
+    ],
+    "commonMistakes": [
+      "Usar TYPE em arquivos binários, o que gera saída ilegível ou até efeitos colaterais no terminal (bipes, caracteres de controle)."
+    ],
+    "relatedCommands": ["cmd-more", "cmd-findstr"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/type",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "texto", "arquivos"],
+    "keywords": ["type", "exibir arquivo", "ler arquivo texto", "cat windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-more",
+    "category": "CMD",
+    "subcategory": "Visualização e busca de texto",
+    "title": "more",
+    "description": "Exibe a saída de um arquivo ou de outro comando uma tela por vez, permitindo navegação página a página.",
+    "syntax": "MORE [arquivo] | comando | MORE",
+    "example": "dir /S C:\\Windows | more",
+    "result": "Lista o conteúdo de C:\\Windows recursivamente, pausando a cada tela cheia até o usuário pressionar uma tecla.",
+    "shortcut": "Espaço (próxima tela) / Enter (próxima linha) / Q (sair)",
+    "notes": [
+      "Pressione a barra de espaço para avançar uma tela inteira ou Enter para avançar linha a linha."
+    ],
+    "relatedCommands": ["cmd-type", "cmd-findstr"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/more",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "texto", "paginacao"],
+    "keywords": ["more", "paginar saida", "ver tela por tela"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-findstr",
+    "category": "CMD",
+    "subcategory": "Visualização e busca de texto",
+    "title": "findstr",
+    "description": "Busca padrões de texto (literais ou expressões regulares) dentro de arquivos, de forma similar ao grep do Unix.",
+    "syntax": "FINDSTR [/S] [/I] [/N] [/R] \"padrão\" arquivo",
+    "example": "findstr /S /I /N \"TODO\" *.js",
+    "result": "Lista, com número da linha, todas as ocorrências (case-insensitive) da palavra TODO em arquivos .js de todas as subpastas.",
+    "flags": [
+      { "flag": "/S", "description": "Busca também nas subpastas." },
+      { "flag": "/I", "description": "Ignora diferenças entre maiúsculas e minúsculas." },
+      { "flag": "/N", "description": "Mostra o número da linha de cada ocorrência." },
+      { "flag": "/R", "description": "Trata o padrão de busca como expressão regular." }
+    ],
+    "notes": [
+      "FINDSTR suporta apenas um subconjunto de expressões regulares, diferente da sintaxe completa do grep/PCRE."
+    ],
+    "bestPractices": [
+      "Use aspas ao redor do padrão de busca sempre que ele contiver espaços ou caracteres especiais do CMD."
+    ],
+    "commonMistakes": [
+      "Esperar suporte total a regex (como grupos de captura) que o FINDSTR não oferece."
+    ],
+    "relatedCommands": ["cmd-find", "cmd-type"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/findstr",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "texto", "busca", "grep"],
+    "keywords": ["findstr", "grep windows", "buscar texto em arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-find",
+    "category": "CMD",
+    "subcategory": "Visualização e busca de texto",
+    "title": "find",
+    "description": "Procura por uma string de texto literal (sem regex) dentro de arquivos, exibindo as linhas que a contêm.",
+    "syntax": "FIND \"string\" [/C] [/I] [/N] arquivo",
+    "example": "find /I /C \"erro\" C:\\logs\\app.log",
+    "result": "Retorna apenas a contagem (/C) de linhas contendo a palavra 'erro', ignorando maiúsculas/minúsculas.",
+    "flags": [
+      {
+        "flag": "/C",
+        "description": "Exibe apenas a contagem de linhas com ocorrências."
+      },
+      { "flag": "/I", "description": "Ignora diferenças entre maiúsculas e minúsculas." },
+      { "flag": "/N", "description": "Numera as linhas exibidas." },
+      { "flag": "/V", "description": "Exibe as linhas que NÃO contêm a string." }
+    ],
+    "notes": [
+      "Diferente de FINDSTR, FIND não interpreta expressões regulares nem curingas — é busca literal."
+    ],
+    "bestPractices": [
+      "Prefira FINDSTR quando precisar de regex, curingas ou padrões mais ricos de busca."
+    ],
+    "commonMistakes": [
+      "Confundir FIND com o `find` do Unix, que localiza arquivos por nome — no Windows quem faz isso é o comando WHERE ou DIR /S."
+    ],
+    "relatedCommands": ["cmd-findstr", "cmd-where"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/find",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "texto", "busca"],
+    "keywords": ["find", "buscar string", "procurar texto"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-tasklist",
+    "category": "CMD",
+    "subcategory": "Processos",
+    "title": "tasklist",
+    "description": "Lista os processos em execução no sistema, com PID, nome, uso de memória e outras informações.",
+    "syntax": "TASKLIST [/FI \"filtro\"] [/V] [/FO formato]",
+    "example": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "result": "Lista apenas os processos cujo nome de imagem é chrome.exe, com PID e uso de memória.",
+    "flags": [
+      { "flag": "/FI", "description": "Aplica um filtro (ex: IMAGENAME, PID, STATUS)." },
+      { "flag": "/V", "description": "Modo detalhado (verbose)." },
+      { "flag": "/FO", "description": "Formato de saída: TABLE, LIST ou CSV." }
+    ],
+    "notes": [
+      "Equivalente ao Gerenciador de Tarefas em modo texto, útil para automação e scripts."
+    ],
+    "bestPractices": [
+      "Use /FO CSV combinado com FOR /F para processar a saída em scripts batch."
+    ],
+    "commonMistakes": [
+      "Filtrar por nome de imagem sem o sufixo `.exe`, o que faz o filtro não retornar nenhum resultado."
+    ],
+    "relatedCommands": ["cmd-taskkill"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/tasklist",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "processos"],
+    "keywords": ["tasklist", "listar processos", "ver processos windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-taskkill",
+    "category": "CMD",
+    "subcategory": "Processos",
+    "title": "taskkill",
+    "description": "Encerra processos em execução pelo PID ou nome da imagem, com opção de forçar o encerramento e finalizar toda a árvore de processos filhos.",
+    "syntax": "TASKKILL [/PID id | /IM nome] [/F] [/T]",
+    "example": "taskkill /IM node.exe /F /T",
+    "result": "Força o encerramento de todos os processos node.exe em execução, incluindo processos filhos criados por eles.",
+    "flags": [
+      {
+        "flag": "/F",
+        "description": "Força o encerramento imediato (equivalente a um kill -9)."
+      },
+      {
+        "flag": "/T",
+        "description": "Encerra também toda a árvore de processos filhos."
+      },
+      { "flag": "/PID", "description": "Identifica o processo pelo Process ID." },
+      {
+        "flag": "/IM",
+        "description": "Identifica o processo pelo nome da imagem (executável)."
+      }
+    ],
+    "notes": [
+      "Sem /F, TASKKILL pede um encerramento 'gracioso', que o processo pode ignorar."
+    ],
+    "bestPractices": [
+      "Prefira encerrar sem /F primeiro e só usar /F quando o processo não responder, para não perder dados não salvos."
+    ],
+    "commonMistakes": [
+      "Usar /IM com processos genéricos (ex: node.exe) em máquinas com múltiplos serviços rodando, encerrando processos que não eram o alvo pretendido."
+    ],
+    "relatedCommands": ["cmd-tasklist"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/taskkill",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "processos"],
+    "keywords": ["taskkill", "matar processo", "encerrar processo windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-ipconfig",
+    "category": "CMD",
+    "subcategory": "Rede e diagnóstico",
+    "title": "ipconfig",
+    "description": "Exibe a configuração de rede TCP/IP de todos os adaptadores da máquina, e permite renovar/liberar endereços DHCP e limpar cache DNS.",
+    "syntax": "IPCONFIG [/ALL] [/RELEASE] [/RENEW] [/FLUSHDNS]",
+    "example": "ipconfig /all",
+    "result": "Exibe endereço IP, máscara, gateway, servidores DNS, MAC address e status de DHCP de todos os adaptadores de rede.",
+    "flags": [
+      {
+        "flag": "/ALL",
+        "description": "Mostra detalhes completos de todos os adaptadores."
+      },
+      { "flag": "/RELEASE", "description": "Libera o endereço IP obtido via DHCP." },
+      { "flag": "/RENEW", "description": "Renova o endereço IP via DHCP." },
+      { "flag": "/FLUSHDNS", "description": "Limpa o cache do resolvedor DNS local." }
+    ],
+    "notes": [
+      "`ipconfig` sem parâmetros mostra só um resumo (IP, máscara e gateway) de cada adaptador."
+    ],
+    "bestPractices": [
+      "Ao investigar problemas de DNS, rode `ipconfig /flushdns` antes de outros testes para eliminar cache desatualizado como causa."
+    ],
+    "commonMistakes": [
+      "Confundir IP dinâmico (DHCP) com estático e tentar `/renew` numa interface configurada manualmente, sem efeito."
+    ],
+    "relatedCommands": ["cmd-ping", "cmd-netstat", "cmd-nslookup"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/ipconfig",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "rede", "diagnostico"],
+    "keywords": ["ipconfig", "configuracao de rede", "ver ip windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-ping",
+    "category": "CMD",
+    "subcategory": "Rede e diagnóstico",
+    "title": "ping",
+    "description": "Testa a conectividade de rede com um host, enviando pacotes ICMP echo request e medindo o tempo de resposta.",
+    "syntax": "PING [-t] [-n contagem] [-l tamanho] destino",
+    "example": "ping -n 4 8.8.8.8",
+    "result": "Envia 4 pacotes ICMP para 8.8.8.8 e exibe o tempo de resposta (ms) de cada um, além de estatísticas de perda de pacotes.",
+    "shortcut": "Ctrl+C interrompe um ping contínuo iniciado com -t",
+    "flags": [
+      {
+        "flag": "-t",
+        "description": "Envia pings continuamente até ser interrompido com Ctrl+C."
+      },
+      { "flag": "-n", "description": "Define o número de pacotes a enviar." },
+      { "flag": "-l", "description": "Define o tamanho do pacote em bytes." }
+    ],
+    "notes": [
+      "Ausência total de resposta não significa necessariamente que o host está fora do ar: firewalls costumam bloquear ICMP por padrão."
+    ],
+    "bestPractices": [
+      "Use `ping -n 4` (em vez de -t) em scripts, para ter um número finito de tentativas e não travar a execução."
+    ],
+    "commonMistakes": [
+      "Concluir que um servidor está indisponível apenas por não responder a PING, sem testar a porta/serviço real."
+    ],
+    "relatedCommands": ["cmd-ipconfig", "cmd-tracert", "cmd-netstat"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/ping",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "rede", "diagnostico"],
+    "keywords": ["ping", "testar conexao", "testar rede"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-tracert",
+    "category": "CMD",
+    "subcategory": "Rede e diagnóstico",
+    "title": "tracert",
+    "description": "Rastreia a rota de pacotes até um destino, mostrando cada salto (roteador) intermediário e seu tempo de resposta.",
+    "syntax": "TRACERT [-d] [-h máximo_saltos] destino",
+    "example": "tracert -d google.com",
+    "result": "Lista cada roteador no caminho até google.com e o tempo de resposta de cada um, sem resolver nomes DNS (-d), o que agiliza a execução.",
+    "flags": [
+      {
+        "flag": "-d",
+        "description": "Não resolve nomes DNS dos saltos, apenas mostra os IPs."
+      },
+      { "flag": "-h", "description": "Limita o número máximo de saltos investigados." }
+    ],
+    "notes": [
+      "Asteriscos (`*`) num salto geralmente indicam que aquele roteador não respondeu ao ICMP, mas não necessariamente que há um problema de rede."
+    ],
+    "bestPractices": [
+      "Use -d para acelerar o diagnóstico quando a resolução de nomes não for necessária."
+    ],
+    "commonMistakes": [
+      "Interpretar um único salto com timeout como prova de falha de rede, quando muitos roteadores simplesmente não respondem a traceroute por política."
+    ],
+    "relatedCommands": ["cmd-ping", "cmd-netstat"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/tracert",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "rede", "diagnostico"],
+    "keywords": ["tracert", "rastrear rota", "traceroute windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-netstat",
+    "category": "CMD",
+    "subcategory": "Rede e diagnóstico",
+    "title": "netstat",
+    "description": "Exibe conexões de rede ativas, portas em escuta e estatísticas de protocolo (TCP/UDP) da máquina.",
+    "syntax": "NETSTAT [-a] [-n] [-o] [-b]",
+    "example": "netstat -ano | findstr :443",
+    "result": "Lista todas as conexões e portas em escuta, sem resolver nomes, com o PID do processo responsável, filtrando apenas as linhas relacionadas à porta 443.",
+    "flags": [
+      { "flag": "-a", "description": "Mostra todas as conexões e portas em escuta." },
+      {
+        "flag": "-n",
+        "description": "Exibe endereços e portas em formato numérico, sem resolver nomes."
+      },
+      {
+        "flag": "-o",
+        "description": "Mostra o PID do processo responsável por cada conexão."
+      },
+      {
+        "flag": "-b",
+        "description": "Mostra o executável associado a cada conexão (requer privilégio elevado)."
+      }
+    ],
+    "notes": [
+      "Combine -ano com FINDSTR ou com TASKLIST /FI para identificar qual processo está usando uma porta específica."
+    ],
+    "bestPractices": [
+      "Use `-n` para evitar que o comando trave tentando resolver nomes DNS reversos de cada conexão."
+    ],
+    "commonMistakes": [
+      "Rodar sem privilégios administrativos e não conseguir ver o nome do executável mesmo usando -b."
+    ],
+    "relatedCommands": ["cmd-tasklist", "cmd-taskkill", "cmd-ipconfig"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/netstat",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "rede", "diagnostico", "portas"],
+    "keywords": ["netstat", "conexoes de rede", "ver portas abertas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-nslookup",
+    "category": "CMD",
+    "subcategory": "Rede e diagnóstico",
+    "title": "nslookup",
+    "description": "Consulta servidores DNS para resolver nomes de domínio em endereços IP (e vice-versa) e inspecionar registros DNS.",
+    "syntax": "NSLOOKUP [host] [servidor_dns]",
+    "example": "nslookup github.com 8.8.8.8",
+    "result": "Resolve o domínio github.com usando especificamente o servidor DNS público 8.8.8.8, mostrando o(s) IP(s) retornado(s).",
+    "notes": [
+      "Sem argumentos, NSLOOKUP entra em modo interativo, permitindo consultas sucessivas e troca de tipo de registro (`set type=MX`, etc.)."
+    ],
+    "bestPractices": [
+      "Teste contra um servidor DNS público (8.8.8.8, 1.1.1.1) para isolar se o problema é do DNS configurado localmente ou do domínio em si."
+    ],
+    "commonMistakes": [
+      "Confiar apenas em NSLOOKUP para diagnosticar propagação de DNS, ignorando cache local e TTL dos registros."
+    ],
+    "relatedCommands": ["cmd-ipconfig", "cmd-ping"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/nslookup",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "rede", "dns", "diagnostico"],
+    "keywords": ["nslookup", "resolver dns", "consultar dominio"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-systeminfo",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "systeminfo",
+    "description": "Exibe informações detalhadas de configuração do sistema operacional e hardware: versão do Windows, memória, hotfixes instalados, tempo de atividade, entre outros.",
+    "syntax": "SYSTEMINFO [/S sistema] [/FO formato]",
+    "example": "systeminfo /FO CSV > info.csv",
+    "result": "Gera um arquivo info.csv com todas as informações do sistema em formato de valores separados por vírgula.",
+    "flags": [
+      { "flag": "/FO", "description": "Define o formato de saída: TABLE, LIST ou CSV." },
+      { "flag": "/S", "description": "Consulta um sistema remoto pelo nome ou IP." }
+    ],
+    "notes": [
+      "A execução pode levar vários segundos, pois o comando também varre os hotfixes (KBs) instalados."
+    ],
+    "bestPractices": [
+      "Use `systeminfo | findstr /B /C:\"OS Version\"` para extrair rapidamente só a versão do sistema operacional."
+    ],
+    "commonMistakes": [
+      "Rodar em ambientes automatizados sem considerar a lentidão do comando, causando timeouts em scripts sensíveis a tempo."
+    ],
+    "relatedCommands": ["cmd-tasklist"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/systeminfo",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "sistema", "diagnostico"],
+    "keywords": ["systeminfo", "informacoes do sistema", "versao do windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-chkdsk",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "chkdsk",
+    "description": "Verifica a integridade do sistema de arquivos de uma unidade e pode corrigir erros lógicos e marcar setores defeituosos.",
+    "syntax": "CHKDSK [unidade:] [/F] [/R]",
+    "example": "chkdsk C: /F /R",
+    "result": "Agenda (caso a unidade esteja em uso, como normalmente é a C:) uma verificação completa com correção de erros (/F) e varredura de setores defeituosos (/R) para a próxima reinicialização.",
+    "flags": [
+      {
+        "flag": "/F",
+        "description": "Corrige erros encontrados no sistema de arquivos."
+      },
+      {
+        "flag": "/R",
+        "description": "Localiza setores defeituosos e recupera informações legíveis (implica /F)."
+      }
+    ],
+    "notes": [
+      "Em unidades do sistema (geralmente C:), o CHKDSK com /F ou /R não roda imediatamente: ele agenda a verificação para a próxima reinicialização."
+    ],
+    "bestPractices": [
+      "Rode `chkdsk` sem flags primeiro (modo somente leitura) para diagnosticar antes de aplicar correções com /F."
+    ],
+    "commonMistakes": [
+      "Executar /R em discos muito grandes sem prever o tempo necessário, já que a varredura de setores é bem mais lenta que a verificação lógica simples."
+    ],
+    "relatedCommands": ["cmd-sfc"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/chkdsk",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "disco", "manutencao"],
+    "keywords": ["chkdsk", "verificar disco", "corrigir erros de disco"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-sfc",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "sfc (System File Checker)",
+    "description": "Verifica a integridade de todos os arquivos de sistema protegidos do Windows e restaura versões corrompidas a partir de uma cópia em cache.",
+    "syntax": "SFC /SCANNOW",
+    "example": "sfc /scannow",
+    "result": "Varre todos os arquivos de sistema protegidos, substituindo automaticamente qualquer versão corrompida ou incorreta encontrada.",
+    "flags": [
+      {
+        "flag": "/SCANNOW",
+        "description": "Varre e repara imediatamente os arquivos de sistema."
+      },
+      {
+        "flag": "/VERIFYONLY",
+        "description": "Apenas verifica a integridade, sem reparar."
+      }
+    ],
+    "notes": [
+      "Precisa ser executado em um Prompt de Comando elevado (Executar como administrador)."
+    ],
+    "bestPractices": [
+      "Se o SFC não conseguir reparar alguns arquivos, rode `DISM /Online /Cleanup-Image /RestoreHealth` antes de tentar o SFC novamente."
+    ],
+    "commonMistakes": [
+      "Rodar sem privilégios administrativos e receber a mensagem de que a Proteção de Recursos do Windows não pôde iniciar o serviço."
+    ],
+    "relatedCommands": ["cmd-chkdsk"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/sfc",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "sistema", "manutencao"],
+    "keywords": ["sfc", "scannow", "reparar arquivos de sistema"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-attrib",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "attrib",
+    "description": "Exibe ou altera atributos de arquivos e pastas, como somente leitura, oculto, sistema e arquivo morto.",
+    "syntax": "ATTRIB [+R|-R] [+H|-H] [+S|-S] [+A|-A] arquivo [/S] [/D]",
+    "example": "attrib +H +S config.dat",
+    "result": "Marca config.dat como oculto (+H) e arquivo de sistema (+S), fazendo com que deixe de aparecer em listagens padrão do Explorer e do DIR.",
+    "flags": [
+      { "flag": "+R / -R", "description": "Ativa/desativa o atributo somente leitura." },
+      { "flag": "+H / -H", "description": "Ativa/desativa o atributo oculto." },
+      {
+        "flag": "+S / -S",
+        "description": "Ativa/desativa o atributo de arquivo de sistema."
+      },
+      { "flag": "/S", "description": "Aplica a alteração também nas subpastas." }
+    ],
+    "notes": [
+      "Um arquivo marcado como Somente Leitura (+R) não pode ser sobrescrito ou apagado até que o atributo seja removido com `-R`."
+    ],
+    "bestPractices": [
+      "Antes de excluir arquivos em massa com DEL /S, use `attrib` para checar se algum está protegido como somente leitura ou sistema."
+    ],
+    "commonMistakes": [
+      "Remover o atributo de sistema (+S) de arquivos essenciais do Windows sem entender o propósito, deixando-os vulneráveis a exclusão acidental."
+    ],
+    "relatedCommands": ["cmd-del"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/attrib",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "atributos"],
+    "keywords": ["attrib", "atributos de arquivo", "arquivo oculto", "somente leitura"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-cls",
+    "category": "CMD",
+    "subcategory": "Utilitários",
+    "title": "cls",
+    "description": "Limpa toda a tela do Prompt de Comando, removendo o histórico visível de comandos e saídas anteriores.",
+    "syntax": "CLS",
+    "example": "cls",
+    "result": "A tela do console fica em branco, com o cursor posicionado no topo.",
+    "notes": [
+      "CLS não apaga o histórico de comandos navegável com as setas ↑/↓, apenas o conteúdo exibido na tela."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/cls",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "console"],
+    "keywords": ["cls", "limpar tela", "limpar console"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-echo",
+    "category": "CMD",
+    "subcategory": "Utilitários",
+    "title": "echo",
+    "description": "Exibe mensagens de texto no console ou ativa/desativa a exibição dos próprios comandos durante a execução de um script.",
+    "syntax": "ECHO [ON|OFF|mensagem]",
+    "example": "echo Processo concluido com sucesso!",
+    "result": "Processo concluido com sucesso!",
+    "notes": [
+      "`echo.` (com ponto, sem espaço) imprime uma linha em branco — usar apenas `echo` sem argumentos mostra o estado atual (ON/OFF)."
+    ],
+    "bestPractices": [
+      "Use `echo off` no início de scripts para não exibir cada comando executado, deixando a saída mais limpa."
+    ],
+    "commonMistakes": [
+      "Digitar `echo ` (com espaço) sem texto depois esperando uma linha em branco, e receber a mensagem de estado ECHO is on/off em vez disso."
+    ],
+    "relatedCommands": ["cmd-cls"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/echo",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "console"],
+    "keywords": ["echo", "exibir mensagem", "imprimir texto"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-env-variables",
+    "category": "CMD",
+    "subcategory": "Variáveis e redirecionamento",
+    "title": "Variáveis de ambiente (%VAR%)",
+    "description": "Variáveis de ambiente armazenam valores acessíveis a qualquer processo do sistema (caminhos, configurações, dados do usuário) e são referenciadas entre sinais de porcentagem.",
+    "syntax": "SET [variavel[=valor]]  |  %variavel%",
+    "example": "echo O usuario atual e %USERNAME%, e o Windows esta instalado em %WINDIR%",
+    "result": "O usuario atual e joao.silva, e o Windows esta instalado em C:\\Windows",
+    "notes": [
+      "Variáveis definidas com `set` num Prompt de Comando só existem durante aquela sessão, a menos que sejam definidas via `setx` ou pelas Propriedades do Sistema."
+    ],
+    "bestPractices": [
+      "Use `set` sem argumentos para listar todas as variáveis de ambiente disponíveis na sessão atual."
+    ],
+    "commonMistakes": [
+      "Confundir `set` (temporário, só na sessão atual) com `setx` (permanente, mas só reflete em novas janelas do CMD abertas depois)."
+    ],
+    "relatedCommands": ["cmd-script-variables", "cmd-script-delayed-expansion"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "variaveis", "ambiente"],
+    "keywords": ["variavel de ambiente", "%path%", "set", "environment variable"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-redirection",
+    "category": "CMD",
+    "subcategory": "Variáveis e redirecionamento",
+    "title": "Redirecionamento (>, >>, <, |)",
+    "description": "Operadores que redirecionam a entrada/saída padrão de comandos: gravar em arquivo, anexar a um arquivo, ler de um arquivo ou encadear a saída de um comando como entrada de outro.",
+    "syntax": "comando > arquivo  |  comando >> arquivo  |  comando < arquivo  |  comando1 | comando2",
+    "example": "dir /S *.log > lista.txt 2>&1",
+    "result": "Grava a listagem de todos os arquivos .log (incluindo eventuais mensagens de erro, redirecionadas com 2>&1) no arquivo lista.txt, sobrescrevendo-o caso já exista.",
+    "notes": [
+      "`>` sobrescreve o arquivo de destino; `>>` acrescenta ao final sem apagar o conteúdo existente.",
+      "`2>&1` redireciona o stream de erro (2) para o mesmo destino do stream de saída padrão (1)."
+    ],
+    "bestPractices": [
+      "Use `>>` em scripts de log para não perder o histórico de execuções anteriores a cada nova execução."
+    ],
+    "commonMistakes": [
+      "Usar `>` (sobrescreve) quando a intenção era acumular logs com `>>`, perdendo o conteúdo anterior a cada execução."
+    ],
+    "relatedCommands": ["cmd-type", "cmd-findstr"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/using-command-redirection-operators",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "redirecionamento", "pipe"],
+    "keywords": ["redirecionamento cmd", "pipe windows", "maior que", "operadores cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-icacls",
+    "category": "CMD",
+    "subcategory": "Permissões e segurança",
+    "title": "icacls",
+    "description": "Exibe ou modifica listas de controle de acesso (ACLs) discricionárias de arquivos e diretórios, definindo permissões de usuários e grupos.",
+    "syntax": "ICACLS caminho [/grant usuario:permissao] [/deny usuario:permissao] [/T]",
+    "example": "icacls C:\\Dados /grant joao:(OI)(CI)F /T",
+    "result": "Concede a 'joao' controle total (F) sobre C:\\Dados, aplicando a herança para objetos (OI) e contêineres (CI) em toda a árvore (/T) de subpastas e arquivos.",
+    "flags": [
+      { "flag": "/grant", "description": "Concede permissões a um usuário ou grupo." },
+      {
+        "flag": "/deny",
+        "description": "Nega explicitamente permissões a um usuário ou grupo."
+      },
+      {
+        "flag": "/T",
+        "description": "Aplica a alteração recursivamente em toda a árvore."
+      },
+      {
+        "flag": "/remove",
+        "description": "Remove todas as entradas de ACL de um usuário específico."
+      }
+    ],
+    "notes": [
+      "Sucessor do antigo CACLS, que está obsoleto; ICACLS oferece suporte a herança e SDDL mais completo."
+    ],
+    "bestPractices": [
+      "Sempre exporte as permissões atuais (`icacls caminho /save backup.txt`) antes de alterações em massa, para poder reverter se necessário."
+    ],
+    "commonMistakes": [
+      "Esquecer /T ao alterar uma pasta, aplicando a permissão apenas à pasta raiz e não ao conteúdo já existente dentro dela."
+    ],
+    "relatedCommands": ["cmd-attrib"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Windows Vista+ / Windows Server 2008+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/icacls",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "permissoes", "seguranca", "acl"],
+    "keywords": ["icacls", "permissoes de arquivo", "acl windows", "controle de acesso"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-net-user",
+    "category": "CMD",
+    "subcategory": "Permissões e segurança",
+    "title": "net user",
+    "description": "Cria, exibe ou modifica contas de usuário locais (ou de domínio) diretamente pelo Prompt de Comando.",
+    "syntax": "NET USER [nome [senha] [/ADD] [/DELETE] [/ACTIVE:{yes|no}]]",
+    "example": "net user joao Senha123! /ADD",
+    "result": "Cria a conta de usuário local 'joao' com a senha informada.",
+    "flags": [
+      { "flag": "/ADD", "description": "Cria uma nova conta de usuário." },
+      { "flag": "/DELETE", "description": "Remove uma conta de usuário existente." },
+      { "flag": "/ACTIVE", "description": "Ativa ou desativa a conta (yes/no)." }
+    ],
+    "notes": [
+      "Requer Prompt de Comando elevado (administrador) para criar, alterar ou remover contas."
+    ],
+    "bestPractices": [
+      "Prefira ferramentas de gerenciamento de identidade (Active Directory, Azure AD) em ambientes corporativos; `net user` é mais indicado para máquinas locais/standalone."
+    ],
+    "commonMistakes": [
+      "Definir senhas que não atendem à política de complexidade do Windows e o comando falhar com uma mensagem de erro pouco clara."
+    ],
+    "relatedCommands": ["cmd-icacls"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/net-user",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "usuarios", "seguranca"],
+    "keywords": ["net user", "criar usuario windows", "gerenciar contas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-shutdown",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "shutdown",
+    "description": "Desliga, reinicia ou hiberna a máquina local ou remota, com opção de agendar a ação e exibir um aviso aos usuários.",
+    "syntax": "SHUTDOWN [/S|/R] [/T segundos] [/M \\\\computador] [/C \"mensagem\"]",
+    "example": "shutdown /r /t 300 /c \"Reinicio agendado para manutencao\"",
+    "result": "Agenda um reinício da máquina em 300 segundos, exibindo a mensagem de aviso 'Reinicio agendado para manutencao' aos usuários logados.",
+    "flags": [
+      { "flag": "/S", "description": "Desliga a máquina." },
+      { "flag": "/R", "description": "Reinicia a máquina." },
+      { "flag": "/T", "description": "Define o tempo em segundos até a ação ocorrer." },
+      { "flag": "/A", "description": "Cancela um desligamento/reinício agendado." },
+      {
+        "flag": "/M",
+        "description": "Mira uma máquina remota pelo nome (\\\\computador)."
+      }
+    ],
+    "notes": [
+      "`shutdown /a` cancela um desligamento ou reinício agendado, desde que ainda esteja dentro do tempo de espera (/T)."
+    ],
+    "bestPractices": [
+      "Sempre use /T com um tempo razoável e um /C explicando o motivo, para que usuários possam salvar o trabalho antes."
+    ],
+    "commonMistakes": [
+      "Rodar `shutdown /s /t 0` em uma máquina remota ou de produção por engano, sem tempo de reação para cancelar."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/shutdown",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "sistema", "energia"],
+    "keywords": [
+      "shutdown",
+      "desligar windows",
+      "reiniciar windows",
+      "agendar desligamento"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-tree",
+    "category": "CMD",
+    "subcategory": "Navegação e arquivos",
+    "title": "tree",
+    "description": "Exibe graficamente a estrutura hierárquica de diretórios (e opcionalmente arquivos) de um caminho, em formato de árvore.",
+    "syntax": "TREE [caminho] [/F] [/A]",
+    "example": "tree C:\\Projetos /F /A",
+    "result": "Exibe a árvore completa de pastas de C:\\Projetos, incluindo os arquivos de cada uma (/F), usando caracteres ASCII simples (/A) em vez dos caracteres de desenho de linha padrão.",
+    "flags": [
+      {
+        "flag": "/F",
+        "description": "Inclui os arquivos na exibição, não só as pastas."
+      },
+      {
+        "flag": "/A",
+        "description": "Usa caracteres ASCII em vez de caracteres estendidos de desenho."
+      }
+    ],
+    "notes": [
+      "Sem /F, TREE mostra apenas a estrutura de pastas, sem listar os arquivos dentro delas."
+    ],
+    "bestPractices": [
+      "Use /A ao redirecionar a saída para um arquivo de texto que será aberto em ferramentas sem suporte a caracteres estendidos."
+    ],
+    "relatedCommands": ["cmd-dir"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/tree",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "arquivos", "diretorios"],
+    "keywords": ["tree", "arvore de diretorios", "estrutura de pastas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-where",
+    "category": "CMD",
+    "subcategory": "Utilitários",
+    "title": "where",
+    "description": "Localiza a(s) localização(ões) de arquivos executáveis, scripts ou outros arquivos correspondentes a um padrão, buscando no PATH e em diretórios especificados.",
+    "syntax": "WHERE [/R caminho] padrão",
+    "example": "where node",
+    "result": "C:\\Program Files\\nodejs\\node.exe",
+    "notes": [
+      "Equivalente ao `which` do Unix/Linux, mas usado para localizar executáveis dentro do PATH do Windows."
+    ],
+    "bestPractices": [
+      "Use `where /R .` para buscar arquivos por nome recursivamente a partir do diretório atual, além de checar o PATH."
+    ],
+    "commonMistakes": [
+      "Confundir WHERE com FIND ou FINDSTR, que buscam conteúdo dentro de arquivos, não arquivos pelo nome."
+    ],
+    "relatedCommands": ["cmd-find", "cmd-dir"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Windows 7+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/where_1",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "utilitario", "path"],
+    "keywords": ["where", "which windows", "localizar executavel"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

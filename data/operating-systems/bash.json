@@ -1,0 +1,1193 @@
+[
+  {
+    "id": "bash-shebang",
+    "category": "Bash",
+    "subcategory": "Fundamentos",
+    "title": "Shebang (#!/bin/bash)",
+    "description": "Primeira linha de um script que indica ao sistema qual interpretador deve executar o arquivo.",
+    "syntax": "#!/bin/bash",
+    "example": "#!/bin/bash\necho \"Ola, mundo!\"",
+    "result": "Ao rodar `./script.sh` (com permissao de execucao), o kernel usa /bin/bash para interpretar o arquivo.",
+    "notes": [
+      "O shebang so tem efeito quando o script e executado diretamente (./script.sh), nao quando chamado como `bash script.sh`.",
+      "`#!/usr/bin/env bash` e mais portavel que `#!/bin/bash` porque resolve o bash pelo PATH."
+    ],
+    "bestPractices": [
+      "Prefira `#!/usr/bin/env bash` em scripts que precisam rodar em sistemas onde o bash nao esta em /bin."
+    ],
+    "commonMistakes": [
+      "Esquecer de dar permissao de execucao (`chmod +x`) e receber 'Permission denied'."
+    ],
+    "relatedCommands": ["bash-set-euo-pipefail", "linux-chmod"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 3.2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Scripts.html",
+    "tags": ["bash", "shell", "script"],
+    "keywords": ["shebang", "bin bash", "interpretador de script"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-variables",
+    "category": "Bash",
+    "subcategory": "Variaveis",
+    "title": "Variaveis em Bash",
+    "description": "Armazenam valores textuais para reutilizacao no script. Nao ha tipagem: tudo e tratado como string por padrao.",
+    "syntax": "nome=valor\necho \"$nome\"",
+    "example": "nome=\"Maria\"\nidade=30\necho \"Usuario: $nome, idade: $idade\"",
+    "result": "Usuario: Maria, idade: 30",
+    "notes": [
+      "Nao pode haver espacos ao redor do `=` na atribuicao.",
+      "Use aspas duplas ao expandir (`\"$var\"`) para evitar word splitting e glob expansion indesejados."
+    ],
+    "bestPractices": [
+      "Sempre envolva expansoes de variaveis em aspas duplas, exceto quando o word splitting for intencional.",
+      "Use `readonly` para constantes que nao devem ser reatribuidas."
+    ],
+    "commonMistakes": [
+      "Escrever `nome = \"Maria\"` (com espacos), que o bash interpreta como comando `nome` com argumentos.",
+      "Nao usar aspas em `$var` contendo espacos, quebrando o comando em varios argumentos."
+    ],
+    "relatedCommands": [
+      "bash-local-vars",
+      "bash-parameter-expansion",
+      "bash-arithmetic-expansion"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameters.html",
+    "tags": ["bash", "variaveis", "shell"],
+    "keywords": ["variavel bash", "atribuicao de variavel", "shell variable"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-local-vars",
+    "category": "Bash",
+    "subcategory": "Funcoes",
+    "title": "local (escopo em funcoes)",
+    "description": "Declara uma variavel com escopo restrito ao corpo da funcao, evitando vazamento para o escopo global do script.",
+    "syntax": "funcao() {\n  local var=valor\n}",
+    "example": "somar() {\n  local resultado=$(( $1 + $2 ))\n  echo \"$resultado\"\n}\nsomar 2 3",
+    "result": "5",
+    "notes": [
+      "Sem `local`, toda variavel atribuida dentro de uma funcao e global por padrao em Bash."
+    ],
+    "bestPractices": [
+      "Declare `local` para toda variavel auxiliar criada dentro de funcoes, evitando efeitos colaterais."
+    ],
+    "commonMistakes": [
+      "Reutilizar nomes de variaveis genericos (i, tmp, result) sem `local`, sobrescrevendo variaveis globais."
+    ],
+    "relatedCommands": ["bash-functions", "bash-function-return"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-local",
+    "tags": ["bash", "funcoes", "escopo"],
+    "keywords": ["local bash", "escopo de variavel", "variavel local funcao"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-arrays-indexed",
+    "category": "Bash",
+    "subcategory": "Arrays",
+    "title": "Arrays indexados",
+    "description": "Estrutura que armazena multiplos valores em uma unica variavel, acessados por indice numerico comecando em 0.",
+    "syntax": "array=(item1 item2 item3)\necho \"${array[0]}\"\necho \"${array[@]}\"",
+    "example": "frutas=(\"maca\" \"banana\" \"uva\")\necho \"${frutas[1]}\"\necho \"Total: ${#frutas[@]}\"",
+    "result": "banana\nTotal: 3",
+    "parameters": [
+      {
+        "name": "array[@]",
+        "description": "Expande para todos os elementos como palavras separadas.",
+        "required": false
+      },
+      {
+        "name": "array[*]",
+        "description": "Expande para todos os elementos como uma unica string.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`${#array[@]}` retorna a quantidade de elementos.",
+      "Arrays em Bash podem ser esparsos (indices nao contiguos)."
+    ],
+    "bestPractices": [
+      "Use `\"${array[@]}\"` (com aspas) ao iterar para preservar elementos com espacos como itens unicos."
+    ],
+    "commonMistakes": [
+      "Usar `${array[*]}` em vez de `${array[@]}` dentro de um `for`, tratando todo o array como uma unica palavra."
+    ],
+    "relatedCommands": ["bash-arrays-associative", "bash-for-loop"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Arrays.html",
+    "tags": ["bash", "array", "lista"],
+    "keywords": ["array bash", "lista bash", "vetor shell"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-arrays-associative",
+    "category": "Bash",
+    "subcategory": "Arrays",
+    "title": "Arrays associativos (declare -A)",
+    "description": "Estrutura tipo dicionario que associa chaves textuais a valores, disponivel a partir do Bash 4.",
+    "syntax": "declare -A mapa\nmapa[chave]=valor",
+    "example": "declare -A cores\ncores[maca]=\"vermelho\"\ncores[banana]=\"amarelo\"\necho \"${cores[maca]}\"\nfor chave in \"${!cores[@]}\"; do\n  echo \"$chave -> ${cores[$chave]}\"\ndone",
+    "result": "vermelho\nmaca -> vermelho\nbanana -> amarelo",
+    "notes": [
+      "`${!mapa[@]}` expande para a lista de chaves do array associativo.",
+      "Requer Bash 4.0+; o macOS ate pouco tempo atras vinha com Bash 3.2, sem suporte a `declare -A`."
+    ],
+    "bestPractices": [
+      "Sempre declare o array associativo com `declare -A` antes de usa-lo, senao o Bash cria um array indexado comum."
+    ],
+    "commonMistakes": [
+      "Esquecer `declare -A` e obter o erro 'array indice invalido' ao usar chaves nao numericas."
+    ],
+    "relatedCommands": ["bash-arrays-indexed", "bash-for-loop"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 4.0+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Arrays.html",
+    "tags": ["bash", "array associativo", "dicionario"],
+    "keywords": ["array associativo bash", "dicionario shell", "declare -A"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-if-else",
+    "category": "Bash",
+    "subcategory": "Estruturas condicionais",
+    "title": "Estrutura if/elif/else",
+    "description": "Executa blocos de codigo condicionalmente com base no status de saida de um comando ou expressao de teste.",
+    "syntax": "if [[ condicao ]]; then\n  comandos\nelif [[ outra_condicao ]]; then\n  comandos\nelse\n  comandos\nfi",
+    "example": "idade=20\nif [[ $idade -ge 18 ]]; then\n  echo \"Maior de idade\"\nelse\n  echo \"Menor de idade\"\nfi",
+    "result": "Maior de idade",
+    "notes": [
+      "`[[ ]]` e uma extensao do Bash mais segura e flexivel que `[ ]` (test), suportando `&&`, `||` e regex.",
+      "O `if` avalia o codigo de saida ($?) do comando: 0 e verdadeiro, diferente de 0 e falso."
+    ],
+    "bestPractices": [
+      "Prefira `[[ ]]` a `[ ]` em scripts exclusivos para Bash, pois evita problemas de word splitting."
+    ],
+    "commonMistakes": [
+      "Esquecer espacos dentro dos colchetes (`[[condicao]]`), o que gera erro de sintaxe."
+    ],
+    "relatedCommands": ["bash-test-conditionals", "bash-case", "bash-exit-codes"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html",
+    "tags": ["bash", "condicional", "if"],
+    "keywords": ["if bash", "condicional shell", "if else bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-case",
+    "category": "Bash",
+    "subcategory": "Estruturas condicionais",
+    "title": "case (switch)",
+    "description": "Compara um valor contra varios padroes, executando o bloco do primeiro padrao que casar. Equivalente ao switch de outras linguagens.",
+    "syntax": "case $variavel in\n  padrao1) comandos ;;\n  padrao2|padrao3) comandos ;;\n  *) comandos_padrao ;;\nesac",
+    "example": "read -p \"Ambiente: \" env\ncase $env in\n  dev|development) echo \"Modo debug ativo\" ;;\n  prod|production) echo \"Modo producao\" ;;\n  *) echo \"Ambiente desconhecido\" ;;\nesac",
+    "result": "Se digitar 'prod': Modo producao",
+    "notes": [
+      "Cada padrao suporta glob (`*`, `?`, `[abc]`) e multiplas alternativas separadas por `|`.",
+      "`;;` finaliza o bloco; `;;&` (Bash 4+) continua testando os proximos padroes mesmo apos um casamento."
+    ],
+    "bestPractices": ["Sempre inclua um padrao `*)` para tratar valores inesperados."],
+    "commonMistakes": [
+      "Esquecer `;;` ao final de cada bloco, fazendo o script executar o proximo padrao (fallthrough indesejado)."
+    ],
+    "relatedCommands": ["bash-if-else", "bash-getopts"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html",
+    "tags": ["bash", "case", "switch"],
+    "keywords": ["case bash", "switch shell", "case esac"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-for-loop",
+    "category": "Bash",
+    "subcategory": "Lacos",
+    "title": "for loop",
+    "description": "Itera sobre uma lista de valores, um array ou um intervalo numerico, executando um bloco de comandos a cada iteracao.",
+    "syntax": "for var in lista; do\n  comandos\ndone",
+    "example": "for arquivo in *.log; do\n  echo \"Processando $arquivo\"\ndone\n\nfor i in {1..5}; do\n  echo \"Iteracao $i\"\ndone",
+    "result": "Processando app.log\nProcessando error.log\nIteracao 1\n...\nIteracao 5",
+    "notes": [
+      "Tambem existe a forma estilo C: `for (( i=0; i<10; i++ )); do ... done`.",
+      "`{1..5}` e brace expansion, resolvida antes do loop comecar."
+    ],
+    "bestPractices": [
+      "Use `\"${array[@]}\"` (com aspas) ao iterar sobre arrays para preservar itens com espacos."
+    ],
+    "commonMistakes": [
+      "Iterar sobre a saida de `ls` em vez de usar glob diretamente (`for f in *.txt`), o que quebra com nomes de arquivo contendo espacos."
+    ],
+    "relatedCommands": ["bash-while-loop", "bash-arrays-indexed"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html",
+    "tags": ["bash", "loop", "for"],
+    "keywords": ["for bash", "laco for shell", "loop bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-while-loop",
+    "category": "Bash",
+    "subcategory": "Lacos",
+    "title": "while loop",
+    "description": "Repete um bloco de comandos enquanto a condicao de teste retornar status de saida 0 (verdadeiro).",
+    "syntax": "while [[ condicao ]]; do\n  comandos\ndone",
+    "example": "contador=1\nwhile [[ $contador -le 3 ]]; do\n  echo \"Contagem: $contador\"\n  (( contador++ ))\ndone",
+    "result": "Contagem: 1\nContagem: 2\nContagem: 3",
+    "notes": [
+      "`while read -r linha; do ... done < arquivo` e um padrao comum para processar arquivos linha a linha."
+    ],
+    "bestPractices": [
+      "Use `read -r` (com -r) dentro de `while` para nao interpretar barras invertidas como escape."
+    ],
+    "commonMistakes": [
+      "Esquecer de atualizar a variavel de controle dentro do loop, causando loop infinito."
+    ],
+    "relatedCommands": ["bash-until-loop", "bash-read-builtin"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html",
+    "tags": ["bash", "loop", "while"],
+    "keywords": ["while bash", "laco while shell", "loop condicional"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-until-loop",
+    "category": "Bash",
+    "subcategory": "Lacos",
+    "title": "until loop",
+    "description": "Repete um bloco de comandos ate que a condicao de teste retorne status de saida 0 (verdadeiro) — o inverso logico do while.",
+    "syntax": "until [[ condicao ]]; do\n  comandos\ndone",
+    "example": "contador=1\nuntil [[ $contador -gt 3 ]]; do\n  echo \"Tentativa $contador\"\n  (( contador++ ))\ndone",
+    "result": "Tentativa 1\nTentativa 2\nTentativa 3",
+    "notes": [
+      "Util para esperar uma condicao se tornar verdadeira, ex: aguardar um servico subir (`until curl -s host; do sleep 1; done`)."
+    ],
+    "bestPractices": [
+      "Prefira `until` a `while` quando a condicao natural do problema for 'repita ate que X aconteca', melhorando a legibilidade."
+    ],
+    "commonMistakes": [
+      "Confundir a logica invertida do `until` com `while`, invertendo a condicao por engano."
+    ],
+    "relatedCommands": ["bash-while-loop", "bash-for-loop"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html",
+    "tags": ["bash", "loop", "until"],
+    "keywords": ["until bash", "laco until shell"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-functions",
+    "category": "Bash",
+    "subcategory": "Funcoes",
+    "title": "Funcoes",
+    "description": "Agrupam comandos reutilizaveis sob um nome, recebendo argumentos posicionais e podendo ser chamadas como qualquer comando.",
+    "syntax": "nome_da_funcao() {\n  comandos\n}",
+    "example": "saudacao() {\n  echo \"Ola, $1! Voce tem $2 anos.\"\n}\nsaudacao \"Ana\" 25",
+    "result": "Ola, Ana! Voce tem 25 anos.",
+    "parameters": [
+      {
+        "name": "$1, $2, ...",
+        "description": "Argumentos posicionais recebidos pela funcao.",
+        "required": false
+      },
+      {
+        "name": "$#",
+        "description": "Numero total de argumentos recebidos.",
+        "required": false
+      },
+      {
+        "name": "$@",
+        "description": "Todos os argumentos, cada um como palavra separada.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "A palavra-chave `function` antes do nome e opcional e especifica do Bash; a forma `nome() { }` e mais portavel."
+    ],
+    "bestPractices": [
+      "Declare variaveis auxiliares com `local` para nao poluir o escopo global.",
+      "Defina funcoes no topo do script, antes do bloco principal que as invoca."
+    ],
+    "commonMistakes": [
+      "Esperar que a funcao retorne um valor com `return` como em outras linguagens — `return` so define o status de saida (0-255), nao um valor arbitrario."
+    ],
+    "relatedCommands": ["bash-function-return", "bash-local-vars"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html",
+    "tags": ["bash", "funcao", "shell"],
+    "keywords": ["funcao bash", "function shell", "definir funcao"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-function-return",
+    "category": "Bash",
+    "subcategory": "Funcoes",
+    "title": "Retorno de funcoes e status",
+    "description": "Funcoes em Bash nao retornam valores arbitrarios: `return` define apenas um codigo de saida numerico (0-255). Para 'retornar' dados, usa-se stdout capturado com command substitution.",
+    "syntax": "funcao() {\n  return codigo_numerico\n}\nresultado=$(funcao)",
+    "example": "dobro() {\n  echo $(( $1 * 2 ))\n}\nvalor=$(dobro 21)\necho \"$valor\"",
+    "result": "42",
+    "returns": "Codigo de saida (0-255) via `return`, ou dados via stdout capturados com `$(...)`.",
+    "notes": [
+      "Sem `return` explicito, a funcao retorna o status de saida do ultimo comando executado nela."
+    ],
+    "bestPractices": [
+      "Use `echo`/`printf` para 'retornar' dados e capture com `$(funcao)`; reserve `return` para indicar sucesso/falha."
+    ],
+    "commonMistakes": [
+      "Tentar fazer `resultado = funcao()` esperando um valor de retorno direto como em Python ou JavaScript."
+    ],
+    "relatedCommands": ["bash-functions", "bash-exit-codes", "bash-command-substitution"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html",
+    "tags": ["bash", "funcao", "return"],
+    "keywords": ["return bash", "retorno de funcao shell", "status de saida funcao"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-getopts",
+    "category": "Bash",
+    "subcategory": "Funcoes",
+    "title": "getopts (parsing de flags)",
+    "description": "Builtin para processar opcoes de linha de comando no estilo POSIX (-a, -b valor) dentro de scripts.",
+    "syntax": "while getopts \"a:bh\" opt; do\n  case $opt in\n    a) arg=\"$OPTARG\" ;;\n    b) flag_b=true ;;\n    h) echo \"uso: script -a valor -b\" ;;\n  esac\ndone",
+    "example": "while getopts \"n:v\" opt; do\n  case $opt in\n    n) nome=\"$OPTARG\" ;;\n    v) verboso=true ;;\n  esac\ndone\necho \"Nome: $nome\"",
+    "result": "Chamando `./script.sh -n Carlos -v` imprime: Nome: Carlos",
+    "parameters": [
+      {
+        "name": "OPTARG",
+        "description": "Contem o valor do argumento quando a opcao espera um valor (indicado por ':').",
+        "required": false
+      },
+      {
+        "name": "OPTIND",
+        "description": "Indice da proxima opcao a ser processada; deve ser resetado entre chamadas repetidas de getopts.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Colocar `:` apos uma letra na string de opcoes (ex: `n:`) indica que ela exige um argumento."
+    ],
+    "bestPractices": [
+      "Para flags longas (--nome=valor) prefira um parser manual com `case \"$1\" in --nome=*)` ou a ferramenta externa `getopt`."
+    ],
+    "commonMistakes": [
+      "Nao resetar `OPTIND=1` ao chamar `getopts` mais de uma vez no mesmo script/shell."
+    ],
+    "relatedCommands": ["bash-case", "bash-functions"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html",
+    "tags": ["bash", "cli", "argumentos"],
+    "keywords": ["getopts bash", "parse argumentos shell", "flags linha de comando"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-redirection",
+    "category": "Bash",
+    "subcategory": "Redirecionamento e pipes",
+    "title": "Redirecionamento (>, >>, <, 2>)",
+    "description": "Redireciona a entrada ou saida padrao de um comando de/para arquivos, em vez do terminal.",
+    "syntax": "comando > arquivo   # stdout, sobrescreve\ncomando >> arquivo  # stdout, anexa\ncomando < arquivo   # stdin\ncomando 2> erro.log # stderr\ncomando > saida.log 2>&1 # stdout e stderr no mesmo arquivo",
+    "example": "echo \"log de inicio\" > app.log\necho \"segunda linha\" >> app.log\nls arquivo_inexistente 2> erros.log",
+    "result": "app.log contem as duas linhas; erros.log contem a mensagem de erro do ls.",
+    "flags": [
+      {
+        "flag": ">",
+        "description": "Redireciona stdout, sobrescrevendo o arquivo de destino."
+      },
+      {
+        "flag": ">>",
+        "description": "Redireciona stdout, anexando ao final do arquivo."
+      },
+      {
+        "flag": "2>",
+        "description": "Redireciona apenas stderr (descritor de arquivo 2)."
+      },
+      {
+        "flag": "&>",
+        "description": "Redireciona stdout e stderr juntos para o mesmo destino (Bash)."
+      }
+    ],
+    "notes": [
+      "A ordem importa: `comando > log 2>&1` funciona, mas `comando 2>&1 > log` nao redireciona stderr para o arquivo."
+    ],
+    "bestPractices": [
+      "Use `/dev/null` como destino quando quiser descartar uma saida (ex: `comando > /dev/null 2>&1`)."
+    ],
+    "commonMistakes": [
+      "Inverter a ordem de `2>&1` e `>arquivo`, fazendo stderr continuar indo para o terminal."
+    ],
+    "relatedCommands": ["bash-pipes", "bash-heredoc"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Redirections.html",
+    "tags": ["bash", "redirecionamento", "io"],
+    "keywords": ["redirecionamento bash", "stdout stderr", "redirect shell"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-pipes",
+    "category": "Bash",
+    "subcategory": "Redirecionamento e pipes",
+    "title": "Pipes (|)",
+    "description": "Conecta a saida padrao (stdout) de um comando diretamente a entrada padrao (stdin) do proximo, formando um pipeline.",
+    "syntax": "comando1 | comando2 | comando3",
+    "example": "ps aux | grep node | awk '{print $2}'",
+    "result": "Lista apenas o PID dos processos node em execucao.",
+    "notes": [
+      "Cada comando do pipeline roda em um subshell separado; variaveis definidas dentro de um pipe nao sobrevivem apos ele.",
+      "`set -o pipefail` faz o status de saida do pipeline refletir o primeiro comando que falhar, nao apenas o ultimo."
+    ],
+    "bestPractices": [
+      "Combine `pipefail` em scripts que dependem do status de saida de um pipeline inteiro."
+    ],
+    "commonMistakes": [
+      "Atribuir uma variavel dentro de um pipe (`... | while read x; do total=$x; done`) e esperar que `total` exista fora do loop."
+    ],
+    "relatedCommands": [
+      "bash-redirection",
+      "bash-set-euo-pipefail",
+      "bash-process-substitution"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Pipelines.html",
+    "tags": ["bash", "pipe", "pipeline"],
+    "keywords": ["pipe bash", "pipeline shell", "encadear comandos"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-process-substitution",
+    "category": "Bash",
+    "subcategory": "Redirecionamento e pipes",
+    "title": "Substituicao de processo (<(...) e >(...))",
+    "description": "Trata a saida (ou entrada) de um comando como se fosse um arquivo temporario, permitindo usa-la onde um caminho de arquivo e esperado.",
+    "syntax": "comando <(outro_comando)\ncomando >(outro_comando)",
+    "example": "diff <(sort arquivo1.txt) <(sort arquivo2.txt)",
+    "result": "Mostra as diferencas entre as duas listas ja ordenadas, sem precisar criar arquivos temporarios manualmente.",
+    "notes": [
+      "E uma extensao do Bash (nao POSIX); internamente usa descritores de arquivo em /dev/fd/."
+    ],
+    "bestPractices": [
+      "Use process substitution para evitar subshells em `while read` quando precisar que variaveis sobrevivam apos o loop: `while read -r linha; do ...; done < <(comando)`."
+    ],
+    "commonMistakes": [
+      "Confundir `<(...)` (substituicao de processo) com `$(...)` (substituicao de comando) — sao mecanismos diferentes."
+    ],
+    "relatedCommands": ["bash-pipes", "bash-command-substitution"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html",
+    "tags": ["bash", "process substitution", "avancado"],
+    "keywords": [
+      "process substitution bash",
+      "substituicao de processo",
+      "diff sort bash"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-command-substitution",
+    "category": "Bash",
+    "subcategory": "Substituicao de comando",
+    "title": "Substituicao de comando $(...)",
+    "description": "Executa um comando em um subshell e substitui a expressao pela saida padrao (stdout) desse comando.",
+    "syntax": "variavel=$(comando)",
+    "example": "data_atual=$(date +%Y-%m-%d)\necho \"Hoje e $data_atual\"",
+    "result": "Hoje e 2026-07-22",
+    "notes": [
+      "A sintaxe antiga com crases (`` `comando` ``) ainda funciona mas nao aninha bem e e considerada legada.",
+      "O shell remove automaticamente quebras de linha finais da saida capturada."
+    ],
+    "bestPractices": [
+      "Prefira `$(comando)` a `` `comando` `` — e mais legivel e permite aninhamento (`$(comando1 $(comando2))`)."
+    ],
+    "commonMistakes": [
+      "Nao usar aspas ao usar o resultado (`arquivo=$(ls); echo $arquivo`), sofrendo word splitting se houver espacos."
+    ],
+    "relatedCommands": ["bash-arithmetic-expansion", "bash-function-return"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html",
+    "tags": ["bash", "substituicao de comando"],
+    "keywords": [
+      "command substitution bash",
+      "capturar saida de comando",
+      "backticks bash"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-parameter-expansion",
+    "category": "Bash",
+    "subcategory": "Expansao de parametros",
+    "title": "Expansao de parametros (${var})",
+    "description": "Sintaxe `${...}` que permite acessar, transformar e extrair partes do valor de uma variavel diretamente no shell.",
+    "syntax": "${var}\n${#var}          # tamanho\n${var:offset:len} # substring\n${var/padrao/novo} # substituicao",
+    "example": "caminho=\"/home/usuario/arquivo.tar.gz\"\necho \"${caminho##*/}\"   # remove tudo ate a ultima /\necho \"${caminho%.tar.gz}\" # remove sufixo .tar.gz",
+    "result": "arquivo.tar.gz\n/home/usuario/arquivo",
+    "parameters": [
+      {
+        "name": "${var#padrao}",
+        "description": "Remove o menor prefixo que casar com o padrao.",
+        "required": false
+      },
+      {
+        "name": "${var##padrao}",
+        "description": "Remove o maior prefixo que casar com o padrao (util para basename).",
+        "required": false
+      },
+      {
+        "name": "${var%padrao}",
+        "description": "Remove o menor sufixo que casar com o padrao.",
+        "required": false
+      },
+      {
+        "name": "${var%%padrao}",
+        "description": "Remove o maior sufixo que casar com o padrao (util para dirname/extensao).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Essas operacoes evitam chamar processos externos como `basename`, `dirname` ou `sed` para tarefas simples de string."
+    ],
+    "bestPractices": [
+      "Prefira expansao de parametros nativa a `sed`/`awk`/`cut` para transformacoes simples — e mais rapido, pois nao cria subprocessos."
+    ],
+    "commonMistakes": ["Confundir `#` (prefixo) com `%` (sufixo) na direcao do corte."],
+    "relatedCommands": [
+      "bash-parameter-expansion-defaults",
+      "bash-string-manipulation",
+      "bash-variables"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html",
+    "tags": ["bash", "expansao de parametros", "string"],
+    "keywords": [
+      "parameter expansion bash",
+      "manipular string shell",
+      "basename dirname bash"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-parameter-expansion-defaults",
+    "category": "Bash",
+    "subcategory": "Expansao de parametros",
+    "title": "Valores padrao em expansao (:-, :=, :?, :+)",
+    "description": "Fornece valores padrao, atribui, ou emite erros quando uma variavel esta vazia ou nao definida, sem precisar de um `if` explicito.",
+    "syntax": "${var:-padrao}  # usa 'padrao' se var estiver vazia/indefinida, sem alterar var\n${var:=padrao}  # idem, mas ATRIBUI 'padrao' a var\n${var:?mensagem} # emite erro e sai se var estiver vazia/indefinida\n${var:+valor}   # usa 'valor' somente se var ESTIVER definida",
+    "example": "ambiente=\"${AMBIENTE:-desenvolvimento}\"\necho \"$ambiente\"\n\n: \"${API_KEY:?Erro: defina a variavel API_KEY}\"",
+    "result": "desenvolvimento\n(se API_KEY nao existir: script.sh: line 4: API_KEY: Erro: defina a variavel API_KEY)",
+    "notes": [
+      "O `:` inicial em cada operador torna a checagem sensivel tambem a variaveis vazias, nao so indefinidas; sem o `:` (ex: `${var-padrao}`), so indefinidas contam."
+    ],
+    "bestPractices": [
+      "Use `${var:?mensagem}` no inicio de scripts para validar variaveis de ambiente obrigatorias e falhar cedo com mensagem clara."
+    ],
+    "commonMistakes": [
+      "Confundir `${var:-padrao}` (nao altera var) com `${var:=padrao}` (atribui var permanentemente)."
+    ],
+    "relatedCommands": ["bash-parameter-expansion", "bash-set-euo-pipefail"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html",
+    "tags": ["bash", "expansao de parametros", "valores padrao"],
+    "keywords": [
+      "valor padrao variavel bash",
+      "parametro obrigatorio shell",
+      "default value bash"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-string-manipulation",
+    "category": "Bash",
+    "subcategory": "Expansao de parametros",
+    "title": "Manipulacao de strings (substituicao, caixa)",
+    "description": "Operadores de expansao para substituir trechos de texto e converter maiusculas/minusculas sem chamar comandos externos.",
+    "syntax": "${var/antigo/novo}   # substitui a 1a ocorrencia\n${var//antigo/novo}  # substitui todas as ocorrencias\n${var^^}             # converte tudo para maiusculo\n${var,,}             # converte tudo para minusculo",
+    "example": "frase=\"o rato roeu a roupa\"\necho \"${frase//roeu/comeu}\"\necho \"${frase^^}\"",
+    "result": "o rato comeu a roupa\nO RATO ROEU A ROUPA",
+    "notes": [
+      "`${var^}` e `${var,}` alteram apenas o primeiro caractere para maiusculo/minusculo, respectivamente."
+    ],
+    "bestPractices": [
+      "Use essas expansoes nativas em vez de invocar `tr` ou `sed` para transformacoes simples de caixa e substituicao."
+    ],
+    "commonMistakes": [
+      "Usar `${var/x/y}` esperando substituir todas as ocorrencias — apenas a primeira e trocada; para todas, use `//`."
+    ],
+    "relatedCommands": ["bash-parameter-expansion", "bash-variables"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 4.0+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html",
+    "tags": ["bash", "string", "expansao de parametros"],
+    "keywords": ["substituir string bash", "maiusculo minusculo bash", "replace shell"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-arithmetic-expansion",
+    "category": "Bash",
+    "subcategory": "Expansao de parametros",
+    "title": "Expansao aritmetica $(( ))",
+    "description": "Avalia expressoes matematicas com inteiros diretamente no shell, sem precisar de comandos externos como `expr` ou `bc`.",
+    "syntax": "resultado=$(( expressao ))\n(( expressao )) # apenas avalia, sem armazenar",
+    "example": "a=10\nb=3\necho $(( a + b ))\necho $(( a % b ))\n(( a++ ))\necho \"$a\"",
+    "result": "13\n1\n11",
+    "notes": [
+      "Suporta operadores +, -, *, /, %, **, e bitwise (&, |, ^, <<, >>), alem de incremento/decremento (++, --).",
+      "So opera com numeros inteiros; para ponto flutuante, use `bc` ou `awk`."
+    ],
+    "bestPractices": [
+      "Use `(( expressao ))` (sem atribuir a variavel) quando so precisar do efeito colateral, ex: `(( contador++ ))`."
+    ],
+    "commonMistakes": [
+      "Tentar fazer divisao ou calculo com casas decimais dentro de `$(( ))`, obtendo apenas o resultado inteiro truncado."
+    ],
+    "relatedCommands": ["bash-command-substitution", "bash-variables"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Arithmetic-Expansion.html",
+    "tags": ["bash", "aritmetica", "matematica"],
+    "keywords": ["aritmetica bash", "calculo shell", "expr bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-test-conditionals",
+    "category": "Bash",
+    "subcategory": "Estruturas condicionais",
+    "title": "Condicionais de teste ([ ], [[ ]], test)",
+    "description": "Avaliam expressoes (comparacao numerica, string, existencia de arquivo) retornando um status de saida usado por `if`, `while` e `&&`/`||`.",
+    "syntax": "[[ expressao ]]\ntest expressao\n[ expressao ]",
+    "example": "arquivo=\"config.yaml\"\nif [[ -f \"$arquivo\" && -r \"$arquivo\" ]]; then\n  echo \"Arquivo existe e e legivel\"\nfi",
+    "result": "Arquivo existe e e legivel",
+    "flags": [
+      {
+        "flag": "-f",
+        "description": "Verdadeiro se o caminho existir e for um arquivo regular."
+      },
+      {
+        "flag": "-d",
+        "description": "Verdadeiro se o caminho existir e for um diretorio."
+      },
+      {
+        "flag": "-z",
+        "description": "Verdadeiro se a string for vazia."
+      },
+      {
+        "flag": "-n",
+        "description": "Verdadeiro se a string NAO for vazia."
+      },
+      {
+        "flag": "-eq / -ne / -lt / -gt / -le / -ge",
+        "description": "Comparacoes numericas (igual, diferente, menor, maior, menor-igual, maior-igual)."
+      }
+    ],
+    "notes": [
+      "`[[ ]]` e um builtin do Bash (mais seguro, suporta `&&`/`||`/regex internamente); `[ ]` e `test` sao POSIX e mais portaveis para shells como `sh`/`dash`."
+    ],
+    "bestPractices": [
+      "Use `==` e `!=` para strings dentro de `[[ ]]`, e `-eq`/`-ne` para numeros — misturar os dois e um erro comum."
+    ],
+    "commonMistakes": [
+      "Usar `[ $var == valor ]` sem aspas em `$var`, causando erro de sintaxe quando a variavel esta vazia ou contem espacos."
+    ],
+    "relatedCommands": ["bash-if-else", "bash-exit-codes"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html",
+    "tags": ["bash", "teste", "condicional"],
+    "keywords": ["test bash", "comparacao shell", "condicional arquivo bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-heredoc",
+    "category": "Bash",
+    "subcategory": "Redirecionamento e pipes",
+    "title": "Here-document (<<EOF)",
+    "description": "Redireciona um bloco de texto multilinha como entrada padrao de um comando, util para gerar arquivos de configuracao ou enviar comandos a outro programa.",
+    "syntax": "comando <<EOF\nlinha 1\nlinha 2\nEOF",
+    "example": "cat <<EOF > config.txt\nhost=localhost\nporta=5432\nEOF",
+    "result": "Cria config.txt com as duas linhas de configuracao.",
+    "notes": [
+      "O delimitador (EOF no exemplo) pode ter qualquer nome; e comum usar EOF, END ou similar.",
+      "Colocar o delimitador entre aspas (`<<'EOF'`) impede a expansao de variaveis dentro do bloco.",
+      "`<<-EOF` permite indentar o bloco e as linhas de fechamento com tabs, que sao ignoradas."
+    ],
+    "bestPractices": [
+      "Use `<<'EOF'` (delimitador entre aspas) quando o conteudo nao deve ter `$variaveis` expandidas, como em templates literais."
+    ],
+    "commonMistakes": [
+      "Deixar espacos antes do delimitador de fechamento (EOF), o que impede o shell de reconhecer o fim do bloco."
+    ],
+    "relatedCommands": ["bash-here-string", "bash-redirection"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Here-Documents.html",
+    "tags": ["bash", "heredoc", "redirecionamento"],
+    "keywords": ["heredoc bash", "here document shell", "texto multilinha bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-here-string",
+    "category": "Bash",
+    "subcategory": "Redirecionamento e pipes",
+    "title": "Here-string (<<<)",
+    "description": "Redireciona uma unica string como entrada padrao de um comando, sem precisar de um arquivo ou bloco multilinha.",
+    "syntax": "comando <<< \"string\"",
+    "example": "read -r nome sobrenome <<< \"Joao Silva\"\necho \"$nome / $sobrenome\"",
+    "result": "Joao / Silva",
+    "notes": [
+      "E uma alternativa mais concisa a `echo \"string\" | comando` quando so ha uma linha de entrada."
+    ],
+    "bestPractices": [
+      "Prefira here-string a `echo | comando` — evita criar um processo extra (echo) e um pipe."
+    ],
+    "commonMistakes": [
+      "Confundir `<<<` (here-string, uma unica string) com `<<` (here-document, bloco multilinha com delimitador)."
+    ],
+    "relatedCommands": ["bash-heredoc", "bash-read-builtin"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 2.05b+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Here-Strings.html",
+    "tags": ["bash", "here-string", "redirecionamento"],
+    "keywords": ["here string bash", "redirecionar string shell"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-read-builtin",
+    "category": "Bash",
+    "subcategory": "Fundamentos",
+    "title": "read (ler entrada)",
+    "description": "Le uma linha da entrada padrao e a divide em uma ou mais variaveis, usada para interacao com o usuario ou processamento de arquivos.",
+    "syntax": "read [-p prompt] [-r] [-s] variavel",
+    "example": "read -p \"Digite seu nome: \" nome\necho \"Ola, $nome!\"",
+    "result": "Digite seu nome: Pedro\nOla, Pedro!",
+    "flags": [
+      {
+        "flag": "-p",
+        "description": "Exibe um texto de prompt antes de ler a entrada."
+      },
+      {
+        "flag": "-r",
+        "description": "Modo raw: nao interpreta barra invertida (\\) como caractere de escape."
+      },
+      {
+        "flag": "-s",
+        "description": "Modo silencioso: nao ecoa os caracteres digitados (util para senhas)."
+      },
+      {
+        "flag": "-a",
+        "description": "Le os valores em um array em vez de variaveis separadas."
+      }
+    ],
+    "notes": [
+      "Sem argumentos de variavel, `read` armazena a linha lida na variavel especial `$REPLY`."
+    ],
+    "bestPractices": [
+      "Sempre use `-r` ao ler entrada de arquivos com `while read -r linha`, para nao corromper caminhos com barras invertidas."
+    ],
+    "commonMistakes": [
+      "Omitir `-r` e ter barras invertidas de caminhos Windows/paths interpretadas como escapes indesejados."
+    ],
+    "relatedCommands": ["bash-while-loop", "bash-here-string"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-read",
+    "tags": ["bash", "read", "entrada"],
+    "keywords": ["read bash", "ler entrada shell", "input bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-trap",
+    "category": "Bash",
+    "subcategory": "Tratamento de erros e sinais",
+    "title": "trap (captura de sinais)",
+    "description": "Registra um comando ou funcao para ser executado quando o script recebe um sinal (SIGINT, SIGTERM) ou atinge um evento (EXIT, ERR).",
+    "syntax": "trap 'comandos' SINAL",
+    "example": "limpar() {\n  echo \"Limpando arquivos temporarios...\"\n  rm -f /tmp/meu_script.*\n}\ntrap limpar EXIT\n\ntrap 'echo \"Interrompido pelo usuario\"; exit 1' SIGINT",
+    "result": "Ao pressionar Ctrl+C ou o script terminar (sucesso ou erro), a rotina de limpeza e executada automaticamente.",
+    "parameters": [
+      {
+        "name": "EXIT",
+        "description": "Pseudo-sinal disparado sempre que o script termina, seja por sucesso, erro ou sinal externo.",
+        "required": false
+      },
+      {
+        "name": "ERR",
+        "description": "Disparado quando um comando falha (util combinado com `set -e`).",
+        "required": false
+      },
+      {
+        "name": "SIGINT",
+        "description": "Disparado ao receber Ctrl+C.",
+        "required": false
+      },
+      {
+        "name": "SIGTERM",
+        "description": "Disparado quando o processo recebe um pedido de encerramento padrao (ex: `kill`).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`trap - SINAL` remove um trap previamente registrado, restaurando o comportamento padrao."
+    ],
+    "bestPractices": [
+      "Registre `trap limpar EXIT` no inicio de scripts que criam arquivos temporarios ou locks, garantindo limpeza mesmo em falhas."
+    ],
+    "commonMistakes": [
+      "Registrar o trap depois de criar recursos temporarios, deixando uma janela onde uma falha nao aciona a limpeza."
+    ],
+    "relatedCommands": ["bash-exit-codes", "bash-set-euo-pipefail"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-trap",
+    "tags": ["bash", "trap", "sinais"],
+    "keywords": ["trap bash", "sinais shell", "sigint sigterm bash", "cleanup script"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-exit-codes",
+    "category": "Bash",
+    "subcategory": "Tratamento de erros e sinais",
+    "title": "Codigos de saida ($? e exit)",
+    "description": "Todo comando em Bash retorna um codigo de saida numerico (0-255) ao terminar: 0 significa sucesso, qualquer valor diferente indica algum tipo de falha.",
+    "syntax": "comando\necho $?      # codigo de saida do ultimo comando\nexit codigo  # termina o script com o codigo especificado",
+    "example": "grep \"erro\" app.log\nif [[ $? -eq 0 ]]; then\n  echo \"Encontrado\"\nelse\n  echo \"Nao encontrado\"\nfi",
+    "result": "Encontrado (se a palavra 'erro' existir no arquivo) ou Nao encontrado, com base no status de saida do grep.",
+    "returns": "Um inteiro de 0 a 255; 0 = sucesso, 1-255 = diferentes tipos de falha (a convencao varia por comando).",
+    "notes": [
+      "`$?` so reflete o status do comando IMEDIATAMENTE anterior — se voce rodar outro comando entre o alvo e a checagem, o valor se perde.",
+      "`exit` sem argumento usa o status de saida do ultimo comando executado."
+    ],
+    "bestPractices": [
+      "Prefira checar o codigo diretamente em `if comando; then` a capturar `$?` separadamente, quando possivel."
+    ],
+    "commonMistakes": [
+      "Rodar um comando de log ou echo entre o comando alvo e a checagem de `$?`, sobrescrevendo o valor que se queria capturar."
+    ],
+    "relatedCommands": ["bash-if-else", "bash-set-euo-pipefail", "bash-function-return"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Exit-Status.html",
+    "tags": ["bash", "exit code", "status"],
+    "keywords": ["exit code bash", "codigo de saida shell", "status de saida bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-set-euo-pipefail",
+    "category": "Bash",
+    "subcategory": "Scripts robustos",
+    "title": "set -euo pipefail",
+    "description": "Combinacao de flags que tornam scripts Bash mais seguros, fazendo-os falhar rapido e de forma visivel em vez de continuar executando em estado inconsistente.",
+    "syntax": "set -euo pipefail",
+    "example": "#!/usr/bin/env bash\nset -euo pipefail\n\narquivo=\"$1\"\nconteudo=$(cat \"$arquivo\")\necho \"$conteudo\"",
+    "result": "Se $1 nao for passado (variavel indefinida) ou `cat` falhar, o script para imediatamente com erro, em vez de continuar silenciosamente.",
+    "flags": [
+      {
+        "flag": "-e (errexit)",
+        "description": "Encerra o script imediatamente se qualquer comando retornar status diferente de 0."
+      },
+      {
+        "flag": "-u (nounset)",
+        "description": "Trata o uso de variaveis nao definidas como erro fatal, em vez de expandir para string vazia."
+      },
+      {
+        "flag": "-o pipefail",
+        "description": "Faz o status de saida de um pipeline refletir o primeiro comando que falhar, nao apenas o ultimo."
+      }
+    ],
+    "notes": [
+      "`-e` tem excecoes conhecidas: nao dispara dentro de condicoes de `if`/`while`, nem no lado esquerdo de `&&`/`||`.",
+      "E considerado o padrao de 'script robusto' recomendado pela comunidade, mas nao substitui tratamento de erro explicito em pontos criticos."
+    ],
+    "bestPractices": [
+      "Coloque `set -euo pipefail` logo apos o shebang em todo script de producao.",
+      "Combine com `trap ... ERR` para logar o contexto exato de uma falha inesperada."
+    ],
+    "commonMistakes": [
+      "Confiar cegamente em `set -e` para capturar todo tipo de erro — comandos dentro de `if`, `&&/||` ou substituicao de comando podem escapar da checagem."
+    ],
+    "relatedCommands": ["bash-exit-codes", "bash-trap", "bash-pipes"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 3+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html",
+    "tags": ["bash", "boas praticas", "erro"],
+    "keywords": [
+      "set -euo pipefail",
+      "script robusto bash",
+      "errexit nounset",
+      "bash strict mode"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-shortcut-ctrl-r",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Ctrl+R (busca reversa no historico)",
+    "description": "Abre uma busca incremental reversa no historico de comandos, permitindo encontrar e reexecutar comandos digitados anteriormente.",
+    "shortcut": "Ctrl+R",
+    "example": "Pressione Ctrl+R e digite parte de um comando ja executado, como 'docker'.",
+    "result": "(reverse-i-search)`docker': docker compose up -d --build",
+    "notes": [
+      "Pressionar Ctrl+R novamente avanca para ocorrencias mais antigas que casam com o mesmo padrao.",
+      "Enter executa o comando encontrado; setas ou Esc saem da busca mantendo o comando na linha para edicao."
+    ],
+    "bestPractices": [
+      "Combine com um `HISTSIZE`/`HISTFILESIZE` generosos no `.bashrc` para ter um historico de busca mais util."
+    ],
+    "commonMistakes": [
+      "Nao saber que Ctrl+G ou Ctrl+C cancelam a busca sem executar nada."
+    ],
+    "relatedCommands": ["bash-bang-bang", "bash-history-expansion"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Readline",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Commands-For-History.html",
+    "tags": ["bash", "atalho", "historico"],
+    "keywords": ["ctrl+r bash", "busca historico terminal", "reverse search bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-shortcut-ctrl-a-e",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Ctrl+A / Ctrl+E (inicio/fim de linha)",
+    "description": "Move o cursor instantaneamente para o inicio ou o fim da linha de comando atual, sem precisar segurar a seta do teclado.",
+    "shortcut": "Ctrl+A (inicio) / Ctrl+E (fim)",
+    "example": "Digite um comando longo, pressione Ctrl+A para ir ao inicio e adicionar `sudo `.",
+    "result": "O cursor pula para a posicao 0 da linha, permitindo inserir texto no comeco sem apagar o resto.",
+    "notes": [
+      "Esses atalhos vem da biblioteca GNU Readline e tambem funcionam em muitos outros programas de linha de comando (psql, python REPL, etc)."
+    ],
+    "bestPractices": [
+      "Use Ctrl+A + `sudo ` + Enter como forma rapida de reexecutar o ultimo comando digitado (mas ainda nao enviado) com privilegios elevados."
+    ],
+    "commonMistakes": [
+      "Tentar usar Home/End quando o terminal ou multiplexador (tmux/screen) intercepta essas teclas de forma diferente — Ctrl+A/Ctrl+E sao mais consistentes entre ambientes."
+    ],
+    "relatedCommands": ["bash-shortcut-ctrl-r", "bash-ctrl-shortcuts-misc"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Readline",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Commands-For-Moving.html",
+    "tags": ["bash", "atalho", "readline"],
+    "keywords": [
+      "ctrl+a ctrl+e bash",
+      "mover cursor terminal",
+      "atalho inicio fim linha"
+    ],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-bang-bang",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "!! (repetir ultimo comando)",
+    "description": "Expansao de historico que substitui `!!` pelo comando completo executado imediatamente antes, permitindo reexecuta-lo ou compo-lo com outro comando.",
+    "shortcut": "!!",
+    "example": "apt install htop\nsudo !!",
+    "result": "sudo apt install htop (o !! e expandido para o comando anterior antes de rodar com sudo)",
+    "notes": [
+      "`!$` expande para o ultimo argumento do comando anterior (ex: `mkdir pasta && cd !$`).",
+      "`!*` expande para todos os argumentos do comando anterior."
+    ],
+    "bestPractices": [
+      "Use `sudo !!` como reflexo rapido quando esquecer `sudo` em um comando que precisava de privilegios elevados."
+    ],
+    "commonMistakes": [
+      "Usar `!!` sem revisar o que sera expandido em scripts ou contextos sensiveis — a expansao de historico e sensivel ao contexto e pode surpreender."
+    ],
+    "relatedCommands": ["bash-history-expansion", "bash-shortcut-ctrl-r"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 1+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/History-Interaction.html",
+    "tags": ["bash", "atalho", "historico"],
+    "keywords": ["!! bash", "repetir ultimo comando", "sudo !! bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-history-expansion",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Expansao de historico (!n, !string, !$)",
+    "description": "Conjunto de expansoes que referenciam comandos anteriores do historico por numero, por prefixo de texto ou por posicao de argumento.",
+    "syntax": "!n       # repete o comando de numero n no historico\n!string  # repete o comando mais recente que comeca com 'string'\n!$       # ultimo argumento do comando anterior\n!*       # todos os argumentos do comando anterior\n^antigo^novo # repete o ultimo comando substituindo 'antigo' por 'novo'",
+    "example": "history | tail -5\n!245\n\ncp arquivo.txt /backup/\ncd !$",
+    "result": "!245 reexecuta o comando de numero 245 do historico; `cd !$` entra em /backup/ (ultimo argumento do cp anterior).",
+    "notes": [
+      "`^antigo^novo` e um atalho rapido para corrigir um erro de digitacao no ultimo comando sem reescreve-lo por completo."
+    ],
+    "bestPractices": [
+      "Use `history | grep termo` para localizar o numero exato antes de usar `!n` em comandos criticos, evitando expandir o comando errado."
+    ],
+    "commonMistakes": [
+      "Usar `!string` sem certeza do que sera expandido e rodar um comando destrutivo por engano — sempre prefira revisar com `!string:p` (que so imprime, sem executar) quando em duvida."
+    ],
+    "relatedCommands": ["bash-bang-bang", "bash-shortcut-ctrl-r"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Bash 1+",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/History-Interaction.html",
+    "tags": ["bash", "historico", "atalho"],
+    "keywords": ["expansao de historico bash", "history bash", "!n bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  },
+  {
+    "id": "bash-ctrl-shortcuts-misc",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Ctrl+U / Ctrl+K / Ctrl+W / Ctrl+L",
+    "description": "Conjunto de atalhos Readline para editar rapidamente a linha de comando atual e limpar o terminal, sem usar o mouse.",
+    "shortcut": "Ctrl+U, Ctrl+K, Ctrl+W, Ctrl+L",
+    "example": "Digite um comando longo e pressione Ctrl+U para apaga-lo do cursor ate o inicio da linha.",
+    "result": "A parte da linha antes do cursor e removida e enviada para o 'kill ring' (pode ser colada de volta com Ctrl+Y).",
+    "flags": [
+      {
+        "flag": "Ctrl+U",
+        "description": "Apaga da posicao do cursor ate o inicio da linha."
+      },
+      {
+        "flag": "Ctrl+K",
+        "description": "Apaga da posicao do cursor ate o fim da linha."
+      },
+      {
+        "flag": "Ctrl+W",
+        "description": "Apaga a palavra imediatamente anterior ao cursor."
+      },
+      {
+        "flag": "Ctrl+L",
+        "description": "Limpa a tela do terminal (equivalente ao comando `clear`)."
+      },
+      {
+        "flag": "Ctrl+Y",
+        "description": "Cola (yank) o ultimo texto apagado por Ctrl+U/K/W."
+      }
+    ],
+    "notes": [
+      "Todo texto apagado com Ctrl+U/K/W vai para o 'kill ring' do Readline e pode ser recuperado com Ctrl+Y, similar a um clipboard local do terminal."
+    ],
+    "bestPractices": [
+      "Use Ctrl+L em vez de digitar `clear` — e mais rapido e nao entra no historico de comandos."
+    ],
+    "commonMistakes": [
+      "Nao saber que Ctrl+U apaga a linha inteira quando o cursor esta no fim, perdendo um comando longo ja digitado por engano."
+    ],
+    "relatedCommands": ["bash-shortcut-ctrl-a-e", "bash-shortcut-ctrl-r"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Readline",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Commands-For-Killing.html",
+    "tags": ["bash", "atalho", "readline"],
+    "keywords": ["ctrl+u ctrl+k bash", "limpar terminal atalho", "kill ring bash"],
+    "updatedAt": "2026-07-22",
+    "favorite": false
+  }
+]

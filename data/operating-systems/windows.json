@@ -1,0 +1,763 @@
+[
+  {
+    "id": "win-shortcut-win-key",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Tecla Windows (Win)",
+    "description": "Abre o Menu Iniciar, permitindo buscar aplicativos, arquivos e configurações. É a base de dezenas de combinações de atalho do sistema.",
+    "shortcut": "Win",
+    "notes": [
+      "Digitar imediatamente após abrir o menu já inicia uma busca no sistema, sem precisar clicar em nada."
+    ],
+    "bestPractices": [
+      "Combine com digitação direta para abrir programas mais rápido do que navegando por ícones (ex: Win, digitar 'calc', Enter)."
+    ],
+    "commonMistakes": [
+      "Não saber que segurar Win e pressionar outra tecla ativa dezenas de atalhos úteis que economizam cliques."
+    ],
+    "relatedCommands": ["win-shortcut-win-d", "win-shortcut-win-e", "win-shortcut-win-l"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "produtividade"],
+    "keywords": ["tecla windows", "menu iniciar", "atalho win"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-d",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + D — mostrar área de trabalho",
+    "description": "Minimiza (ou restaura) todas as janelas abertas de uma vez, exibindo a área de trabalho. Pressionar novamente traz as janelas de volta ao estado anterior.",
+    "shortcut": "Win + D",
+    "notes": [
+      "Diferente de minimizar janela por janela, este atalho age sobre todas simultaneamente."
+    ],
+    "relatedCommands": ["win-shortcut-win-m", "win-shortcut-win-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "area de trabalho"],
+    "keywords": ["mostrar area de trabalho", "minimizar tudo"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-e",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + E — abrir Explorador de Arquivos",
+    "description": "Abre uma nova janela do Explorador de Arquivos diretamente, sem precisar navegar pelo Menu Iniciar ou pela barra de tarefas.",
+    "shortcut": "Win + E",
+    "relatedCommands": ["win-file-explorer", "win-shortcut-win-d"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "explorador de arquivos"],
+    "keywords": ["abrir explorador de arquivos", "meu computador atalho"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-l",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + L — bloquear a tela",
+    "description": "Bloqueia imediatamente a sessão do usuário, exigindo senha/PIN/biometria para retomar. Essencial ao se afastar do computador em ambientes compartilhados.",
+    "shortcut": "Win + L",
+    "bestPractices": [
+      "Use sempre que se afastar do computador, mesmo por pouco tempo, especialmente em ambientes corporativos ou públicos."
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "seguranca"],
+    "keywords": ["bloquear tela windows", "travar computador"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-alt-tab",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Alt + Tab — alternar entre janelas",
+    "description": "Exibe uma lista visual das janelas abertas e permite alternar entre elas. Segurar Alt e pressionar Tab repetidamente percorre a lista; soltar Alt seleciona a janela em foco.",
+    "shortcut": "Alt + Tab",
+    "notes": [
+      "Ctrl + Alt + Tab abre a mesma lista mas fixa na tela, permitindo navegar com as setas sem segurar Alt."
+    ],
+    "bestPractices": ["Use Alt + Shift + Tab para percorrer a lista na ordem inversa."],
+    "relatedCommands": ["win-shortcut-win-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "janelas"],
+    "keywords": ["alternar janelas", "alt tab windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-tab",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + Tab — Visão de Tarefas (Task View)",
+    "description": "Abre a Visão de Tarefas, exibindo todas as janelas abertas e as Áreas de Trabalho Virtuais configuradas, permitindo criar novas áreas e mover janelas entre elas.",
+    "shortcut": "Win + Tab",
+    "notes": [
+      "Diferente do Alt + Tab, esta view permanece aberta até um clique ou Esc, e dá acesso à gestão de desktops virtuais."
+    ],
+    "relatedCommands": ["win-shortcut-alt-tab", "win-shortcut-virtual-desktop"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-varias-areas-de-trabalho-no-windows-36f52e38-5b4a-557b-2ff9-e1a60c976a50",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "areas de trabalho virtuais"],
+    "keywords": ["visao de tarefas", "task view", "desktops virtuais"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-virtual-desktop",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + Ctrl + D / Seta — Áreas de trabalho virtuais",
+    "description": "Cria uma nova Área de Trabalho Virtual (Win + Ctrl + D) e alterna entre as existentes (Win + Ctrl + Seta esquerda/direita), permitindo organizar janelas em contextos separados (ex: trabalho, pessoal).",
+    "shortcut": "Win + Ctrl + D",
+    "notes": [
+      "Win + Ctrl + F4 fecha a área de trabalho virtual atual, movendo suas janelas para a área anterior."
+    ],
+    "bestPractices": [
+      "Separe contextos (ex: 'Foco', 'Comunicação', 'Testes') em áreas de trabalho diferentes para reduzir troca de contexto mental."
+    ],
+    "relatedCommands": ["win-shortcut-win-tab"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-varias-areas-de-trabalho-no-windows-36f52e38-5b4a-557b-2ff9-e1a60c976a50",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "areas de trabalho virtuais"],
+    "keywords": ["desktop virtual windows", "criar area de trabalho"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-snap-layouts",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + Seta — Snap de janelas",
+    "description": "Encaixa a janela ativa em metade, quarto ou canto da tela (Win + Seta esquerda/direita/cima/baixo), permitindo montar layouts de múltiplas janelas lado a lado rapidamente.",
+    "shortcut": "Win + Seta",
+    "notes": [
+      "No Windows 11, passar o mouse sobre o botão de maximizar exibe os 'Snap Layouts' com diversos arranjos pré-definidos."
+    ],
+    "bestPractices": [
+      "Combine Win + Seta esquerda em uma janela e Win + Seta direita em outra para trabalhar com duas janelas lado a lado sem usar o mouse."
+    ],
+    "relatedCommands": ["win-shortcut-win-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/organizar-janelas-por-encaixe-no-windows-3aa3d40e-1a4e-8b64-9c2b-a5ba91cba9dd",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "janelas", "snap"],
+    "keywords": ["encaixar janela", "snap layouts", "organizar janelas windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-r",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + R — caixa Executar (Run)",
+    "description": "Abre a caixa de diálogo 'Executar', usada para abrir programas, pastas, documentos ou recursos de rede digitando diretamente o nome ou comando.",
+    "shortcut": "Win + R",
+    "example": "Win + R, digitar \"services.msc\", Enter",
+    "result": "Abre o console de Serviços do Windows.",
+    "notes": [
+      "Comandos úteis: `msconfig` (configuração do sistema), `devmgmt.msc` (Gerenciador de Dispositivos), `appwiz.cpl` (Programas e Recursos), `%temp%` (pasta de arquivos temporários)."
+    ],
+    "relatedCommands": ["win-services-msc", "win-regedit", "win-env-variables"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "executar", "run"],
+    "keywords": ["executar windows", "win r", "run dialog"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-ctrl-shift-esc",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Ctrl + Shift + Esc — abrir Gerenciador de Tarefas",
+    "description": "Abre o Gerenciador de Tarefas diretamente, sem passar pela tela de segurança (Ctrl + Alt + Del). É o atalho mais rápido para investigar travamentos ou alto consumo de recursos.",
+    "shortcut": "Ctrl + Shift + Esc",
+    "relatedCommands": ["win-task-manager"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "gerenciador de tarefas"],
+    "keywords": ["abrir gerenciador de tarefas", "task manager atalho"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-shift-s",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + Shift + S — Ferramenta de Captura",
+    "description": "Abre a barra de seleção de captura de tela (Ferramenta de Captura/Snipping Tool), permitindo capturar retângulo, tela inteira, janela ou forma livre. A captura vai para a área de transferência.",
+    "shortcut": "Win + Shift + S",
+    "notes": [
+      "Diferente da tecla Print Screen sozinha, este atalho abre a seleção interativa em vez de copiar a tela inteira direto."
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-a-ferramenta-de-captura-para-capturar-telas-00246869-1843-655f-f220-97299b865f6b",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "captura de tela"],
+    "keywords": ["print screen recortado", "captura de tela windows", "snipping tool"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-i",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + I — abrir Configurações",
+    "description": "Abre diretamente o app de Configurações do Windows, sem precisar passar pelo Menu Iniciar.",
+    "shortcut": "Win + I",
+    "relatedCommands": ["win-settings-app"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "configuracoes"],
+    "keywords": ["abrir configuracoes windows", "win i"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-x",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + X — Menu de Ligação Rápida (Power User Menu)",
+    "description": "Abre um menu de contexto com atalhos para ferramentas administrativas: Gerenciador de Dispositivos, Gerenciamento de Disco, PowerShell/Terminal, Prompt de Comando, Painel de Controle, entre outros.",
+    "shortcut": "Win + X",
+    "notes": [
+      "O conteúdo exato do menu varia conforme a versão do Windows (ex: Windows 11 mostra 'Terminal' no lugar do PowerShell clássico)."
+    ],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "administracao"],
+    "keywords": ["menu win x", "power user menu", "menu de ligacao rapida"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-file-explorer",
+    "category": "Windows",
+    "subcategory": "Explorador de Arquivos",
+    "title": "Explorador de Arquivos (File Explorer)",
+    "description": "Aplicativo nativo do Windows para navegar, organizar, copiar, mover e gerenciar arquivos e pastas do sistema, dispositivos conectados e locais de rede.",
+    "shortcut": "Win + E",
+    "notes": [
+      "Executável: `explorer.exe`. Pode ser reiniciado via Gerenciador de Tarefas quando a área de trabalho ou a barra de tarefas trava.",
+      "A barra de endereços aceita caminhos diretos e também comandos como `cmd` ou `powershell` para abrir um terminal na pasta atual."
+    ],
+    "bestPractices": [
+      "Ative a exibição de extensões de arquivo e itens ocultos em Opções de Pasta para evitar confusão com arquivos maliciosos disfarçados.",
+      "Use o painel de Acesso Rápido para fixar pastas usadas com frequência."
+    ],
+    "commonMistakes": [
+      "Deletar arquivos com Shift + Delete (exclusão permanente, sem Lixeira) sem ter certeza do que está sendo removido."
+    ],
+    "relatedCommands": ["win-shortcut-win-e", "win-recycle-bin", "win-shortcut-alt-tab"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/introdu%C3%A7%C3%A3o-ao-explorador-de-arquivos-88ea4058-ac2f-3a1c-9ac2-1c4051f9d5b2",
+    "externalReferences": [],
+    "tags": ["windows", "explorador de arquivos", "arquivos"],
+    "keywords": [
+      "explorador de arquivos",
+      "file explorer",
+      "gerenciador de arquivos windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-recycle-bin",
+    "category": "Windows",
+    "subcategory": "Explorador de Arquivos",
+    "title": "Lixeira (Recycle Bin)",
+    "description": "Armazena temporariamente arquivos e pastas excluídos, permitindo restaurá-los antes de uma exclusão definitiva ou da limpeza manual/automática da lixeira.",
+    "notes": [
+      "Arquivos excluídos com Shift + Delete, ou que excedem o espaço reservado da lixeira, são removidos permanentemente sem passar por ela.",
+      "Arquivos apagados de unidades de rede ou removíveis geralmente não vão para a Lixeira."
+    ],
+    "bestPractices": [
+      "Esvazie a lixeira periodicamente em discos com pouco espaço, já que os arquivos continuam ocupando espaço até serem removidos de fato."
+    ],
+    "relatedCommands": ["win-file-explorer"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/restaurar-arquivos-ou-pastas-da-lixeira-e0f8c94b-e419-fe15-6cb1-7ff02beb5eb0",
+    "externalReferences": [],
+    "tags": ["windows", "arquivos", "lixeira"],
+    "keywords": ["lixeira windows", "recuperar arquivo excluido", "recycle bin"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-task-manager",
+    "category": "Windows",
+    "subcategory": "Gerenciador de Tarefas",
+    "title": "Gerenciador de Tarefas (Task Manager)",
+    "description": "Ferramenta para monitorar e gerenciar processos, desempenho (CPU, memória, disco, rede, GPU), aplicativos de inicialização, usuários conectados e serviços do sistema.",
+    "shortcut": "Ctrl + Shift + Esc",
+    "syntax": "taskmgr.exe",
+    "example": "Win + R, digitar \"taskmgr\", Enter",
+    "notes": [
+      "A guia 'Detalhes' mostra os processos com nome de executável real (mais preciso que a aba 'Processos', que agrupa por app).",
+      "Clicar com o botão direito em um processo permite 'Finalizar tarefa', 'Ir para detalhes' ou 'Abrir local do arquivo', útil para identificar malware disfarçado."
+    ],
+    "bestPractices": [
+      "Verifique a guia 'Inicializar' para desabilitar programas que retardam o boot do Windows desnecessariamente.",
+      "Use a coluna 'Impacto de energia' (em notebooks) para achar processos que consomem bateria excessivamente."
+    ],
+    "commonMistakes": [
+      "Finalizar processos do sistema (ex: `csrss.exe`, `wininit.exe`) sem saber sua função, o que pode travar ou reiniciar o sistema."
+    ],
+    "relatedCommands": [
+      "win-shortcut-ctrl-shift-esc",
+      "win-process-taskkill",
+      "win-services-msc"
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-o-gerenciador-de-tarefas-63687502-3f4a-1338-af0f-b7112124e88d",
+    "externalReferences": [],
+    "tags": ["windows", "gerenciador de tarefas", "processos", "desempenho"],
+    "keywords": ["gerenciador de tarefas", "task manager", "monitorar processos windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-process-taskkill",
+    "category": "Windows",
+    "subcategory": "Gerenciamento de processos",
+    "title": "taskkill — encerrar processo via linha de comando",
+    "description": "Encerra um ou mais processos pelo nome da imagem (executável) ou pelo PID, útil em scripts ou quando a interface gráfica trava.",
+    "syntax": "taskkill /PID <pid> | /IM <nome.exe> [/F] [/T]",
+    "example": "taskkill /IM notepad.exe /F",
+    "result": "SUCCESS: The process \"notepad.exe\" with PID 4321 has been terminated.",
+    "parameters": [
+      {
+        "name": "/PID",
+        "description": "Identifica o processo pelo Process ID.",
+        "required": false
+      },
+      {
+        "name": "/IM",
+        "description": "Identifica o processo pelo nome da imagem (executável).",
+        "required": false
+      }
+    ],
+    "flags": [
+      { "flag": "/F", "description": "Força o encerramento do processo (kill forçado)." },
+      { "flag": "/T", "description": "Encerra também os processos filhos da árvore." }
+    ],
+    "notes": [
+      "Complementa `tasklist`, que lista os processos em execução com seus respectivos PIDs."
+    ],
+    "commonMistakes": [
+      "Esquecer o `/F` em processos que não respondem a um sinal de encerramento normal, fazendo o comando parecer que falhou."
+    ],
+    "relatedCommands": ["win-task-manager", "win-tasklist"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/taskkill",
+    "externalReferences": [],
+    "tags": ["windows", "processos", "linha de comando", "cmd"],
+    "keywords": ["taskkill", "matar processo windows", "encerrar processo cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-tasklist",
+    "category": "Windows",
+    "subcategory": "Gerenciamento de processos",
+    "title": "tasklist — listar processos em execução",
+    "description": "Lista os processos em execução no sistema, incluindo nome da imagem, PID, sessão e uso de memória. Equivalente em linha de comando à guia 'Processos' do Gerenciador de Tarefas.",
+    "syntax": "tasklist [/FI <filtro>] [/V]",
+    "example": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "result": "Lista apenas os processos cujo nome de imagem é chrome.exe, com PID e uso de memória.",
+    "flags": [
+      {
+        "flag": "/FI",
+        "description": "Aplica um filtro (ex: por nome de imagem, PID, status)."
+      },
+      {
+        "flag": "/V",
+        "description": "Exibe informações detalhadas (verbose), incluindo usuário e status da janela."
+      }
+    ],
+    "relatedCommands": ["win-process-taskkill", "win-task-manager"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/tasklist",
+    "externalReferences": [],
+    "tags": ["windows", "processos", "linha de comando", "cmd"],
+    "keywords": ["tasklist", "listar processos windows", "processos em execucao cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-services-msc",
+    "category": "Windows",
+    "subcategory": "Serviços",
+    "title": "services.msc — Console de Serviços",
+    "description": "Snap-in do MMC (Microsoft Management Console) que lista todos os serviços do Windows, permitindo iniciar, parar, reiniciar, pausar e configurar o tipo de inicialização (Automático, Manual, Desabilitado) de cada um.",
+    "syntax": "services.msc",
+    "example": "Win + R, digitar \"services.msc\", Enter",
+    "notes": [
+      "A coluna 'Fazer logon como' mostra a conta usada pelo serviço; alguns exigem privilégios administrativos para alteração.",
+      "Serviços dependentes: parar um serviço do qual outros dependem pode interromper múltiplas funcionalidades em cascata."
+    ],
+    "bestPractices": [
+      "Antes de desabilitar um serviço desconhecido, pesquise seu nome — muitos são essenciais para rede, áudio ou segurança do sistema."
+    ],
+    "commonMistakes": [
+      "Desabilitar serviços críticos (ex: Windows Update, DNS Client) tentando 'otimizar' o sistema, causando falhas difíceis de diagnosticar."
+    ],
+    "relatedCommands": ["win-net-start-stop", "win-task-manager"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/troubleshoot/windows-server/system-management-components/services-and-servicessnap-in",
+    "externalReferences": [],
+    "tags": ["windows", "servicos", "administracao"],
+    "keywords": ["services.msc", "console de servicos", "gerenciar servicos windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-net-start-stop",
+    "category": "Windows",
+    "subcategory": "Serviços",
+    "title": "net start / net stop — controlar serviços via terminal",
+    "description": "Inicia ou para um serviço do Windows diretamente pelo Prompt de Comando ou PowerShell, útil para automação e scripts administrativos.",
+    "syntax": "net start <nome-do-serviço> | net stop <nome-do-serviço>",
+    "example": "net stop \"Windows Search\"",
+    "result": "The Windows Search service is stopping.\nThe Windows Search service was stopped successfully.",
+    "notes": [
+      "Requer prompt executado como Administrador para a maioria dos serviços do sistema."
+    ],
+    "relatedCommands": ["win-services-msc"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/net-start",
+    "externalReferences": [],
+    "tags": ["windows", "servicos", "cmd", "linha de comando"],
+    "keywords": ["net start", "net stop", "iniciar servico cmd", "parar servico windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-settings-app",
+    "category": "Windows",
+    "subcategory": "Configurações",
+    "title": "App Configurações (Settings)",
+    "description": "Central moderna de configurações do Windows (substituindo gradualmente o Painel de Controle), organizada em categorias como Sistema, Dispositivos, Rede, Personalização, Contas, Privacidade e Atualização do Windows.",
+    "shortcut": "Win + I",
+    "syntax": "ms-settings:",
+    "notes": [
+      "URIs específicas abrem seções diretamente, ex: `ms-settings:display` (Tela), `ms-settings:network` (Rede), `ms-settings:windowsupdate` (Windows Update)."
+    ],
+    "relatedCommands": ["win-shortcut-win-i", "win-control-panel"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/localizar-configura%C3%A7%C3%B5es-no-windows-e8d4d054-33a7-2632-7d2a-3b2172e9ea23",
+    "externalReferences": [],
+    "tags": ["windows", "configuracoes", "settings"],
+    "keywords": ["app configuracoes windows", "settings windows", "ms-settings"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-control-panel",
+    "category": "Windows",
+    "subcategory": "Configurações",
+    "title": "Painel de Controle (Control Panel)",
+    "description": "Interface clássica de configuração do Windows, ainda necessária para algumas tarefas administrativas avançadas não migradas para o app Configurações (ex: gerenciamento de contas locais avançado, fontes, ferramentas administrativas).",
+    "syntax": "control.exe",
+    "example": "control /name Microsoft.NetworkAndSharingCenter",
+    "notes": [
+      "Muitos applets clássicos (.cpl) ainda são acessados apenas pelo Painel de Controle, ex: `appwiz.cpl` (Programas), `ncpa.cpl` (Conexões de Rede), `sysdm.cpl` (Propriedades do Sistema)."
+    ],
+    "relatedCommands": ["win-settings-app"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/win32/shell/executing-control-panel-items",
+    "externalReferences": [],
+    "tags": ["windows", "painel de controle", "configuracoes"],
+    "keywords": ["painel de controle", "control panel", "cpl windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-env-variables",
+    "category": "Windows",
+    "subcategory": "Variáveis de ambiente",
+    "title": "Variáveis de ambiente do sistema",
+    "description": "Pares nome/valor usados pelo sistema operacional e aplicativos para localizar recursos (ex: PATH, TEMP, APPDATA), configuráveis em nível de Usuário ou de Sistema em 'Editar as variáveis de ambiente do sistema'.",
+    "syntax": "sysdm.cpl (aba Avançado > Variáveis de Ambiente) | setx <nome> <valor>",
+    "example": "setx JAVA_HOME \"C:\\Program Files\\Java\\jdk-21\"",
+    "result": "SUCCESS: Specified value was saved.",
+    "notes": [
+      "`set` (CMD) e `$env:` (PowerShell) alteram variáveis apenas na sessão atual; `setx` grava permanentemente no registro, mas só reflete em novos processos/terminais.",
+      "Variáveis comuns: `%PATH%` (locais de busca de executáveis), `%APPDATA%`/`%LOCALAPPDATA%` (dados de apps), `%TEMP%`/`%TMP%` (arquivos temporários), `%USERPROFILE%` (pasta do usuário)."
+    ],
+    "bestPractices": [
+      "Prefira adicionar ao PATH de Usuário em vez de Sistema quando a ferramenta é de uso pessoal, evitando afetar outras contas."
+    ],
+    "commonMistakes": [
+      "Editar diretamente a variável PATH e sobrescrever seu conteúdo em vez de acrescentar, quebrando o acesso a executáveis essenciais do sistema."
+    ],
+    "relatedCommands": ["win-regedit", "win-shortcut-win-r"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/setx",
+    "externalReferences": [],
+    "tags": ["windows", "variaveis de ambiente", "path", "configuracoes"],
+    "keywords": ["variavel de ambiente windows", "editar path windows", "setx"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-regedit",
+    "category": "Windows",
+    "subcategory": "Registro do Windows",
+    "title": "Editor do Registro (regedit)",
+    "description": "Ferramenta para visualizar e editar o Registro do Windows, um banco de dados hierárquico que armazena configurações do sistema operacional, drivers, serviços e aplicativos.",
+    "syntax": "regedit.exe",
+    "example": "Win + R, digitar \"regedit\", Enter",
+    "notes": [
+      "As cinco chaves raiz (hives) principais são HKEY_CLASSES_ROOT (HKCR), HKEY_CURRENT_USER (HKCU), HKEY_LOCAL_MACHINE (HKLM), HKEY_USERS (HKU) e HKEY_CURRENT_CONFIG (HKCC).",
+      "Alterações no registro geralmente têm efeito imediato, sem necessidade de reiniciar, embora algumas exijam logoff/reinício."
+    ],
+    "bestPractices": [
+      "Exporte a chave (ou o registro inteiro) via 'Arquivo > Exportar' antes de qualquer edição, para poder reverter em caso de erro.",
+      "Prefira editar via GPO (Política de Grupo) ou PowerShell em ambientes corporativos, mantendo rastreabilidade da mudança."
+    ],
+    "commonMistakes": [
+      "Editar ou excluir chaves sem entender sua função, podendo deixar o Windows instável ou impedir a inicialização.",
+      "Não fazer backup antes de editar, tornando a reversão manual muito mais difícil."
+    ],
+    "relatedCommands": ["win-env-variables", "win-shortcut-win-r"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/reg",
+    "externalReferences": [
+      {
+        "label": "Estrutura do Registro do Windows",
+        "url": "https://learn.microsoft.com/troubleshoot/windows-server/performance/windows-registry-advanced-users"
+      }
+    ],
+    "tags": ["windows", "registro", "regedit", "avancado"],
+    "keywords": ["regedit", "editor do registro", "windows registry"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-reg-command",
+    "category": "Windows",
+    "subcategory": "Registro do Windows",
+    "title": "reg — manipular o registro via linha de comando",
+    "description": "Comando de console para consultar (query), adicionar (add), excluir (delete), importar e exportar chaves e valores do Registro do Windows, útil para automação em scripts.",
+    "syntax": "reg query <chave> | reg add <chave> /v <valor> /t <tipo> /d <dado> | reg export <chave> <arquivo.reg>",
+    "example": "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\"",
+    "result": "Lista os programas configurados para iniciar automaticamente com o login do usuário atual.",
+    "notes": [
+      "A chave `...\\CurrentVersion\\Run` (em HKCU e HKLM) é um dos locais mais comuns usados por programas — e malware — para iniciar junto com o Windows."
+    ],
+    "commonMistakes": [
+      "Rodar `reg add`/`reg delete` sem exportar a chave antes, perdendo a possibilidade de reverter facilmente."
+    ],
+    "relatedCommands": ["win-regedit"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/reg",
+    "externalReferences": [],
+    "tags": ["windows", "registro", "cmd", "linha de comando"],
+    "keywords": ["reg query", "reg add", "editar registro por comando"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-system32",
+    "category": "Windows",
+    "subcategory": "System32",
+    "title": "Pasta System32 e executáveis essenciais",
+    "description": "Diretório (`C:\\Windows\\System32`) que contém a maioria dos executáveis, DLLs e ferramentas centrais do Windows. Diversos utilitários administrativos essenciais ficam aqui e podem ser chamados diretamente pelo nome via Win + R ou terminal.",
+    "notes": [
+      "Executáveis úteis: `msconfig.exe` (Configuração do Sistema), `mstsc.exe` (Área de Trabalho Remota), `perfmon.exe` (Monitor de Desempenho), `resmon.exe` (Monitor de Recursos), `cleanmgr.exe` (Limpeza de Disco), `dxdiag.exe` (Diagnóstico DirectX), `sfc.exe` (Verificador de Arquivos de Sistema).",
+      "Em Windows 64 bits, `System32` contém binários de 64 bits; `SysWOW64` contém a camada de compatibilidade de 32 bits."
+    ],
+    "bestPractices": [
+      "Rode `sfc /scannow` como Administrador quando suspeitar de arquivos de sistema corrompidos."
+    ],
+    "commonMistakes": [
+      "Excluir ou mover arquivos de dentro de System32 manualmente, o que pode deixar o Windows inutilizável."
+    ],
+    "relatedCommands": ["win-sfc-scannow", "win-shortcut-win-r"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["windows", "system32", "executaveis", "avancado"],
+    "keywords": ["system32", "executaveis do windows", "pasta system32"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-sfc-scannow",
+    "category": "Windows",
+    "subcategory": "System32",
+    "title": "sfc /scannow — Verificador de Arquivos de Sistema",
+    "description": "Verifica a integridade de todos os arquivos de sistema protegidos do Windows e substitui versões corrompidas ou alteradas por cópias corretas em cache.",
+    "syntax": "sfc /scannow",
+    "example": "sfc /scannow",
+    "result": "Windows Resource Protection found corrupt files and successfully repaired them.",
+    "notes": [
+      "Deve ser executado em um Prompt de Comando ou PowerShell como Administrador.",
+      "Se `sfc /scannow` não conseguir reparar tudo, o próximo passo costuma ser `DISM /Online /Cleanup-Image /RestoreHealth`, que repara a própria imagem do Windows."
+    ],
+    "relatedCommands": ["win-system32"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/sfc",
+    "externalReferences": [],
+    "tags": ["windows", "system32", "reparo", "diagnostico"],
+    "keywords": ["sfc scannow", "verificador de arquivos de sistema", "reparar windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-startup-folder",
+    "category": "Windows",
+    "subcategory": "Configurações",
+    "title": "Pasta de Inicialização (Startup) e apps de boot",
+    "description": "Colocar um atalho em `shell:startup` faz o programa iniciar automaticamente junto com o login do usuário. É uma alternativa simples ao registro para gerenciar inicialização automática.",
+    "syntax": "shell:startup",
+    "example": "Win + R, digitar \"shell:startup\", Enter",
+    "notes": [
+      "`shell:startup` abre a pasta de inicialização do usuário atual; `shell:common startup` abre a pasta compartilhada por todos os usuários.",
+      "Programas de inicialização também podem ser gerenciados pela guia 'Inicializar' do Gerenciador de Tarefas, que mostra o impacto de cada um no tempo de boot."
+    ],
+    "relatedCommands": ["win-task-manager", "win-shortcut-win-r"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/adicionar-um-aplicativo-para-ser-executado-automaticamente-na-inicializa%C3%A7%C3%A3o-b6d3010f-c923-4c8f-b58d-1a6a960223b9",
+    "externalReferences": [],
+    "tags": ["windows", "inicializacao", "startup", "boot"],
+    "keywords": [
+      "pasta de inicializacao windows",
+      "shell:startup",
+      "programas que abrem com windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-pausebreak",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + Pause/Break — Propriedades do Sistema",
+    "description": "Abre a tela clássica de Propriedades do Sistema, exibindo informações como edição do Windows, processador, memória RAM instalada e nome do computador.",
+    "shortcut": "Win + Pause",
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "sistema"],
+    "keywords": ["propriedades do sistema atalho", "win pause break"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-number",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + número — abrir/alternar app fixado na barra de tarefas",
+    "description": "Abre o aplicativo na posição correspondente da barra de tarefas (ex: Win + 1 abre o primeiro ícone fixado). Se o app já estiver aberto, alterna o foco para ele; pressionar novamente minimiza.",
+    "shortcut": "Win + 1..9",
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "barra de tarefas"],
+    "keywords": ["win numero", "abrir app fixado barra de tarefas"],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-shortcut-win-period",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + . (ponto) — Painel de Emojis",
+    "description": "Abre o painel de emojis, símbolos especiais, kaomojis e área de transferência do clipboard (histórico de itens copiados) para inserção rápida em qualquer campo de texto.",
+    "shortcut": "Win + .",
+    "notes": [
+      "O histórico da área de transferência (clipboard) precisa ser habilitado em Configurações > Sistema > Área de Transferência para aparecer nesse painel."
+    ],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-o-hist%C3%B3rico-da-%C3%A1rea-de-transfer%C3%AAncia-no-windows-c436501e-985d-1c8d-97ea-5cd747190234",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "emoji", "area de transferencia"],
+    "keywords": [
+      "painel de emojis windows",
+      "historico de area de transferencia",
+      "clipboard windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-device-manager",
+    "category": "Windows",
+    "subcategory": "Configurações",
+    "title": "Gerenciador de Dispositivos (Device Manager)",
+    "description": "Lista todo o hardware detectado pelo Windows organizado por categoria, permitindo atualizar, desabilitar, desinstalar drivers ou diagnosticar dispositivos com problema (indicados por um ícone de alerta amarelo).",
+    "syntax": "devmgmt.msc",
+    "example": "Win + X, selecionar \"Gerenciador de Dispositivos\"",
+    "notes": [
+      "Um ponto de exclamação amarelo indica driver ausente ou com problema; uma seta para baixo indica dispositivo desabilitado."
+    ],
+    "bestPractices": [
+      "Ao suspeitar de um driver com bug recém-atualizado, use 'Propriedades > Driver > Reverter Driver' antes de reinstalar do zero."
+    ],
+    "relatedCommands": ["win-shortcut-win-x"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/abrir-o-gerenciador-de-dispositivos-a324f108-8b0c-4f95-96b9-4c3f21c9b3d6",
+    "externalReferences": [],
+    "tags": ["windows", "hardware", "drivers", "dispositivos"],
+    "keywords": [
+      "gerenciador de dispositivos",
+      "device manager",
+      "atualizar driver windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-22"
+  }
+]

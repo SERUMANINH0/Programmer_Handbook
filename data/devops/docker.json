@@ -1,0 +1,66 @@
+[
+  {
+    "id": "docker-run",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker run",
+    "description": "Cria e inicia um novo container a partir de uma imagem.",
+    "syntax": "docker run [opcoes] <imagem> [comando]",
+    "example": "docker run -d -p 3000:3000 --name app node:20-alpine node server.js",
+    "result": "Container iniciado em segundo plano, mapeando a porta 3000 do host para a 3000 do container.",
+    "flags": [
+      { "flag": "-d", "description": "Executa em background (detached)." },
+      { "flag": "-p", "description": "Mapeia porta host:container." },
+      { "flag": "-v", "description": "Monta um volume host:container." },
+      { "flag": "--rm", "description": "Remove o container automaticamente ao parar." }
+    ],
+    "notes": [
+      "Se a imagem não existir localmente, o Docker faz `pull` automaticamente antes de rodar."
+    ],
+    "bestPractices": [
+      "Use `--rm` em containers efêmeros de teste para evitar acúmulo de containers parados."
+    ],
+    "commonMistakes": [
+      "Confundir a ordem do mapeamento de porta (`host:container`) e publicar a porta errada."
+    ],
+    "relatedCommands": ["docker-build", "docker-compose-up"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/run/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "run"],
+    "keywords": ["docker run", "iniciar container", "rodar imagem"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "docker-multi-stage-build",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "Multi-stage build",
+    "description": "Técnica de Dockerfile que usa múltiplos estágios FROM para compilar em uma imagem grande e copiar só o artefato final para uma imagem final enxuta.",
+    "syntax": "FROM base AS build\n...\nFROM base-menor\nCOPY --from=build /app/dist ./dist",
+    "example": "FROM node:20 AS build\nWORKDIR /app\nCOPY . .\nRUN npm ci && npm run build\n\nFROM node:20-alpine\nWORKDIR /app\nCOPY --from=build /app/dist ./dist\nCMD [\"node\", \"dist/server.js\"]",
+    "result": "Imagem final contém apenas o build compilado, sem dependências de desenvolvimento nem código-fonte.",
+    "notes": [
+      "Cada `FROM` inicia um novo estágio; estágios anteriores podem ser referenciados por nome (`AS build`)."
+    ],
+    "bestPractices": [
+      "Use imagens `alpine` ou `slim` no estágio final para reduzir o tamanho da imagem publicada."
+    ],
+    "commonMistakes": [
+      "Copiar `node_modules` inteiro do estágio de build em vez de reinstalar apenas dependências de produção."
+    ],
+    "relatedCommands": ["docker-run", "docker-build"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "17.05+",
+    "officialDocumentation": "https://docs.docker.com/build/building/multi-stage/",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "multi-stage"],
+    "keywords": ["multi-stage build", "imagem docker enxuta"],
+    "favorite": false,
+    "updatedAt": "2026-07-01"
+  }
+]
