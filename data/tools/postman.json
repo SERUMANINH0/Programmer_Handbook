@@ -430,5 +430,390 @@
     "keywords": ["monitors", "monitoramento agendado", "health check postman"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "postman-authorization",
+    "category": "Postman",
+    "subcategory": "Autenticação",
+    "title": "Aba Authorization (tipos de autenticação)",
+    "description": "Configura o método de autenticação de uma requisição (Bearer Token, Basic Auth, API Key, OAuth 2.0 etc.) sem precisar montar headers manualmente.",
+    "syntax": "Aba Authorization > selecionar Type",
+    "example": "Selecionar 'Bearer Token' e colar o token JWT — o Postman adiciona automaticamente o header `Authorization: Bearer <token>`.",
+    "result": "O header de autenticação correto é gerado e enviado junto com a requisição, sem edição manual da aba Headers.",
+    "notes": [
+      "A autenticação configurada em uma Collection é herdada por todas as requisições dela, a menos que uma requisição sobrescreva com 'No Auth' ou outro tipo."
+    ],
+    "bestPractices": [
+      "Configure a autenticação no nível da Collection quando todas as requisições usam o mesmo esquema, evitando repetição."
+    ],
+    "commonMistakes": [
+      "Colar o token diretamente na aba Headers como texto fixo, em vez de usar uma variável de Environment referenciada na aba Authorization."
+    ],
+    "relatedCommands": ["postman-oauth2", "postman-variables-scope"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/authorization/",
+    "externalReferences": [],
+    "tags": ["postman", "autenticacao", "authorization"],
+    "keywords": ["authorization postman", "bearer token", "basic auth", "api key"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-oauth2",
+    "category": "Postman",
+    "subcategory": "Autenticação",
+    "title": "OAuth 2.0 (Get New Access Token)",
+    "description": "Fluxo integrado para obter, renovar e reutilizar tokens de acesso OAuth 2.0 diretamente na aba Authorization, sem precisar chamar o endpoint de token manualmente.",
+    "syntax": "Authorization > Type: OAuth 2.0 > Get New Access Token",
+    "example": "Configurar Auth URL, Access Token URL, Client ID/Secret e Scope, depois clicar em 'Get New Access Token' para autenticar via navegador.",
+    "result": "O Postman abre uma janela de login, completa o fluxo OAuth e preenche automaticamente o token obtido no campo Access Token.",
+    "notes": [
+      "Tokens podem ser configurados para renovação automática (Auto-refresh) antes de expirar, evitando falhas por token vencido."
+    ],
+    "bestPractices": [
+      "Salve o token obtido como uma variável de Environment para reutilizá-lo em múltiplas requisições da Collection."
+    ],
+    "commonMistakes": [
+      "Reconfigurar o fluxo OAuth 2.0 em cada requisição individualmente em vez de centralizar na Collection."
+    ],
+    "relatedCommands": ["postman-authorization", "postman-pre-request-script"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/authorization/#oauth-20",
+    "externalReferences": [],
+    "tags": ["postman", "oauth2", "autenticacao"],
+    "keywords": ["oauth 2.0 postman", "get new access token", "renovar token"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-vault",
+    "category": "Postman",
+    "subcategory": "Autenticação",
+    "title": "Postman Vault (segredos locais)",
+    "description": "Armazenamento local e criptografado de valores sensíveis (tokens, chaves de API), referenciáveis nas requisições via sintaxe própria sem sair do dispositivo do usuário.",
+    "syntax": "{{vault:nomeDoSegredo}}",
+    "example": "Guardar uma chave de API no Vault como `stripe_key` e referenciá-la em um header como `{{vault:stripe_key}}`.",
+    "result": "O valor real da chave nunca é sincronizado com a conta Postman nem visível para outros membros do Workspace, apenas usado localmente no envio da requisição.",
+    "notes": [
+      "Diferente de variáveis normais, segredos do Vault não são exportados junto com a Collection nem sincronizados na nuvem."
+    ],
+    "bestPractices": [
+      "Use o Vault para credenciais pessoais (chaves de conta própria) em vez de Environment Variables compartilhadas com o time."
+    ],
+    "commonMistakes": [
+      "Achar que o Vault sincroniza entre dispositivos — ele é armazenado localmente por instalação do Postman."
+    ],
+    "relatedCommands": ["postman-variables-scope", "postman-environments"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/postman-vault/postman-vault-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "vault", "seguranca"],
+    "keywords": ["postman vault", "segredos locais", "armazenar chave de api"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-graphql",
+    "category": "Postman",
+    "subcategory": "Protocolos",
+    "title": "Suporte a GraphQL",
+    "description": "Modo de requisição dedicado a GraphQL, com editor de query/mutation, painel de variáveis e introspecção automática do schema do servidor.",
+    "syntax": "New Request > Body > GraphQL",
+    "example": "Selecionar o modo GraphQL, colar a query `{ usuario(id: 1) { nome email } }` e enviar para a URL do endpoint GraphQL.",
+    "result": "A resposta JSON é exibida normalmente; o painel de Query Variables permite parametrizar a query sem editar o texto diretamente.",
+    "notes": [
+      "Com introspecção habilitada, o Postman sugere automaticamente campos e tipos disponíveis no schema durante a digitação."
+    ],
+    "bestPractices": [
+      "Use o painel 'Schema' para explorar tipos disponíveis antes de escrever queries complexas manualmente."
+    ],
+    "relatedCommands": ["postman-new-request"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/graphql/graphql-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "graphql", "protocolos"],
+    "keywords": ["graphql postman", "query graphql", "introspeccao schema"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-grpc",
+    "category": "Postman",
+    "subcategory": "Protocolos",
+    "title": "Suporte a gRPC",
+    "description": "Cliente integrado para testar serviços gRPC, com suporte a reflection de servidor ou import manual de arquivos .proto, incluindo streaming (unário, server-stream, client-stream, bidirecional).",
+    "syntax": "New > gRPC Request",
+    "example": "Informar o endereço do servidor gRPC (ex: localhost:50051), deixar o Postman descobrir os métodos via reflection e invocar um método unário com um payload JSON.",
+    "result": "A resposta do serviço gRPC é exibida em formato legível; em streams, cada mensagem recebida aparece incrementalmente no painel.",
+    "notes": [
+      "Sem reflection habilitada no servidor, é necessário importar manualmente o arquivo .proto correspondente ao serviço."
+    ],
+    "bestPractices": [
+      "Salve requisições gRPC em Collections como qualquer requisição REST, para reuso e documentação."
+    ],
+    "relatedCommands": ["postman-new-request"],
+    "difficulty": "avancado",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/grpc/grpc-request-interface/",
+    "externalReferences": [],
+    "tags": ["postman", "grpc", "protocolos"],
+    "keywords": ["grpc postman", "testar servico grpc", "protobuf postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-websocket",
+    "category": "Postman",
+    "subcategory": "Protocolos",
+    "title": "Suporte a WebSocket",
+    "description": "Cliente integrado para abrir conexões WebSocket, enviar mensagens e observar o fluxo de mensagens recebidas em tempo real, incluindo Socket.IO.",
+    "syntax": "New > WebSocket Request",
+    "example": "Conectar em `wss://echo.exemplo.com`, enviar a mensagem `{\"tipo\": \"ping\"}` e observar a resposta do servidor no painel de mensagens.",
+    "result": "O painel exibe um log cronológico de mensagens enviadas e recebidas, com timestamp de cada evento.",
+    "notes": [
+      "Suporta tanto WebSocket puro (RFC 6455) quanto o protocolo Socket.IO, com detecção automática do handshake."
+    ],
+    "bestPractices": [
+      "Use para depurar aplicações de tempo real (chat, notificações) sem precisar escrever um cliente WebSocket customizado só para testes."
+    ],
+    "relatedCommands": ["postman-new-request"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/websocket/websocket-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "websocket", "protocolos"],
+    "keywords": ["websocket postman", "socket.io postman", "tempo real postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-flows",
+    "category": "Postman",
+    "subcategory": "Automação",
+    "title": "Postman Flows",
+    "description": "Editor visual de automações no estilo low-code, conectando blocos (requisições, condicionais, transformação de dados) em um fluxo sem escrever scripts imperativos.",
+    "syntax": "New > Flow",
+    "example": "Conectar um bloco 'Send Request' de login a um bloco 'If Condition' que verifica o status, seguido de outro 'Send Request' que usa o token retornado.",
+    "result": "O fluxo é executado visualmente, com o valor de cada bloco passando para o próximo conforme as conexões definidas.",
+    "notes": [
+      "Flows são úteis para orquestrar cenários de teste com múltiplos passos dependentes sem escrever pre-request/test scripts complexos."
+    ],
+    "bestPractices": [
+      "Use Flows para prototipar visualmente um cenário de integração antes de eventualmente convertê-lo em scripts de CI/CD."
+    ],
+    "relatedCommands": ["postman-runner", "postman-pre-request-script"],
+    "difficulty": "avancado",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/postman-flows/gs/flows-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "flows", "automacao"],
+    "keywords": ["postman flows", "low-code postman", "automacao visual"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-visualizer",
+    "category": "Postman",
+    "subcategory": "Scripts",
+    "title": "Visualizer (aba Post-response)",
+    "description": "Renderiza a resposta da requisição como HTML/gráfico customizado dentro do próprio Postman, útil para visualizar tabelas, gráficos ou dados formatados em vez de JSON cru.",
+    "syntax": "pm.visualizer.set(template, data)",
+    "example": "pm.visualizer.set(\"<table><tr><th>Nome</th></tr>{{#each response}}<tr><td>{{this.nome}}</td></tr>{{/each}}</table>\", { response: pm.response.json() });",
+    "result": "A aba 'Visualize' exibe uma tabela HTML renderizada a partir dos dados da resposta, em vez do JSON bruto.",
+    "notes": ["Usa a sintaxe de templates Handlebars para interpolar os dados no HTML."],
+    "bestPractices": [
+      "Use o Visualizer para revisar rapidamente respostas de APIs com muitos registros, sem precisar rolar um JSON extenso."
+    ],
+    "relatedCommands": ["postman-test-script"],
+    "difficulty": "avancado",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/visualizer/",
+    "externalReferences": [],
+    "tags": ["postman", "visualizer", "scripts"],
+    "keywords": ["postman visualizer", "pm.visualizer", "renderizar resposta html"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-console",
+    "category": "Postman",
+    "subcategory": "Depuração",
+    "title": "Postman Console",
+    "description": "Janela de log que exibe os detalhes brutos de cada requisição enviada e resposta recebida, incluindo headers completos e saída de console.log() dos scripts.",
+    "syntax": "Ctrl+Alt+C (Windows/Linux) | Cmd+Alt+C (Mac)",
+    "shortcut": "Ctrl+Alt+C",
+    "example": "Abrir o Console e chamar `console.log(pm.request.headers)` em um Pre-request Script para inspecionar os headers exatos enviados.",
+    "result": "Cada requisição/resposta aparece como uma entrada expansível no Console, com os dados brutos trafegados na rede.",
+    "notes": [
+      "É a principal ferramenta para depurar por que um header, variável ou script não está se comportando como esperado."
+    ],
+    "bestPractices": [
+      "Mantenha o Console aberto ao depurar scripts complexos de autenticação ou transformação de dados."
+    ],
+    "relatedCommands": ["postman-pre-request-script", "postman-test-script"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/troubleshooting-api-requests/postman-console/",
+    "externalReferences": [],
+    "tags": ["postman", "console", "debug"],
+    "keywords": ["postman console", "debugar requisicao", "ctrl alt c"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-code-generation",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Code Snippet Generator (Gerar código)",
+    "description": "Converte uma requisição configurada na interface em código pronto para uso em uma linguagem/biblioteca específica (cURL, JavaScript fetch, Python requests, etc.).",
+    "syntax": "Ícone </> (Code) no painel da requisição",
+    "example": "Configurar uma requisição POST com headers e body, abrir o painel Code e selecionar 'Python - Requests' para copiar o trecho equivalente.",
+    "result": "Um bloco de código pronto para colar é gerado, replicando exatamente método, URL, headers e body da requisição configurada.",
+    "notes": [
+      "Suporta dezenas de linguagens/bibliotecas: cURL, JavaScript (fetch, jQuery, axios), Python, Go, Java, C#, PHP, Ruby, entre outras."
+    ],
+    "bestPractices": [
+      "Use para gerar rapidamente o snippet cURL de uma requisição e compartilhar com colegas que não usam Postman."
+    ],
+    "relatedCommands": ["postman-new-request"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/sending-requests/generate-code-snippets/",
+    "externalReferences": [],
+    "tags": ["postman", "code generation", "produtividade"],
+    "keywords": ["gerar codigo postman", "code snippet", "curl a partir do postman"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-import-export",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Import / Export de Collections",
+    "description": "Importa Collections a partir de arquivos JSON, cURL, especificações OpenAPI/Swagger ou URLs, e exporta Collections/Environments locais para arquivo, permitindo versionamento fora do Postman.",
+    "syntax": "Import (Ctrl+O) | Collection > ... > Export",
+    "shortcut": "Ctrl+O",
+    "example": "Importar um arquivo `openapi.yaml` para gerar automaticamente uma Collection com todos os endpoints documentados na especificação.",
+    "result": "Uma nova Collection é criada com uma requisição para cada endpoint definido no arquivo importado, pronta para uso.",
+    "notes": [
+      "O arquivo exportado (.postman_collection.json) pode ser versionado em Git para rastrear mudanças na Collection ao longo do tempo."
+    ],
+    "bestPractices": [
+      "Versione o JSON exportado das Collections críticas no mesmo repositório do backend, mantendo API e testes sincronizados."
+    ],
+    "commonMistakes": [
+      "Exportar e compartilhar uma Collection com variáveis de Environment sensíveis embutidas em vez de valores de exemplo."
+    ],
+    "relatedCommands": ["postman-collections", "postman-code-generation"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-and-exporting-overview/",
+    "externalReferences": [],
+    "tags": ["postman", "import", "export"],
+    "keywords": [
+      "importar collection",
+      "exportar collection",
+      "openapi postman",
+      "swagger postman"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-workspaces",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Workspaces (times)",
+    "description": "Espaços colaborativos que agrupam Collections, Environments e APIs compartilhados entre membros de uma equipe, com controle de acesso e histórico de alterações.",
+    "syntax": "Menu superior > seletor de Workspace",
+    "example": "Criar um Workspace 'Time Backend', convidar os membros da equipe e mover as Collections do projeto para dentro dele.",
+    "result": "Todos os membros convidados passam a ver e editar as mesmas Collections/Environments em tempo real, com histórico de quem alterou o quê.",
+    "notes": [
+      "Workspaces podem ser 'Personal', 'Team' ou 'Public', cada um com regras diferentes de visibilidade."
+    ],
+    "bestPractices": [
+      "Use um Workspace por projeto/produto em vez de um único Workspace gigante com Collections de times diferentes misturadas."
+    ],
+    "relatedCommands": ["postman-collections", "postman-fork-pull-request"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos", "browser", "cloud"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/collaborating-in-postman/using-workspaces/creating-workspaces/",
+    "externalReferences": [],
+    "tags": ["postman", "workspaces", "colaboracao"],
+    "keywords": ["workspaces postman", "colaboracao em equipe", "postman times"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-fork-pull-request",
+    "category": "Postman",
+    "subcategory": "Organização",
+    "title": "Fork e Pull Request de Collections",
+    "description": "Cria uma cópia vinculada (fork) de uma Collection compartilhada para editar isoladamente, depois propõe as mudanças de volta via Pull Request revisável, análogo ao fluxo do Git.",
+    "syntax": "Collection > ... > Create Fork",
+    "example": "Fazer fork da Collection 'API Pagamentos' para adicionar uma nova requisição de teste, e depois abrir um Pull Request para mesclar de volta à Collection original.",
+    "result": "As mudanças ficam isoladas no fork até que o Pull Request seja revisado e aprovado por um responsável pela Collection original.",
+    "notes": [
+      "Evita o antipadrão de duplicar Collections manualmente ('Copiar e colar'), que perde o vínculo com a origem."
+    ],
+    "bestPractices": [
+      "Use Fork + Pull Request em vez de editar diretamente uma Collection compartilhada por todo o time, especialmente em Collections críticas."
+    ],
+    "relatedCommands": ["postman-workspaces", "postman-collections"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/collaborating-in-postman/version-control-for-collections/",
+    "externalReferences": [],
+    "tags": ["postman", "fork", "pull request", "colaboracao"],
+    "keywords": [
+      "fork collection postman",
+      "pull request postman",
+      "versionamento de collection"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postman-api-documentation",
+    "category": "Postman",
+    "subcategory": "Documentação",
+    "title": "Documentação automática de API",
+    "description": "Gera uma página de documentação navegável e publicável a partir de uma Collection, incluindo descrições, exemplos de requisição/resposta e snippets de código.",
+    "syntax": "Collection > View Documentation",
+    "example": "Escrever descrições em Markdown para cada requisição da Collection 'API Pública' e clicar em 'Publish' para gerar uma URL de documentação pública.",
+    "result": "Uma página web navegável é publicada, mostrando cada endpoint com seus parâmetros, exemplos e código gerado automaticamente em várias linguagens.",
+    "notes": [
+      "A documentação é atualizada automaticamente sempre que a Collection é modificada e republicada."
+    ],
+    "bestPractices": [
+      "Adicione exemplos salvos (Saved Responses) a cada requisição para que a documentação gerada mostre respostas reais, não apenas a estrutura."
+    ],
+    "relatedCommands": ["postman-collections", "postman-import-export"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos", "browser", "cloud"],
+    "version": "Postman 11",
+    "officialDocumentation": "https://learning.postman.com/docs/publishing-your-api/documenting-your-api/",
+    "externalReferences": [],
+    "tags": ["postman", "documentacao", "api"],
+    "keywords": ["documentacao de api postman", "publicar documentacao", "api docs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

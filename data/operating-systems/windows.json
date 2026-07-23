@@ -759,5 +759,173 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "win-powertoys",
+    "category": "Windows",
+    "subcategory": "PowerToys",
+    "title": "PowerToys — utilitários de produtividade da Microsoft",
+    "description": "Conjunto de utilitários gratuitos e open source da Microsoft que estende o Windows com ferramentas como FancyZones (layouts de janela customizados), PowerToys Run (launcher rápido), PowerRename (renomear em lote com regex) e Color Picker.",
+    "shortcut": "Alt + Space",
+    "notes": [
+      "`Alt + Space` abre o PowerToys Run, um launcher rápido para abrir apps, arquivos e cálculos, similar ao Spotlight do macOS.",
+      "FancyZones permite desenhar layouts de zonas customizados para arrastar janelas, indo além dos Snap Layouts nativos do Windows 11.",
+      "PowerRename adiciona uma opção ao menu de contexto do Explorador para renomear múltiplos arquivos de uma vez usando busca e substituição com regex."
+    ],
+    "bestPractices": [
+      "Instale via winget (`winget install Microsoft.PowerToys`) para manter atualizações automáticas mais fáceis do que baixando o instalador manualmente."
+    ],
+    "relatedCommands": ["win-shortcut-snap-layouts", "win-shortcut-win-r"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/powertoys/",
+    "externalReferences": [
+      {
+        "label": "Repositório oficial no GitHub",
+        "url": "https://github.com/microsoft/PowerToys"
+      }
+    ],
+    "tags": ["windows", "powertoys", "produtividade"],
+    "keywords": ["powertoys", "fancyzones", "powertoys run", "powerrename"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "win-shortcut-win-v",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + V — histórico da Área de Transferência",
+    "description": "Abre o painel de histórico da Área de Transferência (clipboard), mostrando os últimos itens copiados (texto e imagens pequenas) para colar qualquer um deles, não só o mais recente.",
+    "shortcut": "Win + V",
+    "notes": [
+      "Precisa ser habilitado uma vez em Configurações > Sistema > Área de Transferência antes de funcionar.",
+      "Itens podem ser fixados no histórico para não serem apagados ao reiniciar o computador."
+    ],
+    "bestPractices": [
+      "Fixe trechos de texto usados com frequência (ex: assinatura de e-mail, snippets) para tê-los sempre disponíveis no painel."
+    ],
+    "relatedCommands": ["win-shortcut-win-period"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/usar-o-hist%C3%B3rico-da-%C3%A1rea-de-transfer%C3%AAncia-no-windows-c436501e-985d-1c8d-97ea-5cd747190234",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "area de transferencia", "clipboard"],
+    "keywords": ["win v", "historico area de transferencia", "clipboard history windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "win-remote-desktop",
+    "category": "Windows",
+    "subcategory": "Rede",
+    "title": "Área de Trabalho Remota (mstsc / Remote Desktop)",
+    "description": "Permite controlar remotamente outro computador Windows pela rede, transmitindo tela, teclado e mouse. Exige que o recurso esteja habilitado no computador de destino (edições Pro/Enterprise).",
+    "syntax": "mstsc.exe [/v:<host>] [/f] [/admin]",
+    "example": "mstsc /v:192.168.1.50",
+    "result": "Abre uma janela de conexão RDP solicitando credenciais para acessar o computador no IP informado.",
+    "flags": [
+      {
+        "flag": "/v",
+        "description": "Especifica o host/endereço de destino diretamente."
+      },
+      { "flag": "/f", "description": "Inicia a sessão em tela cheia." },
+      {
+        "flag": "/admin",
+        "description": "Conecta à sessão de console/administração em vez de criar uma nova sessão."
+      }
+    ],
+    "notes": [
+      "O computador de destino precisa ter 'Permitir conexões de Área de Trabalho Remota' habilitado em Configurações > Sistema > Área de Trabalho Remota."
+    ],
+    "commonMistakes": [
+      "Tentar conectar via RDP a uma edição Home do Windows, que não suporta atuar como servidor RDP (só como cliente)."
+    ],
+    "relatedCommands": ["win-shortcut-win-r"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients",
+    "externalReferences": [],
+    "tags": ["windows", "rede", "rdp", "acesso remoto"],
+    "keywords": ["area de trabalho remota", "mstsc", "remote desktop windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "win-disk-management",
+    "category": "Windows",
+    "subcategory": "Armazenamento",
+    "title": "Gerenciamento de Disco (diskmgmt.msc)",
+    "description": "Ferramenta gráfica para visualizar, criar, formatar, redimensionar, excluir e atribuir letras a partições e volumes dos discos conectados ao sistema.",
+    "syntax": "diskmgmt.msc",
+    "example": "Win + X, selecionar \"Gerenciamento de Disco\"",
+    "notes": [
+      "Redimensionar uma partição ('Estender Volume'/'Reduzir Volume') só é possível se houver espaço não alocado adjacente disponível.",
+      "Para operações mais avançadas de linha de comando, existe o utilitário `diskpart`, que opera nos mesmos discos por script."
+    ],
+    "commonMistakes": [
+      "Excluir a partição errada por não conferir o número do disco/volume antes de confirmar, causando perda de dados."
+    ],
+    "relatedCommands": ["win-shortcut-win-x", "win-system32"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/storage/disk-management/overview-of-disk-management",
+    "externalReferences": [],
+    "tags": ["windows", "disco", "particao", "armazenamento"],
+    "keywords": ["gerenciamento de disco", "diskmgmt", "particionar disco windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "win-event-viewer",
+    "category": "Windows",
+    "subcategory": "Diagnóstico",
+    "title": "Visualizador de Eventos (Event Viewer)",
+    "description": "Ferramenta que exibe os registros (logs) de eventos do sistema, aplicativos e segurança gerados pelo Windows, essencial para diagnosticar travamentos, falhas de driver e problemas de inicialização.",
+    "syntax": "eventvwr.msc",
+    "example": "Win + R, digitar \"eventvwr\", Enter",
+    "notes": [
+      "Os logs principais ficam em 'Logs do Windows': Aplicativo, Segurança, Instalação, Sistema.",
+      "Eventos são classificados por nível: Informação, Aviso, Erro e Crítico — filtre por 'Erro' e 'Crítico' ao investigar uma falha específica."
+    ],
+    "bestPractices": [
+      "Anote o 'ID do Evento' ao encontrar um erro recorrente — pesquisar esse número junto com a origem costuma levar direto à causa documentada."
+    ],
+    "relatedCommands": ["win-task-manager", "win-shortcut-win-r"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/win32/wes/windows-event-log",
+    "externalReferences": [],
+    "tags": ["windows", "diagnostico", "logs", "event viewer"],
+    "keywords": [
+      "visualizador de eventos",
+      "event viewer",
+      "eventvwr",
+      "logs do windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "win-shortcut-win-m",
+    "category": "Windows",
+    "subcategory": "Atalhos de teclado",
+    "title": "Win + M — minimizar todas as janelas",
+    "description": "Minimiza todas as janelas abertas, exibindo a área de trabalho, sem guardar estado para restauração automática como o Win+D.",
+    "shortcut": "Win + M",
+    "notes": [
+      "Win + Shift + M restaura as janelas minimizadas por Win + M à posição anterior — diferente de pressionar Win+D de novo, que também funciona como toggle."
+    ],
+    "bestPractices": [
+      "Use Win+D quando quiser alternar rapidamente (toggle) entre desktop e janelas; use Win+M quando só precisar minimizar tudo uma vez."
+    ],
+    "relatedCommands": ["win-shortcut-win-d"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://support.microsoft.com/windows/atalhos-de-teclado-no-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+    "externalReferences": [],
+    "tags": ["windows", "atalhos", "area de trabalho"],
+    "keywords": ["win m", "minimizar todas as janelas", "minimizar tudo windows"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

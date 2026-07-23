@@ -15,7 +15,7 @@
     "commonMistakes": [
       "Aninhar comprehensions muito complexas, sacrificando legibilidade — nesse caso um loop explícito é melhor."
     ],
-    "relatedCommands": ["py-generator-expression", "py-map-filter"],
+    "relatedCommands": ["py-generators-yield"],
     "difficulty": "iniciante",
     "platform": ["linux", "windows", "macos"],
     "language": "python",
@@ -45,7 +45,7 @@
     "commonMistakes": [
       "Abrir arquivos com `open()` sem `with` e esquecer de chamar `close()` manualmente."
     ],
-    "relatedCommands": ["py-try-except", "py-contextlib"],
+    "relatedCommands": ["py-try-except"],
     "difficulty": "intermediario",
     "platform": ["linux", "windows", "macos"],
     "language": "python",
@@ -56,5 +56,715 @@
     "keywords": ["with", "context manager", "gerenciador de contexto"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "py-decorators",
+    "category": "Python",
+    "subcategory": "Funções avançadas",
+    "title": "Decorators",
+    "description": "Funções que recebem outra função (ou classe) e retornam uma versão modificada dela, permitindo adicionar comportamento sem alterar o código original.",
+    "syntax": "def decorador(func):\n    def wrapper(*args, **kwargs):\n        # antes\n        resultado = func(*args, **kwargs)\n        # depois\n        return resultado\n    return wrapper\n\n@decorador\ndef minha_funcao(): ...",
+    "example": "def log_chamada(func):\n    def wrapper(*args, **kwargs):\n        print(f\"Chamando {func.__name__}\")\n        return func(*args, **kwargs)\n    return wrapper\n\n@log_chamada\ndef somar(a, b):\n    return a + b",
+    "result": "Chamando somar\n(imprime antes de executar a soma normalmente)",
+    "notes": [
+      "`functools.wraps` deve envolver o `wrapper` para preservar `__name__` e `__doc__` da função original."
+    ],
+    "bestPractices": [
+      "Use decorators para preocupações transversais (logging, cache, autenticação) em vez de duplicar esse código em cada função."
+    ],
+    "commonMistakes": [
+      "Esquecer `@functools.wraps(func)`, fazendo a função decorada perder seu nome e docstring originais."
+    ],
+    "relatedCommands": ["py-context-manager-with"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.4+",
+    "officialDocumentation": "https://docs.python.org/3/glossary.html#term-decorator",
+    "externalReferences": [],
+    "tags": ["python", "decorators", "funcoes"],
+    "keywords": ["decorators python", "decoradores", "functools wraps"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-generators-yield",
+    "category": "Python",
+    "subcategory": "Iteradores",
+    "title": "Generators (yield)",
+    "description": "Funções que produzem uma sequência de valores sob demanda usando `yield`, mantendo seu estado entre chamadas sem armazenar toda a sequência em memória.",
+    "syntax": "def gerador():\n    yield valor1\n    yield valor2",
+    "example": "def contador(limite):\n    n = 0\n    while n < limite:\n        yield n\n        n += 1\n\nfor i in contador(3):\n    print(i)",
+    "result": "0\n1\n2",
+    "notes": [
+      "Diferente de `return`, `yield` pausa a execução da função, preservando variáveis locais até a próxima chamada de `next()`."
+    ],
+    "bestPractices": [
+      "Use generators para processar sequências grandes ou infinitas sem carregar tudo na memória de uma vez."
+    ],
+    "commonMistakes": [
+      "Tentar iterar um generator duas vezes — ele é consumido uma única vez e depois se esgota."
+    ],
+    "relatedCommands": ["py-list-comprehension", "py-itertools"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.2+",
+    "officialDocumentation": "https://docs.python.org/3/glossary.html#term-generator",
+    "externalReferences": [],
+    "tags": ["python", "generators", "yield"],
+    "keywords": ["generators python", "yield", "iteradores"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-args-kwargs",
+    "category": "Python",
+    "subcategory": "Funções",
+    "title": "*args e **kwargs",
+    "description": "Sintaxe para funções aceitarem um número variável de argumentos posicionais (`*args`, uma tupla) e nomeados (`**kwargs`, um dicionário).",
+    "syntax": "def funcao(*args, **kwargs): ...",
+    "example": "def resumo(*args, **kwargs):\n    print(args)\n    print(kwargs)\n\nresumo(1, 2, nome=\"Ana\", idade=30)",
+    "result": "(1, 2)\n{'nome': 'Ana', 'idade': 30}",
+    "notes": [
+      "Os nomes `args` e `kwargs` são convenção, não obrigatórios — o que importa são os prefixos `*` e `**`."
+    ],
+    "bestPractices": [
+      "Use `*args`/`**kwargs` para criar wrappers genéricos (decorators) que repassam qualquer assinatura para a função original."
+    ],
+    "commonMistakes": [
+      "Abusar de `*args`/`**kwargs` em funções de negócio, tornando a assinatura opaca e difícil de documentar/tipar."
+    ],
+    "relatedCommands": ["py-decorators"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/controlflow.html#arbitrary-argument-lists",
+    "externalReferences": [],
+    "tags": ["python", "funcoes", "args-kwargs"],
+    "keywords": ["args kwargs", "argumentos variaveis python", "unpacking argumentos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-f-strings",
+    "category": "Python",
+    "subcategory": "Strings",
+    "title": "f-strings (formatted string literals)",
+    "description": "Sintaxe para interpolar expressões diretamente dentro de strings, prefixando a string com `f` e envolvendo expressões em chaves.",
+    "syntax": "f\"texto {expressao} texto\"",
+    "example": "nome = \"Ana\"\nidade = 30\nprint(f\"{nome} tem {idade} anos e fará {idade + 1} no próximo ano\")",
+    "result": "Ana tem 30 anos e fará 31 no próximo ano",
+    "notes": [
+      "Suporta especificadores de formatação, como `f\"{valor:.2f}\"` para duas casas decimais.",
+      "Desde o Python 3.8, `f\"{expressao=}\"` imprime tanto a expressão quanto seu valor, útil para debug."
+    ],
+    "bestPractices": [
+      "Prefira f-strings a `%`-formatting ou `.format()` em código novo — são mais legíveis e rápidas."
+    ],
+    "commonMistakes": [
+      "Usar f-strings para montar queries SQL com interpolação direta de dados do usuário, abrindo brecha para SQL injection."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.6+",
+    "officialDocumentation": "https://docs.python.org/3/reference/lexical_analysis.html#f-strings",
+    "externalReferences": [],
+    "tags": ["python", "strings", "f-strings"],
+    "keywords": ["f-strings", "formatacao de string python", "interpolacao de string"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-dict-set-comprehension",
+    "category": "Python",
+    "subcategory": "Estruturas de dados",
+    "title": "Dict e set comprehension",
+    "description": "Sintaxe compacta análoga à list comprehension, mas para criar dicionários (`{chave: valor for ...}`) ou conjuntos (`{valor for ...}`).",
+    "syntax": "{chave: valor for item in iteravel if condicao}\n{expressao for item in iteravel if condicao}",
+    "example": "quadrados = {n: n**2 for n in range(5)}\npares_unicos = {n for n in [1, 2, 2, 3, 4, 4] if n % 2 == 0}",
+    "result": "{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}\n{2, 4}",
+    "notes": [
+      "Set comprehensions removem duplicatas automaticamente, já que sets não aceitam elementos repetidos."
+    ],
+    "bestPractices": [
+      "Use dict comprehension para transformar uma lista de pares chave-valor em vez de um loop com `dict[chave] = valor`."
+    ],
+    "relatedCommands": ["py-list-comprehension"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.7+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/datastructures.html#dictionaries",
+    "externalReferences": [],
+    "tags": ["python", "dict", "set", "comprehension"],
+    "keywords": ["dict comprehension", "set comprehension", "compreensao de dicionario"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-lambda",
+    "category": "Python",
+    "subcategory": "Funções",
+    "title": "Funções lambda",
+    "description": "Funções anônimas de uma única expressão, usadas tipicamente como argumento rápido para outras funções (sort, filter, map).",
+    "syntax": "lambda argumentos: expressao",
+    "example": "pessoas = [{\"nome\": \"Ana\", \"idade\": 30}, {\"nome\": \"Bruno\", \"idade\": 25}]\npessoas.sort(key=lambda p: p[\"idade\"])",
+    "result": "[{'nome': 'Bruno', 'idade': 25}, {'nome': 'Ana', 'idade': 30}]",
+    "notes": [
+      "Uma lambda só pode conter uma expressão, não statements (sem `if`/`for` como comandos, sem múltiplas linhas)."
+    ],
+    "bestPractices": [
+      "Use lambda para funções curtas e descartáveis (chave de sort, callback simples); prefira `def` nomeado para lógica reutilizável."
+    ],
+    "commonMistakes": [
+      "Atribuir uma lambda a uma variável (`f = lambda x: x + 1`) em vez de usar `def f(x): return x + 1`, que é mais legível e depurável."
+    ],
+    "relatedCommands": ["py-args-kwargs"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/reference/expressions.html#lambda",
+    "externalReferences": [],
+    "tags": ["python", "lambda", "funcoes"],
+    "keywords": ["lambda python", "funcao anonima", "lambda sort key"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-try-except",
+    "category": "Python",
+    "subcategory": "Tratamento de erros",
+    "title": "try / except / else / finally",
+    "description": "Estrutura de tratamento de exceções: `try` executa código arriscado, `except` captura erros específicos, `else` roda se nada falhar e `finally` roda sempre, independente do resultado.",
+    "syntax": "try:\n    bloco\nexcept TipoErro as e:\n    tratamento\nelse:\n    sem_erro\nfinally:\n    sempre",
+    "example": "try:\n    resultado = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f\"Erro: {e}\")\nelse:\n    print(\"Sucesso\")\nfinally:\n    print(\"Fim da operação\")",
+    "result": "Erro: division by zero\nFim da operação",
+    "notes": [
+      "`except Exception` (sem tipo específico) captura genericamente, mas dificulta identificar a causa real do problema.",
+      "`else` só executa se o bloco `try` não lançar exceção alguma."
+    ],
+    "bestPractices": [
+      "Capture o tipo de exceção mais específico possível em vez de um `except:` genérico que engole qualquer erro."
+    ],
+    "commonMistakes": [
+      "Usar `except:` sem especificar o tipo, capturando até `KeyboardInterrupt` e `SystemExit` sem querer."
+    ],
+    "relatedCommands": ["py-context-manager-with"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/errors.html",
+    "externalReferences": [],
+    "tags": ["python", "excecoes", "try-except"],
+    "keywords": ["try except python", "tratamento de erros python", "exceptions"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-classes-inheritance",
+    "category": "Python",
+    "subcategory": "Orientação a objetos",
+    "title": "Classes e herança",
+    "description": "Define tipos customizados com atributos e métodos; uma classe pode herdar de outra, reutilizando e estendendo seu comportamento.",
+    "syntax": "class Filha(Pai):\n    def __init__(self, args):\n        super().__init__(args)",
+    "example": "class Animal:\n    def __init__(self, nome):\n        self.nome = nome\n    def emitir_som(self):\n        return \"...\"\n\nclass Cachorro(Animal):\n    def emitir_som(self):\n        return \"Au au!\"\n\nprint(Cachorro(\"Rex\").emitir_som())",
+    "result": "Au au!",
+    "notes": [
+      "`super()` acessa métodos da classe pai, útil para estender (em vez de substituir totalmente) o comportamento do `__init__`."
+    ],
+    "bestPractices": [
+      "Prefira composição a herança profunda (mais de 2-3 níveis), que costuma tornar o código difícil de rastrear."
+    ],
+    "commonMistakes": [
+      "Esquecer de chamar `super().__init__()` na subclasse, deixando atributos da classe pai não inicializados."
+    ],
+    "relatedCommands": ["py-dunder-methods", "py-dataclasses"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/classes.html",
+    "externalReferences": [],
+    "tags": ["python", "classes", "heranca", "oop"],
+    "keywords": ["classes python", "heranca python", "super()"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-dataclasses",
+    "category": "Python",
+    "subcategory": "Orientação a objetos",
+    "title": "Dataclasses",
+    "description": "Decorator que gera automaticamente `__init__`, `__repr__` e `__eq__` para classes que servem principalmente para agrupar dados, reduzindo código repetitivo.",
+    "syntax": "from dataclasses import dataclass\n\n@dataclass\nclass Nome:\n    campo: tipo",
+    "example": "from dataclasses import dataclass\n\n@dataclass\nclass Ponto:\n    x: int\n    y: int\n\np1 = Ponto(1, 2)\np2 = Ponto(1, 2)\nprint(p1 == p2)",
+    "result": "True",
+    "notes": [
+      "`@dataclass(frozen=True)` torna as instâncias imutáveis, lançando erro ao tentar reatribuir um atributo."
+    ],
+    "bestPractices": [
+      "Use dataclasses para DTOs e objetos de valor em vez de classes manuais com `__init__`/`__repr__`/`__eq__` escritos à mão."
+    ],
+    "commonMistakes": [
+      "Usar um valor mutável (como lista `[]`) como valor padrão de campo diretamente, em vez de `field(default_factory=list)`."
+    ],
+    "relatedCommands": ["py-classes-inheritance", "py-type-hints"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.7+",
+    "officialDocumentation": "https://docs.python.org/3/library/dataclasses.html",
+    "externalReferences": [],
+    "tags": ["python", "dataclasses", "oop"],
+    "keywords": ["dataclasses python", "@dataclass", "dto python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-venv-pip",
+    "category": "Python",
+    "subcategory": "Ambiente",
+    "title": "Ambientes virtuais (venv) e pip",
+    "description": "`venv` cria um ambiente Python isolado por projeto, com suas próprias dependências; `pip` instala pacotes dentro desse ambiente sem afetar o sistema global.",
+    "syntax": "python -m venv .venv\nsource .venv/bin/activate  # Linux/Mac\n.venv\\Scripts\\activate     # Windows\npip install <pacote>",
+    "example": "python -m venv .venv\nsource .venv/bin/activate\npip install requests\npip freeze > requirements.txt",
+    "result": "O pacote 'requests' é instalado apenas dentro de `.venv`, sem afetar outros projetos ou a instalação global do Python.",
+    "notes": [
+      "`pip freeze > requirements.txt` gera um arquivo com as versões exatas instaladas, para reproduzir o ambiente em outra máquina."
+    ],
+    "bestPractices": [
+      "Sempre crie um ambiente virtual por projeto em vez de instalar pacotes globalmente, evitando conflitos de versão entre projetos."
+    ],
+    "commonMistakes": [
+      "Esquecer de ativar o ambiente virtual antes de instalar pacotes, poluindo a instalação global do Python."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.3+",
+    "officialDocumentation": "https://docs.python.org/3/library/venv.html",
+    "externalReferences": [],
+    "tags": ["python", "venv", "pip", "ambiente"],
+    "keywords": ["venv python", "ambiente virtual python", "pip install"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-type-hints",
+    "category": "Python",
+    "subcategory": "Tipagem",
+    "title": "Type hints",
+    "description": "Anotações opcionais de tipo em variáveis, parâmetros e retornos de função, verificadas por ferramentas externas (mypy, pyright) — não alteram o comportamento em runtime.",
+    "syntax": "def funcao(param: tipo) -> tipo_retorno: ...",
+    "example": "from typing import Optional\n\ndef buscar_usuario(id: int) -> Optional[dict]:\n    return usuarios.get(id)",
+    "result": "A assinatura documenta que `id` é int e o retorno é um dict ou None, verificável estaticamente por mypy/pyright.",
+    "notes": [
+      "Python não impõe os tipos em runtime — passar um tipo errado não gera erro imediato, só falha na checagem estática."
+    ],
+    "bestPractices": [
+      "Adicione type hints em APIs públicas e funções complexas; use uma ferramenta como mypy no CI para validar consistência."
+    ],
+    "commonMistakes": [
+      "Achar que type hints validam o tipo em tempo de execução como em linguagens estaticamente tipadas."
+    ],
+    "relatedCommands": ["py-dataclasses"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.5+",
+    "officialDocumentation": "https://docs.python.org/3/library/typing.html",
+    "externalReferences": [],
+    "tags": ["python", "type-hints", "tipagem"],
+    "keywords": ["type hints python", "tipagem estatica python", "mypy"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-async-await",
+    "category": "Python",
+    "subcategory": "Assincronismo",
+    "title": "async / await",
+    "description": "Sintaxe para escrever código assíncrono baseado em corrotinas, permitindo executar operações de I/O concorrentemente sem bloquear a thread principal.",
+    "syntax": "async def funcao():\n    resultado = await corrotina()",
+    "example": "import asyncio\n\nasync def buscar_dados():\n    await asyncio.sleep(1)\n    return \"dados\"\n\nasync def main():\n    resultado = await buscar_dados()\n    print(resultado)\n\nasyncio.run(main())",
+    "result": "dados (impresso após ~1 segundo, sem bloquear outras corrotinas concorrentes)",
+    "notes": [
+      "`asyncio.gather()` executa múltiplas corrotinas concorrentemente, análogo ao `Promise.all` do JavaScript."
+    ],
+    "bestPractices": [
+      "Use bibliotecas async (httpx, aiohttp) em código assíncrono — misturar chamadas síncronas bloqueantes anula o benefício do asyncio."
+    ],
+    "commonMistakes": [
+      "Chamar uma função `async def` sem `await`, o que apenas cria o objeto corrotina sem executá-lo."
+    ],
+    "relatedCommands": ["py-generators-yield"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.5+",
+    "officialDocumentation": "https://docs.python.org/3/library/asyncio.html",
+    "externalReferences": [],
+    "tags": ["python", "async", "asyncio"],
+    "keywords": ["async await python", "asyncio", "corrotinas python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-itertools",
+    "category": "Python",
+    "subcategory": "Módulos da biblioteca padrão",
+    "title": "Módulo itertools",
+    "description": "Biblioteca padrão com funções eficientes para criar e combinar iteradores: combinações, permutações, agrupamento, encadeamento, ciclos infinitos.",
+    "syntax": "from itertools import chain, combinations, groupby, cycle",
+    "example": "from itertools import combinations\n\nlista = ['a', 'b', 'c']\nprint(list(combinations(lista, 2)))",
+    "result": "[('a', 'b'), ('a', 'c'), ('b', 'c')]",
+    "notes": [
+      "Funções de itertools retornam iteradores preguiçosos (lazy), economizando memória em relação a gerar listas completas."
+    ],
+    "bestPractices": [
+      "Use `itertools.chain` para percorrer múltiplos iteráveis sequencialmente sem concatená-los em uma nova lista."
+    ],
+    "relatedCommands": ["py-generators-yield"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.3+",
+    "officialDocumentation": "https://docs.python.org/3/library/itertools.html",
+    "externalReferences": [],
+    "tags": ["python", "itertools", "iteradores"],
+    "keywords": ["itertools python", "combinations", "groupby python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-enumerate-zip",
+    "category": "Python",
+    "subcategory": "Funções built-in",
+    "title": "enumerate e zip",
+    "description": "`enumerate` itera uma sequência retornando também o índice de cada item; `zip` combina múltiplos iteráveis em tuplas paralelas, parando no mais curto.",
+    "syntax": "for indice, valor in enumerate(iteravel, start=0): ...\nfor a, b in zip(iteravel1, iteravel2): ...",
+    "example": "nomes = ['Ana', 'Bruno']\nidades = [30, 25]\nfor i, nome in enumerate(nomes, start=1):\n    print(i, nome)\nfor nome, idade in zip(nomes, idades):\n    print(nome, idade)",
+    "result": "1 Ana\n2 Bruno\nAna 30\nBruno 25",
+    "notes": [
+      "`zip` para automaticamente no iterável mais curto, sem erro; use `itertools.zip_longest` para preencher os que faltam."
+    ],
+    "bestPractices": [
+      "Use `enumerate` em vez de `range(len(lista))` para obter índice e valor com código mais legível."
+    ],
+    "commonMistakes": [
+      "Esperar que `zip` reclame de tamanhos diferentes — ele simplesmente trunca no menor sem avisar."
+    ],
+    "relatedCommands": ["py-list-comprehension"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.0+",
+    "officialDocumentation": "https://docs.python.org/3/library/functions.html#enumerate",
+    "externalReferences": [],
+    "tags": ["python", "enumerate", "zip"],
+    "keywords": ["enumerate python", "zip python", "iterar com indice"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-slicing",
+    "category": "Python",
+    "subcategory": "Estruturas de dados",
+    "title": "Slicing (fatiamento)",
+    "description": "Sintaxe `[inicio:fim:passo]` para extrair sub-sequências de listas, tuplas e strings sem escrever loops manuais.",
+    "syntax": "sequencia[inicio:fim:passo]",
+    "example": "lista = [0, 1, 2, 3, 4, 5]\nprint(lista[1:4])\nprint(lista[::-1])\nprint(lista[::2])",
+    "result": "[1, 2, 3]\n[5, 4, 3, 2, 1, 0]\n[0, 2, 4]",
+    "notes": [
+      "`inicio` é inclusivo, `fim` é exclusivo; qualquer um dos três valores pode ser omitido (assume início/fim da sequência)."
+    ],
+    "bestPractices": [
+      "Use `lista[::-1]` para inverter uma sequência de forma idiomática, sem `reversed()` explícito quando já se está fatiando."
+    ],
+    "commonMistakes": [
+      "Esquecer que slicing sempre retorna uma cópia rasa (shallow copy), não uma view sobre a lista original."
+    ],
+    "relatedCommands": ["py-unpacking"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/reference/expressions.html#slicings",
+    "externalReferences": [],
+    "tags": ["python", "slicing", "listas"],
+    "keywords": ["slicing python", "fatiamento de lista", "lista invertida python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-unpacking",
+    "category": "Python",
+    "subcategory": "Estruturas de dados",
+    "title": "Unpacking (desempacotamento)",
+    "description": "Atribui múltiplos valores de uma sequência a variáveis separadas em uma única linha, incluindo captura do 'restante' com `*`.",
+    "syntax": "a, b, c = sequencia\nprimeiro, *resto = sequencia",
+    "example": "numeros = [1, 2, 3, 4, 5]\nprimeiro, *meio, ultimo = numeros\nprint(primeiro, meio, ultimo)",
+    "result": "1 [2, 3, 4] 5",
+    "notes": [
+      "O mesmo mecanismo é usado para trocar valores de variáveis sem uma auxiliar: `a, b = b, a`."
+    ],
+    "bestPractices": [
+      "Use unpacking para retornar e capturar múltiplos valores de uma função de forma clara, em vez de indexar um objeto retornado."
+    ],
+    "commonMistakes": [
+      "Tentar desempacotar uma sequência com número de elementos diferente do número de variáveis (sem usar `*`), causando `ValueError`."
+    ],
+    "relatedCommands": ["py-slicing"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences",
+    "externalReferences": [],
+    "tags": ["python", "unpacking", "tuplas"],
+    "keywords": ["unpacking python", "desempacotamento", "trocar variaveis python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-walrus-operator",
+    "category": "Python",
+    "subcategory": "Sintaxe",
+    "title": "Walrus operator (:=)",
+    "description": "Operador de atribuição de expressão, que atribui um valor a uma variável e retorna esse valor na mesma expressão, útil dentro de condições e comprehensions.",
+    "syntax": "variavel := expressao",
+    "example": "dados = [1, 2, 3, 4, 5]\nif (n := len(dados)) > 3:\n    print(f\"Lista tem {n} itens\")",
+    "result": "Lista tem 5 itens",
+    "notes": [
+      "Evita calcular a mesma expressão duas vezes (uma para testar, outra para usar o valor)."
+    ],
+    "bestPractices": [
+      "Use o walrus operator para evitar repetir uma chamada cara (como `len()` ou uma consulta) dentro de uma condição."
+    ],
+    "commonMistakes": [
+      "Abusar do walrus em expressões complexas, tornando o código mais difícil de ler do que uma atribuição em linha separada."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.8+",
+    "officialDocumentation": "https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions",
+    "externalReferences": [],
+    "tags": ["python", "walrus", "sintaxe"],
+    "keywords": ["walrus operator", "operador morsa", ":= python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-property",
+    "category": "Python",
+    "subcategory": "Orientação a objetos",
+    "title": "@property",
+    "description": "Decorator que transforma um método em um atributo somente leitura (ou com getter/setter customizado), permitindo validação sem mudar a API de acesso.",
+    "syntax": "class Nome:\n    @property\n    def atributo(self):\n        return self._atributo\n    @atributo.setter\n    def atributo(self, valor):\n        self._atributo = valor",
+    "example": "class Circulo:\n    def __init__(self, raio):\n        self._raio = raio\n    @property\n    def area(self):\n        return 3.14159 * self._raio ** 2\n\nc = Circulo(2)\nprint(c.area)",
+    "result": "12.56636",
+    "notes": [
+      "`c.area` é acessado como atributo (sem parênteses), mesmo sendo calculado dinamicamente por um método."
+    ],
+    "bestPractices": [
+      "Use `@property` para expor valores derivados/calculados como se fossem atributos simples, sem quebrar a interface da classe."
+    ],
+    "commonMistakes": [
+      "Definir um setter que faz validação pesada ou I/O, surpreendendo quem espera que atribuir um atributo seja uma operação barata."
+    ],
+    "relatedCommands": ["py-classes-inheritance", "py-dunder-methods"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.2+",
+    "officialDocumentation": "https://docs.python.org/3/library/functions.html#property",
+    "externalReferences": [],
+    "tags": ["python", "property", "oop"],
+    "keywords": ["@property python", "getter setter python", "atributo calculado"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-dunder-methods",
+    "category": "Python",
+    "subcategory": "Orientação a objetos",
+    "title": "Métodos mágicos (dunder methods)",
+    "description": "Métodos com nomes especiais entre duplo underscore (`__init__`, `__repr__`, `__eq__`, `__len__`) que integram uma classe customizada aos operadores e funções built-in do Python.",
+    "syntax": "def __metodo__(self, ...): ...",
+    "example": "class Vetor:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f\"Vetor({self.x}, {self.y})\"\n    def __add__(self, outro):\n        return Vetor(self.x + outro.x, self.y + outro.y)\n\nprint(Vetor(1, 2) + Vetor(3, 4))",
+    "result": "Vetor(4, 6)",
+    "notes": [
+      "`__repr__` deve retornar uma representação inequívoca (idealmente reconstruível); `__str__` é a versão amigável para exibição."
+    ],
+    "bestPractices": [
+      "Implemente `__repr__` em toda classe de domínio para facilitar debug — a representação padrão (`<Objeto at 0x...>`) não ajuda em nada."
+    ],
+    "commonMistakes": [
+      "Implementar `__eq__` sem implementar `__hash__`, tornando instâncias da classe inutilizáveis como chave de dict ou item de set."
+    ],
+    "relatedCommands": ["py-property", "py-classes-inheritance"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/reference/datamodel.html#special-method-names",
+    "externalReferences": [],
+    "tags": ["python", "dunder", "oop"],
+    "keywords": ["metodos magicos python", "dunder methods", "__repr__ __eq__"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-pathlib",
+    "category": "Python",
+    "subcategory": "Módulos da biblioteca padrão",
+    "title": "Módulo pathlib",
+    "description": "API orientada a objetos para manipular caminhos de arquivos e diretórios, substituindo a manipulação de strings do módulo `os.path`.",
+    "syntax": "from pathlib import Path\ncaminho = Path(\"pasta\") / \"arquivo.txt\"",
+    "example": "from pathlib import Path\n\np = Path(\"dados\") / \"config.json\"\nprint(p.exists())\nprint(p.suffix)\nprint(p.read_text() if p.exists() else \"não existe\")",
+    "result": "False\n.json\nnão existe",
+    "notes": [
+      "O operador `/` é sobrecarregado para juntar segmentos de caminho de forma legível e independente de sistema operacional."
+    ],
+    "bestPractices": [
+      "Prefira `pathlib.Path` a concatenação manual de strings com `os.path.join`, especialmente em código multiplataforma."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "3.4+",
+    "officialDocumentation": "https://docs.python.org/3/library/pathlib.html",
+    "externalReferences": [],
+    "tags": ["python", "pathlib", "arquivos"],
+    "keywords": ["pathlib python", "manipular caminhos python", "path python"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-json-module",
+    "category": "Python",
+    "subcategory": "Módulos da biblioteca padrão",
+    "title": "Módulo json",
+    "description": "Converte objetos Python para JSON (`dumps`/`dump`) e JSON para objetos Python (`loads`/`load`), usado para serialização de dados e comunicação com APIs.",
+    "syntax": "json.dumps(objeto) | json.loads(texto)",
+    "example": "import json\n\ndados = {\"nome\": \"Ana\", \"idade\": 30}\ntexto = json.dumps(dados, indent=2)\nprint(texto)\nde_volta = json.loads(texto)",
+    "result": "{\n  \"nome\": \"Ana\",\n  \"idade\": 30\n}",
+    "notes": [
+      "`dump`/`load` (sem 's') trabalham diretamente com arquivos abertos; `dumps`/`loads` trabalham com strings em memória."
+    ],
+    "bestPractices": [
+      "Use `indent=2` em `json.dumps` para saída legível em logs/debug; omita em produção para reduzir o tamanho do payload."
+    ],
+    "commonMistakes": [
+      "Tentar serializar objetos não suportados nativamente (datetime, set) sem um `default=` customizado, causando `TypeError`."
+    ],
+    "relatedCommands": ["py-dataclasses"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.6+",
+    "officialDocumentation": "https://docs.python.org/3/library/json.html",
+    "externalReferences": [],
+    "tags": ["python", "json", "serializacao"],
+    "keywords": ["json python", "json.dumps", "json.loads"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-collections-module",
+    "category": "Python",
+    "subcategory": "Módulos da biblioteca padrão",
+    "title": "Módulo collections (Counter, defaultdict, namedtuple)",
+    "description": "Estruturas de dados especializadas que estendem os tipos built-in: `Counter` conta ocorrências, `defaultdict` evita checar existência de chave, `namedtuple` cria tuplas com campos nomeados.",
+    "syntax": "from collections import Counter, defaultdict, namedtuple",
+    "example": "from collections import Counter, defaultdict\n\ncontagem = Counter(\"abracadabra\")\nprint(contagem.most_common(2))\n\ngrupos = defaultdict(list)\ngrupos[\"frutas\"].append(\"maçã\")\nprint(grupos)",
+    "result": "[('a', 5), ('b', 2)]\ndefaultdict(<class 'list'>, {'frutas': ['maçã']})",
+    "notes": [
+      "`defaultdict(list)` cria automaticamente uma lista vazia para qualquer chave nova acessada, evitando `KeyError`."
+    ],
+    "bestPractices": [
+      "Use `Counter` em vez de um loop manual com dict para contar frequências de itens em uma coleção."
+    ],
+    "relatedCommands": ["py-dataclasses"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "2.4+",
+    "officialDocumentation": "https://docs.python.org/3/library/collections.html",
+    "externalReferences": [],
+    "tags": ["python", "collections", "counter"],
+    "keywords": ["collections python", "counter python", "defaultdict", "namedtuple"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-gil",
+    "category": "Python",
+    "subcategory": "Conceitos internos",
+    "title": "GIL (Global Interpreter Lock)",
+    "description": "Trava do interpretador CPython que garante que apenas uma thread execute bytecode Python por vez, mesmo em máquinas multi-core, afetando o paralelismo real de código CPU-bound com threads.",
+    "syntax": "N/A — comportamento interno do interpretador CPython",
+    "example": "Um programa com múltiplas threads fazendo cálculo matemático pesado não ganha speedup proporcional aos cores da máquina, pois só uma thread roda bytecode por vez.",
+    "result": "Threads em Python são úteis para I/O-bound (esperar rede/disco), mas não trazem paralelismo real para CPU-bound.",
+    "notes": [
+      "Para paralelismo real em tarefas CPU-bound, usa-se `multiprocessing` (processos separados, cada um com seu próprio GIL) em vez de threads."
+    ],
+    "bestPractices": [
+      "Use `threading` para I/O-bound (requisições, arquivos) e `multiprocessing` (ou `asyncio` para I/O) para CPU-bound."
+    ],
+    "commonMistakes": [
+      "Esperar speedup linear ao paralelizar cálculo pesado com `threading` em vez de `multiprocessing`."
+    ],
+    "relatedCommands": ["py-async-await"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "CPython (todas)",
+    "officialDocumentation": "https://docs.python.org/3/glossary.html#term-global-interpreter-lock",
+    "externalReferences": [],
+    "tags": ["python", "gil", "concorrencia"],
+    "keywords": ["gil python", "global interpreter lock", "threading vs multiprocessing"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "py-list-tuple-set-mutability",
+    "category": "Python",
+    "subcategory": "Estruturas de dados",
+    "title": "list vs tuple vs set (mutabilidade)",
+    "description": "Três estruturas de coleção com diferenças fundamentais: list é mutável e ordenada, tuple é imutável e ordenada, set é mutável, não-ordenada e não permite duplicatas.",
+    "syntax": "lista = [1, 2, 3]\ntupla = (1, 2, 3)\nconjunto = {1, 2, 3}",
+    "example": "tupla = (1, 2, 3)\ntry:\n    tupla[0] = 99\nexcept TypeError as e:\n    print(f\"Erro: {e}\")",
+    "result": "Erro: 'tuple' object does not support item assignment",
+    "notes": [
+      "Tuplas, por serem imutáveis, podem ser usadas como chave de dicionário; listas não podem (`TypeError: unhashable type`)."
+    ],
+    "bestPractices": [
+      "Use tuple para dados fixos que não devem mudar (coordenadas, registros); use set quando só importa pertencimento e unicidade, não ordem."
+    ],
+    "commonMistakes": [
+      "Usar list como chave de dicionário ou item de set, o que gera `TypeError: unhashable type: 'list'`."
+    ],
+    "relatedCommands": ["py-unpacking", "py-slicing"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "python",
+    "version": "1.0+",
+    "officialDocumentation": "https://docs.python.org/3/tutorial/datastructures.html",
+    "externalReferences": [],
+    "tags": ["python", "list", "tuple", "set"],
+    "keywords": ["list vs tuple", "mutabilidade python", "tuple imutavel"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

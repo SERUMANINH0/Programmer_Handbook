@@ -17,7 +17,7 @@
     "commonMistakes": [
       "Importar um ORM ou client HTTP diretamente dentro de uma entidade de domínio ou de um caso de uso."
     ],
-    "relatedCommands": ["solid-dependency-inversion", "design-patterns-repository"],
+    "relatedCommands": ["solid-dependency-inversion", "pattern-repository"],
     "difficulty": "avancado",
     "platform": ["agnostic"],
     "version": "N/A",
@@ -54,5 +54,332 @@
     "keywords": ["use case", "caso de uso", "interactor"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "clean-arch-entities",
+    "category": "Clean Architecture",
+    "subcategory": "Camadas",
+    "title": "Entities (camada de domínio)",
+    "description": "Camada mais interna, contendo as regras de negócio corporativas mais gerais e estáveis — objetos de domínio que fariam sentido mesmo sem a aplicação atual existir.",
+    "syntax": "class Entidade {\n  private constructor(props) { }\n  static criar(props): Entidade { /* validações de invariantes */ }\n}",
+    "example": "class Pedido {\n  private constructor(private itens: Item[], private status: Status) {}\n  static criar(itens: Item[]) {\n    if (itens.length === 0) throw new Error(\"Pedido precisa de ao menos um item\")\n    return new Pedido(itens, Status.PENDENTE)\n  }\n  calcularTotal() { return this.itens.reduce((s, i) => s + i.preco, 0) }\n}",
+    "result": "A entidade `Pedido` garante suas próprias invariantes (nunca existe um pedido sem itens) independentemente de framework, banco ou UI.",
+    "notes": [
+      "Entities não devem depender de nada — nem de Use Cases, nem de frameworks, nem de bibliotecas externas."
+    ],
+    "bestPractices": [
+      "Coloque nas Entities apenas regras que seriam verdadeiras em qualquer aplicação que usasse esse conceito de negócio, não regras específicas de um caso de uso."
+    ],
+    "commonMistakes": [
+      "Transformar Entities em simples 'bags' de dados (anemic model) sem nenhum comportamento, empurrando toda a lógica para os Use Cases."
+    ],
+    "relatedCommands": ["clean-arch-use-case", "clean-arch-dependency-rule"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "entities"],
+    "keywords": ["entities clean architecture", "camada de dominio", "regras de negocio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "clean-arch-interface-adapters",
+    "category": "Clean Architecture",
+    "subcategory": "Camadas",
+    "title": "Interface Adapters (Controllers, Presenters, Gateways)",
+    "description": "Camada que converte dados entre o formato mais conveniente para Use Cases/Entities e o formato mais conveniente para agentes externos (UI, banco de dados, APIs).",
+    "syntax": "class Controller {\n  constructor(private useCase: UseCase) {}\n  async handle(request) {\n    const input = this.paraInput(request)\n    const resultado = await this.useCase.execute(input)\n    return this.paraResponse(resultado)\n  }\n}",
+    "example": "class CriarPedidoController {\n  constructor(private useCase: CriarPedidoUseCase) {}\n  async handle(req: Request, res: Response) {\n    const pedido = await this.useCase.execute({ itens: req.body.itens })\n    res.status(201).json({ id: pedido.id, total: pedido.calcularTotal() })\n  }\n}",
+    "result": "O Controller traduz a requisição HTTP para o formato de input do Use Case, e o resultado do Use Case para uma resposta HTTP — sem que o Use Case saiba nada sobre HTTP.",
+    "notes": [
+      "Gateways (implementações de Repository) e Presenters (formatação de saída) também vivem nessa camada."
+    ],
+    "bestPractices": [
+      "Mantenha Controllers 'burros': eles só traduzem dados e delegam a decisão de negócio inteiramente ao Use Case."
+    ],
+    "commonMistakes": [
+      "Colocar validações de regra de negócio no Controller em vez de no Use Case ou na Entity, espalhando lógica pela camada errada."
+    ],
+    "relatedCommands": ["clean-arch-use-case", "clean-arch-frameworks-drivers"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "interface-adapters"],
+    "keywords": ["interface adapters", "controllers", "presenters", "gateways"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "clean-arch-frameworks-drivers",
+    "category": "Clean Architecture",
+    "subcategory": "Camadas",
+    "title": "Frameworks & Drivers (camada externa)",
+    "description": "Camada mais externa da Clean Architecture, contendo detalhes concretos: o framework web, o driver do banco de dados, bibliotecas de terceiros e ferramentas de infraestrutura.",
+    "syntax": "// Implementações concretas vivem aqui, implementando interfaces definidas nas camadas internas",
+    "example": "class PedidoRepositoryPrisma implements PedidoRepository {\n  async salvar(pedido: Pedido) {\n    await prisma.pedido.create({ data: pedido.toPersistence() })\n  }\n}",
+    "result": "Trocar Prisma por outro ORM significa reescrever só essa classe, sem tocar em Use Cases ou Entities.",
+    "notes": [
+      "É a camada mais volátil — frameworks, drivers e bibliotecas mudam com muito mais frequência que regras de negócio."
+    ],
+    "bestPractices": [
+      "Considere essa camada 'descartável': deve ser possível reescrevê-la inteira sem afetar a lógica de negócio central."
+    ],
+    "commonMistakes": [
+      "Deixar tipos ou classes específicas de um framework (ex: `Request` do Express) vazarem para dentro de Use Cases ou Entities."
+    ],
+    "relatedCommands": ["clean-arch-interface-adapters", "clean-arch-dependency-rule"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "frameworks-drivers"],
+    "keywords": [
+      "frameworks e drivers",
+      "camada externa",
+      "infraestrutura clean architecture"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "clean-arch-hexagonal",
+    "category": "Clean Architecture",
+    "subcategory": "Princípios",
+    "title": "Ports and Adapters (Arquitetura Hexagonal)",
+    "description": "Arquitetura precursora e conceitualmente equivalente à Clean Architecture: o domínio define 'portas' (interfaces) e o mundo externo se conecta a ele através de 'adaptadores' que implementam essas portas.",
+    "syntax": "Domínio (hexágono central) ← Ports (interfaces) ← Adapters (implementações: HTTP, banco, filas)",
+    "example": "Uma 'porta' `NotificacaoPort` pode ter adaptadores diferentes: `EmailAdapter`, `SmsAdapter`, `PushAdapter` — todos implementando a mesma interface exigida pelo domínio.",
+    "result": "O núcleo da aplicação nunca conhece se está sendo acionado por HTTP, CLI ou fila de mensagens — todos são apenas 'adapters' diferentes plugados nas mesmas 'ports'.",
+    "notes": [
+      "Também chamada de 'Hexagonal Architecture' (Alistair Cockburn) — a Regra da Dependência da Clean Architecture é uma formalização posterior da mesma ideia central."
+    ],
+    "bestPractices": [
+      "Pense em 'ports' (interfaces) como os pontos de entrada/saída do domínio, e 'adapters' como qualquer forma de conectar o mundo externo a essas portas."
+    ],
+    "commonMistakes": [
+      "Achar que Hexagonal e Clean Architecture são coisas totalmente diferentes — na prática, resolvem o mesmo problema (isolar o domínio) com vocabulário distinto."
+    ],
+    "relatedCommands": ["clean-arch-dependency-rule", "pattern-repository"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://alistair.cockburn.us/hexagonal-architecture/",
+    "externalReferences": [],
+    "tags": ["arquitetura", "hexagonal", "ports-and-adapters"],
+    "keywords": ["hexagonal architecture", "ports and adapters", "arquitetura hexagonal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "clean-arch-dto",
+    "category": "Clean Architecture",
+    "subcategory": "Camadas",
+    "title": "DTO (Data Transfer Object)",
+    "description": "Objeto simples usado para transportar dados entre camadas (ex: entre Controller e Use Case), sem comportamento de negócio, evitando expor Entities diretamente para fora do domínio.",
+    "syntax": "interface CriarPedidoInput {\n  itens: { produtoId: string; quantidade: number }[]\n}",
+    "example": "interface CriarPedidoInputDTO {\n  clienteId: string\n  itens: { produtoId: string; quantidade: number }[]\n}\ninterface PedidoOutputDTO {\n  id: string\n  total: number\n  status: string\n}",
+    "result": "O Use Case recebe e retorna apenas DTOs simples, sem expor a Entity `Pedido` inteira (com seus métodos internos) para a camada de apresentação.",
+    "notes": [
+      "DTOs evitam que mudanças na estrutura interna de uma Entity quebrem contratos de API externos."
+    ],
+    "bestPractices": [
+      "Use DTOs específicos por caso de uso (input/output) em vez de reutilizar a mesma Entity em todas as camadas."
+    ],
+    "commonMistakes": [
+      "Retornar a Entity de domínio diretamente na resposta HTTP, acoplando o formato da API à estrutura interna do domínio."
+    ],
+    "relatedCommands": ["clean-arch-use-case", "clean-arch-interface-adapters"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/eaaCatalog/dataTransferObject.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "dto"],
+    "keywords": ["dto", "data transfer object", "input output use case"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "clean-arch-testability",
+    "category": "Clean Architecture",
+    "subcategory": "Princípios",
+    "title": "Testabilidade como consequência da arquitetura",
+    "description": "Ao isolar regras de negócio de frameworks, banco e UI, a Clean Architecture torna possível testar Use Cases e Entities inteiramente em memória, sem infraestrutura real.",
+    "syntax": "test(\"cria pedido válido\", async () => {\n  const useCase = new CriarPedidoUseCase(new RepoFake())\n  const resultado = await useCase.execute(input)\n  expect(resultado).toBeDefined()\n})",
+    "example": "const repoFake: PedidoRepository = {\n  salvar: async (p) => { /* guarda em array em memória */ },\n  buscarPorId: async (id) => pedidosEmMemoria.find((p) => p.id === id)\n}\nconst useCase = new CriarPedidoUseCase(repoFake)",
+    "result": "O teste do Use Case roda em milissegundos, sem precisar de um banco de dados real, container Docker ou mocks pesados de biblioteca.",
+    "notes": [
+      "Testabilidade não é um objetivo em si — é um sintoma de que as dependências estão apontando na direção correta (para dentro)."
+    ],
+    "bestPractices": [
+      "Se testar um Use Case exige subir infraestrutura real (banco, HTTP), é sinal de que a Regra da Dependência está sendo violada em algum ponto."
+    ],
+    "commonMistakes": [
+      "Escrever testes de Use Case que dependem de um banco de dados real 'só para simplificar', perdendo velocidade e isolamento."
+    ],
+    "relatedCommands": ["clean-arch-use-case", "pattern-dependency-injection"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "externalReferences": [],
+    "tags": ["arquitetura", "clean-architecture", "testabilidade"],
+    "keywords": [
+      "testabilidade clean architecture",
+      "testes em memoria",
+      "repositorio fake"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "solid-single-responsibility",
+    "category": "Clean Architecture",
+    "subcategory": "SOLID",
+    "title": "SRP — Single Responsibility Principle",
+    "description": "Uma classe (ou módulo) deve ter um único motivo para mudar — ou seja, deve pertencer a um único ator/stakeholder que poderia solicitar alterações nela.",
+    "syntax": "// Uma classe, uma responsabilidade, um motivo de mudança",
+    "example": "// Viola SRP: gera relatório E salva em arquivo E envia email\nclass Relatorio { gerar() {}; salvarArquivo() {}; enviarEmail() {} }\n\n// Respeita SRP: cada responsabilidade em uma classe\nclass GeradorRelatorio { gerar() {} }\nclass ArmazenadorArquivo { salvar(dados) {} }\nclass EnviadorEmail { enviar(destino, conteudo) {} }",
+    "result": "Uma mudança na forma de enviar email não exige tocar na classe que gera o relatório, e vice-versa.",
+    "notes": [
+      "'Responsabilidade única' não significa 'um método só' — significa um único motivo de mudança, geralmente ligado a um único stakeholder."
+    ],
+    "bestPractices": [
+      "Ao nomear uma classe, se o nome tem 'E' (ex: 'GeradorEEnviadorDeRelatorio'), é um sinal de que ela pode estar violando o SRP."
+    ],
+    "commonMistakes": [
+      "Confundir SRP com 'toda classe deve ter um método só' — o princípio é sobre motivos de mudança, não sobre tamanho."
+    ],
+    "relatedCommands": ["solid-open-closed", "clean-arch-dependency-rule"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "SOLID",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html",
+    "externalReferences": [],
+    "tags": ["solid", "srp", "clean-architecture"],
+    "keywords": ["single responsibility principle", "srp", "responsabilidade unica"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "solid-open-closed",
+    "category": "Clean Architecture",
+    "subcategory": "SOLID",
+    "title": "OCP — Open/Closed Principle",
+    "description": "Entidades de software devem estar abertas para extensão, mas fechadas para modificação — novo comportamento deve ser adicionado sem alterar código já existente e testado.",
+    "syntax": "// Extensível via nova implementação de interface, sem alterar código existente",
+    "example": "interface CalculadoraDesconto { calcular(valor: number): number }\nclass DescontoNatal implements CalculadoraDesconto { calcular(v) { return v * 0.9 } }\n// Novo desconto: nova classe, sem tocar nas existentes\nclass DescontoBlackFriday implements CalculadoraDesconto { calcular(v) { return v * 0.5 } }",
+    "result": "Adicionar `DescontoBlackFriday` não exige modificar `DescontoNatal` nem o código que já usa `CalculadoraDesconto`.",
+    "notes": [
+      "Na prática, é viabilizado por interfaces/polimorfismo (Strategy, Factory), não por `if/else`/`switch` crescente."
+    ],
+    "bestPractices": [
+      "Ao adicionar uma nova variação de comportamento, prefira criar uma nova classe/implementação a editar um `switch` já existente."
+    ],
+    "commonMistakes": [
+      "Adicionar mais um `else if` a uma condicional gigante toda vez que surge um novo caso, violando o princípio a cada mudança."
+    ],
+    "relatedCommands": ["solid-single-responsibility", "pattern-strategy"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "SOLID",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/strategy",
+    "externalReferences": [],
+    "tags": ["solid", "ocp", "clean-architecture"],
+    "keywords": ["open closed principle", "ocp", "aberto para extensao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "solid-liskov-substitution",
+    "category": "Clean Architecture",
+    "subcategory": "SOLID",
+    "title": "LSP — Liskov Substitution Principle",
+    "description": "Objetos de uma subclasse devem poder substituir objetos da superclasse sem quebrar o comportamento esperado pelo código cliente.",
+    "syntax": "// Se B é subtipo de A, qualquer código que funciona com A deve funcionar com B sem surpresas",
+    "example": "// Viola LSP: Quadrado herda de Retangulo mas quebra a expectativa de largura/altura independentes\nclass Retangulo { setLargura(l) {}; setAltura(a) {} }\nclass Quadrado extends Retangulo {\n  setLargura(l) { this.largura = this.altura = l } // efeito colateral inesperado\n}",
+    "result": "Código que espera poder setar largura e altura de forma independente em qualquer `Retangulo` quebra silenciosamente quando recebe um `Quadrado`.",
+    "notes": [
+      "Sinais de violação: métodos sobrescritos que lançam exceção 'não implementado', ou que enfraquecem pré-condições/fortalecem pós-condições do método original."
+    ],
+    "bestPractices": [
+      "Antes de usar herança, pergunte: 'toda instância de B pode substituir A em qualquer contexto sem surpresas?' Se não, considere composição em vez de herança."
+    ],
+    "commonMistakes": [
+      "Herdar de uma classe só para reaproveitar código, mesmo quando a relação 'é um' não se sustenta semanticamente."
+    ],
+    "relatedCommands": ["solid-interface-segregation"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "SOLID",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html",
+    "externalReferences": [],
+    "tags": ["solid", "lsp", "clean-architecture"],
+    "keywords": ["liskov substitution principle", "lsp", "substituicao de liskov"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "solid-interface-segregation",
+    "category": "Clean Architecture",
+    "subcategory": "SOLID",
+    "title": "ISP — Interface Segregation Principle",
+    "description": "Clientes não devem ser forçados a depender de interfaces (métodos) que não usam — prefira várias interfaces pequenas e específicas a uma única interface genérica e inchada.",
+    "syntax": "// Muitas interfaces pequenas e coesas, em vez de uma grande e genérica",
+    "example": "// Viola ISP: toda impressora precisa implementar métodos que não usa\ninterface Dispositivo { imprimir(); escanear(); enviarFax() }\n\n// Respeita ISP: interfaces segregadas por capacidade\ninterface Impressora { imprimir() }\ninterface Scanner { escanear() }\nclass ImpressoraSimples implements Impressora { imprimir() {} }",
+    "result": "`ImpressoraSimples` implementa só `Impressora`, sem precisar de métodos `escanear`/`enviarFax` que não faz sentido para ela ter.",
+    "notes": [
+      "ISP é especialmente relevante em TypeScript/interfaces — evita 'interfaces gordas' que forçam implementações vazias ou que lançam erro."
+    ],
+    "bestPractices": [
+      "Prefira várias interfaces pequenas e coesas (uma por capacidade) a uma única interface genérica que tenta cobrir tudo."
+    ],
+    "commonMistakes": [
+      "Criar uma interface enorme 'para não ter que criar várias', forçando implementações a terem métodos irrelevantes ou vazios."
+    ],
+    "relatedCommands": ["solid-liskov-substitution", "solid-dependency-inversion"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "SOLID",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html",
+    "externalReferences": [],
+    "tags": ["solid", "isp", "clean-architecture"],
+    "keywords": ["interface segregation principle", "isp", "segregacao de interface"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "solid-dependency-inversion",
+    "category": "Clean Architecture",
+    "subcategory": "SOLID",
+    "title": "DIP — Dependency Inversion Principle",
+    "description": "Módulos de alto nível não devem depender de módulos de baixo nível — ambos devem depender de abstrações. Abstrações não devem depender de detalhes; detalhes devem depender de abstrações.",
+    "syntax": "// Módulo de alto nível depende de uma interface, não de uma implementação concreta\nclass Servico {\n  constructor(private dependencia: Interface) {}\n}",
+    "example": "// Viola DIP: Use Case depende diretamente do Postgres\nclass CriarPedidoUseCase {\n  private repo = new PedidoRepositoryPostgres()\n}\n\n// Respeita DIP: Use Case depende de uma abstração, injetada de fora\nclass CriarPedidoUseCase {\n  constructor(private repo: PedidoRepository) {}\n}",
+    "result": "O Use Case pode receber qualquer implementação de `PedidoRepository` (Postgres, memória, fake de teste) sem alterar seu próprio código.",
+    "notes": [
+      "É o mecanismo prático que viabiliza a Regra da Dependência da Clean Architecture — é o 'D' do SOLID e o mais citado dos cinco princípios."
+    ],
+    "bestPractices": [
+      "Defina interfaces no módulo que as usa (alto nível), não no módulo que as implementa (baixo nível) — 'quem usa é dono do contrato'."
+    ],
+    "commonMistakes": [
+      "Instanciar dependências concretas com `new` diretamente dentro de classes de alto nível, invertendo a direção correta da dependência."
+    ],
+    "relatedCommands": ["clean-arch-dependency-rule", "pattern-dependency-injection"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "SOLID",
+    "officialDocumentation": "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html",
+    "externalReferences": [],
+    "tags": ["solid", "dip", "clean-architecture"],
+    "keywords": ["dependency inversion principle", "dip", "inversao de dependencia"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

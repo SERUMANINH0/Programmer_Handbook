@@ -1189,5 +1189,147 @@
     "keywords": ["ctrl+u ctrl+k bash", "limpar terminal atalho", "kill ring bash"],
     "updatedAt": "2026-07-22",
     "favorite": false
+  },
+  {
+    "id": "bash-shortcut-ctrl-c-d-z",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Ctrl+C / Ctrl+D / Ctrl+Z (controle de processos)",
+    "description": "Atalhos de controle de processo do terminal: interrompem, encerram a entrada ou suspendem o processo em primeiro plano.",
+    "shortcut": "Ctrl+C, Ctrl+D, Ctrl+Z",
+    "example": "Rode `sleep 100` e pressione Ctrl+Z para suspender; depois `bg` para continuar em segundo plano ou `fg` para retomar em primeiro plano.",
+    "result": "[1]+  Stopped                 sleep 100 — o processo fica pausado ate `bg` ou `fg` serem usados.",
+    "flags": [
+      {
+        "flag": "Ctrl+C",
+        "description": "Envia SIGINT ao processo em primeiro plano, interrompendo-o."
+      },
+      {
+        "flag": "Ctrl+D",
+        "description": "Envia EOF; fecha o shell atual se a linha estiver vazia, ou finaliza a entrada de um comando como `cat`."
+      },
+      {
+        "flag": "Ctrl+Z",
+        "description": "Envia SIGTSTP, suspendendo o processo em primeiro plano (retome com `fg` ou `bg`)."
+      }
+    ],
+    "notes": [
+      "`jobs` lista os processos suspensos/em segundo plano da sessao atual.",
+      "Ctrl+D num shell interativo vazio fecha a sessao do terminal — cuidado ao pressionar sem querer."
+    ],
+    "bestPractices": [
+      "Use Ctrl+Z + `bg` para liberar o terminal sem matar um processo longo, em vez de abrir um novo terminal."
+    ],
+    "commonMistakes": [
+      "Pressionar Ctrl+D por engano numa linha vazia e fechar a sessao SSH/terminal inteira."
+    ],
+    "relatedCommands": ["bash-trap", "bash-exit-codes"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Job-Control-Basics.html",
+    "tags": ["bash", "atalho", "processos"],
+    "keywords": ["ctrl+c bash", "ctrl+z suspender processo", "ctrl+d eof bash"],
+    "updatedAt": "2026-07-23",
+    "favorite": false
+  },
+  {
+    "id": "bash-tab-completion",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Tab (autocompletar)",
+    "description": "Autocompleta comandos, caminhos de arquivo e argumentos com base no que ja foi digitado; pressionar duas vezes lista todas as opcoes possiveis quando ha ambiguidade.",
+    "shortcut": "Tab",
+    "example": "Digite `cd Doc` e pressione Tab.",
+    "result": "cd Documentos/ (completa automaticamente se for a unica pasta que casa com o prefixo)",
+    "notes": [
+      "Tab duas vezes seguidas exibe todas as opcoes quando existe mais de uma correspondencia.",
+      "A completude pode ser estendida por ferramentas como `bash-completion` para subcomandos de CLIs (git, docker, etc.)."
+    ],
+    "bestPractices": [
+      "Use Tab constantemente para reduzir erros de digitacao em caminhos e nomes de comandos longos."
+    ],
+    "commonMistakes": [
+      "Nao instalar `bash-completion`, perdendo autocompletar de subcomandos e flags de ferramentas como git e docker."
+    ],
+    "relatedCommands": ["bash-shortcut-ctrl-r"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Readline",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html",
+    "tags": ["bash", "atalho", "autocompletar"],
+    "keywords": ["tab autocompletar bash", "completion bash", "autocomplete terminal"],
+    "updatedAt": "2026-07-23",
+    "favorite": false
+  },
+  {
+    "id": "bash-ctrl-x-ctrl-e",
+    "category": "Bash",
+    "subcategory": "Atalhos de linha de comando",
+    "title": "Ctrl+X Ctrl+E (editar comando no $EDITOR)",
+    "description": "Abre o comando atualmente digitado na linha no editor de texto definido por $EDITOR, util para comandos longos ou multilinha antes de executar.",
+    "shortcut": "Ctrl+X Ctrl+E",
+    "example": "Digite um comando complexo, pressione Ctrl+X depois Ctrl+E.",
+    "result": "O editor configurado (vim, nano...) abre com o conteudo da linha; ao salvar e sair, o comando e executado no shell.",
+    "notes": [
+      "Requer que a variavel de ambiente $EDITOR esteja definida (ex: `export EDITOR=vim`)."
+    ],
+    "bestPractices": [
+      "Use para comandos com multiplas linhas ou heredocs que sao dificeis de editar apenas com as setas do teclado."
+    ],
+    "commonMistakes": [
+      "Esperar o atalho funcionar sem $EDITOR configurado, caindo no editor padrao do sistema (geralmente vi)."
+    ],
+    "relatedCommands": ["bash-shortcut-ctrl-r"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "Readline",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Miscellaneous-Commands.html",
+    "tags": ["bash", "atalho", "readline"],
+    "keywords": [
+      "ctrl+x ctrl+e bash",
+      "editar comando editor",
+      "readline edit-and-execute"
+    ],
+    "updatedAt": "2026-07-23",
+    "favorite": false
+  },
+  {
+    "id": "bash-source",
+    "category": "Bash",
+    "subcategory": "Fundamentos",
+    "title": "source (ou .) — carregar script no shell atual",
+    "description": "Executa um script no contexto do shell atual, em vez de criar um subshell novo, fazendo com que variaveis, funcoes e diretorio de trabalho definidos nele persistam apos a execucao.",
+    "syntax": "source arquivo.sh\n. arquivo.sh",
+    "example": "cat ~/.bashrc_extra\nexport API_URL=\"https://api.exemplo.com\"\n\nsource ~/.bashrc_extra\necho \"$API_URL\"",
+    "result": "https://api.exemplo.com",
+    "notes": [
+      "`.` (ponto) e o equivalente POSIX de `source`, que e uma extensao do Bash — ambos fazem a mesma coisa.",
+      "Diferente de `./script.sh` (que roda em um subshell separado), `source script.sh` afeta diretamente o shell que o chamou."
+    ],
+    "bestPractices": [
+      "Use `source` para recarregar `.bashrc`/`.bash_profile` apos editar, ou para carregar arquivos de variaveis de ambiente (.env) num script."
+    ],
+    "commonMistakes": [
+      "Rodar `./script.sh` esperando que `export`/`cd` feitos nele afetem o shell atual — isso so funciona com `source`, pois `./script.sh` roda num processo filho isolado."
+    ],
+    "relatedCommands": ["bash-shebang", "bash-variables"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "language": "bash",
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source",
+    "tags": ["bash", "source", "script"],
+    "keywords": [
+      "source bash",
+      "carregar script shell atual",
+      "ponto bash",
+      "dot command"
+    ],
+    "updatedAt": "2026-07-23",
+    "favorite": false
   }
 ]

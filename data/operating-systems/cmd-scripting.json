@@ -698,5 +698,459 @@
     "keywords": ["boas praticas batch", "convencoes de script cmd", "armadilhas batch"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-script-substring",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Substring de variáveis (%var:~inicio,tamanho%)",
+    "description": "Extrai uma parte do valor de uma variável a partir de uma posição inicial e um tamanho opcional, sem precisar de ferramentas externas.",
+    "syntax": "%variavel:~inicio,tamanho%",
+    "example": "set DATA=20260723\nset ANO=%DATA:~0,4%\nset MES=%DATA:~4,2%\necho %ANO%-%MES%",
+    "result": "2026-07",
+    "parameters": [
+      {
+        "name": "inicio",
+        "description": "Posição inicial (baseada em 0); valores negativos contam a partir do fim da string.",
+        "required": true
+      },
+      {
+        "name": "tamanho",
+        "description": "Quantidade de caracteres a extrair; se omitido, vai até o fim da string.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "`%var:~-4%` extrai os 4 últimos caracteres, útil para pegar extensão ou sufixo sem contar o tamanho total da string."
+    ],
+    "bestPractices": [
+      "Combine com `%~dp0`/`%~n1` quando o objetivo for manipular partes de caminhos — geralmente os modificadores de caminho já resolvem o caso sem precisar de substring manual."
+    ],
+    "commonMistakes": [
+      "Esquecer que a posição inicial é baseada em 0, não em 1, e extrair um caractere a mais ou a menos do esperado."
+    ],
+    "relatedCommands": ["cmd-script-string-replace", "cmd-script-variables"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "strings"],
+    "keywords": ["substring batch", "extrair parte de string cmd", "%var:~%"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-string-replace",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Substituição de texto em variáveis (%var:antigo=novo%)",
+    "description": "Substitui todas as ocorrências de um trecho de texto dentro do valor de uma variável, sem precisar de comandos externos como sed.",
+    "syntax": "%variavel:texto_antigo=texto_novo%",
+    "example": "set CAMINHO=C:\\Projetos\\App\nset CAMINHO_UNIX=%CAMINHO:\\=/%\necho %CAMINHO_UNIX%",
+    "result": "C:/Projetos/App",
+    "notes": [
+      "Deixar `texto_novo` vazio (ex: `%var:texto=%`) remove todas as ocorrências do trecho em vez de substituí-las."
+    ],
+    "bestPractices": [
+      "Use essa sintaxe para normalizar separadores de caminho ou remover caracteres indesejados sem depender de findstr/sed."
+    ],
+    "commonMistakes": [
+      "Tentar usar regex ou curingas dentro da substituição — só substitui texto literal, não padrões."
+    ],
+    "relatedCommands": ["cmd-script-substring", "cmd-script-variables"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "strings"],
+    "keywords": ["substituir texto batch", "replace string cmd", "find replace variavel"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-choice",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "CHOICE (menu interativo)",
+    "description": "Exibe um prompt que aceita uma única tecla dentre um conjunto pré-definido de opções, retornando o índice escolhido via %ERRORLEVEL%.",
+    "syntax": "CHOICE [/C opções] [/N] [/M mensagem] [/T tempo /D padrão]",
+    "example": "choice /C SN /M \"Deseja continuar\"\nif errorlevel 2 goto :cancelado\nif errorlevel 1 goto :continuar",
+    "result": "Deseja continuar [S,N]? S\n(segue para o rótulo :continuar)",
+    "flags": [
+      { "flag": "/C", "description": "Define as teclas válidas (padrão: Y e N)." },
+      { "flag": "/N", "description": "Oculta a lista de opções no prompt." },
+      {
+        "flag": "/T /D",
+        "description": "Define um tempo limite (segundos) e a opção padrão escolhida automaticamente ao expirar."
+      }
+    ],
+    "notes": [
+      "`IF ERRORLEVEL n` é verdadeiro para valores maiores ou iguais a n, então sempre teste do maior índice para o menor, como no exemplo (2 antes de 1)."
+    ],
+    "bestPractices": [
+      "Use `/T` e `/D` em scripts não assistidos (agendados) para evitar que fiquem travados esperando uma tecla que nunca será pressionada."
+    ],
+    "commonMistakes": [
+      "Testar `IF ERRORLEVEL 1` antes de `IF ERRORLEVEL 2`, fazendo a primeira condição capturar incorretamente todas as opções."
+    ],
+    "relatedCommands": ["cmd-script-if", "cmd-script-errorlevel"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/choice",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "interatividade"],
+    "keywords": ["choice batch", "menu cmd", "escolha do usuario script"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-redirection-pipes",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Redirecionamento e pipes (>, >>, 2>&1, |)",
+    "description": "Controlam para onde vai a saída padrão e de erro de um comando dentro do script: gravar em arquivo, anexar, combinar os dois fluxos ou encadear com outro comando.",
+    "syntax": "comando > arquivo   |   comando >> arquivo   |   comando 2>&1   |   comando1 | comando2",
+    "example": "meu-script.bat > saida.log 2>&1",
+    "result": "Toda a saída padrão e os erros do script são gravados em saida.log, sem aparecer no console.",
+    "notes": [
+      "`2>&1` deve vir depois do redirecionamento de saída padrão (`>`) para funcionar como esperado; a ordem inversa não combina os fluxos corretamente.",
+      "`>` sobrescreve o arquivo do zero a cada execução; `>>` anexa ao final do conteúdo já existente."
+    ],
+    "bestPractices": [
+      "Redirecione stdout e stderr para o mesmo log em tarefas agendadas, garantindo que erros silenciosos também fiquem registrados."
+    ],
+    "commonMistakes": [
+      "Escrever `2>&1 > saida.log` (ordem trocada), o que redireciona stderr para o console antes de stdout ser redirecionado ao arquivo."
+    ],
+    "relatedCommands": ["cmd-script-errorlevel"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "redirecionamento"],
+    "keywords": ["redirecionar saida batch", "2>&1 cmd", "pipe batch", "log de script"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-pushd-popd",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "PUSHD e POPD (pilha de diretórios)",
+    "description": "PUSHD salva o diretório atual em uma pilha e muda para outro (inclusive caminhos UNC, que CD sozinho não suporta); POPD volta ao diretório salvo mais recentemente.",
+    "syntax": "PUSHD caminho\n...\nPOPD",
+    "example": "pushd \\\\servidor\\compartilhamento\ndir\npopd",
+    "result": "Entra temporariamente no caminho de rede (mapeando uma unidade temporária), lista os arquivos e retorna ao diretório original ao final.",
+    "notes": [
+      "Diferente de `CD`, `PUSHD` consegue navegar diretamente para caminhos UNC (`\\\\servidor\\pasta`), mapeando uma letra de unidade temporária automaticamente."
+    ],
+    "bestPractices": [
+      "Use PUSHD/POPD em vez de guardar o diretório manualmente em uma variável e usar CD para voltar, especialmente em scripts que podem lidar com caminhos de rede."
+    ],
+    "commonMistakes": [
+      "Esquecer o POPD correspondente em um caminho de saída antecipada do script (ex: um `exit /b` dentro de um IF), deixando a pilha de diretórios desbalanceada em execuções interativas."
+    ],
+    "relatedCommands": ["cmd-script-bat-basics"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/pushd",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "diretorios"],
+    "keywords": ["pushd popd", "pilha de diretorios batch", "navegar caminho unc"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-if-defined-default",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "IF DEFINED e valores padrão para variáveis",
+    "description": "IF DEFINED testa se uma variável foi definida (independentemente do valor); combinado com SET, permite atribuir um valor padrão só quando ela ainda não existe.",
+    "syntax": "IF NOT DEFINED variavel SET variavel=valor_padrao",
+    "example": "if not defined AMBIENTE set AMBIENTE=desenvolvimento\necho Rodando em: %AMBIENTE%",
+    "result": "Rodando em: desenvolvimento",
+    "notes": [
+      "Diferente de comparar `%variavel%==\"\"`, `IF DEFINED` funciona mesmo que o nome da variável nunca tenha sido declarado, sem risco de erro de sintaxe."
+    ],
+    "bestPractices": [
+      "Use esse padrão no início do script para permitir que variáveis de ambiente externas sobrescrevam um valor padrão (ex: definidas antes de chamar o script)."
+    ],
+    "commonMistakes": [
+      "Comparar `if %variavel%==\"\"` sem aspas ao redor de `%variavel%` quando ela pode não estar definida, quebrando a sintaxe do IF."
+    ],
+    "relatedCommands": ["cmd-script-if", "cmd-script-variables"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/if",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "variaveis", "condicional"],
+    "keywords": [
+      "if defined batch",
+      "valor padrao variavel cmd",
+      "variavel opcional script"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-escaping",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Escapando caracteres especiais (^, %%, aspas)",
+    "description": "O caractere circunflexo (^) escapa símbolos especiais do CMD (como &, |, >, <), o duplo % (%%) é necessário para representar um % literal, e aspas duplas delimitam strings com espaços.",
+    "syntax": "^caractere_especial  |  %%  |  \"string com espaços\"",
+    "example": "echo Progresso: 50%%\necho Use ^&^& para encadear comandos",
+    "result": "Progresso: 50%\nUse && para encadear comandos",
+    "notes": [
+      "Dentro de um arquivo .bat, `%` é usado para variáveis, então um `%` literal precisa ser escrito como `%%`; no Prompt de Comando interativo, um único `%` já funciona.",
+      "`^` no final de uma linha também funciona como continuação de linha, permitindo quebrar comandos longos em várias linhas."
+    ],
+    "bestPractices": [
+      "Envolva caminhos e argumentos que podem conter espaços em aspas duplas consistentemente, em vez de escapar espaços individualmente."
+    ],
+    "commonMistakes": [
+      "Esquecer de dobrar o `%` em mensagens de ECHO que mostram porcentagem, fazendo o CMD tentar interpretar como início de variável."
+    ],
+    "relatedCommands": ["cmd-script-variables", "cmd-script-bat-basics"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "escaping"],
+    "keywords": [
+      "escapar caracteres batch",
+      "percentual literal cmd",
+      "circunflexo escape"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-timeout",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "TIMEOUT (pausar execução)",
+    "description": "Pausa a execução do script por um número determinado de segundos, exibindo uma contagem regressiva e permitindo cancelamento via tecla (a menos que /NOBREAK seja usado).",
+    "syntax": "TIMEOUT /T segundos [/NOBREAK]",
+    "example": "echo Aguardando o servico subir...\ntimeout /T 10 /NOBREAK",
+    "result": "Aguardando o servico subir...\nEsperando 10 segundos...",
+    "flags": [
+      {
+        "flag": "/NOBREAK",
+        "description": "Ignora qualquer tecla pressionada, garantindo que a espera não seja cancelada em scripts não assistidos."
+      },
+      {
+        "flag": "/T",
+        "description": "Define a duração da espera em segundos (-1 espera indefinidamente até uma tecla)."
+      }
+    ],
+    "notes": [
+      "É a alternativa moderna e recomendada ao truque antigo `ping -n <segundos+1> 127.0.0.1 > nul`, usado antes do TIMEOUT existir."
+    ],
+    "bestPractices": [
+      "Use `/NOBREAK` em scripts agendados/automatizados para que a pausa não seja interrompida acidentalmente."
+    ],
+    "commonMistakes": [
+      "Usar TIMEOUT sem `/NOBREAK` em um script sem interação humana, arriscando que uma tecla espúria (ex: de outro processo) cancele a espera."
+    ],
+    "relatedCommands": ["cmd-script-bat-basics"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Windows Vista+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/timeout",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "timeout"],
+    "keywords": ["timeout batch", "pausar script cmd", "esperar segundos batch"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-start",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "START (executar em novo processo/janela)",
+    "description": "Inicia um programa ou comando em uma nova janela (ou processo separado), opcionalmente sem esperar que ele termine antes de continuar o script.",
+    "syntax": "START [\"título\"] [/B] [/WAIT] comando",
+    "example": "start \"\" /B node server.js\necho Servidor iniciado em segundo plano, script continua...",
+    "result": "Servidor iniciado em segundo plano, script continua...",
+    "flags": [
+      {
+        "flag": "/B",
+        "description": "Executa sem abrir uma nova janela de console, no mesmo console atual."
+      },
+      {
+        "flag": "/WAIT",
+        "description": "Espera o processo iniciado terminar antes de continuar o script."
+      }
+    ],
+    "notes": [
+      "O primeiro argumento entre aspas é interpretado como o título da nova janela — por isso `start \"\" comando` usa aspas vazias quando não se quer definir título."
+    ],
+    "bestPractices": [
+      "Use `start /B` para rodar processos auxiliares em paralelo dentro do mesmo script, sem abrir janelas extras."
+    ],
+    "commonMistakes": [
+      "Esquecer as aspas vazias de título ao rodar um comando cujo caminho está entre aspas, fazendo o CMD interpretar o caminho como título."
+    ],
+    "relatedCommands": ["cmd-script-timeout"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/start",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "processos"],
+    "keywords": ["start batch", "executar em background cmd", "nova janela script"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-arrays",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Arrays simulados com variáveis indexadas",
+    "description": "Batch não tem um tipo array nativo; a convenção é simular um usando variáveis nomeadas com sufixo numérico (ex: item[0], item[1]) combinadas com FOR /L para iterar.",
+    "syntax": "SET item[0]=valor0\nSET item[1]=valor1\n...\nFOR /L %%i IN (0,1,N) DO ...!item[%%i]!...",
+    "example": "setlocal enabledelayedexpansion\nset frutas[0]=Maca\nset frutas[1]=Banana\nset frutas[2]=Laranja\nfor /L %%i in (0,1,2) do echo !frutas[%%i]!",
+    "result": "Maca\nBanana\nLaranja",
+    "notes": [
+      "Requer `EnableDelayedExpansion` para ler os valores corretamente dentro do próprio loop FOR, já que o índice muda a cada iteração."
+    ],
+    "bestPractices": [
+      "Para listas simples sem necessidade de índice, prefira `FOR %%x IN (item1 item2 item3) DO ...`, mais direto que simular um array indexado."
+    ],
+    "commonMistakes": [
+      "Simular arrays sem ativar expansão atrasada, fazendo o script ler sempre o valor do índice de antes do loop começar."
+    ],
+    "relatedCommands": ["cmd-script-delayed-expansion", "cmd-script-for-l"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Windows XP+",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "arrays"],
+    "keywords": ["array batch", "lista indexada cmd", "vetor batch script"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-dynamic-variables",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Variáveis dinâmicas do sistema (%DATE%, %TIME%, %CD%, %RANDOM%)",
+    "description": "Variáveis de ambiente especiais mantidas automaticamente pelo CMD, com data/hora atuais, o diretório de trabalho corrente e um número pseudoaleatório, sem precisar de comandos externos.",
+    "syntax": "%DATE%  %TIME%  %CD%  %RANDOM%",
+    "example": "echo Executado em %DATE% as %TIME%\necho Pasta atual: %CD%\nset /A dado=%RANDOM% %% 6 + 1",
+    "result": "Executado em ter 23/07/2026 as 14:32:07,45\nPasta atual: C:\\Scripts\ndado recebe um numero entre 1 e 6",
+    "notes": [
+      "O formato de %DATE% e %TIME% depende da configuração regional do Windows, então parsear essas variáveis diretamente é frágil entre máquinas diferentes.",
+      "%RANDOM% gera um inteiro entre 0 e 32767; use módulo (`%% N`) para limitar o intervalo desejado."
+    ],
+    "bestPractices": [
+      "Para nomes de arquivo com timestamp confiável entre máquinas, prefira `wmic` ou PowerShell chamado a partir do batch, em vez de parsear %DATE%/%TIME% diretamente."
+    ],
+    "commonMistakes": [
+      "Assumir um formato fixo de %DATE% (ex: sempre MM/DD/YYYY) em um script que pode rodar em máquinas com configuração regional diferente."
+    ],
+    "relatedCommands": ["cmd-script-variables", "cmd-script-set-arithmetic"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/set_1",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "variaveis"],
+    "keywords": [
+      "date time batch",
+      "random batch",
+      "cd variavel cmd",
+      "variaveis dinamicas"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-line-continuation",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Continuação de linha com ^",
+    "description": "O circunflexo (^) no final de uma linha indica ao CMD que o comando continua na linha seguinte, útil para quebrar comandos longos e deixá-los mais legíveis.",
+    "syntax": "comando parametro1 ^\n  parametro2 ^\n  parametro3",
+    "example": "xcopy C:\\Origem D:\\Destino ^\n  /E /I /Y ^\n  /EXCLUDE:excluir.txt",
+    "result": "Executa o mesmo xcopy que ficaria em uma única linha longa, agora dividido em três linhas para facilitar a leitura.",
+    "notes": [
+      "Não pode haver nenhum espaço ou caractere após o `^` na mesma linha, nem linhas em branco entre os trechos continuados."
+    ],
+    "bestPractices": [
+      "Use continuação de linha para comandos com muitos parâmetros (xcopy, robocopy, docker run), mantendo o script legível em revisões de código."
+    ],
+    "commonMistakes": [
+      "Deixar um espaço invisível depois do `^`, o que quebra silenciosamente a continuação e gera um comando incompleto."
+    ],
+    "relatedCommands": ["cmd-script-escaping"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "legibilidade"],
+    "keywords": [
+      "continuacao de linha batch",
+      "quebrar comando longo cmd",
+      "circunflexo linha"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-script-check-admin",
+    "category": "CMD",
+    "subcategory": "Batch Scripting",
+    "title": "Verificar privilégios de administrador",
+    "description": "Testa, dentro do script, se o CMD está rodando elevado (como administrador), usando o comando NET SESSION como truque — só administradores conseguem executá-lo com sucesso.",
+    "syntax": "NET SESSION >nul 2>&1\nIF %ERRORLEVEL% NEQ 0 (comando_para_nao_admin)",
+    "example": "net session >nul 2>&1\nif %ERRORLEVEL% NEQ 0 (\n  echo Este script precisa ser executado como administrador!\n  exit /b 1\n)",
+    "result": "Este script precisa ser executado como administrador!",
+    "notes": [
+      "`NET SESSION` retorna ERRORLEVEL 0 apenas quando o processo tem privilégios administrativos, mesmo sem sessões de rede ativas — por isso funciona como teste indireto."
+    ],
+    "bestPractices": [
+      "Verifique privilégios logo no início de scripts que alteram configurações do sistema, serviços ou chaves de registro protegidas."
+    ],
+    "commonMistakes": [
+      "Assumir que o script sempre roda elevado e só descobrir a falta de permissão no meio da execução, deixando o sistema em estado parcialmente alterado."
+    ],
+    "relatedCommands": ["cmd-script-errorlevel", "cmd-script-if"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "language": "batch",
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/net-session",
+    "externalReferences": [],
+    "tags": ["cmd", "batch", "script", "administrador", "seguranca"],
+    "keywords": [
+      "verificar admin batch",
+      "executar como administrador cmd",
+      "net session privilegios"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

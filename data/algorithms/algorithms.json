@@ -57,5 +57,570 @@
     "keywords": ["big o", "notacao big o", "complexidade de algoritmos"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "algo-linear-search",
+    "category": "Algoritmos",
+    "subcategory": "Busca",
+    "title": "Busca linear",
+    "description": "Percorre um array elemento por elemento, do início ao fim, até encontrar o valor procurado ou esgotar a coleção.",
+    "syntax": "function buscaLinear(array, alvo) { ... }",
+    "example": "function buscaLinear(arr, alvo) {\n  for (let i = 0; i < arr.length; i++) {\n    if (arr[i] === alvo) return i\n  }\n  return -1\n}",
+    "result": "Retorna o índice do elemento encontrado, ou -1 se não existir.",
+    "returns": "Índice (number) do elemento, ou -1 quando não encontrado.",
+    "notes": [
+      "Complexidade de tempo O(n) — funciona em qualquer array, ordenado ou não, ao contrário da busca binária."
+    ],
+    "bestPractices": [
+      "Use busca linear em coleções pequenas ou não ordenadas, onde ordenar só para buscar não compensaria."
+    ],
+    "commonMistakes": [
+      "Usar busca linear repetidamente em uma coleção grande e estática, quando ordenar uma vez e usar busca binária seria muito mais eficiente."
+    ],
+    "relatedCommands": ["algo-binary-search"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Linear_search",
+    "externalReferences": [],
+    "tags": ["algoritmos", "busca", "linear-search"],
+    "keywords": ["busca linear", "linear search", "percorrer array"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-bubble-sort",
+    "category": "Algoritmos",
+    "subcategory": "Ordenação",
+    "title": "Bubble Sort",
+    "description": "Algoritmo de ordenação simples que percorre repetidamente a lista, trocando elementos adjacentes fora de ordem, até que nenhuma troca seja mais necessária.",
+    "syntax": "function bubbleSort(array) { ... }",
+    "example": "function bubbleSort(arr) {\n  for (let i = 0; i < arr.length; i++) {\n    for (let j = 0; j < arr.length - i - 1; j++) {\n      if (arr[j] > arr[j + 1]) [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]\n    }\n  }\n  return arr\n}",
+    "result": "O array é ordenado in-place em ordem crescente.",
+    "notes": [
+      "Complexidade O(n²) no pior e caso médio — didático, mas raramente usado em produção por causa da ineficiência em coleções grandes."
+    ],
+    "bestPractices": [
+      "Use Bubble Sort apenas para fins didáticos ou coleções muito pequenas; prefira Quick Sort/Merge Sort em produção."
+    ],
+    "commonMistakes": [
+      "Usar Bubble Sort em datasets grandes, onde sua complexidade O(n²) causa lentidão perceptível."
+    ],
+    "relatedCommands": ["algo-quicksort", "algo-merge-sort", "algo-big-o-notation"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Bubble_sort",
+    "externalReferences": [],
+    "tags": ["algoritmos", "ordenacao", "bubble-sort"],
+    "keywords": ["bubble sort", "ordenacao bolha", "algoritmo de ordenacao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-quicksort",
+    "category": "Algoritmos",
+    "subcategory": "Ordenação",
+    "title": "Quick Sort",
+    "description": "Algoritmo de ordenação por divisão e conquista que escolhe um pivô, particiona o array em menores/maiores que o pivô, e ordena recursivamente cada partição.",
+    "syntax": "function quickSort(array) { ... }",
+    "example": "function quickSort(arr) {\n  if (arr.length <= 1) return arr\n  const [pivo, ...resto] = arr\n  const menores = resto.filter((n) => n < pivo)\n  const maiores = resto.filter((n) => n >= pivo)\n  return [...quickSort(menores), pivo, ...quickSort(maiores)]\n}",
+    "result": "Retorna um novo array ordenado em ordem crescente.",
+    "returns": "Um novo array ordenado.",
+    "notes": [
+      "Complexidade média O(n log n), mas pode degradar para O(n²) no pior caso (pivô sempre o menor/maior elemento)."
+    ],
+    "bestPractices": [
+      "Escolha o pivô de forma aleatória ou pela mediana de três elementos para evitar o pior caso em dados já ordenados."
+    ],
+    "commonMistakes": [
+      "Sempre escolher o primeiro elemento como pivô, o que degrada para O(n²) em arrays já ordenados ou quase ordenados."
+    ],
+    "relatedCommands": ["algo-merge-sort", "algo-bubble-sort", "algo-big-o-notation"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Quicksort",
+    "externalReferences": [],
+    "tags": ["algoritmos", "ordenacao", "quicksort"],
+    "keywords": ["quicksort", "quick sort", "divisao e conquista"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-merge-sort",
+    "category": "Algoritmos",
+    "subcategory": "Ordenação",
+    "title": "Merge Sort",
+    "description": "Algoritmo de ordenação por divisão e conquista que divide o array ao meio recursivamente até sublistas de um elemento, depois as intercala (merge) em ordem.",
+    "syntax": "function mergeSort(array) { ... }",
+    "example": "function mergeSort(arr) {\n  if (arr.length <= 1) return arr\n  const meio = Math.floor(arr.length / 2)\n  const esquerda = mergeSort(arr.slice(0, meio))\n  const direita = mergeSort(arr.slice(meio))\n  return merge(esquerda, direita)\n}",
+    "result": "Retorna um novo array ordenado, sempre em O(n log n), independentemente da distribuição dos dados de entrada.",
+    "returns": "Um novo array ordenado.",
+    "notes": [
+      "Diferente do Quick Sort, Merge Sort garante O(n log n) mesmo no pior caso, mas usa O(n) de memória extra para o merge."
+    ],
+    "bestPractices": [
+      "Prefira Merge Sort quando precisar de ordenação estável (preserva a ordem relativa de elementos iguais) e complexidade previsível."
+    ],
+    "commonMistakes": [
+      "Usar Merge Sort em ambientes com memória muito restrita, ignorando seu custo de espaço adicional O(n)."
+    ],
+    "relatedCommands": ["algo-quicksort", "algo-big-o-notation"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Merge_sort",
+    "externalReferences": [],
+    "tags": ["algoritmos", "ordenacao", "merge-sort"],
+    "keywords": ["merge sort", "ordenacao por intercalacao", "divisao e conquista"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-bfs",
+    "category": "Algoritmos",
+    "subcategory": "Grafos",
+    "title": "BFS (Busca em Largura)",
+    "description": "Percorre um grafo ou árvore nível por nível, visitando todos os vizinhos de um nó antes de avançar para o próximo nível, usando uma fila (queue).",
+    "syntax": "function bfs(grafo, inicio) { ... }",
+    "example": "function bfs(grafo, inicio) {\n  const visitados = new Set([inicio])\n  const fila = [inicio]\n  const ordem = []\n  while (fila.length) {\n    const atual = fila.shift()\n    ordem.push(atual)\n    for (const vizinho of grafo[atual]) {\n      if (!visitados.has(vizinho)) {\n        visitados.add(vizinho)\n        fila.push(vizinho)\n      }\n    }\n  }\n  return ordem\n}",
+    "result": "Retorna a ordem em que os nós foram visitados, camada por camada, a partir do nó inicial.",
+    "returns": "Array com a ordem de visitação dos nós.",
+    "notes": [
+      "BFS encontra o caminho mais curto em grafos não ponderados, já que visita os nós em ordem crescente de distância."
+    ],
+    "bestPractices": [
+      "Use BFS quando precisar do caminho mais curto (em número de arestas) ou percorrer por níveis, como em redes sociais (graus de separação)."
+    ],
+    "commonMistakes": [
+      "Esquecer de marcar nós como visitados antes de enfileirá-los (não ao desenfileirar), o que pode adicionar o mesmo nó à fila múltiplas vezes."
+    ],
+    "relatedCommands": ["algo-dfs", "algo-graph-representation"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Breadth-first_search",
+    "externalReferences": [],
+    "tags": ["algoritmos", "grafos", "bfs"],
+    "keywords": ["bfs", "busca em largura", "breadth first search"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-dfs",
+    "category": "Algoritmos",
+    "subcategory": "Grafos",
+    "title": "DFS (Busca em Profundidade)",
+    "description": "Percorre um grafo ou árvore explorando o mais fundo possível em cada ramo antes de retroceder (backtrack), usando recursão ou uma pilha (stack) explícita.",
+    "syntax": "function dfs(grafo, atual, visitados = new Set()) { ... }",
+    "example": "function dfs(grafo, atual, visitados = new Set()) {\n  visitados.add(atual)\n  for (const vizinho of grafo[atual]) {\n    if (!visitados.has(vizinho)) dfs(grafo, vizinho, visitados)\n  }\n  return visitados\n}",
+    "result": "Retorna o conjunto de todos os nós alcançáveis a partir do nó inicial.",
+    "returns": "Set com todos os nós visitados.",
+    "notes": [
+      "DFS é naturalmente implementado com recursão (usando a call stack) ou com uma pilha explícita para evitar estouro de pilha em grafos muito profundos."
+    ],
+    "bestPractices": [
+      "Use DFS para detectar ciclos, ordenação topológica ou explorar todos os caminhos possíveis, como em labirintos."
+    ],
+    "commonMistakes": [
+      "Usar DFS recursivo em grafos muito profundos sem tratar o risco de estouro de pilha (stack overflow)."
+    ],
+    "relatedCommands": ["algo-bfs", "algo-graph-representation", "algo-recursion"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Depth-first_search",
+    "externalReferences": [],
+    "tags": ["algoritmos", "grafos", "dfs"],
+    "keywords": ["dfs", "busca em profundidade", "depth first search"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-recursion",
+    "category": "Algoritmos",
+    "subcategory": "Fundamentos",
+    "title": "Recursão",
+    "description": "Técnica em que uma função chama a si mesma para resolver um problema menor do mesmo tipo, até atingir um caso base que interrompe as chamadas.",
+    "syntax": "function fatorial(n) {\n  if (n <= 1) return 1 // caso base\n  return n * fatorial(n - 1) // chamada recursiva\n}",
+    "example": "fatorial(5)",
+    "result": "120 (5 × 4 × 3 × 2 × 1)",
+    "notes": [
+      "Cada chamada recursiva ocupa um frame na call stack; recursão sem caso base (ou com caso base inatingível) causa estouro de pilha."
+    ],
+    "bestPractices": [
+      "Sempre defina claramente o caso base antes de escrever a chamada recursiva, para evitar recursão infinita."
+    ],
+    "commonMistakes": [
+      "Esquecer o caso base ou defini-lo de forma que nunca é alcançado, causando `RangeError: Maximum call stack size exceeded`."
+    ],
+    "relatedCommands": ["algo-dfs", "algo-dynamic-programming"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Recursion_(computer_science)",
+    "externalReferences": [],
+    "tags": ["algoritmos", "recursao", "fundamentos"],
+    "keywords": ["recursao", "recursion", "caso base", "call stack"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-dynamic-programming",
+    "category": "Algoritmos",
+    "subcategory": "Otimização",
+    "title": "Programação Dinâmica (Memoization vs Tabulation)",
+    "description": "Técnica de otimização que resolve problemas complexos quebrando-os em subproblemas sobrepostos, armazenando resultados já calculados para evitar recomputação — via memoization (top-down, cache) ou tabulation (bottom-up, tabela iterativa).",
+    "syntax": "// Memoization (top-down)\nfunction fib(n, cache = {}) {\n  if (n in cache) return cache[n]\n  if (n <= 1) return n\n  return cache[n] = fib(n - 1, cache) + fib(n - 2, cache)\n}",
+    "example": "// Tabulation (bottom-up)\nfunction fibTab(n) {\n  const tabela = [0, 1]\n  for (let i = 2; i <= n; i++) tabela[i] = tabela[i - 1] + tabela[i - 2]\n  return tabela[n]\n}",
+    "result": "Ambas as versões calculam Fibonacci em O(n), contra O(2ⁿ) da recursão ingênua sem cache.",
+    "notes": [
+      "Um problema só é candidato a programação dinâmica se tiver 'subestrutura ótima' e 'subproblemas sobrepostos' — caso contrário, memoization não ajuda."
+    ],
+    "bestPractices": [
+      "Identifique a recorrência do problema primeiro (como cada subproblema se relaciona) antes de decidir entre memoization ou tabulation."
+    ],
+    "commonMistakes": [
+      "Aplicar recursão pura em problemas com subproblemas sobrepostos (como Fibonacci ingênuo), recalculando os mesmos valores exponencialmente."
+    ],
+    "relatedCommands": ["algo-recursion", "algo-big-o-notation"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Dynamic_programming",
+    "externalReferences": [],
+    "tags": ["algoritmos", "programacao-dinamica", "otimizacao"],
+    "keywords": [
+      "programacao dinamica",
+      "memoization",
+      "tabulation",
+      "dynamic programming"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-hash-table",
+    "category": "Algoritmos",
+    "subcategory": "Estruturas de dados",
+    "title": "Tabela Hash (Hash Table)",
+    "description": "Estrutura de dados que mapeia chaves a valores usando uma função hash para calcular o índice de armazenamento, oferecendo acesso, inserção e remoção em tempo médio O(1).",
+    "syntax": "const tabela = new Map() // ou objeto {} em JS\ntabela.set(chave, valor)",
+    "example": "const idade = new Map()\nidade.set(\"Ana\", 30)\nidade.get(\"Ana\")",
+    "result": "30 — acesso em tempo constante médio, independentemente do número de entradas na tabela.",
+    "notes": [
+      "Colisões (duas chaves mapeando o mesmo índice) são tratadas via encadeamento (chaining) ou endereçamento aberto (open addressing), afetando a complexidade no pior caso."
+    ],
+    "bestPractices": [
+      "Use hash tables para buscas frequentes por chave em vez de percorrer arrays linearmente com `find`."
+    ],
+    "commonMistakes": [
+      "Assumir O(1) garantido mesmo no pior caso — com muitas colisões, a complexidade pode degradar para O(n)."
+    ],
+    "relatedCommands": ["algo-linear-search", "algo-big-o-notation"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Hash_table",
+    "externalReferences": [],
+    "tags": ["algoritmos", "hash table", "estruturas de dados"],
+    "keywords": ["tabela hash", "hash table", "hash map", "colisao de hash"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-linked-list",
+    "category": "Algoritmos",
+    "subcategory": "Estruturas de dados",
+    "title": "Lista Encadeada (Linked List)",
+    "description": "Estrutura linear em que cada elemento (nó) armazena seu valor e uma referência ao próximo nó, permitindo inserção/remoção O(1) nas pontas sem realocar memória contígua como um array.",
+    "syntax": "class No {\n  constructor(valor) {\n    this.valor = valor\n    this.proximo = null\n  }\n}",
+    "example": "const a = new No(1)\nconst b = new No(2)\na.proximo = b",
+    "result": "`a` aponta para `b`, formando uma lista encadeada de dois nós: 1 → 2.",
+    "notes": [
+      "Diferente de arrays, listas encadeadas não têm acesso O(1) por índice — encontrar o n-ésimo elemento exige percorrer a lista, O(n)."
+    ],
+    "bestPractices": [
+      "Use listas encadeadas quando inserções/remoções frequentes nas pontas forem mais comuns que acesso aleatório por índice."
+    ],
+    "commonMistakes": [
+      "Esquecer de atualizar a referência `proximo` do nó anterior ao remover um nó do meio da lista, quebrando a cadeia."
+    ],
+    "relatedCommands": ["algo-stack-queue"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Linked_list",
+    "externalReferences": [],
+    "tags": ["algoritmos", "linked list", "estruturas de dados"],
+    "keywords": ["lista encadeada", "linked list", "no e ponteiro"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-stack-queue",
+    "category": "Algoritmos",
+    "subcategory": "Estruturas de dados",
+    "title": "Pilhas e Filas (Stack e Queue)",
+    "description": "Duas estruturas lineares com disciplinas de acesso opostas: pilha (Stack) segue LIFO (último a entrar, primeiro a sair); fila (Queue) segue FIFO (primeiro a entrar, primeiro a sair).",
+    "syntax": "// Stack (LIFO)\narray.push(item); array.pop()\n// Queue (FIFO)\narray.push(item); array.shift()",
+    "example": "const pilha = []\npilha.push(1); pilha.push(2)\npilha.pop()\n\nconst fila = []\nfila.push(1); fila.push(2)\nfila.shift()",
+    "result": "pilha.pop() retorna 2 (o último inserido); fila.shift() retorna 1 (o primeiro inserido).",
+    "notes": [
+      "A call stack de chamadas de função é literalmente uma pilha; filas são usadas em BFS e processamento de tarefas em ordem de chegada."
+    ],
+    "bestPractices": [
+      "Use pilha para desfazer/refazer ações (undo/redo) e histórico de navegação; use fila para processamento em ordem de chegada, como filas de impressão ou mensagens."
+    ],
+    "commonMistakes": [
+      "Usar `array.shift()` repetidamente para simular fila em arrays grandes — é O(n) por causa da reindexação, prejudicando performance."
+    ],
+    "relatedCommands": ["algo-bfs", "algo-linked-list"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Stack_(abstract_data_type)",
+    "externalReferences": [],
+    "tags": ["algoritmos", "stack", "queue", "estruturas de dados"],
+    "keywords": ["pilha e fila", "stack queue", "lifo fifo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-binary-search-tree",
+    "category": "Algoritmos",
+    "subcategory": "Estruturas de dados",
+    "title": "Árvore Binária de Busca (BST)",
+    "description": "Estrutura em árvore onde cada nó tem no máximo dois filhos; o filho esquerdo é sempre menor e o direito sempre maior que o nó pai, permitindo busca, inserção e remoção em O(log n) quando balanceada.",
+    "syntax": "class NoBST {\n  constructor(valor) {\n    this.valor = valor\n    this.esquerda = null\n    this.direita = null\n  }\n}",
+    "example": "function inserir(raiz, valor) {\n  if (!raiz) return new NoBST(valor)\n  if (valor < raiz.valor) raiz.esquerda = inserir(raiz.esquerda, valor)\n  else raiz.direita = inserir(raiz.direita, valor)\n  return raiz\n}",
+    "result": "Os valores são inseridos mantendo a propriedade da BST, permitindo buscas eficientes por comparação.",
+    "notes": [
+      "Uma BST desbalanceada (ex: inserir dados já ordenados) degrada para O(n), comportando-se como uma lista encadeada — árvores AVL/Red-Black resolvem isso com auto-balanceamento."
+    ],
+    "bestPractices": [
+      "Use estruturas auto-balanceadas (AVL, Red-Black Tree) em vez de BST simples quando a ordem de inserção dos dados não for controlada."
+    ],
+    "commonMistakes": [
+      "Inserir dados já ordenados em uma BST simples, criando uma árvore degenerada (equivalente a uma lista) com pior caso O(n)."
+    ],
+    "relatedCommands": ["algo-binary-search", "algo-recursion"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Binary_search_tree",
+    "externalReferences": [],
+    "tags": ["algoritmos", "arvore", "bst", "estruturas de dados"],
+    "keywords": ["arvore binaria de busca", "binary search tree", "bst"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-two-pointers",
+    "category": "Algoritmos",
+    "subcategory": "Técnicas",
+    "title": "Two Pointers (Dois Ponteiros)",
+    "description": "Técnica que usa dois índices percorrendo um array ou string (das pontas para o centro, ou ambos na mesma direção) para resolver problemas em O(n) em vez de O(n²) com loops aninhados.",
+    "syntax": "let esquerda = 0, direita = array.length - 1\nwhile (esquerda < direita) { ... }",
+    "example": "function temParSoma(arr, alvo) {\n  let esq = 0, dir = arr.length - 1\n  while (esq < dir) {\n    const soma = arr[esq] + arr[dir]\n    if (soma === alvo) return true\n    if (soma < alvo) esq++\n    else dir--\n  }\n  return false\n}",
+    "result": "Verifica em O(n) se existem dois números em um array ordenado que somam um valor alvo, sem loops aninhados.",
+    "notes": [
+      "Requer, na maioria dos casos, que os dados estejam ordenados para que mover os ponteiros de forma consistente faça sentido."
+    ],
+    "bestPractices": [
+      "Considere two pointers sempre que a solução ingênua envolver um loop duplo (O(n²)) sobre um array ordenado ou string."
+    ],
+    "commonMistakes": [
+      "Aplicar a técnica em dados não ordenados sem ordená-los antes, quebrando a lógica de mover os ponteiros."
+    ],
+    "relatedCommands": ["algo-sliding-window"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Two-pointer_technique",
+    "externalReferences": [],
+    "tags": ["algoritmos", "two-pointers", "tecnicas"],
+    "keywords": ["two pointers", "dois ponteiros", "tecnica de ponteiros"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-sliding-window",
+    "category": "Algoritmos",
+    "subcategory": "Técnicas",
+    "title": "Sliding Window (Janela Deslizante)",
+    "description": "Técnica que mantém uma 'janela' (subarray/substring contígua) que se expande e contrai sobre os dados, evitando recalcular do zero a cada posição — útil para problemas de subarray/substring com alguma condição.",
+    "syntax": "let inicio = 0\nfor (let fim = 0; fim < array.length; fim++) { ... }",
+    "example": "function maiorSomaSubarray(arr, k) {\n  let somaJanela = arr.slice(0, k).reduce((a, b) => a + b, 0)\n  let maiorSoma = somaJanela\n  for (let i = k; i < arr.length; i++) {\n    somaJanela += arr[i] - arr[i - k]\n    maiorSoma = Math.max(maiorSoma, somaJanela)\n  }\n  return maiorSoma\n}",
+    "result": "Encontra a maior soma de um subarray de tamanho k em O(n), em vez de O(n×k) recalculando a soma a cada posição.",
+    "notes": [
+      "Existem duas variações: janela de tamanho fixo (como no exemplo) e janela de tamanho variável (expande/contrai conforme uma condição)."
+    ],
+    "bestPractices": [
+      "Use sliding window para problemas de 'maior/menor subarray contíguo que satisfaz X', evitando recalcular a métrica do zero a cada posição."
+    ],
+    "commonMistakes": [
+      "Recalcular a soma/métrica da janela inteira a cada deslocamento em vez de só ajustar incrementalmente (somar o novo elemento, subtrair o que saiu)."
+    ],
+    "relatedCommands": ["algo-two-pointers"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Sliding_window_protocol",
+    "externalReferences": [],
+    "tags": ["algoritmos", "sliding-window", "tecnicas"],
+    "keywords": ["sliding window", "janela deslizante", "subarray contiguo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-backtracking",
+    "category": "Algoritmos",
+    "subcategory": "Técnicas",
+    "title": "Backtracking",
+    "description": "Técnica que explora todas as soluções possíveis construindo-as incrementalmente e abandonando (retrocedendo) um caminho assim que se prova inválido, evitando explorar ramos inúteis por completo.",
+    "syntax": "function backtrack(caminho, opcoes) {\n  if (ehSolucaoValida(caminho)) { salvar(caminho); return }\n  for (const opcao of opcoes) {\n    caminho.push(opcao)\n    backtrack(caminho, proximasOpcoes)\n    caminho.pop() // retrocede\n  }\n}",
+    "example": "Gerar todas as permutações de [1, 2, 3] testando cada posição e retrocedendo quando uma combinação já foi completada.",
+    "result": "Todas as permutações válidas são geradas sem repetir combinações, retrocedendo (`pop`) a cada tentativa esgotada.",
+    "notes": [
+      "Comum em problemas como N-Rainhas, Sudoku, geração de permutações/combinações e labirintos."
+    ],
+    "bestPractices": [
+      "Adicione 'poda' (pruning) — abandonar um ramo assim que ele se prova inválido, sem esperar chegar ao fim — para reduzir drasticamente o espaço de busca."
+    ],
+    "commonMistakes": [
+      "Esquecer de desfazer (`pop`/reverter) a escolha ao retroceder, corrompendo o estado para as próximas tentativas."
+    ],
+    "relatedCommands": ["algo-recursion", "algo-dfs"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Backtracking",
+    "externalReferences": [],
+    "tags": ["algoritmos", "backtracking", "tecnicas"],
+    "keywords": ["backtracking", "retrocesso", "permutacoes e combinacoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-greedy",
+    "category": "Algoritmos",
+    "subcategory": "Técnicas",
+    "title": "Algoritmos Gulosos (Greedy)",
+    "description": "Técnica que toma, a cada passo, a decisão localmente ótima na esperança de que isso leve a uma solução globalmente ótima — mais rápido que programação dinâmica, mas nem sempre correto.",
+    "syntax": "// A cada passo, escolha a melhor opção disponível no momento, sem reconsiderar depois",
+    "example": "Problema do troco: para dar troco de R$ 0,67 com moedas de 50, 25, 10, 5 e 1 centavos, um algoritmo guloso sempre escolhe a maior moeda possível a cada passo.",
+    "result": "50 + 10 + 5 + 1 + 1 = 67 centavos, usando o menor número de moedas possível (para esse sistema monetário específico).",
+    "notes": [
+      "Algoritmos gulosos nem sempre produzem a solução ótima — depende da estrutura do problema (é necessário provar a 'propriedade da escolha gulosa')."
+    ],
+    "bestPractices": [
+      "Use greedy quando o problema tiver subestrutura ótima E propriedade de escolha gulosa comprovada (ex: Dijkstra, Kruskal); caso contrário, considere programação dinâmica."
+    ],
+    "commonMistakes": [
+      "Assumir que uma abordagem gulosa sempre funciona sem verificar se o problema realmente garante otimalidade local ⇒ global (contra-exemplo clássico: troco com moedas de valores arbitrários)."
+    ],
+    "relatedCommands": ["algo-dynamic-programming"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Greedy_algorithm",
+    "externalReferences": [],
+    "tags": ["algoritmos", "greedy", "tecnicas"],
+    "keywords": ["algoritmo guloso", "greedy algorithm", "otimizacao local"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-graph-representation",
+    "category": "Algoritmos",
+    "subcategory": "Grafos",
+    "title": "Representação de Grafos (Lista vs Matriz de Adjacência)",
+    "description": "Duas formas comuns de representar um grafo em código: lista de adjacência (mapa de cada nó para seus vizinhos) e matriz de adjacência (matriz N×N indicando conexões entre todos os pares de nós).",
+    "syntax": "// Lista de adjacência\nconst grafo = { A: [\"B\", \"C\"], B: [\"A\"], C: [\"A\"] }\n\n// Matriz de adjacência\nconst matriz = [[0,1,1],[1,0,0],[1,0,0]]",
+    "example": "Um grafo social com milhões de usuários, mas poucas conexões por pessoa (esparso), é muito mais eficiente em memória como lista de adjacência do que como matriz.",
+    "result": "Lista de adjacência usa O(V + E) de memória; matriz de adjacência usa O(V²), independentemente de quantas arestas realmente existem.",
+    "notes": [
+      "Verificar se dois nós específicos são conectados é O(1) na matriz, mas O(grau do nó) na lista de adjacência."
+    ],
+    "bestPractices": [
+      "Use lista de adjacência para grafos esparsos (poucas conexões por nó, como redes sociais); use matriz para grafos densos ou quando precisar checar conexões frequentemente."
+    ],
+    "commonMistakes": [
+      "Usar matriz de adjacência para grafos muito grandes e esparsos, desperdiçando memória com a maioria das células zeradas."
+    ],
+    "relatedCommands": ["algo-bfs", "algo-dfs"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Graph_(abstract_data_type)",
+    "externalReferences": [],
+    "tags": ["algoritmos", "grafos", "representacao"],
+    "keywords": [
+      "lista de adjacencia",
+      "matriz de adjacencia",
+      "representacao de grafos"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-heap-priority-queue",
+    "category": "Algoritmos",
+    "subcategory": "Estruturas de dados",
+    "title": "Heap e Fila de Prioridade",
+    "description": "Um Heap é uma árvore binária quase completa que mantém a propriedade de heap (min-heap: pai sempre menor que filhos; max-heap: pai sempre maior), usada para implementar filas de prioridade com inserção e remoção do topo em O(log n).",
+    "syntax": "// Min-heap: extrairMin() sempre retorna o menor elemento em O(log n)",
+    "example": "Um sistema de atendimento hospitalar usa uma fila de prioridade (min-heap) para sempre atender primeiro o paciente com maior gravidade, independentemente da ordem de chegada.",
+    "result": "extrairMin()/extrairMax() sempre retorna o elemento de maior prioridade em O(log n), sem precisar ordenar a coleção inteira.",
+    "notes": [
+      "Diferente de uma fila comum (FIFO), a fila de prioridade sempre serve o elemento de maior prioridade, não o mais antigo."
+    ],
+    "bestPractices": [
+      "Use heap/fila de prioridade para algoritmos como Dijkstra (caminho mínimo) ou para encontrar os k maiores/menores elementos eficientemente."
+    ],
+    "commonMistakes": [
+      "Usar `array.sort()` repetidamente para simular uma fila de prioridade, custando O(n log n) a cada operação em vez de O(log n) com um heap real."
+    ],
+    "relatedCommands": ["algo-big-o-notation"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Heap_(data_structure)",
+    "externalReferences": [],
+    "tags": ["algoritmos", "heap", "fila de prioridade", "estruturas de dados"],
+    "keywords": ["heap", "fila de prioridade", "priority queue", "min-heap", "max-heap"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "algo-space-complexity",
+    "category": "Algoritmos",
+    "subcategory": "Complexidade",
+    "title": "Complexidade de Espaço (Space Complexity)",
+    "description": "Assim como Big O mede o crescimento do tempo de execução, complexidade de espaço mede quanta memória adicional um algoritmo consome em relação ao tamanho da entrada.",
+    "syntax": "O(1), O(n), O(n²) — mesma notação do Big O de tempo, aplicada à memória usada",
+    "example": "Um algoritmo in-place (como Bubble Sort) usa O(1) de espaço extra; Merge Sort usa O(n) por causa dos arrays temporários criados no merge.",
+    "result": "Permite comparar algoritmos considerando não só velocidade, mas também consumo de memória — frequentemente há um trade-off entre os dois.",
+    "notes": [
+      "Recursão também consome espaço: cada chamada recursiva ocupa memória na call stack, contando para a complexidade de espaço do algoritmo."
+    ],
+    "bestPractices": [
+      "Ao escolher entre dois algoritmos com complexidade de tempo similar, considere o espaço extra necessário, especialmente em ambientes com memória restrita."
+    ],
+    "commonMistakes": [
+      "Focar apenas na complexidade de tempo (Big O) ao otimizar código, ignorando o consumo de memória de estruturas auxiliares criadas."
+    ],
+    "relatedCommands": ["algo-big-o-notation", "algo-merge-sort"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://en.wikipedia.org/wiki/Space_complexity",
+    "externalReferences": [],
+    "tags": ["algoritmos", "complexidade", "espaco"],
+    "keywords": ["complexidade de espaco", "space complexity", "memoria de algoritmo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

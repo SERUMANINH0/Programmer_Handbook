@@ -54,5 +54,538 @@
     "keywords": ["piramide de testes", "test pyramid", "testes unitarios vs e2e"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "testing-test-doubles",
+    "category": "Testes",
+    "subcategory": "Fundamentos",
+    "title": "Test doubles (Mock, Stub, Fake, Spy)",
+    "description": "Termo genérico para objetos que substituem uma dependência real em um teste. Cada tipo tem um propósito diferente: Dummy só preenche um parâmetro, Stub retorna valores fixos, Spy registra chamadas, Mock verifica interações esperadas e Fake é uma implementação simplificada funcional.",
+    "syntax": "Dummy | Stub | Spy | Mock | Fake",
+    "example": "const stubRepo = { buscar: () => ({ id: 1, nome: \"Ana\" }) }\nconst spyEnviarEmail = jest.fn()\nconst mockPagamento = jest.fn().mockReturnValue(true)",
+    "result": "Cada tipo de double isola o código testado de dependências externas lentas, instáveis ou difíceis de reproduzir.",
+    "notes": [
+      "Na prática, muitas bibliotecas (Jest, Sinon) chamam tudo de 'mock', mas a distinção conceitual ajuda a escolher a ferramenta certa para cada caso."
+    ],
+    "bestPractices": [
+      "Use Stub quando só precisa de um retorno fixo, e Mock quando precisa verificar se uma interação específica aconteceu."
+    ],
+    "commonMistakes": [
+      "Usar Mock (que verifica comportamento) quando um Stub simples (que só retorna dados) já resolveria, tornando o teste frágil a mudanças internas irrelevantes."
+    ],
+    "relatedCommands": ["testing-mocking", "testing-dependency-injection-testability"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/articles/mocksArentStubs.html",
+    "externalReferences": [],
+    "tags": ["testes", "test-doubles", "mock", "stub"],
+    "keywords": ["test doubles", "mock vs stub", "spy vs fake", "dummy"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-mocking",
+    "category": "Testes",
+    "subcategory": "Fundamentos",
+    "title": "Mocking de dependências",
+    "description": "Técnica de substituir uma dependência real (banco de dados, API externa, sistema de arquivos) por uma versão controlada, permitindo testar uma unidade de código isoladamente.",
+    "syntax": "jest.mock(\"./modulo\")\nvi.mock(\"./modulo\")",
+    "example": "jest.mock(\"./emailService\")\ntest(\"envia email de boas-vindas\", async () => {\n  emailService.enviar.mockResolvedValue(true)\n  await registrarUsuario({ email: \"ana@ex.com\" })\n  expect(emailService.enviar).toHaveBeenCalledWith(\"ana@ex.com\")\n})",
+    "result": "O teste roda sem realmente enviar um e-mail, verificando apenas que a função foi chamada com os argumentos corretos.",
+    "notes": [
+      "Mockar em excesso pode fazer o teste validar a implementação em vez do comportamento, quebrando a cada refatoração interna."
+    ],
+    "bestPractices": [
+      "Mocke apenas as bordas do sistema (I/O, rede, tempo) — evite mockar objetos de domínio simples que não têm efeitos colaterais."
+    ],
+    "commonMistakes": [
+      "Mockar tantas dependências que o teste deixa de validar qualquer lógica real, apenas a orquestração de chamadas mockadas."
+    ],
+    "relatedCommands": ["testing-test-doubles", "testing-mock-http"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://jestjs.io/docs/mock-functions",
+    "externalReferences": [],
+    "tags": ["testes", "mocking", "isolamento"],
+    "keywords": ["mocking", "mockar dependencia", "jest.mock"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-tdd",
+    "category": "Testes",
+    "subcategory": "Estratégia",
+    "title": "TDD (Test-Driven Development)",
+    "description": "Prática de desenvolvimento onde o teste é escrito antes do código de produção, seguindo o ciclo Red (teste falha) → Green (implementação mínima que passa) → Refactor (melhora o código mantendo os testes verdes).",
+    "syntax": "Red → Green → Refactor",
+    "example": "1. Escrever `test(\"soma\", () => expect(somar(2,3)).toBe(5))` (falha, função não existe)\n2. Implementar `function somar(a,b) { return a+b }` (passa)\n3. Refatorar nomes/estrutura mantendo o teste verde",
+    "result": "O design do código emerge guiado pelos testes, resultando naturalmente em código testável e com boa cobertura.",
+    "notes": [
+      "TDD é uma técnica de design, não apenas uma forma de garantir cobertura — o valor principal é o feedback rápido sobre a API do código."
+    ],
+    "bestPractices": [
+      "Mantenha os ciclos curtos: um teste pequeno, a implementação mínima para passá-lo, depois refatore antes do próximo teste."
+    ],
+    "commonMistakes": [
+      "Escrever vários testes de uma vez antes de implementar qualquer coisa, perdendo o feedback incremental que é o ponto central do TDD."
+    ],
+    "relatedCommands": ["testing-aaa-pattern", "testing-code-coverage"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/bliki/TestDrivenDevelopment.html",
+    "externalReferences": [],
+    "tags": ["testes", "tdd", "metodologia"],
+    "keywords": ["tdd", "test driven development", "red green refactor"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-types-of-tests",
+    "category": "Testes",
+    "subcategory": "Estratégia",
+    "title": "Testes unitários vs. integração vs. E2E",
+    "description": "Três níveis de teste com escopo crescente: unitário valida uma função/classe isolada, integração valida a colaboração entre componentes reais (ex: código + banco), e E2E valida o sistema completo do ponto de vista do usuário.",
+    "syntax": "Unitário: 1 unidade isolada | Integração: 2+ componentes reais | E2E: sistema inteiro",
+    "example": "Unitário: testar `calcularDesconto(pedido)` isoladamente.\nIntegração: testar que `PedidoRepository.salvar()` realmente grava no banco de teste.\nE2E: testar o fluxo completo de compra em um navegador automatizado.",
+    "result": "Cada nível captura um tipo diferente de bug: unitário pega erros de lógica, integração pega problemas de configuração/contrato, E2E pega falhas no fluxo real do usuário.",
+    "notes": [
+      "Não existe consenso absoluto sobre os limites exatos entre 'integração' e 'E2E' — o importante é a intenção de cada teste."
+    ],
+    "bestPractices": [
+      "Escreva testes no nível mais baixo possível que ainda capture o risco real — não escreva um E2E para validar uma regra de negócio pura."
+    ],
+    "relatedCommands": ["testing-test-pyramid", "testing-e2e-playwright-cypress"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/bliki/UnitTest.html",
+    "externalReferences": [],
+    "tags": ["testes", "unitario", "integracao", "e2e"],
+    "keywords": ["teste unitario", "teste de integracao", "teste e2e"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-snapshot",
+    "category": "Testes",
+    "subcategory": "Técnicas",
+    "title": "Snapshot testing",
+    "description": "Compara a saída atual de um componente/função (renderização, objeto serializado) com uma versão salva anteriormente ('snapshot'), alertando sobre qualquer diferença inesperada.",
+    "syntax": "expect(valor).toMatchSnapshot()",
+    "example": "test(\"renderiza card de produto\", () => {\n  const { container } = render(<ProdutoCard nome=\"Caneca\" preco={29.9} />)\n  expect(container).toMatchSnapshot()\n})",
+    "result": "Na primeira execução, o snapshot é salvo em um arquivo `__snapshots__`; execuções seguintes comparam contra ele e falham se houver mudança não aprovada.",
+    "notes": [
+      "Snapshots desatualizados (por mudança intencional) são atualizados com `jest --updateSnapshot` (ou `-u`)."
+    ],
+    "bestPractices": [
+      "Revise cada diff de snapshot manualmente antes de aceitar — atualizar snapshots sem revisar mascara regressões reais."
+    ],
+    "commonMistakes": [
+      "Rodar `--updateSnapshot` automaticamente em CI sem revisão humana, o que faz o teste perder todo o valor de regressão."
+    ],
+    "relatedCommands": ["testing-visual-regression"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://jestjs.io/docs/snapshot-testing",
+    "externalReferences": [],
+    "tags": ["testes", "snapshot", "regressao"],
+    "keywords": ["snapshot testing", "toMatchSnapshot", "teste de regressao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-code-coverage",
+    "category": "Testes",
+    "subcategory": "Métricas",
+    "title": "Cobertura de código (Code Coverage)",
+    "description": "Métrica que mede a porcentagem de linhas, branches, funções ou statements do código executados pela suíte de testes, usada como indicador (imperfeito) de quão testado o código está.",
+    "syntax": "jest --coverage\nvitest run --coverage",
+    "example": "npm test -- --coverage",
+    "result": "Um relatório mostra percentuais de Statements, Branches, Functions e Lines cobertos, geralmente com um arquivo HTML navegável.",
+    "notes": [
+      "100% de cobertura não significa ausência de bugs — cobertura mede execução de código, não a qualidade das asserções."
+    ],
+    "bestPractices": [
+      "Use cobertura para encontrar código não testado (pontos cegos), não como meta numérica isolada a ser perseguida."
+    ],
+    "commonMistakes": [
+      "Escrever testes sem asserções reais só para 'passar' pela linha de código e inflar artificialmente o percentual de cobertura."
+    ],
+    "relatedCommands": ["testing-tdd"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://jestjs.io/docs/configuration#collectcoverage-boolean",
+    "externalReferences": [],
+    "tags": ["testes", "cobertura", "coverage"],
+    "keywords": ["code coverage", "cobertura de codigo", "coverage report"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-fixtures-setup-teardown",
+    "category": "Testes",
+    "subcategory": "Fundamentos",
+    "title": "Fixtures, setup e teardown",
+    "description": "Fixtures são dados/estado pré-configurados usados por um teste; setup (beforeEach/beforeAll) prepara o ambiente antes dos testes rodarem, e teardown (afterEach/afterAll) limpa recursos depois.",
+    "syntax": "beforeEach(() => { ... })\nafterEach(() => { ... })",
+    "example": "let db\nbeforeEach(async () => { db = await criarBancoDeTeste() })\nafterEach(async () => { await db.limpar() })",
+    "result": "Cada teste roda com um banco de teste limpo e isolado, sem dados residuais de execuções anteriores.",
+    "notes": [
+      "`beforeAll`/`afterAll` rodam uma vez para todo o arquivo; `beforeEach`/`afterEach` rodam antes/depois de cada teste individual."
+    ],
+    "bestPractices": [
+      "Prefira `beforeEach` a `beforeAll` para estado mutável, evitando que um teste vaze estado para o próximo."
+    ],
+    "commonMistakes": [
+      "Compartilhar um objeto de fixture mutável entre testes via `beforeAll`, fazendo um teste afetar o resultado de outro."
+    ],
+    "relatedCommands": ["testing-test-isolation"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://jestjs.io/docs/setup-teardown",
+    "externalReferences": [],
+    "tags": ["testes", "fixtures", "setup", "teardown"],
+    "keywords": ["fixtures", "beforeeach", "aftereach", "setup teardown"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-mock-http",
+    "category": "Testes",
+    "subcategory": "Técnicas",
+    "title": "Mockar chamadas HTTP",
+    "description": "Intercepta requisições HTTP feitas pelo código testado e retorna respostas controladas, evitando dependência de rede real e tornando o teste determinístico e rápido.",
+    "syntax": "msw / nock — interceptar requisições no nível de rede",
+    "example": "server.use(\n  http.get(\"/api/usuarios/:id\", () => HttpResponse.json({ id: 1, nome: \"Ana\" }))\n)",
+    "result": "Qualquer chamada `fetch`/`axios` feita pelo código sob teste para essa rota recebe a resposta mockada, sem tráfego de rede real.",
+    "notes": [
+      "MSW (Mock Service Worker) intercepta no nível de rede, funcionando de forma transparente tanto no navegador quanto em Node."
+    ],
+    "bestPractices": [
+      "Prefira interceptar a nível de rede (MSW/nock) a mockar diretamente o cliente HTTP, deixando o código de produção inalterado."
+    ],
+    "commonMistakes": [
+      "Deixar testes dependerem de uma API externa real, tornando a suíte lenta e instável (flaky) por fatores fora do controle do time."
+    ],
+    "relatedCommands": ["testing-mocking", "testing-flaky-tests"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://mswjs.io/docs/",
+    "externalReferences": [],
+    "tags": ["testes", "http", "mock"],
+    "keywords": ["mock http", "msw", "nock", "mockar api"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-e2e-playwright-cypress",
+    "category": "Testes",
+    "subcategory": "E2E",
+    "title": "Testes E2E com Playwright/Cypress",
+    "description": "Ferramentas que automatizam um navegador real para simular a jornada completa de um usuário — clicar, digitar, navegar — validando o sistema integrado de ponta a ponta.",
+    "syntax": "await page.goto(\"/login\")\nawait page.fill(\"#email\", \"ana@ex.com\")\nawait page.click(\"button[type=submit]\")",
+    "example": "test(\"login com sucesso\", async ({ page }) => {\n  await page.goto(\"/login\")\n  await page.fill(\"#email\", \"ana@ex.com\")\n  await page.fill(\"#senha\", \"123456\")\n  await page.click(\"text=Entrar\")\n  await expect(page).toHaveURL(\"/dashboard\")\n})",
+    "result": "Um navegador (Chromium/Firefox/WebKit) é automatizado de ponta a ponta, validando que o fluxo real funciona como esperado.",
+    "notes": [
+      "Playwright suporta múltiplos navegadores nativamente e roda em paralelo por padrão; Cypress historicamente focou em Chromium com uma experiência de debug mais visual."
+    ],
+    "bestPractices": [
+      "Use seletores estáveis (data-testid) em vez de classes CSS ou texto que mudam com frequência, para reduzir testes quebradiços."
+    ],
+    "commonMistakes": [
+      "Usar `sleep`/espera fixa em vez das esperas automáticas (auto-waiting) dessas ferramentas, tornando o teste lento e ainda assim flaky."
+    ],
+    "relatedCommands": ["testing-types-of-tests", "testing-flaky-tests"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://playwright.dev/docs/writing-tests",
+    "externalReferences": [],
+    "tags": ["testes", "e2e", "playwright", "cypress"],
+    "keywords": ["playwright", "cypress", "teste e2e navegador"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-parameterized-tests",
+    "category": "Testes",
+    "subcategory": "Técnicas",
+    "title": "Testes parametrizados (table-driven)",
+    "description": "Executa o mesmo teste várias vezes com diferentes combinações de entrada/saída definidas em uma tabela de dados, evitando duplicar código de teste quase idêntico.",
+    "syntax": "test.each([[entrada, esperado], ...])(\"descricao\", (entrada, esperado) => { ... })",
+    "example": "test.each([\n  [0, \"par\"],\n  [1, \"impar\"],\n  [4, \"par\"],\n])(\"classifica %i como %s\", (numero, esperado) => {\n  expect(classificar(numero)).toBe(esperado)\n})",
+    "result": "Três testes independentes são executados (um por linha da tabela), cada um reportado separadamente em caso de falha.",
+    "notes": [
+      "Também chamado de 'table-driven tests', padrão comum em Go e outras linguagens além de JS/TS."
+    ],
+    "bestPractices": [
+      "Use para casos de borda (valores negativos, zero, vazio, limites) em vez de escrever um `test()` separado para cada variação."
+    ],
+    "relatedCommands": ["testing-aaa-pattern"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://jestjs.io/docs/api#testeachtablename-fn-timeout",
+    "externalReferences": [],
+    "tags": ["testes", "parametrizado", "table-driven"],
+    "keywords": ["test.each", "testes parametrizados", "table driven tests"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-flaky-tests",
+    "category": "Testes",
+    "subcategory": "Qualidade",
+    "title": "Testes flaky (instáveis)",
+    "description": "Testes que passam ou falham de forma inconsistente sem mudança no código, geralmente causados por dependência de tempo, ordem de execução, rede ou estado compartilhado.",
+    "syntax": "N/A — sintoma, não sintaxe",
+    "example": "Um teste que usa `setTimeout(resolve, 100)` esperando uma animação terminar falha ocasionalmente em máquinas mais lentas ou sob carga de CI.",
+    "result": "A confiança da equipe na suíte de testes cai, levando ao hábito perigoso de simplesmente re-rodar o CI até passar.",
+    "notes": [
+      "Causas comuns: timing/race conditions, testes que dependem da ordem de execução, dados compartilhados entre testes, dependência de rede real."
+    ],
+    "bestPractices": [
+      "Investigue e corrija (ou isole) testes flaky imediatamente — não normalize re-executar o pipeline até passar."
+    ],
+    "commonMistakes": [
+      "Marcar um teste flaky como 'skip' permanentemente em vez de investigar a causa raiz, perdendo a cobertura que ele deveria fornecer."
+    ],
+    "relatedCommands": ["testing-test-isolation", "testing-e2e-playwright-cypress"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/articles/nonDeterminism.html",
+    "externalReferences": [],
+    "tags": ["testes", "flaky", "qualidade"],
+    "keywords": ["testes flaky", "testes instaveis", "flaky tests"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-ci-pipeline",
+    "category": "Testes",
+    "subcategory": "CI/CD",
+    "title": "Rodar testes em CI",
+    "description": "Executa a suíte de testes automaticamente a cada push/pull request em um pipeline de integração contínua, bloqueando o merge de código que quebra testes existentes.",
+    "syntax": "npm test — executado como um step/job do pipeline",
+    "example": "- name: Rodar testes\n  run: npm test -- --coverage",
+    "result": "O pipeline falha (e bloqueia o merge, se configurado) caso qualquer teste falhe, dando feedback rápido ao autor do PR.",
+    "notes": [
+      "Testes mais lentos (E2E) costumam rodar em um job/stage separado dos testes unitários, para não atrasar o feedback rápido."
+    ],
+    "bestPractices": [
+      "Rode a suíte completa em toda PR antes do merge; reserve suítes ainda mais pesadas (carga, segurança) para rodar em cron separado."
+    ],
+    "commonMistakes": [
+      "Permitir merge com testes falhando 'temporariamente', criando o hábito de ignorar falhas do pipeline."
+    ],
+    "relatedCommands": ["testing-code-coverage"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://docs.github.com/actions/automating-builds-and-tests",
+    "externalReferences": [],
+    "tags": ["testes", "ci-cd", "pipeline"],
+    "keywords": ["testes no ci", "pipeline de testes", "testar no pull request"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-test-isolation",
+    "category": "Testes",
+    "subcategory": "Fundamentos",
+    "title": "Isolamento de testes",
+    "description": "Princípio de que cada teste deve poder rodar de forma independente, em qualquer ordem, sem depender do resultado ou estado deixado por outro teste.",
+    "syntax": "N/A — princípio de design de testes",
+    "example": "Em vez de um teste 'criar usuário' seguido de outro teste 'editar o usuário criado no teste anterior', cada teste cria seus próprios dados do zero.",
+    "result": "A suíte pode ser executada em paralelo, em qualquer ordem, ou parcialmente (só um arquivo) sem falhas espúrias.",
+    "notes": [
+      "Falta de isolamento é uma das causas mais comuns de testes flaky em suítes de integração."
+    ],
+    "bestPractices": [
+      "Cada teste deve criar (e idealmente limpar) seus próprios dados, em vez de depender de estado global ou de outro teste."
+    ],
+    "commonMistakes": [
+      "Depender da ordem alfabética/de declaração dos testes para que a suíte passe, quebrando ao rodar em paralelo ou parcialmente."
+    ],
+    "relatedCommands": ["testing-fixtures-setup-teardown", "testing-flaky-tests"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/bliki/UnitTest.html",
+    "externalReferences": [],
+    "tags": ["testes", "isolamento", "boas-praticas"],
+    "keywords": ["isolamento de testes", "test isolation", "testes independentes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-contract-testing",
+    "category": "Testes",
+    "subcategory": "Integração",
+    "title": "Contract testing (testes de contrato)",
+    "description": "Valida que a interface entre dois serviços (ex: frontend e API, ou dois microsserviços) permanece compatível, sem precisar subir ambos os sistemas juntos em um teste E2E completo.",
+    "syntax": "Consumer define expectativas → Provider verifica se as atende (ex: Pact)",
+    "example": "O time de frontend define um 'contrato' esperando que `GET /usuarios/1` retorne `{ id, nome, email }`; o time de backend roda esse contrato contra sua implementação real no CI.",
+    "result": "Se o backend remover o campo `email` da resposta, o teste de contrato falha no CI do backend antes de quebrar o frontend em produção.",
+    "notes": [
+      "Especialmente valioso em arquiteturas de microsserviços, onde testar E2E todos os serviços juntos é caro e lento."
+    ],
+    "bestPractices": [
+      "Use contract testing entre times/serviços diferentes para detectar breaking changes de API antes do deploy, sem depender de um ambiente de staging compartilhado."
+    ],
+    "relatedCommands": ["testing-types-of-tests"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://docs.pact.io/",
+    "externalReferences": [],
+    "tags": ["testes", "contract-testing", "microsservicos"],
+    "keywords": ["contract testing", "teste de contrato", "pact"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-bdd-gherkin",
+    "category": "Testes",
+    "subcategory": "Metodologia",
+    "title": "BDD e sintaxe Gherkin (Given-When-Then)",
+    "description": "Behavior-Driven Development descreve comportamento esperado em linguagem natural estruturada (Given-When-Then), legível tanto por desenvolvedores quanto por stakeholders não técnicos.",
+    "syntax": "Given <contexto>\nWhen <acao>\nThen <resultado esperado>",
+    "example": "Cenário: Login com credenciais válidas\n  Given que o usuário está na tela de login\n  When ele preenche email e senha corretos e envia\n  Then ele é redirecionado para o dashboard",
+    "result": "O cenário em Gherkin pode ser automatizado (ex: com Cucumber) para gerar um teste E2E executável a partir do texto.",
+    "notes": [
+      "BDD foca a conversa em comportamento observável do sistema, ajudando a alinhar entendimento entre negócio e desenvolvimento antes de codificar."
+    ],
+    "bestPractices": [
+      "Escreva cenários do ponto de vista do usuário/negócio, evitando detalhes técnicos de implementação no texto Gherkin."
+    ],
+    "relatedCommands": ["testing-e2e-playwright-cypress"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://cucumber.io/docs/gherkin/",
+    "externalReferences": [],
+    "tags": ["testes", "bdd", "gherkin"],
+    "keywords": ["bdd", "gherkin", "given when then", "cucumber"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-mutation-testing",
+    "category": "Testes",
+    "subcategory": "Métricas",
+    "title": "Mutation testing (testes de mutação)",
+    "description": "Técnica que introduz pequenas alterações artificiais ('mutantes') no código de produção e verifica se a suíte de testes detecta essas mudanças, medindo a qualidade real dos testes além da cobertura de linhas.",
+    "syntax": "Ferramenta gera mutantes automaticamente (ex: trocar `>` por `>=`) e roda a suíte contra cada um",
+    "example": "Mutante: trocar `if (idade >= 18)` por `if (idade > 18)`. Se nenhum teste falhar com essa mutação, há uma lacuna de teste no limite de 18 anos.",
+    "result": "Um 'mutation score' indica a porcentagem de mutantes 'mortos' (detectados pelos testes) — mais confiável que cobertura de linha isolada.",
+    "notes": [
+      "Bem mais lento que rodar a suíte normal, já que executa os testes uma vez para cada mutante gerado."
+    ],
+    "bestPractices": [
+      "Use mutation testing pontualmente em módulos críticos para validar a qualidade dos testes, não como parte do CI de toda PR."
+    ],
+    "relatedCommands": ["testing-code-coverage"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://stryker-mutator.io/docs/",
+    "externalReferences": [],
+    "tags": ["testes", "mutation-testing", "qualidade"],
+    "keywords": ["mutation testing", "teste de mutacao", "stryker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-visual-regression",
+    "category": "Testes",
+    "subcategory": "E2E",
+    "title": "Visual regression testing",
+    "description": "Captura screenshots da interface e compara pixel a pixel (ou por diff perceptual) contra uma versão de referência aprovada, detectando mudanças visuais não intencionais.",
+    "syntax": "await expect(page).toHaveScreenshot(\"nome.png\")",
+    "example": "test(\"pagina inicial nao muda visualmente\", async ({ page }) => {\n  await page.goto(\"/\")\n  await expect(page).toHaveScreenshot(\"home.png\")\n})",
+    "result": "Se a renderização diferir da imagem de referência além de um limiar configurado, o teste falha e mostra o diff visual.",
+    "notes": [
+      "Sensível a diferenças de fonte/renderização entre sistemas operacionais — geralmente roda em um ambiente Docker padronizado para evitar falsos positivos."
+    ],
+    "bestPractices": [
+      "Rode captura e comparação sempre no mesmo ambiente (mesmo Docker image/CI) para evitar diffs causados só por diferenças de renderização entre máquinas."
+    ],
+    "relatedCommands": ["testing-snapshot", "testing-e2e-playwright-cypress"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://playwright.dev/docs/test-snapshots",
+    "externalReferences": [],
+    "tags": ["testes", "visual-regression", "screenshot"],
+    "keywords": ["visual regression testing", "teste visual", "screenshot diff"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-load-performance",
+    "category": "Testes",
+    "subcategory": "Performance",
+    "title": "Testes de carga e performance",
+    "description": "Simula múltiplos usuários/requisições simultâneas contra o sistema para medir tempo de resposta, throughput e identificar o ponto de saturação sob carga.",
+    "syntax": "k6 run script.js",
+    "example": "import http from \"k6/http\"\nexport const options = { vus: 100, duration: \"30s\" }\nexport default function () {\n  http.get(\"https://minha-api.exemplo.com/produtos\")\n}",
+    "result": "Um relatório mostra latência (p50/p95/p99), taxa de erro e requisições por segundo sob a carga simulada de 100 usuários virtuais.",
+    "notes": [
+      "Teste de carga (comportamento sob carga esperada) é diferente de teste de estresse (encontrar o ponto de ruptura do sistema)."
+    ],
+    "bestPractices": [
+      "Rode testes de carga em um ambiente isolado similar à produção, nunca diretamente contra o ambiente de produção real sem planejamento."
+    ],
+    "commonMistakes": [
+      "Rodar teste de carga contra produção sem aviso, causando uma indisponibilidade real para usuários legítimos."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://k6.io/docs/",
+    "externalReferences": [],
+    "tags": ["testes", "performance", "carga"],
+    "keywords": ["teste de carga", "load testing", "k6", "teste de performance"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "testing-dependency-injection-testability",
+    "category": "Testes",
+    "subcategory": "Fundamentos",
+    "title": "Injeção de dependência para testabilidade",
+    "description": "Passar dependências (repositórios, clientes HTTP, relógio) como parâmetros em vez de instanciá-las diretamente dentro da função/classe, permitindo substituí-las por test doubles nos testes.",
+    "syntax": "function criarServico(dependencia = dependenciaReal) { ... }\nclass Servico { constructor(private dependencia: Dependencia) {} }",
+    "example": "class RelatorioService {\n  constructor(private repo: PedidoRepository, private relogio: () => Date = () => new Date()) {}\n}\n// no teste: new RelatorioService(repoFake, () => new Date(\"2026-01-01\"))",
+    "result": "O teste consegue controlar totalmente as dependências (incluindo tempo), tornando o resultado determinístico e reproduzível.",
+    "notes": [
+      "Código que instancia suas próprias dependências internamente (`new PedidoRepository()` dentro do construtor) é notoriamente difícil de testar sem mocks pesados de módulo."
+    ],
+    "bestPractices": [
+      "Injete até mesmo dependências 'óbvias' como o relógio (`Date.now`) quando o comportamento depender de tempo, para eliminar não-determinismo nos testes."
+    ],
+    "commonMistakes": [
+      "Instanciar dependências com `new` diretamente dentro de métodos, obrigando o teste a recorrer a mocks de módulo em vez de simples injeção."
+    ],
+    "relatedCommands": ["testing-test-doubles", "clean-arch-dependency-rule"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/articles/injection.html",
+    "externalReferences": [],
+    "tags": ["testes", "dependency-injection", "testabilidade"],
+    "keywords": ["injecao de dependencia", "testabilidade", "dependency injection"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

@@ -936,5 +936,510 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "azure-aks-create",
+    "category": "Azure",
+    "subcategory": "AKS",
+    "title": "az aks create",
+    "description": "Cria um cluster Azure Kubernetes Service (AKS) gerenciado, provisionando o control plane e o pool inicial de nós.",
+    "syntax": "az aks create --resource-group <rg> --name <cluster> --node-count <n> --generate-ssh-keys",
+    "example": "az aks create --resource-group meu-rg --name meu-cluster --node-count 3 --generate-ssh-keys",
+    "result": "Um cluster AKS é provisionado em alguns minutos; o comando retorna o JSON com os detalhes do cluster criado.",
+    "flags": [
+      { "flag": "--node-count", "description": "Número inicial de nós no pool padrão." },
+      {
+        "flag": "--enable-managed-identity",
+        "description": "Usa identidade gerenciada para o control plane em vez de service principal."
+      },
+      {
+        "flag": "--generate-ssh-keys",
+        "description": "Gera automaticamente um par de chaves SSH se não existir."
+      }
+    ],
+    "notes": [
+      "Após criado, use `az aks get-credentials` para configurar o kubectl local a apontar para o cluster."
+    ],
+    "bestPractices": [
+      "Habilite autoscaling do node pool (`--enable-cluster-autoscaler`) em vez de fixar um número estático de nós."
+    ],
+    "commonMistakes": [
+      "Esquecer de rodar `az aks get-credentials`, fazendo o kubectl continuar apontando para o cluster errado (ou nenhum)."
+    ],
+    "relatedCommands": ["azure-cli-login", "azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/aks#az-aks-create",
+    "externalReferences": [],
+    "tags": ["azure", "aks", "kubernetes"],
+    "keywords": ["az aks create", "criar cluster kubernetes azure", "aks"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-sql-database-create",
+    "category": "Azure",
+    "subcategory": "Azure SQL",
+    "title": "az sql db create",
+    "description": "Cria um banco de dados gerenciado no Azure SQL Database, dentro de um servidor lógico SQL já existente.",
+    "syntax": "az sql db create --resource-group <rg> --server <servidor> --name <banco> --service-objective <tier>",
+    "example": "az sql db create --resource-group meu-rg --server meu-servidor-sql --name minha-app-db --service-objective S0",
+    "result": "O banco de dados é provisionado dentro do servidor lógico especificado, pronto para receber conexões.",
+    "flags": [
+      {
+        "flag": "--service-objective",
+        "description": "Define o tier de performance (ex: Basic, S0, S1, GP_Gen5_2)."
+      }
+    ],
+    "notes": [
+      "O servidor lógico (`az sql server create`) precisa existir antes de criar o banco; ele é o endpoint de conexão compartilhado."
+    ],
+    "bestPractices": [
+      "Configure regras de firewall (`az sql server firewall-rule create`) restritas em vez de liberar acesso público amplo ao servidor."
+    ],
+    "commonMistakes": [
+      "Confundir o servidor lógico do Azure SQL (só um endpoint administrativo) com uma instância de VM rodando SQL Server."
+    ],
+    "relatedCommands": ["azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/sql/db#az-sql-db-create",
+    "externalReferences": [],
+    "tags": ["azure", "sql", "banco de dados"],
+    "keywords": ["az sql db create", "azure sql database", "banco de dados azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-devops-pipelines-yaml",
+    "category": "Azure",
+    "subcategory": "Azure DevOps",
+    "title": "Azure Pipelines (azure-pipelines.yml)",
+    "description": "Arquivo YAML que define um pipeline de CI/CD no Azure DevOps: quando disparar, em que agente rodar e quais stages/jobs/steps executar.",
+    "syntax": "trigger: [<branches>]\npool:\n  vmImage: <imagem>\nsteps:\n  - script: <comando>",
+    "example": "trigger:\n  - main\npool:\n  vmImage: 'ubuntu-latest'\nsteps:\n  - script: npm ci && npm test\n    displayName: 'Instalar e testar'",
+    "result": "A cada push na branch main, o pipeline provisiona um agente Ubuntu e executa os steps definidos, reportando sucesso/falha no Azure DevOps.",
+    "notes": [
+      "Pipelines podem ser organizados em `stages` (ex: Build, Test, Deploy), cada um com múltiplos `jobs` executados em paralelo ou sequência."
+    ],
+    "bestPractices": [
+      "Use templates YAML reutilizáveis (`extends`/`template`) para compartilhar lógica de pipeline entre múltiplos repositórios."
+    ],
+    "commonMistakes": [
+      "Misturar lógica de build e deploy em um único job monolítico em vez de separar em stages com aprovações entre eles."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure DevOps",
+    "officialDocumentation": "https://learn.microsoft.com/azure/devops/pipelines/yaml-schema/",
+    "externalReferences": [],
+    "tags": ["azure", "devops", "ci-cd"],
+    "keywords": ["azure pipelines", "azure-pipelines.yml", "ci cd azure devops"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-container-registry",
+    "category": "Azure",
+    "subcategory": "Containers",
+    "title": "Azure Container Registry (ACR)",
+    "description": "Registry privado gerenciado para armazenar e distribuir imagens Docker/OCI, integrado nativamente com AKS, App Service e Azure DevOps.",
+    "syntax": "az acr create --resource-group <rg> --name <registry> --sku Basic\naz acr login --name <registry>",
+    "example": "az acr create --resource-group meu-rg --name meuregistry --sku Basic\naz acr login --name meuregistry\ndocker push meuregistry.azurecr.io/minha-app:1.0",
+    "result": "O registry é criado e, após login, imagens podem ser enviadas (`docker push`) para `meuregistry.azurecr.io`.",
+    "notes": [
+      "`az aks update --attach-acr` concede ao cluster AKS permissão para puxar imagens do ACR sem precisar de credenciais separadas."
+    ],
+    "bestPractices": [
+      "Habilite políticas de retenção automática para remover imagens não taggeadas antigas e controlar custo de armazenamento."
+    ],
+    "relatedCommands": ["azure-aks-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/azure/container-registry/",
+    "externalReferences": [],
+    "tags": ["azure", "acr", "docker", "registry"],
+    "keywords": ["azure container registry", "acr", "registry docker azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-container-apps",
+    "category": "Azure",
+    "subcategory": "Containers",
+    "title": "Azure Container Apps",
+    "description": "Serviço serverless para rodar containers sem gerenciar infraestrutura de Kubernetes, com autoscaling (inclusive até zero) baseado em HTTP, eventos ou filas.",
+    "syntax": "az containerapp up --resource-group <rg> --name <app> --image <imagem> --target-port <porta> --ingress external",
+    "example": "az containerapp up --resource-group meu-rg --name minha-api --image meuregistry.azurecr.io/minha-api:1.0 --target-port 3000 --ingress external",
+    "result": "O container é implantado e uma URL pública HTTPS é provisionada automaticamente, com escala de 0 a N réplicas conforme a carga.",
+    "notes": [
+      "Diferente do AKS, não expõe o Kubernetes subjacente — é uma abordagem mais simples para microsserviços que não precisam de controle granular do cluster."
+    ],
+    "bestPractices": [
+      "Use Container Apps para APIs e workers com carga variável; prefira AKS quando precisar de controle fino sobre orquestração e rede."
+    ],
+    "relatedCommands": ["azure-container-registry", "azure-aks-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/azure/container-apps/overview",
+    "externalReferences": [],
+    "tags": ["azure", "container apps", "serverless"],
+    "keywords": [
+      "azure container apps",
+      "containers serverless azure",
+      "autoscaling ate zero"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-service-bus",
+    "category": "Azure",
+    "subcategory": "Mensageria",
+    "title": "Azure Service Bus",
+    "description": "Serviço de mensageria gerenciado com filas (queues) e tópicos/assinaturas (topics/subscriptions) para comunicação assíncrona e desacoplada entre serviços.",
+    "syntax": "az servicebus namespace create --resource-group <rg> --name <namespace> --sku Standard\naz servicebus queue create --resource-group <rg> --namespace-name <namespace> --name <fila>",
+    "example": "az servicebus namespace create --resource-group meu-rg --name meu-sb --sku Standard\naz servicebus queue create --resource-group meu-rg --namespace-name meu-sb --name pedidos",
+    "result": "Um namespace Service Bus e uma fila 'pedidos' são criados, prontos para envio/recebimento de mensagens via SDK.",
+    "notes": [
+      "Tópicos com múltiplas assinaturas permitem que uma mesma mensagem seja processada por vários consumidores independentes (padrão pub/sub)."
+    ],
+    "bestPractices": [
+      "Use filas para processamento ponto-a-ponto (um consumidor por mensagem) e tópicos para broadcast a múltiplos consumidores."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/azure/service-bus-messaging/",
+    "externalReferences": [],
+    "tags": ["azure", "service bus", "mensageria"],
+    "keywords": ["azure service bus", "filas azure", "topicos e assinaturas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-cosmos-db",
+    "category": "Azure",
+    "subcategory": "Banco de dados",
+    "title": "Azure Cosmos DB",
+    "description": "Banco de dados NoSQL multi-modelo (documentos, chave-valor, grafo, coluna larga) com distribuição global, replicação multi-região e SLA garantido de baixa latência.",
+    "syntax": "az cosmosdb create --name <conta> --resource-group <rg> --kind GlobalDocumentDB\naz cosmosdb sql database create --account-name <conta> --resource-group <rg> --name <db>",
+    "example": "az cosmosdb create --name cosmos-app-prod --resource-group rg-app-prod --kind GlobalDocumentDB --locations regionName=brazilsouth",
+    "result": "{\n  \"name\": \"cosmos-app-prod\",\n  \"documentEndpoint\": \"https://cosmos-app-prod.documents.azure.com:443/\"\n}",
+    "notes": [
+      "O throughput é medido em RU/s (Request Units por segundo), provisionável no nível do container ou compartilhado no banco."
+    ],
+    "bestPractices": [
+      "Escolha uma partition key com alta cardinalidade e distribuição uniforme de acesso, evitando hot partitions."
+    ],
+    "commonMistakes": [
+      "Provisionar RU/s fixo muito alto 'por segurança', gerando custo desnecessário em vez de usar o modo autoscale."
+    ],
+    "relatedCommands": ["azure-group-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/cosmos-db/introduction",
+    "externalReferences": [],
+    "tags": ["azure", "cosmos-db", "nosql"],
+    "keywords": ["azure cosmos db", "nosql azure", "partition key cosmos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-container-instances",
+    "category": "Azure",
+    "subcategory": "Containers",
+    "title": "az container create (Azure Container Instances)",
+    "description": "Executa um único container isolado sob demanda, sem orquestração e sem provisionar VMs ou clusters, cobrado por segundo de execução.",
+    "syntax": "az container create --resource-group <rg> --name <nome> --image <imagem> --cpu <n> --memory <gb> [--ports <porta>]",
+    "example": "az container create --resource-group rg-app-prod --name job-relatorio --image registry.azurecr.io/relatorio:1.0 --cpu 1 --memory 1.5 --restart-policy Never",
+    "result": "{\n  \"provisioningState\": \"Succeeded\",\n  \"ipAddress\": { \"ip\": \"20.201.10.9\" }\n}",
+    "notes": [
+      "`--restart-policy Never` é útil para jobs de execução única (batch), diferente de cargas de serviço contínuo."
+    ],
+    "bestPractices": [
+      "Use ACI para jobs pontuais, burst de processamento ou tarefas disparadas por eventos, não para serviços de longa duração com necessidade de escalonamento automático."
+    ],
+    "commonMistakes": [
+      "Usar ACI como substituto de um serviço web permanente, perdendo recursos de escalonamento e balanceamento que Container Apps/AKS oferecem."
+    ],
+    "relatedCommands": ["azure-container-apps"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "Azure CLI 2.x",
+    "officialDocumentation": "https://learn.microsoft.com/cli/azure/container?view=azure-cli-latest#az-container-create",
+    "externalReferences": [],
+    "tags": ["azure", "aci", "containers"],
+    "keywords": ["azure container instances", "az container create", "aci"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-event-grid",
+    "category": "Azure",
+    "subcategory": "Mensageria",
+    "title": "Azure Event Grid",
+    "description": "Serviço de roteamento de eventos publish-subscribe que conecta produtores de eventos (recursos do Azure ou aplicações customizadas) a múltiplos consumidores (Functions, Logic Apps, webhooks) de forma desacoplada.",
+    "syntax": "az eventgrid event-subscription create --source-resource-id <id-recurso> --name <assinatura> --endpoint <url-ou-recurso-destino>",
+    "example": "az eventgrid event-subscription create --source-resource-id /subscriptions/.../storageAccounts/stappprodbr --name notifica-upload --endpoint https://minha-func.azurewebsites.net/api/HandleBlob",
+    "result": "Toda vez que um novo blob é criado na storage account, o Event Grid dispara uma chamada HTTP para o endpoint configurado.",
+    "notes": [
+      "Diferente do Service Bus (mensageria com fila), o Event Grid é otimizado para notificações reativas de eventos discretos, com entrega best-effort e retries automáticos."
+    ],
+    "bestPractices": [
+      "Use filtros de assinatura (subject filters) para que um consumidor só receba os eventos relevantes, reduzindo processamento desnecessário."
+    ],
+    "commonMistakes": [
+      "Confundir Event Grid (roteamento de eventos discretos) com Event Hubs (streaming de alto volume de dados de telemetria)."
+    ],
+    "relatedCommands": ["azure-service-bus", "azure-functions-triggers-bindings"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/event-grid/overview",
+    "externalReferences": [],
+    "tags": ["azure", "event-grid", "eventos"],
+    "keywords": ["azure event grid", "eventos azure", "event subscription"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-api-management",
+    "category": "Azure",
+    "subcategory": "API Management",
+    "title": "Azure API Management (APIM)",
+    "description": "Gateway de API gerenciado que centraliza autenticação, rate limiting, transformação de requisições, versionamento e documentação para APIs publicadas por múltiplos backends.",
+    "syntax": "az apim create --name <instancia> --resource-group <rg> --publisher-name <nome> --publisher-email <email>",
+    "example": "az apim create --name apim-app-prod --resource-group rg-app-prod --publisher-name \"Minha Empresa\" --publisher-email dev@empresa.com --sku-name Developer",
+    "result": "Instância APIM provisionada (pode levar ~30-45 minutos); APIs podem então ser importadas de uma especificação OpenAPI e publicadas atrás do gateway.",
+    "notes": [
+      "Políticas (policies) em XML permitem transformar requisições/respostas, aplicar rate limiting e validar JWT sem alterar o código do backend."
+    ],
+    "bestPractices": [
+      "Use o tier Consumption para APIs de baixo/variável tráfego, evitando o custo fixo do tier Developer/Standard/Premium."
+    ],
+    "commonMistakes": [
+      "Expor o backend diretamente ao público além do APIM, permitindo contornar rate limiting e autenticação configurados no gateway."
+    ],
+    "relatedCommands": ["azure-webapp-up"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/api-management/api-management-key-concepts",
+    "externalReferences": [],
+    "tags": ["azure", "api-management", "gateway"],
+    "keywords": ["azure api management", "apim", "gateway de api azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-cdn-front-door",
+    "category": "Azure",
+    "subcategory": "Rede",
+    "title": "Azure Front Door / CDN",
+    "description": "Serviço de entrega de conteúdo e balanceamento global de tráfego HTTP(S) com cache em edge locations, WAF integrado e roteamento baseado em latência ou prioridade entre origens.",
+    "syntax": "az afd profile create --profile-name <perfil> --resource-group <rg> --sku Standard_AzureFrontDoor",
+    "example": "az afd profile create --profile-name fd-app-prod --resource-group rg-app-prod --sku Standard_AzureFrontDoor",
+    "result": "Perfil do Front Door criado; endpoints, origem e rotas são configurados em seguida para servir o tráfego global com cache e WAF.",
+    "notes": [
+      "Front Door substitui gradualmente o Azure CDN clássico, unificando CDN, balanceamento global e WAF em um único produto."
+    ],
+    "bestPractices": [
+      "Habilite o WAF (Web Application Firewall) integrado ao Front Door para bloquear ataques comuns (OWASP Top 10) na borda, antes de chegar à origem."
+    ],
+    "commonMistakes": [
+      "Configurar cache agressivo em rotas que servem conteúdo dinâmico/personalizado por usuário, servindo dados de um usuário para outro."
+    ],
+    "relatedCommands": ["azure-storage-sync-cli", "azure-webapp-up"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/frontdoor/front-door-overview",
+    "externalReferences": [],
+    "tags": ["azure", "cdn", "front-door", "rede"],
+    "keywords": ["azure front door", "azure cdn", "waf azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-policy",
+    "category": "Azure",
+    "subcategory": "Governança",
+    "title": "Azure Policy",
+    "description": "Serviço de governança que avalia recursos contra regras definidas (JSON) e pode auditar, negar a criação ou corrigir automaticamente recursos fora de conformidade, aplicado em escala de assinatura ou grupo de gerenciamento.",
+    "syntax": "az policy assignment create --name <nome> --policy <id-ou-nome-da-definicao> --scope <escopo>",
+    "example": "az policy assignment create --name exigir-tags --policy \"96670d01-0a4d-4649-9c89-2d3abc0a5025\" --scope \"/subscriptions/<sub-id>\"",
+    "result": "Toda tentativa de criar um recurso sem a tag exigida na assinatura passa a ser bloqueada (efeito 'Deny') ou sinalizada como não conforme (efeito 'Audit').",
+    "notes": [
+      "Effects comuns: Audit (só registra), Deny (bloqueia a criação), Append (adiciona campos automaticamente), DeployIfNotExists (corrige o recurso automaticamente)."
+    ],
+    "bestPractices": [
+      "Use Initiatives (grupos de policies relacionadas, ex: baseline de segurança) em vez de atribuir dezenas de policies individuais."
+    ],
+    "commonMistakes": [
+      "Atribuir uma policy com efeito 'Deny' direto em produção sem antes testar em modo 'Audit', bloqueando deploys legítimos inesperadamente."
+    ],
+    "relatedCommands": ["azure-rbac-role-assignment", "azure-group-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/governance/policy/overview",
+    "externalReferences": [],
+    "tags": ["azure", "policy", "governanca"],
+    "keywords": ["azure policy", "governanca azure", "compliance azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-load-balancer",
+    "category": "Azure",
+    "subcategory": "Rede",
+    "title": "Azure Load Balancer",
+    "description": "Balanceador de carga de camada 4 (TCP/UDP) que distribui tráfego entre VMs ou instâncias de um backend pool, com opções pública (Internet-facing) ou interna (dentro de uma VNet).",
+    "syntax": "az network lb create --resource-group <rg> --name <lb> --sku Standard --public-ip-address <ip>",
+    "example": "az network lb create --resource-group rg-app-prod --name lb-app --sku Standard --public-ip-address pip-lb-app",
+    "result": "Load Balancer criado; regras de balanceamento e health probes precisam ser configuradas em seguida para direcionar tráfego ao backend pool.",
+    "notes": [
+      "Diferente do Application Gateway (camada 7, ciente de HTTP), o Load Balancer opera em camada 4, sem inspecionar conteúdo da aplicação."
+    ],
+    "bestPractices": [
+      "Configure health probes agressivos o suficiente para remover rapidamente instâncias não saudáveis do backend pool."
+    ],
+    "commonMistakes": [
+      "Usar Load Balancer (L4) quando a necessidade real é roteamento por path/host HTTP, cenário em que Application Gateway é mais adequado."
+    ],
+    "relatedCommands": ["azure-vnet-subnet-overview", "azure-application-gateway"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview",
+    "externalReferences": [],
+    "tags": ["azure", "load-balancer", "rede"],
+    "keywords": ["azure load balancer", "balanceador de carga azure", "backend pool"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-application-gateway",
+    "category": "Azure",
+    "subcategory": "Rede",
+    "title": "Azure Application Gateway",
+    "description": "Balanceador de carga de camada 7 (HTTP/HTTPS) com roteamento baseado em path/host, terminação SSL e WAF opcional integrado, direcionando tráfego para backend pools de acordo com regras de aplicação.",
+    "syntax": "az network application-gateway create --resource-group <rg> --name <gateway> --sku Standard_v2 --public-ip-address <ip> --vnet-name <vnet> --subnet <subnet>",
+    "example": "az network application-gateway create --resource-group rg-app-prod --name agw-app --sku Standard_v2 --public-ip-address pip-agw --vnet-name vnet-app --subnet subnet-agw",
+    "result": "Gateway criado com listener HTTP padrão; regras de roteamento por path (ex: /api/* → backend-api, /* → backend-web) são configuradas em seguida.",
+    "notes": [
+      "O SKU WAF_v2 adiciona proteção contra ataques comuns (SQL injection, XSS) diretamente no gateway."
+    ],
+    "bestPractices": [
+      "Use Application Gateway quando precisar de roteamento por conteúdo HTTP (path/host) ou terminação SSL centralizada; use Load Balancer para tráfego TCP/UDP puro."
+    ],
+    "commonMistakes": [
+      "Configurar terminação SSL no gateway mas deixar o tráfego para o backend sem criptografia (end-to-end) em ambientes que exigem TLS completo."
+    ],
+    "relatedCommands": ["azure-load-balancer", "azure-vnet-subnet-overview"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/application-gateway/overview",
+    "externalReferences": [],
+    "tags": ["azure", "application-gateway", "rede", "waf"],
+    "keywords": ["azure application gateway", "waf azure", "roteamento http azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-backup",
+    "category": "Azure",
+    "subcategory": "Backup e recuperação",
+    "title": "Azure Backup",
+    "description": "Serviço gerenciado de backup para VMs, bancos de dados e File Shares, com políticas de retenção configuráveis e armazenamento em um Recovery Services Vault.",
+    "syntax": "az backup vault create --resource-group <rg> --name <vault> --location <regiao>\naz backup protection enable-for-vm --resource-group <rg> --vault-name <vault> --vm <vm-id> --policy-name <politica>",
+    "example": "az backup vault create --resource-group rg-app-prod --name rsv-app-prod --location brazilsouth",
+    "result": "{\n  \"name\": \"rsv-app-prod\",\n  \"properties\": { \"provisioningState\": \"Succeeded\" }\n}",
+    "notes": [
+      "O Recovery Services Vault também armazena backups do Azure Site Recovery, usado para failover de disaster recovery entre regiões."
+    ],
+    "bestPractices": [
+      "Teste periodicamente restaurações reais a partir do backup, não apenas confie que o job de backup concluiu com sucesso."
+    ],
+    "commonMistakes": [
+      "Configurar backup apenas da VM sem considerar dependências externas (bancos de dados gerenciados, configurações de rede) necessárias para uma recuperação completa."
+    ],
+    "relatedCommands": ["azure-vm-create", "azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/backup/backup-overview",
+    "externalReferences": [],
+    "tags": ["azure", "backup", "recuperacao"],
+    "keywords": ["azure backup", "recovery services vault", "disaster recovery azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-private-link",
+    "category": "Azure",
+    "subcategory": "Rede",
+    "title": "Private Link / Private Endpoint",
+    "description": "Conecta um serviço PaaS do Azure (Storage, SQL Database, Key Vault) a uma VNet através de um endereço IP privado, eliminando a necessidade de exposição pública do serviço à internet.",
+    "syntax": "az network private-endpoint create --resource-group <rg> --name <endpoint> --vnet-name <vnet> --subnet <subnet> --private-connection-resource-id <id-do-recurso> --group-id <grupo> --connection-name <nome>",
+    "example": "az network private-endpoint create --resource-group rg-app-prod --name pe-storage --vnet-name vnet-app --subnet subnet-data --private-connection-resource-id <id-storage-account> --group-id blob --connection-name conexao-storage",
+    "result": "O serviço de Storage passa a ser acessível por um IP privado dentro da VNet, podendo ter o acesso público desabilitado por completo.",
+    "notes": [
+      "Requer uma zona DNS privada (Private DNS Zone) associada para que o nome público do serviço resolva para o IP privado dentro da VNet."
+    ],
+    "bestPractices": [
+      "Desabilite o acesso público ao recurso (`--public-network-access Disabled`) depois de validar que o Private Endpoint está funcionando."
+    ],
+    "commonMistakes": [
+      "Criar o Private Endpoint mas esquecer de configurar a Private DNS Zone, fazendo aplicações continuarem resolvendo o endpoint público."
+    ],
+    "relatedCommands": ["azure-vnet-subnet-overview", "azure-storage-account-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview",
+    "externalReferences": [],
+    "tags": ["azure", "private-link", "rede", "seguranca"],
+    "keywords": ["azure private link", "private endpoint", "acesso privado paas azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "azure-redis-cache",
+    "category": "Azure",
+    "subcategory": "Banco de dados",
+    "title": "Azure Cache for Redis",
+    "description": "Serviço gerenciado do Redis usado como cache em memória, armazenamento de sessão ou message broker, com opções de replicação e cluster para alta disponibilidade.",
+    "syntax": "az redis create --resource-group <rg> --name <cache> --location <regiao> --sku Standard --vm-size C1",
+    "example": "az redis create --resource-group rg-app-prod --name redis-app-prod --location brazilsouth --sku Standard --vm-size C1",
+    "result": "{\n  \"hostName\": \"redis-app-prod.redis.cache.windows.net\",\n  \"provisioningState\": \"Succeeded\"\n}",
+    "notes": [
+      "O tier Basic não tem SLA nem réplica; produção deve usar Standard (com réplica) ou Premium (com cluster e persistência)."
+    ],
+    "bestPractices": [
+      "Use o tier Premium quando precisar de particionamento (clustering) para datasets maiores que a memória de uma única instância."
+    ],
+    "commonMistakes": [
+      "Usar o tier Basic (sem SLA, sem failover) para cache crítico de sessão em produção."
+    ],
+    "relatedCommands": ["azure-group-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/azure/azure-cache-for-redis/cache-overview",
+    "externalReferences": [],
+    "tags": ["azure", "redis", "cache"],
+    "keywords": ["azure cache for redis", "redis azure", "cache gerenciado azure"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

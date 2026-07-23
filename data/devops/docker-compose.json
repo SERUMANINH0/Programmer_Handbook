@@ -934,5 +934,237 @@
     "keywords": ["docker compose watch", "hot reload docker compose", "develop.watch"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "compose-extends-anchors",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "Reuso de configuração: extends e YAML anchors",
+    "description": "Duas formas de evitar repetição entre serviços parecidos: `extends` herda configurações de outro serviço/arquivo, enquanto YAML anchors (`&`/`*`) reutilizam blocos de texto genéricos dentro do mesmo arquivo.",
+    "syntax": "# YAML anchor\nx-base: &base\n  restart: unless-stopped\n  logging:\n    driver: json-file\n\nservices:\n  api:\n    <<: *base\n    build: .",
+    "example": "x-healthcheck: &default-healthcheck\n  interval: 15s\n  timeout: 3s\n  retries: 3\n\nservices:\n  api:\n    healthcheck:\n      <<: *default-healthcheck\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:3000/health\"]\n  worker:\n    healthcheck:\n      <<: *default-healthcheck\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:3001/health\"]",
+    "result": "Ambos os serviços herdam os mesmos parâmetros de `interval`/`timeout`/`retries`, definidos uma única vez no anchor `default-healthcheck`.",
+    "notes": [
+      "Chaves prefixadas com `x-` (extension fields) são ignoradas pelo Compose ao subir os serviços, servindo apenas como área para declarar anchors reutilizáveis.",
+      "`extends` funciona entre arquivos diferentes; YAML anchors só funcionam dentro do mesmo arquivo (ou entre arquivos combinados via merge)."
+    ],
+    "bestPractices": [
+      "Use `x-` + anchors para blocos pequenos e repetidos (healthcheck, logging) em vez de copiar e colar entre serviços."
+    ],
+    "commonMistakes": [
+      "Duplicar manualmente configuração de logging/healthcheck em cada serviço, deixando o arquivo difícil de manter quando o padrão muda."
+    ],
+    "relatedCommands": ["compose-healthcheck", "compose-services"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/compose/how-tos/fragments/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "yaml", "reuso"],
+    "keywords": ["yaml anchors compose", "extends docker compose", "x- extension fields"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-secrets",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "secrets",
+    "description": "Injeta dados sensíveis (senhas, chaves) em um serviço como arquivos montados em `/run/secrets/`, evitando expor o valor em variáveis de ambiente visíveis via `docker inspect`.",
+    "syntax": "services:\n  <nome>:\n    secrets:\n      - <nome-do-secret>\n\nsecrets:\n  <nome-do-secret>:\n    file: ./secrets/<arquivo>.txt",
+    "example": "services:\n  db:\n    image: postgres:16\n    environment:\n      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password\n    secrets:\n      - db_password\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt",
+    "result": "O conteúdo de `db_password.txt` fica disponível dentro do container em `/run/secrets/db_password`, sem aparecer em `environment` nem em `docker inspect`.",
+    "notes": [
+      "Imagens que suportam a convenção `_FILE` (como a oficial do Postgres) leem o segredo diretamente do arquivo montado."
+    ],
+    "bestPractices": [
+      "Prefira `secrets` a variáveis de ambiente para credenciais, especialmente em ambientes com Swarm ou integração a um cofre externo (Vault, AWS Secrets Manager)."
+    ],
+    "commonMistakes": [
+      "Versionar o arquivo referenciado em `file:` no Git, anulando o propósito de manter o segredo fora do controle de versão."
+    ],
+    "relatedCommands": ["compose-environment-key", "compose-env-file"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/secrets/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "secrets", "seguranca"],
+    "keywords": ["secrets docker compose", "segredos compose", "run secrets"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-build-args",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "build.args (variáveis de build)",
+    "description": "Passa variáveis ARG do Dockerfile a partir do compose.yaml, permitindo parametrizar o build sem hardcodear valores na imagem.",
+    "syntax": "services:\n  <nome>:\n    build:\n      context: .\n      args:\n        <NOME>: <valor>",
+    "example": "services:\n  api:\n    build:\n      context: .\n      args:\n        NODE_VERSION: \"20\"\n        BUILD_ENV: production",
+    "result": "As variáveis `NODE_VERSION` e `BUILD_ENV` ficam disponíveis como `ARG` durante o build da imagem, definidas no Dockerfile correspondente.",
+    "notes": [
+      "Diferente de `environment`, os valores de `build.args` só existem durante o build da imagem, não em tempo de execução do container."
+    ],
+    "bestPractices": [
+      "Use `build.args` para parametrizar versões de imagem base ou flags de build, mantendo um único Dockerfile reutilizável entre ambientes."
+    ],
+    "commonMistakes": [
+      "Passar segredos via `build.args`, que ficam registrados no histórico da imagem (`docker history`) mesmo sem aparecer no container final."
+    ],
+    "relatedCommands": ["compose-services", "compose-build"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/build/#args",
+    "externalReferences": [],
+    "tags": ["docker-compose", "build", "args"],
+    "keywords": [
+      "build args docker compose",
+      "arg dockerfile compose",
+      "variavel de build"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-run",
+    "category": "Docker Compose",
+    "subcategory": "Comandos",
+    "title": "docker compose run",
+    "description": "Cria e executa um container único de um serviço para rodar um comando pontual (como um script ou migração), diferente de `up` (que sobe todos os serviços) e `exec` (que exige o container já em execução).",
+    "syntax": "docker compose run [opcoes] <servico> <comando>",
+    "example": "docker compose run --rm api npm run migrate",
+    "result": "Um novo container temporário do serviço `api` é criado só para rodar a migração; com `--rm`, ele é removido automaticamente ao terminar.",
+    "flags": [
+      {
+        "flag": "--rm",
+        "description": "Remove o container automaticamente após a execução."
+      },
+      {
+        "flag": "--no-deps",
+        "description": "Não inicia os serviços declarados em depends_on."
+      },
+      {
+        "flag": "-e",
+        "description": "Define variável de ambiente apenas para essa execução pontual."
+      }
+    ],
+    "notes": [
+      "`run` publica portas apenas se explicitamente pedido (`--service-ports`); por padrão não expõe as portas do serviço."
+    ],
+    "bestPractices": [
+      "Use `docker compose run --rm` para tarefas pontuais (seed de banco, scripts one-off) em vez de `exec`, que exige que o serviço já esteja de pé."
+    ],
+    "commonMistakes": [
+      "Confundir `run` (cria um novo container isolado) com `exec` (executa dentro de um container já em execução), gerando containers órfãos não removidos."
+    ],
+    "relatedCommands": ["compose-exec", "compose-up"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/compose/run/",
+    "externalReferences": [],
+    "tags": ["docker-compose", "run", "comando"],
+    "keywords": ["docker compose run", "rodar comando pontual compose", "run vs exec"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-container-name-labels",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "container_name e labels",
+    "description": "`container_name` define um nome fixo e previsível para o container (em vez do nome gerado automaticamente); `labels` anexa metadados chave-valor consultáveis via `docker inspect` ou usados por ferramentas de descoberta (Traefik, Prometheus).",
+    "syntax": "services:\n  <nome>:\n    container_name: <nome-fixo>\n    labels:\n      <chave>: \"<valor>\"",
+    "example": "services:\n  api:\n    container_name: minha-app-api\n    labels:\n      traefik.enable: \"true\"\n      traefik.http.routers.api.rule: \"Host(`api.local`)\"",
+    "result": "O container recebe o nome fixo `minha-app-api`; o Traefik lê as labels para rotear automaticamente o tráfego HTTP para esse serviço.",
+    "notes": [
+      "`container_name` impede o escalonamento do serviço (`--scale`), pois nomes de container precisam ser únicos."
+    ],
+    "bestPractices": [
+      "Use `container_name` apenas em serviços que nunca serão escalados; para os demais, deixe o Compose gerar o nome automaticamente."
+    ],
+    "commonMistakes": [
+      "Definir `container_name` em um serviço que depois se tenta escalar com `--scale`, recebendo erro de conflito de nome."
+    ],
+    "relatedCommands": ["compose-scale", "compose-services"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#container_name",
+    "externalReferences": [],
+    "tags": ["docker-compose", "container_name", "labels"],
+    "keywords": ["container_name compose", "labels docker compose", "traefik labels"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-command-entrypoint",
+    "category": "Docker Compose",
+    "subcategory": "Configuração",
+    "title": "command e entrypoint (sobrescrever)",
+    "description": "Sobrescreve, respectivamente, o CMD e o ENTRYPOINT definidos na imagem/Dockerfile do serviço, sem precisar reconstruir a imagem.",
+    "syntax": "services:\n  <nome>:\n    command: [\"<argumento>\", ...]\n    entrypoint: [\"<executavel>\", ...]",
+    "example": "services:\n  api:\n    image: node:20-alpine\n    command: [\"node\", \"--inspect=0.0.0.0:9229\", \"server.js\"]",
+    "result": "O container roda com o Node.js em modo debug (`--inspect`) em vez do comando padrão definido na imagem base.",
+    "notes": [
+      "`command` sobrescreve apenas o CMD; se a imagem tiver um ENTRYPOINT fixo, o `command` é passado como argumento a ele, a menos que `entrypoint` também seja sobrescrito."
+    ],
+    "bestPractices": [
+      "Use `command` para variações pontuais (modo debug, flags extras) em vez de manter Dockerfiles quase idênticos só para mudar o comando de inicialização."
+    ],
+    "commonMistakes": [
+      "Sobrescrever apenas `command` esperando substituir totalmente o comportamento, sem perceber que o ENTRYPOINT da imagem ainda está em vigor."
+    ],
+    "relatedCommands": ["compose-services", "compose-run"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/services/#command",
+    "externalReferences": [],
+    "tags": ["docker-compose", "command", "entrypoint"],
+    "keywords": ["command docker compose", "entrypoint compose", "sobrescrever cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "compose-resource-limits",
+    "category": "Docker Compose",
+    "subcategory": "Configuração avançada",
+    "title": "Limites de recursos (deploy.resources)",
+    "description": "Restringe o uso máximo de CPU e memória de um serviço (e opcionalmente reserva um mínimo garantido), evitando que um container consuma todos os recursos do host.",
+    "syntax": "services:\n  <nome>:\n    deploy:\n      resources:\n        limits:\n          cpus: \"<n>\"\n          memory: <valor>\n        reservations:\n          memory: <valor>",
+    "example": "services:\n  worker:\n    deploy:\n      resources:\n        limits:\n          cpus: \"0.50\"\n          memory: 512M\n        reservations:\n          memory: 256M",
+    "result": "O container do serviço `worker` fica limitado a meio núcleo de CPU e 512MB de memória, com reserva mínima garantida de 256MB.",
+    "notes": [
+      "Em Compose puro (sem Swarm), os limites de `deploy.resources` só têm efeito a partir do Compose v2 usando o runtime local; em versões antigas eram ignorados fora do Swarm."
+    ],
+    "bestPractices": [
+      "Defina limites de memória em todo serviço de produção para evitar que um vazamento de memória em um container derrube o host inteiro."
+    ],
+    "commonMistakes": [
+      "Definir um limite de memória menor do que a aplicação realmente precisa, fazendo o container ser morto (OOMKilled) repetidamente."
+    ],
+    "relatedCommands": ["compose-restart-policy", "compose-services"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "yaml",
+    "version": "Compose v2",
+    "officialDocumentation": "https://docs.docker.com/reference/compose-file/deploy/#resources",
+    "externalReferences": [],
+    "tags": ["docker-compose", "resources", "limites"],
+    "keywords": [
+      "deploy resources compose",
+      "limitar memoria container",
+      "limitar cpu compose"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

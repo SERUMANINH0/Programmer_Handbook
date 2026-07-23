@@ -575,5 +575,330 @@
     "keywords": ["pipeline schedules", "cron gitlab", "pipeline agendado"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gitlab-draft-mr",
+    "category": "GitLab",
+    "subcategory": "Merge Requests",
+    "title": "Draft merge requests",
+    "description": "Marca um merge request como rascunho (prefixo \"Draft:\" no título), sinalizando que ainda não está pronto para merge e bloqueando o botão de mesclagem até ser desmarcado.",
+    "syntax": "Prefixar o título com \"Draft:\" ao criar o MR, ou usar o botão \"Mark as draft\"",
+    "example": "Abrir um MR com o título \"Draft: implementa checkout com Pix\" enquanto ainda falta cobrir casos de erro.",
+    "result": "O botão de merge fica desabilitado e exibe \"Mark as ready\" até que o autor remova o status de rascunho.",
+    "notes": [
+      "Draft MRs ainda disparam o pipeline de CI normalmente, permitindo validar a mudança antes de pedir revisão formal."
+    ],
+    "bestPractices": [
+      "Abra o MR como Draft assim que o primeiro commit for enviado, dando visibilidade cedo ao time sem sinalizar que já está pronto para review."
+    ],
+    "commonMistakes": [
+      "Esquecer de remover o prefixo \"Draft:\" após concluir o trabalho, atrasando a revisão por engano."
+    ],
+    "relatedCommands": ["gitlab-merge-request", "gitlab-merge-trains"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/merge_requests/drafts/",
+    "externalReferences": [],
+    "tags": ["gitlab", "merge request", "draft"],
+    "keywords": ["draft merge request", "rascunho de mr", "mark as ready"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-merge-trains",
+    "category": "GitLab",
+    "subcategory": "Merge Requests",
+    "title": "Merge Trains",
+    "description": "Fila automática de merge requests que testa cada MR combinado com as mudanças dos MRs à frente na fila antes de mesclar, evitando que integrações paralelas quebrem o branch principal.",
+    "syntax": "Settings → Merge requests → habilitar \"Merge trains\" + clicar em \"Merge\" (ou \"Add to merge train\") em um MR aprovado",
+    "example": "Três MRs aprovados simultaneamente entram no merge train; cada um roda o pipeline já considerando as mudanças dos MRs anteriores na fila.",
+    "result": "Os MRs são mesclados em sequência apenas se o pipeline combinado passar; um MR que quebra a combinação é removido do trem automaticamente.",
+    "notes": [
+      "Requer que o pipeline esteja configurado para rodar em MRs (`rules: if: $CI_PIPELINE_SOURCE == \"merge_request_event\"`)."
+    ],
+    "bestPractices": [
+      "Ative Merge Trains em repositórios com alto volume de MRs simultâneos para reduzir quebras do branch principal por integrações conflitantes."
+    ],
+    "commonMistakes": [
+      "Ativar Merge Trains sem pipelines rápidos o suficiente, criando uma fila que demora muito para esvaziar."
+    ],
+    "relatedCommands": ["gitlab-merge-request", "gitlab-protected-branches"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/pipelines/merge_trains/",
+    "externalReferences": [],
+    "tags": ["gitlab", "merge trains", "ci/cd"],
+    "keywords": ["merge trains gitlab", "fila de merge", "add to merge train"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-container-registry",
+    "category": "GitLab",
+    "subcategory": "Container Registry",
+    "title": "Container Registry integrado",
+    "description": "Registry Docker embutido em cada projeto GitLab, permitindo publicar e consumir imagens sem depender de um registry externo, autenticado com as mesmas credenciais do GitLab.",
+    "syntax": "docker login registry.gitlab.com\\ndocker build -t registry.gitlab.com/<grupo>/<projeto> .\\ndocker push registry.gitlab.com/<grupo>/<projeto>",
+    "example": "docker push registry.gitlab.com/minha-org/minha-api:1.2.0",
+    "result": "A imagem fica disponível na aba \"Packages and registries → Container Registry\" do projeto, pronta para pull em pipelines ou ambientes de deploy.",
+    "notes": [
+      "Dentro de um job de CI, a variável `$CI_REGISTRY_IMAGE` já aponta para o path correto do registry do projeto atual."
+    ],
+    "bestPractices": [
+      "Configure políticas de limpeza (\"Cleanup policies\") para remover automaticamente tags antigas e evitar acúmulo de imagens não utilizadas."
+    ],
+    "commonMistakes": [
+      "Publicar imagens com a tag `latest` sempre sobrescrita, dificultando rastrear qual commit gerou a imagem em produção."
+    ],
+    "relatedCommands": ["gitlab-jobs", "gitlab-variables-ci-cd"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/packages/container_registry/",
+    "externalReferences": [],
+    "tags": ["gitlab", "container registry", "docker"],
+    "keywords": [
+      "gitlab container registry",
+      "registry.gitlab.com",
+      "publicar imagem docker gitlab"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-issue-boards",
+    "category": "GitLab",
+    "subcategory": "Planejamento",
+    "title": "Issue Boards",
+    "description": "Quadro estilo Kanban que organiza issues do projeto (ou grupo) em colunas baseadas em labels, permitindo arrastar issues entre estados de um fluxo de trabalho.",
+    "syntax": "Plan → Issue boards",
+    "example": "Criar colunas 'To Do', 'Doing' e 'Review' vinculadas às labels correspondentes, arrastando uma issue de 'To Do' para 'Doing' ao começar o trabalho.",
+    "result": "Mover a issue entre colunas atualiza automaticamente a label associada a ela, sem precisar editar a issue manualmente.",
+    "notes": [
+      "É possível criar múltiplos boards por projeto (ex: um por sprint, outro por squad) e boards em nível de grupo, agregando issues de vários projetos."
+    ],
+    "bestPractices": [
+      "Use \"Weight\" e \"Milestones\" em conjunto com o board para visualizar capacidade e progresso de uma sprint diretamente na coluna."
+    ],
+    "relatedCommands": ["gitlab-epics"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/issue_board/",
+    "externalReferences": [],
+    "tags": ["gitlab", "issue boards", "kanban"],
+    "keywords": ["issue boards gitlab", "kanban gitlab", "quadro de issues"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-epics",
+    "category": "GitLab",
+    "subcategory": "Planejamento",
+    "title": "Epics",
+    "description": "Agrupamento de issues relacionadas (potencialmente de múltiplos projetos de um mesmo grupo) em torno de um objetivo maior, com suporte a epics aninhadas e roadmap visual.",
+    "syntax": "Group → Epics → New epic",
+    "example": "Criar a epic \"Checkout 2.0\" e vincular a ela issues de três projetos diferentes (frontend, backend, pagamentos) que compõem essa iniciativa.",
+    "result": "A epic exibe a soma do progresso de todas as issues vinculadas, com uma barra de conclusão e visão de roadmap por trimestre.",
+    "notes": [
+      "Disponível apenas em grupos, não em projetos isolados, e requer plano Premium ou superior."
+    ],
+    "bestPractices": [
+      "Use epics para iniciativas que atravessam múltiplos projetos/times, reservando milestones para o planejamento dentro de um único projeto."
+    ],
+    "relatedCommands": ["gitlab-issue-boards"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/group/epics/",
+    "externalReferences": [],
+    "tags": ["gitlab", "epics", "planejamento"],
+    "keywords": ["epics gitlab", "roadmap gitlab", "iniciativas multiprojeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-flow",
+    "category": "GitLab",
+    "subcategory": "Estratégia de branching",
+    "title": "GitLab Flow",
+    "description": "Estratégia de branching recomendada pelo GitLab que combina feature branches curtas com branches de ambiente (ex: `staging`, `production`) ou de release, mantendo `main` sempre implantável.",
+    "syntax": "main → feature/* (via MR) → main → staging → production (via MR/promoção)",
+    "example": "Uma feature é desenvolvida em `feature/checkout-pix`, mesclada em `main` após aprovação, e depois promovida para `production` através de um MR de `main` para `production`.",
+    "result": "Cada ambiente reflete exatamente o histórico de commits que passou por ele, com rastreabilidade clara de o que está implantado onde.",
+    "notes": [
+      "Diferente do Git Flow tradicional (com branches `develop`, `release/*`, `hotfix/*`), o GitLab Flow evita branches de longa duração além dos de ambiente."
+    ],
+    "bestPractices": [
+      "Prefira branches de ambiente apenas quando o deploy não for automático a cada merge em `main`; caso contrário, deploy contínuo a partir de `main` é mais simples."
+    ],
+    "commonMistakes": [
+      "Deixar feature branches vivas por semanas, acumulando divergência e conflitos difíceis de resolver no merge final."
+    ],
+    "relatedCommands": ["gitlab-merge-request", "gitlab-environments-deployments"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/topics/gitlab_flow/",
+    "externalReferences": [],
+    "tags": ["gitlab", "gitlab flow", "branching"],
+    "keywords": ["gitlab flow", "estrategia de branching", "environment branches"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-code-owners",
+    "category": "GitLab",
+    "subcategory": "Segurança e Governança",
+    "title": "CODEOWNERS",
+    "description": "Arquivo que mapeia caminhos do repositório a pessoas ou grupos responsáveis por revisá-los, exigindo automaticamente a aprovação deles em MRs que tocam esses arquivos.",
+    "syntax": "# .gitlab/CODEOWNERS\\n<padrao-de-caminho> @usuario-ou-grupo",
+    "example": "/auth/ @security-team\\n*.tf @infra-team\\n/frontend/ @time-frontend",
+    "result": "MRs que alteram arquivos em `/auth/` exigem aprovação de alguém do `@security-team`, exibido automaticamente na lista de aprovadores do MR.",
+    "notes": [
+      "O arquivo pode ficar na raiz do repositório, em `.gitlab/` ou em `docs/`, nessa ordem de prioridade."
+    ],
+    "bestPractices": [
+      "Combine CODEOWNERS com approval rules obrigatórias para garantir que a aprovação do owner seja realmente exigida, não apenas sugerida."
+    ],
+    "commonMistakes": [
+      "Definir um padrão de caminho amplo demais (ex: `*`) apontando para um único grupo, criando gargalo de revisão para todo o repositório."
+    ],
+    "relatedCommands": [
+      "gitlab-merge-request-approval-rules",
+      "gitlab-protected-branches"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/project/codeowners/",
+    "externalReferences": [],
+    "tags": ["gitlab", "codeowners", "governanca"],
+    "keywords": [
+      "codeowners gitlab",
+      "donos de codigo",
+      "aprovacao automatica por caminho"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-auto-devops",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "Auto DevOps",
+    "description": "Conjunto de pipelines pré-configurados que detectam automaticamente a linguagem do projeto e geram build, teste, análise de segurança e deploy sem precisar escrever um `.gitlab-ci.yml` do zero.",
+    "syntax": "Settings → CI/CD → Auto DevOps → Enable Auto DevOps",
+    "example": "Ativar Auto DevOps em um projeto Node.js: o GitLab detecta o `package.json`, builda uma imagem via Buildpacks e a implanta em um cluster Kubernetes conectado.",
+    "result": "Um pipeline completo (Build, Test, Code Quality, SAST, Container Scanning, Deploy) roda automaticamente sem configuração manual de YAML.",
+    "notes": [
+      "É possível customizar partes específicas do Auto DevOps sobrescrevendo jobs individuais em um `.gitlab-ci.yml` próprio, mantendo o restante automático."
+    ],
+    "bestPractices": [
+      "Use Auto DevOps como ponto de partida em protótipos e projetos novos; substitua por pipeline customizado conforme requisitos específicos surgem."
+    ],
+    "commonMistakes": [
+      "Ativar Auto DevOps em um projeto sem cluster Kubernetes conectado, fazendo o estágio de deploy falhar continuamente."
+    ],
+    "relatedCommands": ["gitlab-ci-yml-structure", "gitlab-sast-dast"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/topics/autodevops/",
+    "externalReferences": [],
+    "tags": ["gitlab", "auto devops", "ci/cd"],
+    "keywords": ["auto devops gitlab", "pipeline automatico", "buildpacks gitlab"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-sast-dast",
+    "category": "GitLab",
+    "subcategory": "Segurança e Governança",
+    "title": "SAST e DAST (security scanning)",
+    "description": "Templates de pipeline integrados que analisam o código-fonte em busca de vulnerabilidades (SAST — Static Application Security Testing) ou testam a aplicação em execução (DAST — Dynamic Application Security Testing), reportando achados direto no MR.",
+    "syntax": "include:\\n  - template: Security/SAST.gitlab-ci.yml\\n  - template: Security/DAST.gitlab-ci.yml",
+    "example": "include:\\n  - template: Security/SAST.gitlab-ci.yml",
+    "result": "Um job `sast` é adicionado ao pipeline, gerando um relatório de vulnerabilidades exibido na aba \"Security\" do MR, com severidade e trecho de código afetado.",
+    "notes": [
+      "SAST analisa o código estaticamente sem executá-lo; DAST precisa de uma URL da aplicação rodando (geralmente uma Review App) para testar ativamente."
+    ],
+    "bestPractices": [
+      "Configure a política \"Merge request approval policies\" para exigir revisão de segurança quando o SAST encontrar vulnerabilidades críticas."
+    ],
+    "commonMistakes": [
+      "Ignorar sistematicamente os alertas do SAST por gerarem falsos positivos, sem revisar e suprimir individualmente cada achado."
+    ],
+    "relatedCommands": ["gitlab-auto-devops", "gitlab-include-templates"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/user/application_security/sast/",
+    "externalReferences": [],
+    "tags": ["gitlab", "sast", "dast", "seguranca"],
+    "keywords": [
+      "sast gitlab",
+      "dast gitlab",
+      "security scanning",
+      "vulnerabilidades pipeline"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-include-templates",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "include (templates de pipeline)",
+    "description": "Chave que importa configuração de CI/CD de outros arquivos — locais, de outro projeto, de um template do GitLab ou de uma URL remota — permitindo reutilizar pipelines entre múltiplos repositórios.",
+    "syntax": "include:\\n  - local: <caminho-local>\\n  - project: <grupo/projeto>\\n    file: <caminho-no-projeto>\\n  - template: <template-do-gitlab>",
+    "example": "include:\\n  - project: 'minha-org/ci-templates'\\n    file: '/templates/node.yml'\\n  - template: Security/SAST.gitlab-ci.yml",
+    "result": "As definições de job dos arquivos incluídos são mescladas ao `.gitlab-ci.yml` do projeto atual como se estivessem escritas diretamente nele.",
+    "notes": [
+      "Jobs incluídos podem ser sobrescritos redefinindo a mesma chave no arquivo local, permitindo customizar apenas partes do template compartilhado."
+    ],
+    "bestPractices": [
+      "Centralize pipelines padronizados (lint, testes, security scan) em um projeto de templates compartilhado entre repositórios do time."
+    ],
+    "commonMistakes": [
+      "Criar dependência circular entre `include`s de projetos diferentes, causando erro de configuração do pipeline."
+    ],
+    "relatedCommands": ["gitlab-ci-yml-structure", "gitlab-sast-dast"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/includes/",
+    "externalReferences": [],
+    "tags": ["gitlab", "include", "templates"],
+    "keywords": ["include gitlab ci", "templates de pipeline", "reutilizar pipeline"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gitlab-needs-dag",
+    "category": "GitLab",
+    "subcategory": "GitLab CI/CD",
+    "title": "needs (DAG entre jobs)",
+    "description": "Chave que permite a um job iniciar assim que suas dependências diretas terminarem, em vez de esperar todo o stage anterior concluir, criando um grafo de execução (DAG) em vez de um pipeline estritamente sequencial.",
+    "syntax": "<job-id>:\\n  stage: <stage>\\n  needs: [<job1>, <job2>]",
+    "example": "deploy-api:\\n  stage: deploy\\n  needs: [\"build-api\"]\\n  script:\\n    - ./deploy.sh",
+    "result": "\"deploy-api\" inicia assim que \"build-api\" terminar, sem esperar outros jobs do mesmo stage (como \"build-frontend\") que não são suas dependências.",
+    "parameters": [
+      {
+        "name": "needs",
+        "description": "Lista de jobs dos quais este job depende diretamente, ignorando a ordem padrão de stages.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "`needs: []` (lista vazia) faz o job iniciar imediatamente, no início do pipeline, independente de stage."
+    ],
+    "bestPractices": [
+      "Use `needs` em pipelines grandes com múltiplos componentes independentes (monorepo) para paralelizar e reduzir o tempo total de execução."
+    ],
+    "commonMistakes": [
+      "Declarar `needs` para um job de um stage posterior ao atual, o que o GitLab rejeita por criar uma dependência circular no grafo."
+    ],
+    "relatedCommands": ["gitlab-stages", "gitlab-jobs"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.gitlab.com/ci/yaml/#needs",
+    "externalReferences": [],
+    "tags": ["gitlab", "needs", "dag"],
+    "keywords": ["needs gitlab ci", "dag pipeline", "paralelizar pipeline"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

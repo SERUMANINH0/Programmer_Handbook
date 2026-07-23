@@ -18,7 +18,7 @@
     "commonMistakes": [
       "Misturar App Router e Pages Router na mesma rota, causando conflitos de resolução."
     ],
-    "relatedCommands": ["react-server-components", "nextjs-metadata"],
+    "relatedCommands": ["react-server-components", "nextjs-metadata-api"],
     "difficulty": "intermediario",
     "platform": ["node"],
     "language": "typescript",
@@ -59,5 +59,530 @@
     "keywords": ["metadata api", "seo nextjs", "open graph"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "nextjs-server-actions",
+    "category": "Next.js",
+    "subcategory": "Server Actions",
+    "title": "Server Actions (\"use server\")",
+    "description": "Funções assíncronas que rodam exclusivamente no servidor e podem ser chamadas diretamente de Client Components ou de formulários, sem precisar criar uma API route manualmente.",
+    "syntax": "'use server'\n\nexport async function nomeDaAcao(formData: FormData) { ... }",
+    "example": "async function criarPedido(formData: FormData) {\n  'use server'\n  const item = formData.get('item')\n  await db.pedidos.create({ data: { item } })\n  revalidatePath('/pedidos')\n}\n\nexport default function Form() {\n  return <form action={criarPedido}><input name=\"item\" /><button>Enviar</button></form>\n}",
+    "result": "O submit do formulário executa a função no servidor, sem JavaScript de fetch manual no cliente, e revalida a rota afetada.",
+    "notes": [
+      "'use server' pode ser colocado no topo de um arquivo inteiro (todas as exports viram Server Actions) ou dentro de uma função específica."
+    ],
+    "bestPractices": [
+      "Valide e sanitize sempre os dados recebidos em uma Server Action como faria em qualquer endpoint público — ela é, na prática, um endpoint de API."
+    ],
+    "commonMistakes": [
+      "Confiar em validação apenas no client e assumir que a Server Action já recebe dados seguros."
+    ],
+    "relatedCommands": ["nextjs-use-client", "nextjs-revalidate"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "14+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations",
+    "externalReferences": [],
+    "tags": ["nextjs", "server-actions", "mutations"],
+    "keywords": ["server actions", "use server", "formularios nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-use-client",
+    "category": "Next.js",
+    "subcategory": "Componentes",
+    "title": "Client Components (\"use client\")",
+    "description": "Diretiva que marca um componente (e tudo que ele importa) para rodar também no navegador, habilitando hooks de estado, event handlers e APIs do browser.",
+    "syntax": "'use client'\n\nexport default function Componente() { ... }",
+    "example": "'use client'\nimport { useState } from 'react'\n\nexport default function Contador() {\n  const [count, setCount] = useState(0)\n  return <button onClick={() => setCount(count + 1)}>{count}</button>\n}",
+    "result": "O componente é renderizado no servidor para o HTML inicial e depois hidratado no cliente, passando a responder a interações.",
+    "notes": [
+      "A diretiva se aplica ao ponto de entrada da árvore de componentes; componentes importados por um Client Component também viram parte do bundle do cliente."
+    ],
+    "bestPractices": [
+      "Marque como Client Component apenas o componente folha que realmente precisa de interatividade, mantendo o restante como Server Component."
+    ],
+    "commonMistakes": [
+      "Colocar 'use client' no layout raiz 'por garantia', transformando a aplicação inteira em Client Components e perdendo os benefícios de Server Components."
+    ],
+    "relatedCommands": ["nextjs-server-actions", "react-server-components"],
+    "difficulty": "iniciante",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/rendering/client-components",
+    "externalReferences": [],
+    "tags": ["nextjs", "client-components", "use-client"],
+    "keywords": ["use client", "client components", "hidratacao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-data-fetching-cache",
+    "category": "Next.js",
+    "subcategory": "Data Fetching",
+    "title": "fetch nativo com cache em Server Components",
+    "description": "O fetch do Next.js estende a API nativa do navegador com opções de cache e revalidação integradas ao App Router, permitindo buscar dados diretamente dentro de Server Components assíncronos.",
+    "syntax": "fetch(url, { cache: 'force-cache' | 'no-store', next: { revalidate: <segundos> } })",
+    "example": "async function Produtos() {\n  const res = await fetch('https://api.exemplo.com/produtos', {\n    next: { revalidate: 60 },\n  })\n  const produtos = await res.json()\n  return <Lista itens={produtos} />\n}",
+    "result": "A resposta é cacheada e reutilizada por até 60 segundos antes de ser revalidada em segundo plano na próxima requisição (ISR via fetch).",
+    "notes": [
+      "`cache: 'no-store'` desativa o cache, forçando busca dinâmica a cada requisição; omitir a opção usa 'force-cache' por padrão em Server Components."
+    ],
+    "bestPractices": [
+      "Prefira `next: { revalidate }` a `no-store` sempre que o dado tolerar alguns segundos de defasagem, reduzindo carga na API de origem."
+    ],
+    "commonMistakes": [
+      "Chamar fetch dentro de um useEffect em um Client Component quando os dados poderiam ser buscados diretamente no servidor, adicionando um round-trip desnecessário."
+    ],
+    "relatedCommands": ["nextjs-revalidate", "nextjs-static-dynamic-rendering"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating",
+    "externalReferences": [],
+    "tags": ["nextjs", "data-fetching", "cache"],
+    "keywords": ["fetch cache nextjs", "revalidate", "data fetching app router"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-revalidate",
+    "category": "Next.js",
+    "subcategory": "Data Fetching",
+    "title": "revalidatePath / revalidateTag",
+    "description": "Funções que invalidam o cache de dados sob demanda, forçando o Next.js a buscar dados atualizados na próxima requisição de uma rota ou de dados marcados com uma tag específica.",
+    "syntax": "revalidatePath('/rota')\nrevalidateTag('nome-da-tag')",
+    "example": "async function publicarPost(id: string) {\n  'use server'\n  await db.posts.publish(id)\n  revalidateTag('posts')\n}",
+    "result": "Todo fetch marcado com `next: { tags: ['posts'] }` passa a ser considerado obsoleto e é refeito na próxima leitura.",
+    "notes": [
+      "`revalidateTag` é mais granular que `revalidatePath` quando o mesmo dado aparece em múltiplas rotas diferentes."
+    ],
+    "bestPractices": [
+      "Chame revalidate dentro da Server Action que executa a mutação, logo após ela ter sucesso, para manter a UI consistente com o banco."
+    ],
+    "commonMistakes": [
+      "Esquecer de revalidar após uma mutação, fazendo a UI continuar mostrando dados em cache desatualizados."
+    ],
+    "relatedCommands": ["nextjs-server-actions", "nextjs-data-fetching-cache"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13.4+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/functions/revalidatePath",
+    "externalReferences": [],
+    "tags": ["nextjs", "cache", "revalidate"],
+    "keywords": ["revalidatepath", "revalidatetag", "invalidar cache nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-route-handlers",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "Route Handlers (app/api/.../route.ts)",
+    "description": "Substituem as API Routes do Pages Router dentro do App Router: um arquivo route.ts exporta funções nomeadas pelo verbo HTTP (GET, POST, etc.) para criar endpoints de API.",
+    "syntax": "export async function GET(request: Request) { ... }\nexport async function POST(request: Request) { ... }",
+    "example": "export async function GET() {\n  const produtos = await db.produtos.findMany()\n  return Response.json(produtos)\n}",
+    "result": "Uma requisição GET para `/api/produtos` retorna o JSON da lista de produtos.",
+    "notes": [
+      "Route Handlers não podem coexistir com um `page.tsx` no mesmo segmento de rota."
+    ],
+    "bestPractices": [
+      "Use Route Handlers para expor dados a clientes externos (webhooks, apps mobile); para dados consumidos só pela própria UI, prefira Server Components/Server Actions."
+    ],
+    "commonMistakes": [
+      "Recriar um Route Handler só para repassar dados que um Server Component já poderia buscar diretamente, adicionando uma camada de rede desnecessária."
+    ],
+    "relatedCommands": ["nextjs-app-router", "nextjs-middleware"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/route-handlers",
+    "externalReferences": [],
+    "tags": ["nextjs", "route-handlers", "api"],
+    "keywords": ["route handlers", "app api route.ts", "api routes app router"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-dynamic-routes",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "Dynamic Routes ([slug]) e Catch-all ([...slug])",
+    "description": "Segmentos de pasta entre colchetes capturam parte da URL como parâmetro; colchetes com reticências capturam múltiplos segmentos de uma vez.",
+    "syntax": "app/produtos/[id]/page.tsx        → { id: string }\napp/docs/[...slug]/page.tsx       → { slug: string[] }\napp/docs/[[...slug]]/page.tsx     → { slug: string[] | undefined } (opcional)",
+    "example": "export default function Pagina({ params }: { params: { id: string } }) {\n  return <h1>Produto {params.id}</h1>\n}",
+    "result": "Acessar `/produtos/42` renderiza a página com `params.id === '42'`.",
+    "notes": [
+      "Catch-all com colchetes duplos (`[[...slug]]`) torna o segmento opcional, casando também com a rota sem nenhum parâmetro."
+    ],
+    "bestPractices": [
+      "Use catch-all routes para estruturas hierárquicas variáveis, como documentação com profundidade de pastas arbitrária."
+    ],
+    "commonMistakes": [
+      "Esquecer de tratar o caso em que `params.slug` vem `undefined` em uma catch-all opcional."
+    ],
+    "relatedCommands": ["nextjs-app-router", "nextjs-generate-static-params"],
+    "difficulty": "iniciante",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes",
+    "externalReferences": [],
+    "tags": ["nextjs", "rotas-dinamicas", "roteamento"],
+    "keywords": ["dynamic routes", "catch-all routes", "slug nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-parallel-intercepting-routes",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "Parallel Routes e Intercepting Routes",
+    "description": "Parallel Routes (pastas @slot) renderizam múltiplas páginas independentes na mesma tela; Intercepting Routes ((.)rota) exibem uma rota em um contexto diferente (como um modal) sem perder a URL de origem.",
+    "syntax": "app/@modal/(.)foto/[id]/page.tsx   → intercepta /foto/[id] como modal\napp/@analytics/page.tsx            → slot paralelo renderizado junto do layout",
+    "example": "Uma galeria que, ao clicar em uma foto, abre `/foto/42` como modal sobreposto (intercepting), mas ao recarregar a página exibe a foto em página cheia (rota real).",
+    "result": "A navegação client-side abre o modal preservando o contexto da galeria; um acesso direto pela URL renderiza a página completa.",
+    "notes": [
+      "`(.)`, `(..)`, `(..)(..)` e `(...)` controlam a partir de qual nível da árvore de rotas a interceptação ocorre."
+    ],
+    "bestPractices": [
+      "Use Parallel + Intercepting Routes para padrões de modal com URL compartilhável, como feeds de fotos (Instagram-style)."
+    ],
+    "commonMistakes": [
+      "Implementar modais só com estado local de React quando a URL deveria refletir o conteúdo aberto (perda de deep-linking)."
+    ],
+    "relatedCommands": ["nextjs-dynamic-routes", "nextjs-route-groups"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13.3+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/parallel-routes",
+    "externalReferences": [],
+    "tags": ["nextjs", "parallel-routes", "intercepting-routes"],
+    "keywords": ["parallel routes", "intercepting routes", "modal nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-middleware",
+    "category": "Next.js",
+    "subcategory": "Middleware",
+    "title": "Middleware (middleware.ts)",
+    "description": "Código que roda antes de uma requisição ser completada, na borda (Edge Runtime), permitindo redirecionar, reescrever URLs, checar autenticação ou modificar headers.",
+    "syntax": "export function middleware(request: NextRequest) { ... }\nexport const config = { matcher: ['/rota/:path*'] }",
+    "example": "export function middleware(request: NextRequest) {\n  const token = request.cookies.get('token')\n  if (!token) {\n    return NextResponse.redirect(new URL('/login', request.url))\n  }\n}\nexport const config = { matcher: ['/dashboard/:path*'] }",
+    "result": "Requisições a `/dashboard/*` sem cookie de token são redirecionadas para `/login` antes de qualquer renderização.",
+    "notes": [
+      "Middleware roda no Edge Runtime, um ambiente restrito (sem Node.js APIs completas) otimizado para baixa latência."
+    ],
+    "bestPractices": [
+      "Use `matcher` para restringir o middleware apenas às rotas necessárias, evitando overhead em toda a aplicação."
+    ],
+    "commonMistakes": [
+      "Fazer chamadas pesadas a banco de dados dentro do middleware, já que ele roda a cada requisição e no Edge Runtime restrito."
+    ],
+    "relatedCommands": ["nextjs-route-handlers"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "12+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/middleware",
+    "externalReferences": [],
+    "tags": ["nextjs", "middleware", "edge"],
+    "keywords": ["middleware nextjs", "edge runtime", "autenticacao middleware"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-image-component",
+    "category": "Next.js",
+    "subcategory": "Otimização",
+    "title": "next/image (Image component)",
+    "description": "Componente que otimiza imagens automaticamente: redimensiona, converte para formatos modernos (WebP/AVIF), aplica lazy loading e previne layout shift.",
+    "syntax": "<Image src={...} alt={...} width={...} height={...} />",
+    "example": "import Image from 'next/image'\n\n<Image src=\"/banner.jpg\" alt=\"Banner\" width={1200} height={400} priority />",
+    "result": "A imagem é servida em formato otimizado e no tamanho adequado ao dispositivo, com `priority` pré-carregando imagens acima da dobra.",
+    "notes": [
+      "`width`/`height` (ou `fill`) são obrigatórios para o Next.js reservar o espaço correto e evitar Cumulative Layout Shift (CLS)."
+    ],
+    "bestPractices": [
+      "Use `priority` apenas na imagem principal 'above the fold' (como o LCP da página); demais imagens já fazem lazy loading por padrão."
+    ],
+    "commonMistakes": [
+      "Usar `<img>` nativo em vez de `next/image` em projetos Next.js, perdendo otimização automática e piorando métricas de Core Web Vitals."
+    ],
+    "relatedCommands": ["nextjs-font-optimization"],
+    "difficulty": "iniciante",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/components/image",
+    "externalReferences": [],
+    "tags": ["nextjs", "next-image", "performance"],
+    "keywords": ["next/image", "otimizacao de imagem", "lazy loading nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-font-optimization",
+    "category": "Next.js",
+    "subcategory": "Otimização",
+    "title": "next/font (Font optimization)",
+    "description": "Carrega e otimiza fontes (Google Fonts ou fontes locais) em build time, hospedando os arquivos junto com o resto do bundle, sem requisições externas em runtime.",
+    "syntax": "import { NomeDaFonte } from 'next/font/google'\nconst fonte = NomeDaFonte({ subsets: ['latin'] })",
+    "example": "import { Inter } from 'next/font/google'\nconst inter = Inter({ subsets: ['latin'] })\n\nexport default function Layout({ children }) {\n  return <html className={inter.className}>{children}</html>\n}",
+    "result": "A fonte é baixada em build time e servida pelo próprio domínio, eliminando o request externo a fonts.googleapis.com e o CLS associado.",
+    "notes": [
+      "Também suporta fontes locais via `next/font/local`, apontando para arquivos .woff2 do próprio projeto."
+    ],
+    "bestPractices": [
+      "Prefira next/font a importar `<link>` de Google Fonts manualmente no `<head>`, eliminando uma requisição de rede externa render-blocking."
+    ],
+    "relatedCommands": ["nextjs-image-component"],
+    "difficulty": "iniciante",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13.2+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/optimizing/fonts",
+    "externalReferences": [],
+    "tags": ["nextjs", "next-font", "performance"],
+    "keywords": ["next/font", "otimizacao de fonte", "google fonts nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-streaming-suspense",
+    "category": "Next.js",
+    "subcategory": "Renderização",
+    "title": "Streaming e Suspense boundaries",
+    "description": "Permite enviar o HTML de uma página em pedaços conforme fica pronto, exibindo partes rápidas imediatamente enquanto seções mais lentas (com dados demorados) continuam carregando.",
+    "syntax": "<Suspense fallback={<Skeleton />}>\n  <ComponenteLento />\n</Suspense>",
+    "example": "export default function Pagina() {\n  return (\n    <div>\n      <Header />\n      <Suspense fallback={<p>Carregando comentários...</p>}>\n        <Comentarios />\n      </Suspense>\n    </div>\n  )\n}",
+    "result": "O Header aparece imediatamente; o fallback de Comentários é substituído pelo conteúdo real assim que a busca de dados termina, sem bloquear o resto da página.",
+    "notes": [
+      "Streaming funciona automaticamente com Server Components assíncronos dentro de um `<Suspense>`, sem configuração adicional de servidor."
+    ],
+    "bestPractices": [
+      "Envolva em Suspense apenas as seções que dependem de dados lentos, mantendo o esqueleto principal da página instantâneo."
+    ],
+    "commonMistakes": [
+      "Colocar um único `<Suspense>` ao redor da página inteira, perdendo o benefício de streaming granular por seção."
+    ],
+    "relatedCommands": ["nextjs-loading-error-ui", "nextjs-data-fetching-cache"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming",
+    "externalReferences": [],
+    "tags": ["nextjs", "streaming", "suspense"],
+    "keywords": ["streaming nextjs", "suspense boundaries", "loading ui"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-loading-error-ui",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "loading.tsx e error.tsx",
+    "description": "Arquivos especiais de convenção que definem automaticamente um estado de carregamento (via Suspense) e um limite de erro (via Error Boundary) para um segmento de rota, sem código extra de composição.",
+    "syntax": "app/produtos/loading.tsx   → fallback de Suspense automático\napp/produtos/error.tsx     → Error Boundary automático ('use client' obrigatório)",
+    "example": "// app/produtos/error.tsx\n'use client'\nexport default function Error({ error, reset }: { error: Error; reset: () => void }) {\n  return (\n    <div>\n      <p>Algo deu errado: {error.message}</p>\n      <button onClick={() => reset()}>Tentar novamente</button>\n    </div>\n  )\n}",
+    "result": "Enquanto `page.tsx` carrega dados, `loading.tsx` é exibido; se `page.tsx` lançar uma exceção, `error.tsx` é renderizado no lugar, com um botão para tentar de novo.",
+    "notes": [
+      "`error.tsx` precisa ser um Client Component ('use client'), já que Error Boundaries dependem de lifecycle methods do React não disponíveis em Server Components."
+    ],
+    "bestPractices": [
+      "Coloque `error.tsx` no nível mais próximo possível de onde o erro pode ocorrer, evitando que uma falha pequena derrube a página inteira."
+    ],
+    "relatedCommands": ["nextjs-streaming-suspense", "nextjs-app-router"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/error-handling",
+    "externalReferences": [],
+    "tags": ["nextjs", "loading-ui", "error-boundary"],
+    "keywords": ["loading.tsx", "error.tsx", "error boundary nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-static-dynamic-rendering",
+    "category": "Next.js",
+    "subcategory": "Renderização",
+    "title": "Static vs Dynamic Rendering",
+    "description": "O Next.js decide automaticamente, por rota, se renderiza estaticamente em build time (Static) ou a cada requisição no servidor (Dynamic), com base nas APIs usadas dentro dela.",
+    "syntax": "export const dynamic = 'force-static' | 'force-dynamic' | 'auto'",
+    "example": "export const dynamic = 'force-dynamic'\n\nexport default async function Pagina() {\n  const dados = await buscarDadosPersonalizados()\n  return <Dashboard dados={dados} />\n}",
+    "result": "Marcar `force-dynamic` garante que a rota sempre renderiza no servidor a cada requisição, mesmo que nenhuma API dinâmica explícita seja detectada.",
+    "notes": [
+      "Usar `cookies()`, `headers()` ou `searchParams` automaticamente torna a rota dinâmica, mesmo sem configurar `dynamic` explicitamente."
+    ],
+    "bestPractices": [
+      "Deixe o Next.js decidir automaticamente (`auto`, o padrão) na maioria dos casos; force apenas quando o comportamento automático não for o desejado."
+    ],
+    "commonMistakes": [
+      "Forçar `force-static` em uma rota que depende de dados por usuário (como um dashboard autenticado), servindo o mesmo HTML cacheado para todos."
+    ],
+    "relatedCommands": ["nextjs-data-fetching-cache", "nextjs-generate-static-params"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-and-dynamic-rendering",
+    "externalReferences": [],
+    "tags": ["nextjs", "static-rendering", "dynamic-rendering"],
+    "keywords": ["static vs dynamic rendering", "force-dynamic", "force-static"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-generate-static-params",
+    "category": "Next.js",
+    "subcategory": "Renderização",
+    "title": "generateStaticParams (SSG dinâmico)",
+    "description": "Função exportada de uma rota dinâmica que gera, em build time, a lista de parâmetros para os quais páginas estáticas devem ser pré-renderizadas (substitui getStaticPaths do Pages Router).",
+    "syntax": "export async function generateStaticParams() {\n  return [{ id: '1' }, { id: '2' }]\n}",
+    "example": "export async function generateStaticParams() {\n  const posts = await db.posts.findMany({ select: { slug: true } })\n  return posts.map((post) => ({ slug: post.slug }))\n}",
+    "result": "O Next.js pré-renderiza estaticamente uma página `page.tsx` para cada slug retornado, servindo-as como HTML estático em produção.",
+    "notes": [
+      "Rotas com parâmetros não incluídos em `generateStaticParams` ainda podem ser renderizadas sob demanda (ISR), dependendo de `dynamicParams`."
+    ],
+    "bestPractices": [
+      "Use para páginas com conteúdo relativamente estável (posts de blog, páginas de produto) em vez de renderizar tudo dinamicamente a cada requisição."
+    ],
+    "commonMistakes": [
+      "Usar `generateStaticParams` para milhares de rotas com dados que mudam a todo momento, gerando builds excessivamente longos."
+    ],
+    "relatedCommands": ["nextjs-dynamic-routes", "nextjs-static-dynamic-rendering"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/functions/generate-static-params",
+    "externalReferences": [],
+    "tags": ["nextjs", "ssg", "generate-static-params"],
+    "keywords": ["generatestaticparams", "ssg dinamico", "getstaticpaths equivalente"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-route-groups",
+    "category": "Next.js",
+    "subcategory": "Roteamento",
+    "title": "Route Groups ((grupo))",
+    "description": "Pastas entre parênteses organizam rotas e compartilham layouts sem afetar o caminho da URL, usadas para agrupar seções da aplicação (ex: autenticação, área logada) sem criar segmentos extras.",
+    "syntax": "app/(marketing)/sobre/page.tsx   → /sobre\napp/(app)/dashboard/page.tsx     → /dashboard",
+    "example": "app/\n  (marketing)/\n    layout.tsx   ← layout público (header de marketing)\n    page.tsx     → /\n    sobre/page.tsx → /sobre\n  (app)/\n    layout.tsx   ← layout autenticado (sidebar)\n    dashboard/page.tsx → /dashboard",
+    "result": "As rotas `/` e `/sobre` usam o layout de marketing; `/dashboard` usa o layout da área logada, sem que '(marketing)' ou '(app)' apareçam na URL.",
+    "notes": [
+      "O nome entre parênteses é puramente organizacional — o Next.js o ignora ao resolver a URL final."
+    ],
+    "bestPractices": [
+      "Use Route Groups para dar layouts raiz diferentes a seções distintas do site (pública vs autenticada) sem duplicar `app/layout.tsx`."
+    ],
+    "relatedCommands": ["nextjs-app-router", "nextjs-parallel-intercepting-routes"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "13+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/routing/route-groups",
+    "externalReferences": [],
+    "tags": ["nextjs", "route-groups", "layouts"],
+    "keywords": ["route groups", "grupos de rota", "layouts multiplos nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-env-variables",
+    "category": "Next.js",
+    "subcategory": "Configuração",
+    "title": "Environment Variables (.env.local, NEXT_PUBLIC_)",
+    "description": "Variáveis de ambiente carregadas de arquivos .env; apenas as prefixadas com NEXT_PUBLIC_ são incluídas no bundle do cliente, as demais ficam restritas ao servidor.",
+    "syntax": "// .env.local\nDATABASE_URL=postgres://...\nNEXT_PUBLIC_API_URL=https://api.exemplo.com",
+    "example": "// Server Component ou Route Handler\nconst db = connect(process.env.DATABASE_URL)\n\n// Client Component\nfetch(process.env.NEXT_PUBLIC_API_URL + '/produtos')",
+    "result": "`DATABASE_URL` só existe no ambiente Node do servidor; `NEXT_PUBLIC_API_URL` é embutida (inlined) no JavaScript enviado ao navegador em build time.",
+    "notes": [
+      "`.env.local` nunca deve ser commitado (é ignorado pelo `.gitignore` padrão do create-next-app); use `.env.example` para documentar as chaves esperadas."
+    ],
+    "bestPractices": [
+      "Nunca prefixe uma variável com segredo (chave de API privada, connection string) com NEXT_PUBLIC_ — ela ficaria visível no bundle do cliente."
+    ],
+    "commonMistakes": [
+      "Esperar que uma variável sem o prefixo NEXT_PUBLIC_ esteja disponível em um Client Component — ela retorna `undefined` no navegador."
+    ],
+    "relatedCommands": ["nextjs-config-js"],
+    "difficulty": "iniciante",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "9.4+",
+    "officialDocumentation": "https://nextjs.org/docs/app/building-your-application/configuring/environment-variables",
+    "externalReferences": [],
+    "tags": ["nextjs", "env", "configuracao"],
+    "keywords": ["env.local nextjs", "next_public", "variaveis de ambiente nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-config-js",
+    "category": "Next.js",
+    "subcategory": "Configuração",
+    "title": "next.config.js (opções comuns)",
+    "description": "Arquivo de configuração na raiz do projeto que ajusta o comportamento de build e runtime do Next.js: imagens externas, redirects, headers, variáveis expostas, entre outros.",
+    "syntax": "/** @type {import('next').NextConfig} */\nconst nextConfig = { ... }\nmodule.exports = nextConfig",
+    "example": "const nextConfig = {\n  images: { remotePatterns: [{ hostname: 'cdn.exemplo.com' }] },\n  async redirects() {\n    return [{ source: '/old', destination: '/new', permanent: true }]\n  },\n}\nmodule.exports = nextConfig",
+    "result": "Imagens de `cdn.exemplo.com` passam a ser aceitas pelo `next/image`, e requisições a `/old` são redirecionadas permanentemente para `/new`.",
+    "notes": [
+      "Também pode ser escrito como `next.config.ts` desde versões recentes, com tipagem nativa."
+    ],
+    "bestPractices": [
+      "Use `redirects()`/`rewrites()` no next.config em vez de lógica de redirecionamento espalhada em múltiplas páginas."
+    ],
+    "relatedCommands": ["nextjs-env-variables", "nextjs-image-component"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "9+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/next-config-js",
+    "externalReferences": [],
+    "tags": ["nextjs", "next-config", "configuracao"],
+    "keywords": ["next.config.js", "redirects nextjs", "configuracao nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "nextjs-turbopack",
+    "category": "Next.js",
+    "subcategory": "Build",
+    "title": "Turbopack",
+    "description": "Bundler escrito em Rust, sucessor do Webpack no Next.js, com builds incrementais e Hot Module Replacement significativamente mais rápidos em projetos grandes.",
+    "syntax": "next dev --turbo",
+    "example": "// package.json\n{ \"scripts\": { \"dev\": \"next dev --turbo\" } }",
+    "result": "O servidor de desenvolvimento inicia usando Turbopack, com atualizações de HMR percebidas quase instantaneamente mesmo em bases de código grandes.",
+    "notes": [
+      "A partir do Next.js 15, Turbopack é considerado estável para desenvolvimento (`next dev`); o suporte a `next build --turbo` para produção ainda evolui em versões mais recentes."
+    ],
+    "bestPractices": [
+      "Habilite `--turbo` em projetos grandes para reduzir o tempo de refresh durante o desenvolvimento; valide o build de produção normalmente antes de generalizar seu uso lá."
+    ],
+    "relatedCommands": ["nextjs-config-js"],
+    "difficulty": "intermediario",
+    "platform": ["node"],
+    "language": "typescript",
+    "version": "15+",
+    "officialDocumentation": "https://nextjs.org/docs/app/api-reference/turbopack",
+    "externalReferences": [],
+    "tags": ["nextjs", "turbopack", "build"],
+    "keywords": ["turbopack", "next dev --turbo", "bundler rust nextjs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

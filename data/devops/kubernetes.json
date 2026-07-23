@@ -1194,5 +1194,440 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "k8s-rbac",
+    "category": "Kubernetes",
+    "subcategory": "Segurança",
+    "title": "RBAC: Role, RoleBinding, ClusterRole, ClusterRoleBinding",
+    "description": "Controle de acesso baseado em papéis: Role/ClusterRole definem um conjunto de permissões (verbos sobre recursos), e RoleBinding/ClusterRoleBinding concedem essas permissões a um usuário, grupo ou ServiceAccount.",
+    "syntax": "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  name: <nome>\n  namespace: <ns>\nrules:\n  - apiGroups: [\"\"]\n    resources: [\"pods\"]\n    verbs: [\"get\", \"list\"]\n---\nkind: RoleBinding\nsubjects:\n  - kind: ServiceAccount\n    name: <sa>\nroleRef:\n  kind: Role\n  name: <nome>",
+    "example": "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  name: leitor-pods\n  namespace: staging\nrules:\n  - apiGroups: [\"\"]\n    resources: [\"pods\"]\n    verbs: [\"get\", \"list\", \"watch\"]",
+    "result": "Qualquer subject vinculado a essa Role via RoleBinding só consegue ler (get/list/watch) Pods dentro do namespace `staging`, sem permissão de criar ou deletar.",
+    "notes": [
+      "Role/RoleBinding têm escopo de namespace; ClusterRole/ClusterRoleBinding têm escopo de cluster inteiro (ou podem ser referenciados dentro de um namespace específico via RoleBinding)."
+    ],
+    "bestPractices": [
+      "Aplique o princípio do menor privilégio: crie Roles granulares por função em vez de conceder `cluster-admin` a ServiceAccounts de aplicações."
+    ],
+    "commonMistakes": [
+      "Usar ClusterRoleBinding com `cluster-admin` para resolver rapidamente um erro de permissão, concedendo acesso total ao cluster sem necessidade."
+    ],
+    "relatedCommands": ["k8s-serviceaccount", "k8s-namespace"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "rbac", "seguranca"],
+    "keywords": [
+      "rbac kubernetes",
+      "role rolebinding",
+      "clusterrole",
+      "permissoes kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-serviceaccount",
+    "category": "Kubernetes",
+    "subcategory": "Segurança",
+    "title": "ServiceAccount",
+    "description": "Identidade usada por Pods (não por pessoas) para autenticar contra a API do Kubernetes, controlando o que a própria aplicação pode fazer no cluster.",
+    "syntax": "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: <nome>\n\n# no Pod:\nspec:\n  serviceAccountName: <nome>",
+    "example": "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: api-sa\n  namespace: producao",
+    "result": "O Pod que referenciar `serviceAccountName: api-sa` passa a se autenticar na API do cluster com a identidade dessa ServiceAccount, sujeita às Roles vinculadas a ela.",
+    "notes": [
+      "Todo namespace tem uma ServiceAccount `default` usada automaticamente por Pods que não especificam uma explicitamente."
+    ],
+    "bestPractices": [
+      "Crie uma ServiceAccount dedicada por aplicação em vez de usar a `default` do namespace, facilitando auditoria e permissões granulares via RBAC."
+    ],
+    "commonMistakes": [
+      "Deixar todos os Pods do namespace usando a ServiceAccount `default` com permissões amplas, dificultando saber qual aplicação fez qual chamada à API."
+    ],
+    "relatedCommands": ["k8s-rbac"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/security/service-accounts/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "serviceaccount", "seguranca"],
+    "keywords": [
+      "serviceaccount kubernetes",
+      "identidade de pod",
+      "autenticacao api kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-node-affinity",
+    "category": "Kubernetes",
+    "subcategory": "Agendamento",
+    "title": "Node Affinity e Pod Affinity/Anti-affinity",
+    "description": "Regras declarativas que atraem (afinidade) ou repelem (anti-afinidade) o agendamento de Pods em relação a nodes específicos ou a outros Pods já rodando no cluster.",
+    "syntax": "affinity:\n  nodeAffinity:\n    requiredDuringSchedulingIgnoredDuringExecution:\n      nodeSelectorTerms:\n        - matchExpressions: [...]\n  podAntiAffinity:\n    preferredDuringSchedulingIgnoredDuringExecution: [...]",
+    "example": "affinity:\n  podAntiAffinity:\n    requiredDuringSchedulingIgnoredDuringExecution:\n      - labelSelector:\n          matchLabels:\n            app: api\n        topologyKey: \"kubernetes.io/hostname\"",
+    "result": "Garante que dois Pods com label `app: api` nunca sejam agendados no mesmo node, aumentando a resiliência a falha de um único node.",
+    "notes": [
+      "`required...` é uma regra rígida (o Pod fica Pending se não puder ser satisfeita); `preferred...` é uma preferência, respeitada quando possível mas não obrigatória."
+    ],
+    "bestPractices": [
+      "Use `podAntiAffinity` para espalhar réplicas de um Deployment crítico entre nodes/zonas diferentes, evitando que a queda de um único node derrube todas as réplicas."
+    ],
+    "commonMistakes": [
+      "Usar apenas `requiredDuringScheduling` para anti-afinidade em clusters pequenos, fazendo Pods ficarem presos em Pending por falta de nodes suficientes para satisfazer a regra."
+    ],
+    "relatedCommands": ["k8s-taints-tolerations", "k8s-troubleshooting-pending"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity",
+    "externalReferences": [],
+    "tags": ["kubernetes", "affinity", "agendamento"],
+    "keywords": ["node affinity kubernetes", "pod anti-affinity", "topologyKey"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-init-containers",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "Init Containers",
+    "description": "Containers que rodam sequencialmente e até a conclusão antes dos containers principais do Pod iniciarem, usados para preparação (aguardar dependência, migrar schema, baixar configuração).",
+    "syntax": "spec:\n  initContainers:\n    - name: <nome>\n      image: <imagem>\n      command: [...]\n  containers: [...]",
+    "example": "initContainers:\n  - name: aguarda-db\n    image: busybox:1.36\n    command: [\"sh\", \"-c\", \"until nc -z db 5432; do sleep 2; done\"]\ncontainers:\n  - name: api\n    image: minha-api:1.0",
+    "result": "O container `api` só é iniciado depois que o init container confirmar que a porta 5432 do serviço `db` está aceitando conexões.",
+    "notes": [
+      "Se um init container falhar, o Kubernetes o reinicia repetidamente até ter sucesso; os containers principais nunca iniciam enquanto isso."
+    ],
+    "bestPractices": [
+      "Use init containers para checagens de dependência (\"wait for\") em vez de colocar lógica de retry de conexão dentro do código da aplicação principal."
+    ],
+    "commonMistakes": [
+      "Colocar lógica de negócio pesada em um init container, tornando o tempo de start do Pod desnecessariamente longo."
+    ],
+    "relatedCommands": ["k8s-pod", "k8s-deployment"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "init containers", "workloads"],
+    "keywords": [
+      "init containers kubernetes",
+      "container de inicializacao",
+      "aguardar dependencia kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-poddisruptionbudget",
+    "category": "Kubernetes",
+    "subcategory": "Escalonamento",
+    "title": "PodDisruptionBudget (PDB)",
+    "description": "Limita quantas réplicas de uma aplicação podem ficar indisponíveis simultaneamente durante interrupções voluntárias (drenagem de node, atualização de cluster), sem afetar falhas involuntárias.",
+    "syntax": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nmetadata:\n  name: <nome>\nspec:\n  minAvailable: <n-ou-%>\n  selector:\n    matchLabels: {...}",
+    "example": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nmetadata:\n  name: api-pdb\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels:\n      app: api",
+    "result": "Durante uma drenagem de node (`kubectl drain`) ou upgrade do cluster, o Kubernetes nunca remove Pods do `app: api` se isso deixar menos de 2 réplicas disponíveis.",
+    "notes": [
+      "PDB não protege contra falhas involuntárias (crash, OOMKill, falha de hardware) — apenas contra operações voluntárias e coordenadas de manutenção."
+    ],
+    "bestPractices": [
+      "Defina um PDB para todo workload crítico com múltiplas réplicas, garantindo disponibilidade mínima durante manutenções e upgrades do cluster."
+    ],
+    "commonMistakes": [
+      "Definir `minAvailable` igual ao número total de réplicas, o que impede completamente a drenagem de qualquer node que hospede esses Pods."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-hpa"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "poddisruptionbudget", "disponibilidade"],
+    "keywords": ["poddisruptionbudget", "pdb kubernetes", "minAvailable", "drain node"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-resourcequota-limitrange",
+    "category": "Kubernetes",
+    "subcategory": "Recursos",
+    "title": "ResourceQuota e LimitRange",
+    "description": "ResourceQuota limita o total de recursos (CPU, memória, número de objetos) consumíveis por um namespace inteiro; LimitRange define requests/limits padrão e mínimos/máximos por container dentro de um namespace.",
+    "syntax": "apiVersion: v1\nkind: ResourceQuota\nspec:\n  hard:\n    requests.cpu: <valor>\n    requests.memory: <valor>\n    pods: \"<n>\"",
+    "example": "apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: quota-staging\n  namespace: staging\nspec:\n  hard:\n    requests.cpu: \"4\"\n    requests.memory: 8Gi\n    pods: \"20\"",
+    "result": "O namespace `staging` não pode ter, no total, mais que 4 CPUs e 8Gi de memória solicitados, nem mais que 20 Pods simultâneos.",
+    "notes": [
+      "Se um namespace tem ResourceQuota, todo Pod criado nele precisa declarar `requests`/`limits` explicitamente, ou a criação é rejeitada."
+    ],
+    "bestPractices": [
+      "Combine ResourceQuota (limite do namespace) com LimitRange (valores padrão por container) para evitar que times esqueçam de definir requests/limits."
+    ],
+    "commonMistakes": [
+      "Aplicar uma ResourceQuota em um namespace com Pods já rodando sem `requests`/`limits`, causando erro ao tentar criar novos Pods que não os declaram."
+    ],
+    "relatedCommands": ["k8s-resource-requests-limits", "k8s-namespace"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/policy/resource-quotas/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "resourcequota", "limitrange"],
+    "keywords": [
+      "resourcequota kubernetes",
+      "limitrange kubernetes",
+      "limite de namespace"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-kubectl-top",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl top",
+    "description": "Exibe o uso atual de CPU e memória de nodes ou Pods, obtido em tempo real do metrics-server do cluster.",
+    "syntax": "kubectl top nodes\nkubectl top pods [-n <namespace>] [--containers]",
+    "example": "kubectl top pods -n producao --containers",
+    "result": "Lista cada Pod do namespace `producao` com o uso atual de CPU/memória por container, permitindo identificar rapidamente consumidores anômalos.",
+    "flags": [
+      {
+        "flag": "--containers",
+        "description": "Detalha o uso por container em vez de agregado por Pod."
+      },
+      { "flag": "--sort-by", "description": "Ordena a saída por `cpu` ou `memory`." }
+    ],
+    "notes": [
+      "Requer o metrics-server instalado no cluster; sem ele, o comando retorna erro informando que a métrica não está disponível."
+    ],
+    "bestPractices": [
+      "Use `kubectl top pods --sort-by=memory` para identificar rapidamente candidatos a ajuste de `limits` antes de investigar com ferramentas de profiling mais pesadas."
+    ],
+    "relatedCommands": ["k8s-resource-requests-limits", "k8s-hpa"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#top",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "top"],
+    "keywords": [
+      "kubectl top",
+      "uso de cpu kubernetes",
+      "uso de memoria pods",
+      "metrics-server"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-kubectl-cp",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl cp",
+    "description": "Copia arquivos ou diretórios entre o sistema de arquivos local e um container dentro de um Pod, em qualquer direção.",
+    "syntax": "kubectl cp <origem> <namespace>/<pod>:<destino>\nkubectl cp <namespace>/<pod>:<origem> <destino>",
+    "example": "kubectl cp ./backup.sql producao/db-0:/tmp/backup.sql",
+    "result": "O arquivo `backup.sql` local é copiado para `/tmp/backup.sql` dentro do container principal do Pod `db-0` no namespace `producao`.",
+    "notes": [
+      "Requer que o container tenha o binário `tar` instalado, já que `kubectl cp` usa tar internamente para empacotar os arquivos transferidos."
+    ],
+    "bestPractices": [
+      "Use `kubectl cp` para depuração pontual; para transferência de dados recorrente, prefira volumes compartilhados ou object storage."
+    ],
+    "commonMistakes": [
+      "Tentar usar `kubectl cp` em uma imagem `distroless`/`scratch` sem `tar`, recebendo erro silencioso ou arquivo corrompido."
+    ],
+    "relatedCommands": ["k8s-kubectl-exec"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cp",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "cp"],
+    "keywords": ["kubectl cp", "copiar arquivo pod", "transferir arquivo kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-replicaset",
+    "category": "Kubernetes",
+    "subcategory": "Workloads",
+    "title": "ReplicaSet",
+    "description": "Controller de nível mais baixo que garante um número fixo de réplicas de Pods idênticos rodando; na prática, quase sempre gerenciado indiretamente por um Deployment, que cria e gerencia ReplicaSets para você.",
+    "syntax": "apiVersion: apps/v1\nkind: ReplicaSet\nspec:\n  replicas: <n>\n  selector:\n    matchLabels: {...}\n  template: {...}",
+    "example": "kubectl get replicasets -n producao",
+    "result": "Lista os ReplicaSets do namespace, revelando que cada Deployment mantém um ReplicaSet ativo (a versão atual) e, durante rollouts, ReplicaSets antigos com 0 réplicas preservados para rollback.",
+    "notes": [
+      "Cada rolling update de um Deployment cria um novo ReplicaSet; o histórico de ReplicaSets antigos é o que possibilita `kubectl rollout undo`."
+    ],
+    "bestPractices": [
+      "Gerencie réplicas sempre via Deployment, não criando ReplicaSets diretamente — o Deployment adiciona rolling updates e histórico de revisões que o ReplicaSet sozinho não tem."
+    ],
+    "commonMistakes": [
+      "Editar um ReplicaSet criado por um Deployment diretamente, quando a alteração deveria ser feita no Deployment (que reconcilia o ReplicaSet automaticamente)."
+    ],
+    "relatedCommands": ["k8s-deployment", "k8s-kubectl-rollout"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "replicaset", "workloads"],
+    "keywords": [
+      "replicaset kubernetes",
+      "deployment vs replicaset",
+      "historico de revisoes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-emptydir-hostpath",
+    "category": "Kubernetes",
+    "subcategory": "Armazenamento",
+    "title": "Volumes efêmeros: emptyDir e hostPath",
+    "description": "emptyDir cria um diretório vazio e temporário compartilhado entre containers de um mesmo Pod, apagado quando o Pod é removido; hostPath monta um caminho do sistema de arquivos do node diretamente no container.",
+    "syntax": "volumes:\n  - name: <nome>\n    emptyDir: {}\n  - name: <nome>\n    hostPath:\n      path: <caminho-no-node>",
+    "example": "volumes:\n  - name: cache-compartilhado\n    emptyDir: {}\ncontainers:\n  - name: app\n    volumeMounts:\n      - name: cache-compartilhado\n        mountPath: /cache",
+    "result": "Os containers do Pod compartilham o diretório `/cache`, útil para troca de arquivos entre um container principal e um sidecar, mas os dados somem quando o Pod é removido.",
+    "notes": [
+      "hostPath amarra o Pod aos dados de um node específico e é considerado um risco de segurança/portabilidade — evite em produção, salvo casos de infraestrutura (DaemonSets de monitoramento)."
+    ],
+    "bestPractices": [
+      "Use emptyDir para cache/scratch space temporário compartilhado entre containers do mesmo Pod; use PersistentVolume para qualquer dado que precise sobreviver ao Pod."
+    ],
+    "commonMistakes": [
+      "Usar emptyDir esperando persistência de dados entre reinícios do Pod, perdendo tudo quando o Pod é recriado (mesmo em um restart simples do container, o conteúdo do emptyDir permanece, mas some se o Pod inteiro for removido)."
+    ],
+    "relatedCommands": ["k8s-persistent-volume", "k8s-pod"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/storage/volumes/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "volumes", "emptydir", "hostpath"],
+    "keywords": [
+      "emptydir kubernetes",
+      "hostpath kubernetes",
+      "volume temporario kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-headless-service",
+    "category": "Kubernetes",
+    "subcategory": "Networking",
+    "title": "Headless Service",
+    "description": "Service sem ClusterIP (definido com `clusterIP: None`) que, em vez de balancear tráfego, retorna via DNS os IPs individuais de cada Pod correspondente, usado principalmente com StatefulSets.",
+    "syntax": "apiVersion: v1\nkind: Service\nmetadata:\n  name: <nome>\nspec:\n  clusterIP: None\n  selector:\n    app: <label>\n  ports: [...]",
+    "example": "apiVersion: v1\nkind: Service\nmetadata:\n  name: postgres\nspec:\n  clusterIP: None\n  selector:\n    app: postgres\n  ports:\n    - port: 5432",
+    "result": "Uma consulta DNS a `postgres` retorna os IPs individuais de todos os Pods do StatefulSet, e cada Pod ganha um DNS próprio como `postgres-0.postgres`.",
+    "notes": [
+      "É o mecanismo que dá aos Pods de um StatefulSet identidade de rede estável e individualmente endereçável, necessário para clusters de banco de dados/replicação."
+    ],
+    "bestPractices": [
+      "Use Headless Service sempre que a aplicação cliente precisar descobrir e se conectar a réplicas individuais (não apenas a uma delas via balanceamento), como em clientes de banco com replicação."
+    ],
+    "relatedCommands": ["k8s-statefulset", "k8s-service"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/services-networking/service/#headless-services",
+    "externalReferences": [],
+    "tags": ["kubernetes", "headless service", "networking"],
+    "keywords": [
+      "headless service kubernetes",
+      "clusterIP None",
+      "dns por pod kubernetes"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-kustomize",
+    "category": "Kubernetes",
+    "subcategory": "Deploy",
+    "title": "Kustomize",
+    "description": "Ferramenta nativa do kubectl para customizar manifests Kubernetes por ambiente (dev/staging/prod) via overlays, sem templates ou variáveis — parte de um `base` comum, sobrepondo apenas as diferenças.",
+    "syntax": "kubectl apply -k <diretorio>\n\n# kustomization.yaml\nresources:\n  - deployment.yaml\npatches:\n  - path: <patch.yaml>",
+    "example": "kubectl apply -k overlays/producao/",
+    "result": "Aplica o manifesto base combinado com os patches específicos do overlay `producao` (ex: mais réplicas, limites de recurso maiores), sem duplicar o YAML inteiro por ambiente.",
+    "notes": [
+      "Diferente do Helm, Kustomize não usa uma linguagem de templates — trabalha por composição e patches sobre YAML puro, já embutido no kubectl (`kubectl apply -k`)."
+    ],
+    "bestPractices": [
+      "Use Kustomize quando a variação entre ambientes é pequena (réplicas, imagens, recursos); prefira Helm quando precisar de lógica condicional complexa ou distribuir o pacote para terceiros."
+    ],
+    "relatedCommands": ["k8s-kubectl-apply", "k8s-helm-intro"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kustomize", "deploy"],
+    "keywords": ["kustomize kubernetes", "overlays kustomize", "kubectl apply -k"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-crd-operators",
+    "category": "Kubernetes",
+    "subcategory": "Extensibilidade",
+    "title": "CRDs e Operators",
+    "description": "CustomResourceDefinition (CRD) estende a API do Kubernetes com tipos de recurso próprios; um Operator é um controller customizado que observa esses recursos e automatiza a operação de um sistema complexo (ex: provisionar e gerenciar um cluster de banco de dados).",
+    "syntax": "apiVersion: apiextensions.k8s.io/v1\nkind: CustomResourceDefinition\nmetadata:\n  name: <nome>.<grupo>\nspec:\n  group: <grupo>\n  versions: [...]",
+    "example": "apiVersion: postgresql.example.com/v1\nkind: PostgresCluster\nmetadata:\n  name: meu-cluster\nspec:\n  replicas: 3\n  version: \"16\"",
+    "result": "Ao aplicar esse manifesto customizado, o Operator correspondente detecta o novo objeto `PostgresCluster` e provisiona automaticamente StatefulSets, Services e Secrets necessários para o cluster de banco.",
+    "notes": [
+      "Operators seguem o mesmo padrão de reconciliação usado internamente pelo Kubernetes (control loop: observar estado desejado vs real e agir para convergir)."
+    ],
+    "bestPractices": [
+      "Prefira Operators maduros e mantidos pela comunidade/fabricante (ex: operators de bancos de dados) a escrever um Operator customizado do zero, salvo necessidade real."
+    ],
+    "relatedCommands": ["k8s-intro-architecture", "k8s-helm-intro"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "yaml",
+    "officialDocumentation": "https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/",
+    "externalReferences": [],
+    "tags": ["kubernetes", "crd", "operators"],
+    "keywords": ["crd kubernetes", "custom resource definition", "operators kubernetes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "k8s-kubectl-create-vs-apply",
+    "category": "Kubernetes",
+    "subcategory": "kubectl",
+    "title": "kubectl create vs. apply",
+    "description": "kubectl create cria recursos de forma imperativa e falha se o recurso já existir; kubectl apply é declarativo, idempotente, e cria ou atualiza o recurso comparando o manifesto com o estado atual.",
+    "syntax": "kubectl create -f <arquivo>\nkubectl apply -f <arquivo>",
+    "example": "kubectl create deployment nginx --image=nginx  # imperativo, um comando\nkubectl apply -f deployment.yaml               # declarativo, a partir de um arquivo versionado",
+    "result": "`create` gera o recurso a partir de flags ou de um arquivo, mas rodar de novo com o mesmo nome falha com \"already exists\"; `apply` pode ser executado repetidamente, aplicando apenas o diff.",
+    "notes": [
+      "`kubectl create` é útil para gerar rapidamente um manifesto de exemplo com `--dry-run=client -o yaml`, mesmo que o fluxo final use `apply`."
+    ],
+    "bestPractices": [
+      "Adote `apply -f` a partir de manifestos versionados em Git como fluxo padrão (GitOps); reserve `create` para comandos pontuais e geração rápida de YAML de exemplo."
+    ],
+    "commonMistakes": [
+      "Misturar `create` e `apply` no mesmo recurso ao longo do tempo, perdendo os metadados de 'last-applied-configuration' que o `apply` usa para calcular diffs corretamente."
+    ],
+    "relatedCommands": ["k8s-kubectl-apply", "k8s-kubectl-delete"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "officialDocumentation": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create",
+    "externalReferences": [],
+    "tags": ["kubernetes", "kubectl", "create", "apply"],
+    "keywords": [
+      "kubectl create vs apply",
+      "imperativo vs declarativo kubernetes",
+      "kubectl create"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

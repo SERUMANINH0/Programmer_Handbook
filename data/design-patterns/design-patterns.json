@@ -54,5 +54,531 @@
     "keywords": ["strategy pattern", "padrao strategy", "algoritmos intercambiaveis"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "pattern-factory",
+    "category": "Design Patterns",
+    "subcategory": "Padrões criacionais",
+    "title": "Factory Method",
+    "description": "Delega a criação de objetos a um método especializado em vez de instanciar diretamente com `new`, permitindo que subclasses decidam qual classe concreta instanciar.",
+    "syntax": "abstract class Criador {\n  abstract criarProduto(): Produto\n}",
+    "example": "abstract class NotificadorFactory {\n  abstract criar(): Notificador\n}\nclass EmailFactory extends NotificadorFactory {\n  criar() { return new EmailNotificador() }\n}\nclass SmsFactory extends NotificadorFactory {\n  criar() { return new SmsNotificador() }\n}",
+    "result": "O código cliente trabalha só com a interface `Notificador`, sem saber qual implementação concreta foi criada.",
+    "notes": [
+      "Diferente do Abstract Factory, o Factory Method cria um único tipo de produto por vez, geralmente via herança."
+    ],
+    "bestPractices": [
+      "Use Factory Method quando a lógica de criação de um objeto for complexa ou variar conforme configuração/contexto."
+    ],
+    "commonMistakes": [
+      "Criar uma factory para objetos simples sem variação real, adicionando indireção desnecessária."
+    ],
+    "relatedCommands": ["pattern-abstract-factory", "pattern-singleton"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/factory-method",
+    "externalReferences": [],
+    "tags": ["design-patterns", "factory", "criacional"],
+    "keywords": ["factory method", "padrao factory", "fabrica de objetos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-abstract-factory",
+    "category": "Design Patterns",
+    "subcategory": "Padrões criacionais",
+    "title": "Abstract Factory",
+    "description": "Fornece uma interface para criar famílias de objetos relacionados sem especificar suas classes concretas, garantindo que os produtos de uma família sejam compatíveis entre si.",
+    "syntax": "interface UIFactory {\n  criarBotao(): Botao\n  criarInput(): Input\n}",
+    "example": "interface TemaFactory {\n  criarBotao(): Botao\n  criarInput(): Input\n}\nclass TemaEscuroFactory implements TemaFactory {\n  criarBotao() { return new BotaoEscuro() }\n  criarInput() { return new InputEscuro() }\n}",
+    "result": "Trocar `TemaEscuroFactory` por `TemaClaroFactory` garante que todos os componentes criados pertençam ao mesmo tema, sem misturar estilos.",
+    "notes": [
+      "Cada método da factory retorna um Factory Method individual — Abstract Factory é essencialmente um agrupamento de Factory Methods relacionados."
+    ],
+    "bestPractices": [
+      "Use quando o sistema precisa ser independente de como seus produtos são criados, compostos e representados, e produtos de uma família devem ser usados juntos."
+    ],
+    "commonMistakes": [
+      "Adicionar um novo produto à família exige alterar a interface da factory e todas as suas implementações — planeje a família de produtos com cuidado antes."
+    ],
+    "relatedCommands": ["pattern-factory", "pattern-builder"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/abstract-factory",
+    "externalReferences": [],
+    "tags": ["design-patterns", "abstract factory", "criacional"],
+    "keywords": ["abstract factory", "familia de objetos", "fabrica abstrata"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-builder",
+    "category": "Design Patterns",
+    "subcategory": "Padrões criacionais",
+    "title": "Builder",
+    "description": "Constrói um objeto complexo passo a passo, separando a construção de sua representação final e permitindo criar diferentes variações do mesmo processo.",
+    "syntax": "class Builder {\n  comX(valor) { this.x = valor; return this }\n  build() { return new Produto(this) }\n}",
+    "example": "class PedidoBuilder {\n  private itens = []\n  adicionarItem(item) { this.itens.push(item); return this }\n  comDesconto(pct) { this.desconto = pct; return this }\n  build() { return new Pedido(this.itens, this.desconto) }\n}\nconst pedido = new PedidoBuilder().adicionarItem(\"Livro\").comDesconto(10).build()",
+    "result": "O objeto `Pedido` é montado de forma fluente (method chaining), evitando um construtor com dezenas de parâmetros opcionais.",
+    "notes": [
+      "Muito usado quando um objeto tem muitos parâmetros opcionais, evitando o antipadrão 'telescoping constructor'."
+    ],
+    "bestPractices": [
+      "Use Builder para objetos imutáveis complexos, retornando o objeto final já validado apenas no `build()`."
+    ],
+    "commonMistakes": [
+      "Usar Builder para objetos simples com dois ou três campos obrigatórios, onde um construtor direto já seria suficiente."
+    ],
+    "relatedCommands": ["pattern-abstract-factory"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/builder",
+    "externalReferences": [],
+    "tags": ["design-patterns", "builder", "criacional"],
+    "keywords": ["builder pattern", "padrao builder", "construcao passo a passo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-prototype",
+    "category": "Design Patterns",
+    "subcategory": "Padrões criacionais",
+    "title": "Prototype",
+    "description": "Cria novos objetos clonando uma instância existente (o protótipo) em vez de instanciar do zero, útil quando a criação é custosa ou complexa.",
+    "syntax": "interface Clonavel { clonar(): this }",
+    "example": "class Documento implements Clonavel {\n  constructor(public conteudo: string, public formatacao: object) {}\n  clonar() { return new Documento(this.conteudo, { ...this.formatacao }) }\n}\nconst copia = documentoOriginal.clonar()",
+    "result": "`copia` é uma nova instância independente, com os mesmos valores iniciais do objeto original.",
+    "notes": [
+      "A clonagem deve ser 'deep' o suficiente para evitar que objetos aninhados sejam compartilhados por referência entre original e cópia."
+    ],
+    "bestPractices": [
+      "Use Prototype quando criar um objeto do zero for mais custoso (ex: consulta a banco, cálculo pesado) do que copiar um já existente."
+    ],
+    "commonMistakes": [
+      "Implementar uma clonagem rasa (shallow copy) quando o objeto tem propriedades aninhadas, fazendo original e cópia compartilharem estado indevidamente."
+    ],
+    "relatedCommands": ["pattern-builder"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/prototype",
+    "externalReferences": [],
+    "tags": ["design-patterns", "prototype", "criacional"],
+    "keywords": ["prototype pattern", "clonagem de objeto", "padrao prototype"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-observer",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Observer",
+    "description": "Define uma dependência um-para-muitos entre objetos, de forma que quando o 'sujeito' muda de estado, todos os 'observadores' registrados são notificados automaticamente.",
+    "syntax": "class Sujeito {\n  observadores = []\n  inscrever(obs) { this.observadores.push(obs) }\n  notificar(dados) { this.observadores.forEach((o) => o.atualizar(dados)) }\n}",
+    "example": "class EstoqueProduto {\n  private observadores: ((qtd: number) => void)[] = []\n  onMudanca(callback) { this.observadores.push(callback) }\n  atualizarQuantidade(qtd) {\n    this.observadores.forEach((cb) => cb(qtd))\n  }\n}",
+    "result": "Todo callback registrado com `onMudanca` é executado automaticamente sempre que a quantidade em estoque mudar.",
+    "notes": [
+      "É a base conceitual de sistemas de eventos (EventEmitter no Node.js, addEventListener no DOM, RxJS)."
+    ],
+    "bestPractices": [
+      "Use Observer para desacoplar quem gera um evento de quem reage a ele, evitando dependências diretas entre módulos."
+    ],
+    "commonMistakes": [
+      "Esquecer de desinscrever (unsubscribe) observadores, causando vazamento de memória e callbacks executando em objetos já descartados."
+    ],
+    "relatedCommands": ["pattern-mediator"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/observer",
+    "externalReferences": [],
+    "tags": ["design-patterns", "observer", "comportamental"],
+    "keywords": ["observer pattern", "padrao observer", "pub sub"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-decorator",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Decorator",
+    "description": "Adiciona novos comportamentos a um objeto dinamicamente, envolvendo-o em objetos 'decoradores' que implementam a mesma interface, sem alterar sua classe original.",
+    "syntax": "class Decorador implements Componente {\n  constructor(private wrapped: Componente) {}\n  operacao() { return this.wrapped.operacao() + \" + extra\" }\n}",
+    "example": "interface Cafe { preco(): number }\nclass CafeSimples implements Cafe { preco() { return 5 } }\nclass ComLeite implements Cafe {\n  constructor(private cafe: Cafe) {}\n  preco() { return this.cafe.preco() + 2 }\n}\nconst pedido = new ComLeite(new CafeSimples())",
+    "result": "`pedido.preco()` retorna 7, combinando o preço base com o adicional, sem herança nem alterar `CafeSimples`.",
+    "notes": [
+      "Diferente de herança, Decorator permite combinar comportamentos dinamicamente em tempo de execução, empilhando quantos decoradores forem necessários."
+    ],
+    "bestPractices": [
+      "Use Decorator para adicionar responsabilidades opcionais a um objeto sem inflar a hierarquia de classes com subclasses para cada combinação."
+    ],
+    "commonMistakes": [
+      "Empilhar dezenas de decoradores pequenos, tornando o fluxo de execução difícil de rastrear e depurar."
+    ],
+    "relatedCommands": ["pattern-proxy", "pattern-adapter"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/decorator",
+    "externalReferences": [],
+    "tags": ["design-patterns", "decorator", "estrutural"],
+    "keywords": ["decorator pattern", "padrao decorator", "adicionar comportamento"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-adapter",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Adapter",
+    "description": "Converte a interface de uma classe existente em outra interface esperada pelo código cliente, permitindo que classes incompatíveis trabalhem juntas.",
+    "syntax": "class Adapter implements InterfaceEsperada {\n  constructor(private legado: ClasseIncompativel) {}\n  metodoEsperado() { return this.legado.metodoAntigo() }\n}",
+    "example": "class GatewayPagamentoAntigo {\n  processarPagamentoLegado(valorEmCentavos: number) { }\n}\nclass GatewayAdapter implements GatewayPagamentoModerno {\n  constructor(private legado: GatewayPagamentoAntigo) {}\n  processar(valor: number) {\n    return this.legado.processarPagamentoLegado(valor * 100)\n  }\n}",
+    "result": "O código novo chama `processar(valor)` normalmente, sem saber que por baixo está adaptando para a API legada em centavos.",
+    "notes": [
+      "Muito usado para integrar bibliotecas de terceiros ou sistemas legados sem modificar seu código-fonte."
+    ],
+    "bestPractices": [
+      "Use Adapter para isolar o código legado/externo atrás de uma interface que seu sistema já entende, facilitando futura substituição."
+    ],
+    "commonMistakes": [
+      "Colocar lógica de negócio dentro do Adapter — ele deve só traduzir chamadas, não decidir regras."
+    ],
+    "relatedCommands": ["pattern-facade", "pattern-decorator"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/adapter",
+    "externalReferences": [],
+    "tags": ["design-patterns", "adapter", "estrutural"],
+    "keywords": ["adapter pattern", "padrao adapter", "integracao sistemas legados"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-facade",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Facade",
+    "description": "Fornece uma interface simplificada e unificada para um conjunto de interfaces mais complexas de um subsistema, escondendo a complexidade interna do cliente.",
+    "syntax": "class Facade {\n  constructor(private subsistemaA, private subsistemaB) {}\n  operacaoSimplificada() { this.subsistemaA.x(); this.subsistemaB.y() }\n}",
+    "example": "class PedidoFacade {\n  constructor(private estoque: Estoque, private pagamento: Pagamento, private envio: Envio) {}\n  finalizarCompra(pedido) {\n    this.estoque.reservar(pedido.itens)\n    this.pagamento.cobrar(pedido.total)\n    this.envio.agendar(pedido.endereco)\n  }\n}",
+    "result": "O código cliente chama apenas `finalizarCompra(pedido)`, sem precisar orquestrar estoque, pagamento e envio individualmente.",
+    "notes": [
+      "Facade não impede o acesso direto aos subsistemas — apenas oferece um caminho mais simples para os casos de uso comuns."
+    ],
+    "bestPractices": [
+      "Use Facade para simplificar a integração com um subsistema complexo (ex: uma biblioteca de terceiros com muitas classes)."
+    ],
+    "commonMistakes": [
+      "Transformar a Facade em um 'god object' que acumula lógica de negócio, em vez de apenas orquestrar chamadas aos subsistemas."
+    ],
+    "relatedCommands": ["pattern-adapter"],
+    "difficulty": "iniciante",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/facade",
+    "externalReferences": [],
+    "tags": ["design-patterns", "facade", "estrutural"],
+    "keywords": ["facade pattern", "padrao facade", "interface simplificada"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-repository",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Repository",
+    "description": "Abstrai o acesso a uma fonte de dados (banco, API externa) atrás de uma interface orientada ao domínio, isolando a lógica de negócio dos detalhes de persistência.",
+    "syntax": "interface Repositorio<T> {\n  buscarPorId(id): Promise<T>\n  salvar(entidade: T): Promise<void>\n}",
+    "example": "interface UsuarioRepository {\n  buscarPorEmail(email: string): Promise<Usuario | null>\n  salvar(usuario: Usuario): Promise<void>\n}\nclass UsuarioRepositoryPostgres implements UsuarioRepository {\n  async buscarPorEmail(email) { /* query SQL */ }\n  async salvar(usuario) { /* insert/update SQL */ }\n}",
+    "result": "A camada de negócio depende só da interface `UsuarioRepository`; trocar Postgres por outro banco não exige alterar regras de negócio.",
+    "notes": [
+      "É o mecanismo prático mais comum para respeitar a Regra da Dependência da Clean Architecture."
+    ],
+    "bestPractices": [
+      "Defina a interface do Repository na camada de domínio/aplicação e implemente-a na camada de infraestrutura."
+    ],
+    "commonMistakes": [
+      "Vazar detalhes do ORM (como objetos de query builder) através da interface do Repository, acoplando o domínio à tecnologia de persistência."
+    ],
+    "relatedCommands": ["pattern-facade"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/eaaCatalog/repository.html",
+    "externalReferences": [],
+    "tags": ["design-patterns", "repository", "persistencia"],
+    "keywords": ["repository pattern", "padrao repository", "abstracao de dados"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-dependency-injection",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Dependency Injection (DI)",
+    "description": "Fornece as dependências de um objeto de fora para dentro (via construtor, propriedade ou método) em vez de o próprio objeto criá-las internamente, facilitando testes e desacoplamento.",
+    "syntax": "class Servico {\n  constructor(private dependencia: Interface) {}\n}",
+    "example": "class PedidoService {\n  constructor(private repo: UsuarioRepository, private email: EmailService) {}\n}\n// em teste:\nnew PedidoService(new RepoFake(), new EmailFake())",
+    "result": "Em produção, injeta-se implementações reais; em testes, injeta-se dublês (fakes/mocks), sem alterar a classe `PedidoService`.",
+    "notes": [
+      "DI é diferente de um 'container de DI' (framework) — é possível fazer injeção de dependência manualmente, sem nenhuma biblioteca."
+    ],
+    "bestPractices": [
+      "Injete abstrações (interfaces), não implementações concretas, para manter o código testável e desacoplado."
+    ],
+    "commonMistakes": [
+      "Instanciar dependências com `new` diretamente dentro da classe, tornando impossível substituí-las em testes sem mocks pesados (module mocking)."
+    ],
+    "relatedCommands": ["pattern-repository", "pattern-singleton"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://martinfowler.com/articles/injection.html",
+    "externalReferences": [],
+    "tags": ["design-patterns", "dependency injection", "desacoplamento"],
+    "keywords": ["dependency injection", "injecao de dependencia", "di pattern"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-command",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Command",
+    "description": "Encapsula uma solicitação (ação + parâmetros) como um objeto independente, permitindo parametrizar, enfileirar, desfazer (undo) ou logar operações.",
+    "syntax": "interface Comando { executar(): void; desfazer(): void }",
+    "example": "class AdicionarItemComando implements Comando {\n  constructor(private carrinho: Carrinho, private item: Item) {}\n  executar() { this.carrinho.adicionar(this.item) }\n  desfazer() { this.carrinho.remover(this.item) }\n}\nconst historico: Comando[] = []\nfunction executar(comando: Comando) { comando.executar(); historico.push(comando) }",
+    "result": "Cada ação vira um objeto rastreável, permitindo implementar undo/redo percorrendo o histórico de comandos executados.",
+    "notes": [
+      "É a base de sistemas de undo/redo, filas de tarefas (job queues) e macros de automação."
+    ],
+    "bestPractices": [
+      "Use Command quando precisar desacoplar quem dispara uma ação de quem a executa, ou quando precisar de undo/redo/log de operações."
+    ],
+    "commonMistakes": [
+      "Usar Command para ações triviais sem necessidade de undo, log ou enfileiramento, adicionando complexidade desnecessária."
+    ],
+    "relatedCommands": ["pattern-observer"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/command",
+    "externalReferences": [],
+    "tags": ["design-patterns", "command", "comportamental"],
+    "keywords": ["command pattern", "padrao command", "undo redo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-state",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "State",
+    "description": "Permite que um objeto altere seu comportamento quando seu estado interno muda, delegando a lógica específica de cada estado a classes separadas em vez de condicionais gigantes.",
+    "syntax": "interface Estado { proximo(pedido): void }",
+    "example": "interface EstadoPedido { avancar(pedido: Pedido): void }\nclass PendenteState implements EstadoPedido {\n  avancar(pedido) { pedido.estado = new PagoState() }\n}\nclass PagoState implements EstadoPedido {\n  avancar(pedido) { pedido.estado = new EnviadoState() }\n}",
+    "result": "Cada estado sabe apenas para qual próximo estado transicionar, eliminando um `switch` gigante espalhado pelo código de `Pedido`.",
+    "notes": [
+      "Muito parecido estruturalmente com Strategy, mas o foco de State é a transição entre estados (máquina de estados), não algoritmos intercambiáveis."
+    ],
+    "bestPractices": [
+      "Use State quando um objeto tem comportamento significativamente diferente conforme seu estado, e esse comportamento muda em tempo de execução."
+    ],
+    "commonMistakes": [
+      "Confundir State com Strategy — Strategy troca algoritmo por escolha externa; State troca comportamento como consequência de transições internas."
+    ],
+    "relatedCommands": ["pattern-strategy"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/state",
+    "externalReferences": [],
+    "tags": ["design-patterns", "state", "comportamental"],
+    "keywords": ["state pattern", "padrao state", "maquina de estados"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-proxy",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Proxy",
+    "description": "Fornece um substituto ou intermediário para outro objeto, controlando o acesso a ele — usado para lazy loading, controle de acesso, cache ou logging transparente.",
+    "syntax": "class Proxy implements Interface {\n  constructor(private real: Interface) {}\n  operacao() { /* lógica extra */ return this.real.operacao() }\n}",
+    "example": "class ImagemProxy implements Imagem {\n  private real: ImagemReal | null = null\n  constructor(private caminho: string) {}\n  exibir() {\n    if (!this.real) this.real = new ImagemReal(this.caminho)\n    this.real.exibir()\n  }\n}",
+    "result": "A imagem pesada só é carregada de fato (`ImagemReal`) na primeira chamada a `exibir()`, implementando lazy loading transparente.",
+    "notes": [
+      "Proxy tem a mesma interface do objeto real, tornando a substituição transparente para o código cliente."
+    ],
+    "bestPractices": [
+      "Use Proxy para adicionar controle de acesso, cache ou lazy loading sem que o código cliente perceba a diferença."
+    ],
+    "commonMistakes": [
+      "Confundir Proxy com Decorator — Proxy controla acesso ao objeto real (podendo até negar a chamada); Decorator sempre delega e adiciona comportamento."
+    ],
+    "relatedCommands": ["pattern-decorator"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/proxy",
+    "externalReferences": [],
+    "tags": ["design-patterns", "proxy", "estrutural"],
+    "keywords": ["proxy pattern", "padrao proxy", "lazy loading"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-composite",
+    "category": "Design Patterns",
+    "subcategory": "Padrões estruturais",
+    "title": "Composite",
+    "description": "Compõe objetos em estruturas de árvore para representar hierarquias parte-todo, permitindo que o código cliente trate objetos individuais e composições de forma uniforme.",
+    "syntax": "interface Componente { renderizar(): string }\nclass Composto implements Componente {\n  filhos: Componente[] = []\n  renderizar() { return this.filhos.map((f) => f.renderizar()).join() }\n}",
+    "example": "interface ItemMenu { calcularPreco(): number }\nclass Prato implements ItemMenu {\n  constructor(private preco: number) {}\n  calcularPreco() { return this.preco }\n}\nclass Combo implements ItemMenu {\n  private itens: ItemMenu[] = []\n  adicionar(item: ItemMenu) { this.itens.push(item) }\n  calcularPreco() { return this.itens.reduce((s, i) => s + i.calcularPreco(), 0) }\n}",
+    "result": "`combo.calcularPreco()` funciona igual a `prato.calcularPreco()` do ponto de vista do código cliente, mesmo sendo uma composição de vários itens.",
+    "notes": [
+      "É a estrutura clássica por trás de árvores de componentes de UI, sistemas de arquivos (pastas/arquivos) e menus aninhados."
+    ],
+    "bestPractices": [
+      "Use Composite quando a estrutura de dados for naturalmente uma árvore e o cliente precisar tratar folhas e galhos de forma uniforme."
+    ],
+    "commonMistakes": [
+      "Forçar Composite em estruturas que não são realmente hierárquicas, complicando o modelo sem necessidade."
+    ],
+    "relatedCommands": ["pattern-decorator"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/composite",
+    "externalReferences": [],
+    "tags": ["design-patterns", "composite", "estrutural"],
+    "keywords": ["composite pattern", "padrao composite", "estrutura de arvore"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-chain-of-responsibility",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Chain of Responsibility",
+    "description": "Encadeia múltiplos handlers, passando uma requisição de um para o próximo até que algum a processe, evitando acoplar o emissor a um handler específico.",
+    "syntax": "abstract class Handler {\n  private proximo: Handler\n  setProximo(h: Handler) { this.proximo = h; return h }\n  tratar(req) { return this.proximo?.tratar(req) }\n}",
+    "example": "class ValidacaoHandler extends Handler {\n  tratar(req) {\n    if (!req.valido) return \"Requisição inválida\"\n    return super.tratar(req)\n  }\n}\nclass AutenticacaoHandler extends Handler {\n  tratar(req) {\n    if (!req.autenticado) return \"Não autenticado\"\n    return super.tratar(req)\n  }\n}",
+    "result": "A requisição passa por validação, depois autenticação, e assim por diante, até ser tratada ou rejeitada por algum elo da cadeia.",
+    "notes": [
+      "Middlewares em frameworks web (Express, Koa) são uma aplicação direta desse padrão."
+    ],
+    "bestPractices": [
+      "Use Chain of Responsibility para pipelines de processamento (validação, autenticação, logging) onde cada etapa é independente."
+    ],
+    "commonMistakes": [
+      "Esquecer de chamar o próximo handler da cadeia, interrompendo o fluxo de processamento silenciosamente."
+    ],
+    "relatedCommands": ["pattern-command"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/chain-of-responsibility",
+    "externalReferences": [],
+    "tags": ["design-patterns", "chain of responsibility", "comportamental"],
+    "keywords": [
+      "chain of responsibility",
+      "padrao cadeia de responsabilidade",
+      "middleware pattern"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-template-method",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Template Method",
+    "description": "Define o esqueleto de um algoritmo em um método na classe base, deixando que subclasses sobrescrevam apenas passos específicos sem alterar a estrutura geral.",
+    "syntax": "abstract class Algoritmo {\n  executar() { this.passo1(); this.passo2() }\n  abstract passo2(): void\n}",
+    "example": "abstract class RelatorioBase {\n  gerar() {\n    const dados = this.buscarDados()\n    return this.formatar(dados)\n  }\n  abstract buscarDados(): any[]\n  abstract formatar(dados: any[]): string\n}\nclass RelatorioPDF extends RelatorioBase {\n  buscarDados() { return [] }\n  formatar(dados) { return \"PDF gerado\" }\n}",
+    "result": "`gerar()` sempre segue a mesma sequência (buscar → formatar), mas cada subclasse define sua própria forma de buscar e formatar os dados.",
+    "notes": [
+      "Aplica o 'princípio de Hollywood': 'não nos chame, nós te chamamos' — a classe base controla o fluxo, as subclasses só preenchem os detalhes."
+    ],
+    "bestPractices": [
+      "Use Template Method quando múltiplos algoritmos compartilham a mesma estrutura geral, mas diferem em passos específicos."
+    ],
+    "commonMistakes": [
+      "Criar métodos abstratos demais no template, tornando as subclasses tão complexas quanto reimplementar o algoritmo do zero."
+    ],
+    "relatedCommands": ["pattern-strategy"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/template-method",
+    "externalReferences": [],
+    "tags": ["design-patterns", "template method", "comportamental"],
+    "keywords": ["template method", "padrao template method", "esqueleto de algoritmo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-iterator",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Iterator",
+    "description": "Fornece uma forma de percorrer os elementos de uma coleção sequencialmente sem expor sua estrutura interna (array, árvore, lista encadeada).",
+    "syntax": "interface Iterador<T> {\n  temProximo(): boolean\n  proximo(): T\n}",
+    "example": "class ColecaoPersonalizada implements Iterable<number> {\n  private itens = [1, 2, 3]\n  [Symbol.iterator]() {\n    let i = 0\n    return {\n      next: () => i < this.itens.length\n        ? { value: this.itens[i++], done: false }\n        : { value: undefined, done: true }\n    }\n  }\n}\nfor (const item of new ColecaoPersonalizada()) { console.log(item) }",
+    "result": "A coleção customizada funciona diretamente com `for...of`, sem que o código cliente precise conhecer sua estrutura interna.",
+    "notes": [
+      "Em JavaScript/TypeScript, o protocolo `Symbol.iterator` é a implementação nativa desse padrão."
+    ],
+    "bestPractices": [
+      "Implemente o protocolo iterável nativo da linguagem em vez de criar uma API de iteração customizada, mantendo compatibilidade com `for...of`, spread, etc."
+    ],
+    "commonMistakes": [
+      "Expor a estrutura de dados interna (o array bruto) em vez de fornecer um iterador, acoplando o cliente à implementação."
+    ],
+    "relatedCommands": ["pattern-composite"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/iterator",
+    "externalReferences": [],
+    "tags": ["design-patterns", "iterator", "comportamental"],
+    "keywords": ["iterator pattern", "padrao iterator", "percorrer colecao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "pattern-mediator",
+    "category": "Design Patterns",
+    "subcategory": "Padrões comportamentais",
+    "title": "Mediator",
+    "description": "Centraliza a comunicação entre múltiplos objetos em um único objeto mediador, evitando que eles se referenciem diretamente uns aos outros (acoplamento muitos-para-muitos).",
+    "syntax": "class Mediador {\n  notificar(remetente, evento) { /* decide o que fazer */ }\n}",
+    "example": "class FormularioMediador {\n  constructor(private campoEmail, private botaoEnviar) {}\n  onCampoAlterado() {\n    this.botaoEnviar.habilitado = this.campoEmail.valido\n  }\n}",
+    "result": "`campoEmail` e `botaoEnviar` não se conhecem diretamente — toda a coordenação passa pelo `FormularioMediador`.",
+    "notes": [
+      "Reduz o acoplamento muitos-para-muitos entre componentes, concentrando a lógica de coordenação em um só lugar (que pode virar complexo se mal gerenciado)."
+    ],
+    "bestPractices": [
+      "Use Mediator quando um grupo de objetos se comunica de forma complexa e emaranhada, centralizando as regras de interação."
+    ],
+    "commonMistakes": [
+      "Deixar o Mediator crescer indefinidamente até virar um 'god object' que conhece e controla todos os detalhes do sistema."
+    ],
+    "relatedCommands": ["pattern-observer"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "GoF",
+    "officialDocumentation": "https://refactoring.guru/design-patterns/mediator",
+    "externalReferences": [],
+    "tags": ["design-patterns", "mediator", "comportamental"],
+    "keywords": ["mediator pattern", "padrao mediator", "desacoplamento de componentes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

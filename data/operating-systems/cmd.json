@@ -619,7 +619,12 @@
     "commonMistakes": [
       "Concluir que um servidor está indisponível apenas por não responder a PING, sem testar a porta/serviço real."
     ],
-    "relatedCommands": ["cmd-ipconfig", "cmd-tracert", "cmd-netstat"],
+    "relatedCommands": [
+      "cmd-ipconfig",
+      "cmd-tracert",
+      "cmd-netstat",
+      "cmd-shortcut-ctrl-c"
+    ],
     "difficulty": "iniciante",
     "platform": ["windows"],
     "version": "Todas as versões do Windows",
@@ -1185,5 +1190,194 @@
     "keywords": ["where", "which windows", "localizar executavel"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "cmd-shortcut-f7-history",
+    "category": "CMD",
+    "subcategory": "Atalhos de teclado",
+    "title": "F7 (histórico de comandos)",
+    "description": "Abre uma janela pop-up com o histórico de comandos já digitados na sessão atual do Prompt de Comando, permitindo navegar e reexecutar um deles.",
+    "shortcut": "F7",
+    "example": "Pressione F7 após digitar vários comandos na sessão.",
+    "result": "Uma caixa com a lista numerada dos últimos comandos aparece; use as setas para escolher e Enter para executar.",
+    "notes": [
+      "Esc fecha a janela de histórico sem executar nada.",
+      "O histórico é limpo ao fechar a janela do Prompt de Comando."
+    ],
+    "bestPractices": [
+      "Use F7 em vez de redigitar comandos longos já executados na mesma sessão."
+    ],
+    "commonMistakes": [
+      "Confundir F7 com a seta ↑, que navega o histórico comando a comando em vez de abrir a lista completa."
+    ],
+    "relatedCommands": ["cmd-shortcut-f3-f8"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "atalho", "historico"],
+    "keywords": ["f7 cmd", "historico de comandos cmd", "atalho prompt de comando"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-shortcut-tab",
+    "category": "CMD",
+    "subcategory": "Atalhos de teclado",
+    "title": "Tab (autocompletar caminhos)",
+    "description": "Autocompleta nomes de arquivos e pastas no caminho digitado; pressionar repetidamente Tab alterna entre as correspondências possíveis.",
+    "shortcut": "Tab",
+    "example": "Digite `cd C:\\Prog` e pressione Tab.",
+    "result": "cd C:\\Program Files\\ (ou próxima correspondência ao pressionar Tab novamente)",
+    "notes": ["Shift+Tab percorre as correspondências na ordem inversa."],
+    "bestPractices": [
+      "Use Tab para evitar erros de digitação em caminhos longos com espaços ou acentos."
+    ],
+    "commonMistakes": [
+      "Não perceber que Tab cicla entre múltiplas correspondências e continuar pressionando até passar da opção desejada."
+    ],
+    "relatedCommands": ["cmd-dir", "cmd-cd"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "atalho", "autocompletar"],
+    "keywords": [
+      "tab cmd",
+      "autocompletar caminho cmd",
+      "autocomplete prompt de comando"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-shortcut-ctrl-c",
+    "category": "CMD",
+    "subcategory": "Atalhos de teclado",
+    "title": "Ctrl+C (interromper comando)",
+    "description": "Interrompe (envia um sinal de cancelamento) o comando em execução no Prompt de Comando, encerrando-o antes de terminar naturalmente.",
+    "shortcut": "Ctrl+C",
+    "example": "Durante um `ping -t` contínuo, pressione Ctrl+C.",
+    "result": "O comando é interrompido e o prompt volta a aceitar novos comandos.",
+    "notes": [
+      "Alguns comandos perguntam 'Terminate batch job (Y/N)?' ao receber Ctrl+C dentro de um script .bat."
+    ],
+    "bestPractices": [
+      "Use Ctrl+C para interromper comandos de longa duração (ping -t, tracert, loops infinitos em scripts) em vez de fechar a janela do console."
+    ],
+    "commonMistakes": [
+      "Fechar a janela inteira do CMD para parar um comando, perdendo o contexto da sessão, quando Ctrl+C resolveria."
+    ],
+    "relatedCommands": ["cmd-ping"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "atalho"],
+    "keywords": [
+      "ctrl+c cmd",
+      "cancelar comando windows",
+      "interromper prompt de comando"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-shortcut-f3-f8",
+    "category": "CMD",
+    "subcategory": "Atalhos de teclado",
+    "title": "F3 / F8 (repetir e ciclar histórico)",
+    "description": "F3 repete o último comando digitado por completo; F8 cicla pelo histórico filtrando pelos comandos que começam com o texto já digitado.",
+    "shortcut": "F3, F8",
+    "example": "Digite `git` e pressione F8 repetidamente.",
+    "result": "O CMD percorre, um a um, os comandos anteriores da sessão que começam com 'git'.",
+    "flags": [
+      { "flag": "F3", "description": "Repete o último comando inteiro digitado." },
+      {
+        "flag": "F8",
+        "description": "Cicla pelo histórico filtrando pelo prefixo já digitado na linha."
+      }
+    ],
+    "notes": [
+      "F5 cicla pelo histórico completo (sem filtro) sem abrir a janela pop-up do F7."
+    ],
+    "bestPractices": [
+      "Combine F8 com um prefixo específico para achar rapidamente um comando específico em sessões com histórico longo."
+    ],
+    "commonMistakes": [
+      "Confundir F3 (repete o último comando) com F8 (cicla pelo histórico filtrado), esperando comportamentos trocados."
+    ],
+    "relatedCommands": ["cmd-shortcut-f7-history"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "atalho", "historico"],
+    "keywords": ["f3 cmd", "f8 cmd", "repetir comando windows", "historico filtrado cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-wmic",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "wmic",
+    "description": "Interface de linha de comando para o WMI (Windows Management Instrumentation), permitindo consultar e alterar praticamente qualquer informação de hardware, sistema operacional e configuração de forma estruturada.",
+    "syntax": "WMIC <alias> [WHERE <condição>] GET <propriedades> [/FORMAT:<formato>]",
+    "example": "wmic process where name=\"node.exe\" get processid,workingsetsize",
+    "result": "Lista o PID e o consumo de memória (em bytes) de cada processo node.exe em execução, em formato tabular.",
+    "notes": [
+      "A Microsoft descontinuou o WMIC em versões recentes do Windows em favor do PowerShell (`Get-CimInstance`), embora ainda funcione em muitas instalações.",
+      "`wmic os get caption,version` é um atalho rápido para ver a versão exata do Windows instalado."
+    ],
+    "bestPractices": [
+      "Em scripts novos, prefira `Get-CimInstance`/`Get-WmiObject` do PowerShell — o WMIC está em processo de descontinuação pela Microsoft."
+    ],
+    "commonMistakes": [
+      "Depender do WMIC em scripts de longo prazo sem saber que o comando pode não estar disponível em instalações futuras do Windows."
+    ],
+    "relatedCommands": ["cmd-tasklist", "cmd-systeminfo"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Windows XP a Windows 10/11 (descontinuado)",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/wmic",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "wmi", "sistema"],
+    "keywords": ["wmic", "windows management instrumentation", "consultar sistema cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "cmd-assoc-ftype",
+    "category": "CMD",
+    "subcategory": "Sistema e disco",
+    "title": "assoc / ftype",
+    "description": "ASSOC exibe ou define qual extensão de arquivo está associada a um tipo de arquivo; FTYPE define qual comando/programa é executado ao abrir arquivos daquele tipo.",
+    "syntax": "ASSOC [.ext[=tipoDeArquivo]]\nFTYPE [tipoDeArquivo[=comando]]",
+    "example": "assoc .log\nftype txtfile",
+    "result": ".log=txtfile\ntxtfile=%SystemRoot%\\system32\\NOTEPAD.EXE %1",
+    "notes": [
+      "ASSOC liga a extensão a um 'tipo de arquivo' nomeado; FTYPE liga esse tipo nomeado ao programa que de fato o abre — os dois trabalham em conjunto."
+    ],
+    "bestPractices": [
+      "Antes de alterar uma associação, rode `assoc .ext` e `ftype tipo` sem argumentos para anotar os valores originais, permitindo reverter."
+    ],
+    "commonMistakes": [
+      "Sobrescrever a associação de uma extensão de sistema (como .exe ou .bat) sem entender o impacto, tornando arquivos essenciais inexecutáveis por duplo clique."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Todas as versões do Windows",
+    "officialDocumentation": "https://learn.microsoft.com/windows-server/administration/windows-commands/assoc",
+    "externalReferences": [],
+    "tags": ["cmd", "windows", "associacao de arquivos"],
+    "keywords": ["assoc", "ftype", "associar extensao windows", "tipo de arquivo cmd"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

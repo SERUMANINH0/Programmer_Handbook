@@ -69,5 +69,737 @@
     "keywords": ["explain analyze", "plano de execucao", "query performance"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "postgres-joins",
+    "category": "PostgreSQL",
+    "subcategory": "Consultas",
+    "title": "JOINs (INNER, LEFT, RIGHT, FULL)",
+    "description": "Combina linhas de duas ou mais tabelas com base em uma condição de relacionamento, com diferentes comportamentos para linhas sem correspondência.",
+    "syntax": "SELECT ... FROM tabelaA\nINNER JOIN tabelaB ON tabelaA.id = tabelaB.a_id",
+    "example": "SELECT pedidos.id, clientes.nome\nFROM pedidos\nLEFT JOIN clientes ON pedidos.cliente_id = clientes.id;",
+    "result": "Todos os pedidos são retornados, mesmo os sem cliente associado (nome fica NULL nesse caso, por causa do LEFT JOIN).",
+    "notes": [
+      "INNER JOIN retorna só linhas com correspondência em ambas as tabelas; LEFT/RIGHT JOIN preservam todas as linhas de um dos lados; FULL JOIN preserva ambos os lados."
+    ],
+    "bestPractices": [
+      "Sempre indexe as colunas usadas na condição de JOIN (geralmente chaves estrangeiras) para evitar Seq Scans custosos."
+    ],
+    "commonMistakes": [
+      "Usar INNER JOIN quando o objetivo era listar todos os registros de uma tabela, mesmo sem correspondência — nesse caso o correto é LEFT JOIN."
+    ],
+    "relatedCommands": ["postgres-create-index", "postgres-subqueries"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-JOIN",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "join"],
+    "keywords": ["inner join", "left join", "right join", "full join"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-transactions",
+    "category": "PostgreSQL",
+    "subcategory": "Transações",
+    "title": "BEGIN / COMMIT / ROLLBACK",
+    "description": "Agrupa múltiplas operações em uma transação atômica: todas são aplicadas com COMMIT ou nenhuma é aplicada com ROLLBACK.",
+    "syntax": "BEGIN;\n<comandos>\nCOMMIT;   -- ou ROLLBACK;",
+    "example": "BEGIN;\nUPDATE contas SET saldo = saldo - 100 WHERE id = 1;\nUPDATE contas SET saldo = saldo + 100 WHERE id = 2;\nCOMMIT;",
+    "result": "As duas atualizações (débito e crédito) são aplicadas juntas ou nenhuma delas é, garantindo consistência mesmo em caso de falha no meio do processo.",
+    "notes": [
+      "Fora de um bloco explícito, cada comando SQL roda em sua própria transação implícita (autocommit)."
+    ],
+    "bestPractices": [
+      "Mantenha transações curtas — transações longas seguram locks por mais tempo e aumentam o risco de contenção."
+    ],
+    "commonMistakes": [
+      "Esquecer o COMMIT/ROLLBACK final, deixando a transação aberta e segurando locks indefinidamente."
+    ],
+    "relatedCommands": ["postgres-transaction-isolation"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-begin.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "transacoes"],
+    "keywords": ["begin commit rollback", "transacao sql", "atomicidade"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-cte",
+    "category": "PostgreSQL",
+    "subcategory": "Consultas",
+    "title": "CTE (WITH)",
+    "description": "Common Table Expression: define uma consulta nomeada e temporária que pode ser referenciada dentro da query principal, melhorando legibilidade de queries complexas.",
+    "syntax": "WITH nome_cte AS (\n  SELECT ...\n)\nSELECT * FROM nome_cte WHERE ...;",
+    "example": "WITH vendas_por_mes AS (\n  SELECT date_trunc('month', criado_em) AS mes, SUM(total) AS total\n  FROM pedidos\n  GROUP BY 1\n)\nSELECT * FROM vendas_por_mes WHERE total > 10000;",
+    "result": "A CTE 'vendas_por_mes' é calculada uma vez e depois filtrada na query externa, como se fosse uma tabela temporária.",
+    "notes": [
+      "CTEs recursivas (`WITH RECURSIVE`) permitem consultas hierárquicas, como percorrer uma árvore de categorias."
+    ],
+    "bestPractices": [
+      "Use CTEs para quebrar queries complexas em passos nomeados e legíveis, em vez de subqueries profundamente aninhadas."
+    ],
+    "commonMistakes": [
+      "Assumir que toda CTE é materializada (cacheada) automaticamente — desde o Postgres 12, o otimizador pode inline CTEs simples."
+    ],
+    "relatedCommands": ["postgres-window-functions", "postgres-subqueries"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "8.4+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/queries-with.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "cte"],
+    "keywords": ["with", "cte sql", "common table expression"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-window-functions",
+    "category": "PostgreSQL",
+    "subcategory": "Consultas",
+    "title": "Window functions (OVER / PARTITION BY)",
+    "description": "Calcula valores agregados (soma, ranking, média móvel) por linha, mantendo todas as linhas individuais no resultado — diferente de GROUP BY, que colapsa linhas em grupos.",
+    "syntax": "funcao() OVER (PARTITION BY coluna ORDER BY coluna)",
+    "example": "SELECT nome, salario,\n  RANK() OVER (PARTITION BY departamento ORDER BY salario DESC) AS ranking\nFROM funcionarios;",
+    "result": "Cada funcionário aparece em sua própria linha, com o ranking de salário calculado dentro do seu departamento.",
+    "notes": [
+      "Funções comuns: ROW_NUMBER(), RANK(), DENSE_RANK(), LAG()/LEAD() (linha anterior/seguinte), SUM()/AVG() OVER (médias móveis)."
+    ],
+    "bestPractices": [
+      "Use window functions em vez de subqueries correlacionadas para rankings e comparações entre linhas — geralmente mais performático e legível."
+    ],
+    "commonMistakes": [
+      "Confundir PARTITION BY (agrupa para o cálculo, mas mantém as linhas) com GROUP BY (colapsa as linhas em um único resultado por grupo)."
+    ],
+    "relatedCommands": ["postgres-cte"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "8.4+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/tutorial-window.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "window functions"],
+    "keywords": ["window functions", "over partition by", "rank row_number"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-constraints",
+    "category": "PostgreSQL",
+    "subcategory": "Modelagem",
+    "title": "Constraints (PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK)",
+    "description": "Regras aplicadas pelo banco para garantir integridade dos dados: chave primária, chave estrangeira, unicidade e validações customizadas de valor.",
+    "syntax": "CREATE TABLE tabela (\n  id SERIAL PRIMARY KEY,\n  email TEXT UNIQUE NOT NULL,\n  idade INT CHECK (idade >= 0),\n  categoria_id INT REFERENCES categorias(id)\n);",
+    "example": "ALTER TABLE pedidos ADD CONSTRAINT fk_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id);",
+    "result": "O banco passa a rejeitar INSERTs/UPDATEs que violem a constraint, como um cliente_id inexistente.",
+    "notes": [
+      "FOREIGN KEY pode ter `ON DELETE CASCADE`/`SET NULL`/`RESTRICT` para definir o comportamento ao excluir o registro referenciado."
+    ],
+    "bestPractices": [
+      "Modele constraints no schema em vez de validar integridade referencial só na aplicação — o banco é a última linha de defesa."
+    ],
+    "commonMistakes": [
+      "Usar `ON DELETE CASCADE` sem entender o efeito em cadeia, apagando registros relacionados inesperadamente."
+    ],
+    "relatedCommands": ["postgres-alter-table"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/ddl-constraints.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "constraints"],
+    "keywords": ["primary key", "foreign key", "unique", "check constraint"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-views",
+    "category": "PostgreSQL",
+    "subcategory": "Modelagem",
+    "title": "Views e Materialized Views",
+    "description": "Uma View salva uma consulta como se fosse uma tabela virtual, sempre executada em tempo real; uma Materialized View armazena o resultado fisicamente, exigindo REFRESH manual para atualizar.",
+    "syntax": "CREATE VIEW nome AS SELECT ...;\nCREATE MATERIALIZED VIEW nome AS SELECT ...;\nREFRESH MATERIALIZED VIEW nome;",
+    "example": "CREATE MATERIALIZED VIEW resumo_vendas AS\nSELECT produto_id, SUM(quantidade) AS total\nFROM itens_pedido GROUP BY produto_id;",
+    "result": "A view materializada armazena o resultado agregado; consultas nela são instantâneas até o próximo REFRESH.",
+    "notes": [
+      "`REFRESH MATERIALIZED VIEW CONCURRENTLY` evita travar leituras durante a atualização, mas exige um índice único na view."
+    ],
+    "bestPractices": [
+      "Use Materialized Views para relatórios pesados que não precisam de dados em tempo real, agendando REFRESH periódico."
+    ],
+    "commonMistakes": [
+      "Esperar que uma Materialized View reflita mudanças automaticamente, sem rodar REFRESH."
+    ],
+    "relatedCommands": ["postgres-cte"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "9.3+ (materialized views)",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-creatematerializedview.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "views"],
+    "keywords": ["create view", "materialized view", "refresh materialized view"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-triggers",
+    "category": "PostgreSQL",
+    "subcategory": "Automação",
+    "title": "Triggers",
+    "description": "Executa automaticamente uma função quando um evento (INSERT, UPDATE, DELETE) ocorre em uma tabela, antes ou depois da operação.",
+    "syntax": "CREATE TRIGGER nome\n  BEFORE|AFTER INSERT|UPDATE|DELETE ON tabela\n  FOR EACH ROW EXECUTE FUNCTION funcao();",
+    "example": "CREATE TRIGGER atualizar_timestamp\n  BEFORE UPDATE ON pedidos\n  FOR EACH ROW EXECUTE FUNCTION set_updated_at();",
+    "result": "Toda vez que um pedido é atualizado, a função `set_updated_at` roda automaticamente antes de gravar, atualizando a coluna `updated_at`.",
+    "notes": [
+      "Triggers `BEFORE` podem modificar a linha antes de salvá-la; triggers `AFTER` são usadas para efeitos colaterais (auditoria, notificações)."
+    ],
+    "bestPractices": [
+      "Use triggers para invariantes de dados (como timestamps automáticos), mas evite lógica de negócio complexa nelas — fica difícil de testar e depurar."
+    ],
+    "commonMistakes": [
+      "Criar triggers com efeitos colaterais não óbvios, dificultando entender por que um UPDATE simples afeta outras tabelas."
+    ],
+    "relatedCommands": ["postgres-functions-plpgsql"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-createtrigger.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "triggers"],
+    "keywords": ["create trigger", "gatilho sql", "before after trigger"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-functions-plpgsql",
+    "category": "PostgreSQL",
+    "subcategory": "Automação",
+    "title": "Funções em PL/pgSQL",
+    "description": "Linguagem procedural do PostgreSQL para escrever funções e stored procedures com lógica imperativa (variáveis, loops, condicionais) executada dentro do banco.",
+    "syntax": "CREATE FUNCTION nome(parametros) RETURNS tipo AS $$\nBEGIN\n  -- lógica\n  RETURN valor;\nEND;\n$$ LANGUAGE plpgsql;",
+    "example": "CREATE FUNCTION calcular_desconto(preco NUMERIC, percentual NUMERIC)\nRETURNS NUMERIC AS $$\nBEGIN\n  RETURN preco - (preco * percentual / 100);\nEND;\n$$ LANGUAGE plpgsql;",
+    "result": "A função pode ser chamada como `SELECT calcular_desconto(100, 10)`, retornando `90`.",
+    "notes": [
+      "Funções podem ser `IMMUTABLE`, `STABLE` ou `VOLATILE`, afetando como o otimizador de queries pode cachear seus resultados."
+    ],
+    "bestPractices": [
+      "Prefira lógica de negócio na aplicação; use funções no banco principalmente para regras de integridade e performance (evitar múltiplas viagens ao banco)."
+    ],
+    "commonMistakes": [
+      "Escrever lógica de negócio complexa em PL/pgSQL, dificultando versionamento, testes e portabilidade entre bancos."
+    ],
+    "relatedCommands": ["postgres-triggers"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/plpgsql.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "plpgsql", "funcoes"],
+    "keywords": ["plpgsql", "create function", "stored procedure postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-json-jsonb",
+    "category": "PostgreSQL",
+    "subcategory": "Tipos de dados",
+    "title": "JSON e JSONB",
+    "description": "Tipos nativos para armazenar dados semiestruturados; JSON preserva o texto original, enquanto JSONB armazena em formato binário indexável, mais rápido para consultas.",
+    "syntax": "coluna JSONB\nSELECT coluna->'chave', coluna->>'chave' FROM tabela;",
+    "example": "SELECT dados->>'nome' AS nome\nFROM usuarios\nWHERE dados @> '{\"ativo\": true}';",
+    "result": "Retorna o campo 'nome' extraído do JSON para usuários cujo campo 'ativo' seja `true`.",
+    "notes": [
+      "`->` retorna um JSON/JSONB; `->>` retorna texto. `@>` verifica se o JSONB contém o objeto especificado (usa índice GIN)."
+    ],
+    "bestPractices": [
+      "Prefira JSONB a JSON na maioria dos casos e crie um índice GIN na coluna para acelerar buscas por chave/valor."
+    ],
+    "commonMistakes": [
+      "Usar JSONB como substituto de um schema relacional bem modelado, perdendo constraints e integridade referencial."
+    ],
+    "relatedCommands": ["postgres-create-index"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "9.4+ (JSONB)",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/datatype-json.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "json", "jsonb"],
+    "keywords": ["jsonb postgres", "json postgres", "consultar json sql"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-full-text-search",
+    "category": "PostgreSQL",
+    "subcategory": "Busca",
+    "title": "Full-text search (tsvector / tsquery)",
+    "description": "Mecanismo nativo de busca textual que entende variações de palavra (stemming), relevância e idioma, sem depender de um serviço externo como Elasticsearch para casos simples.",
+    "syntax": "SELECT * FROM tabela\nWHERE to_tsvector('portuguese', coluna) @@ to_tsquery('portuguese', 'termo');",
+    "example": "SELECT titulo FROM artigos\nWHERE to_tsvector('portuguese', titulo || ' ' || corpo) @@ to_tsquery('portuguese', 'postgres & performance');",
+    "result": "Retorna artigos que contenham as palavras 'postgres' e 'performance' (ou suas variações, como 'performático'), independente da ordem no texto.",
+    "notes": [
+      "Um índice GIN sobre a expressão `to_tsvector` é essencial para performance em tabelas grandes."
+    ],
+    "bestPractices": [
+      "Use uma coluna gerada (`GENERATED ALWAYS AS`) armazenando o `tsvector` pré-calculado, em vez de recalculá-lo a cada busca."
+    ],
+    "commonMistakes": [
+      "Usar `LIKE '%termo%'` para busca textual em vez de full-text search, perdendo relevância e performance em tabelas grandes."
+    ],
+    "relatedCommands": ["postgres-create-index"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "8.3+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/textsearch.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "full-text search"],
+    "keywords": ["tsvector", "tsquery", "busca textual postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-vacuum",
+    "category": "PostgreSQL",
+    "subcategory": "Manutenção",
+    "title": "VACUUM e autovacuum",
+    "description": "Recupera espaço ocupado por linhas 'mortas' (deletadas ou atualizadas via MVCC) e atualiza estatísticas usadas pelo otimizador de queries.",
+    "syntax": "VACUUM [ANALYZE] [tabela];\nVACUUM FULL [tabela];",
+    "example": "VACUUM ANALYZE pedidos;",
+    "result": "Espaço de linhas mortas é marcado como reutilizável e as estatísticas da tabela `pedidos` são atualizadas.",
+    "notes": [
+      "`autovacuum` roda automaticamente em background; `VACUUM FULL` reescreve a tabela inteira (bloqueante) e só deve ser usado quando necessário."
+    ],
+    "bestPractices": [
+      "Monitore o autovacuum em tabelas com muita escrita/atualização; ajuste seus parâmetros (`autovacuum_vacuum_scale_factor`) se necessário em vez de desabilitá-lo."
+    ],
+    "commonMistakes": [
+      "Desabilitar o autovacuum para 'ganhar performance', causando bloat (inchaço) da tabela e degradação progressiva das queries."
+    ],
+    "relatedCommands": ["postgres-explain-analyze"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-vacuum.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "vacuum", "manutencao"],
+    "keywords": ["vacuum postgres", "autovacuum", "bloat de tabela"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-migrations",
+    "category": "PostgreSQL",
+    "subcategory": "Fluxo de trabalho",
+    "title": "Migrations (versionamento de schema)",
+    "description": "Prática de versionar mudanças no schema do banco (criar/alterar tabelas) como scripts sequenciais e reversíveis, aplicados de forma controlada em cada ambiente.",
+    "syntax": "-- 0001_criar_tabela_usuarios.up.sql\nCREATE TABLE usuarios (...);\n-- 0001_criar_tabela_usuarios.down.sql\nDROP TABLE usuarios;",
+    "example": "Ferramentas comuns: Prisma Migrate, Flyway, Alembic (Python), node-pg-migrate, golang-migrate.",
+    "result": "Cada ambiente (dev, staging, produção) pode aplicar as mesmas migrations na mesma ordem, mantendo o schema sincronizado com o código.",
+    "notes": [
+      "Migrations 'down' (reversão) nem sempre são possíveis sem perda de dados — algumas mudanças (como DROP COLUMN) são destrutivas."
+    ],
+    "bestPractices": [
+      "Nunca edite uma migration já aplicada em produção; crie uma nova migration para corrigir/complementar."
+    ],
+    "commonMistakes": [
+      "Alterar o schema manualmente em produção fora do fluxo de migrations, dessincronizando o histórico versionado do estado real do banco."
+    ],
+    "relatedCommands": ["postgres-alter-table"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "N/A",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/ddl.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "migrations"],
+    "keywords": ["migrations sql", "versionamento de schema", "database migrations"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-connection-pooling",
+    "category": "PostgreSQL",
+    "subcategory": "Performance",
+    "title": "Connection Pooling (PgBouncer)",
+    "description": "Camada intermediária que reutiliza um número limitado de conexões físicas ao banco entre muitas conexões lógicas da aplicação, evitando o custo de abrir/fechar conexões PostgreSQL repetidamente.",
+    "syntax": "aplicação → PgBouncer (porta 6432) → PostgreSQL (porta 5432)",
+    "example": "Configurar `pool_mode = transaction` no pgbouncer.ini para compartilhar conexões entre requisições de curta duração.",
+    "result": "Centenas de conexões de aplicação (ex: serverless/lambdas) são multiplexadas em um pool pequeno de conexões reais ao Postgres.",
+    "notes": [
+      "Cada conexão PostgreSQL consome memória do servidor (~10MB); sem pooling, muitas conexões simultâneas podem esgotar recursos rapidamente."
+    ],
+    "bestPractices": [
+      "Use connection pooling (PgBouncer, ou pooling do provedor cloud) em arquiteturas serverless, onde cada invocação abriria uma nova conexão."
+    ],
+    "commonMistakes": [
+      "Usar `pool_mode = transaction` com features que exigem estado de sessão (como prepared statements nomeados), causando comportamento inesperado."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "sql",
+    "version": "N/A",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/runtime-config-connection.html",
+    "externalReferences": [
+      { "label": "PgBouncer — Documentação", "url": "https://www.pgbouncer.org/" }
+    ],
+    "tags": ["postgresql", "connection pooling", "pgbouncer"],
+    "keywords": ["connection pooling postgres", "pgbouncer", "pool de conexoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-group-by-having",
+    "category": "PostgreSQL",
+    "subcategory": "Consultas",
+    "title": "GROUP BY e HAVING",
+    "description": "GROUP BY agrupa linhas com valores iguais em uma coluna para aplicar funções agregadas (COUNT, SUM, AVG); HAVING filtra os grupos resultantes, diferente de WHERE, que filtra linhas antes do agrupamento.",
+    "syntax": "SELECT coluna, AGREGACAO(outra_coluna)\nFROM tabela\nGROUP BY coluna\nHAVING condicao_sobre_agregacao;",
+    "example": "SELECT cliente_id, COUNT(*) AS total_pedidos\nFROM pedidos\nGROUP BY cliente_id\nHAVING COUNT(*) > 10;",
+    "result": "Retorna apenas os clientes que fizeram mais de 10 pedidos.",
+    "notes": [
+      "WHERE filtra antes do agrupamento (linha a linha); HAVING filtra depois, sobre o resultado já agregado."
+    ],
+    "bestPractices": [
+      "Use WHERE para reduzir o volume de linhas antes de agrupar, em vez de filtrar tudo só no HAVING — melhora performance."
+    ],
+    "commonMistakes": [
+      "Tentar usar uma função agregada (COUNT, SUM) dentro de WHERE, o que gera erro de sintaxe — o correto é usar HAVING."
+    ],
+    "relatedCommands": ["postgres-window-functions"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/tutorial-agg.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "group by", "having"],
+    "keywords": ["group by sql", "having sql", "funcoes agregadas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-upsert",
+    "category": "PostgreSQL",
+    "subcategory": "Manipulação de dados",
+    "title": "UPSERT (INSERT ... ON CONFLICT)",
+    "description": "Insere uma linha ou, se já existir um conflito de chave única/primária, atualiza a linha existente — evita ter que fazer SELECT + IF + INSERT/UPDATE manualmente.",
+    "syntax": "INSERT INTO tabela (colunas) VALUES (valores)\nON CONFLICT (coluna_unica) DO UPDATE SET coluna = EXCLUDED.coluna;",
+    "example": "INSERT INTO contadores (chave, total) VALUES ('visitas', 1)\nON CONFLICT (chave) DO UPDATE SET total = contadores.total + 1;",
+    "result": "Se 'visitas' já existir, o contador é incrementado; se não existir, uma nova linha é criada com total = 1.",
+    "notes": [
+      "`ON CONFLICT (coluna) DO NOTHING` ignora silenciosamente o conflito sem atualizar nada."
+    ],
+    "bestPractices": [
+      "Use UPSERT em vez de SELECT seguido de INSERT/UPDATE condicional, evitando condições de corrida (race conditions) entre requisições concorrentes."
+    ],
+    "commonMistakes": [
+      "Esquecer que `ON CONFLICT` exige uma constraint UNIQUE ou PRIMARY KEY na coluna especificada, ou o comando falha."
+    ],
+    "relatedCommands": ["postgres-constraints"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "9.5+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-insert.html#SQL-ON-CONFLICT",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "upsert"],
+    "keywords": ["upsert postgres", "on conflict", "insert on conflict update"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-subqueries",
+    "category": "PostgreSQL",
+    "subcategory": "Consultas",
+    "title": "Subqueries",
+    "description": "Uma consulta SQL aninhada dentro de outra, usada em cláusulas SELECT, FROM, WHERE ou como parte de uma condição (IN, EXISTS).",
+    "syntax": "SELECT * FROM tabela WHERE coluna IN (SELECT coluna FROM outra_tabela WHERE ...);",
+    "example": "SELECT nome FROM clientes\nWHERE id IN (SELECT cliente_id FROM pedidos WHERE total > 1000);",
+    "result": "Retorna clientes que têm ao menos um pedido com total maior que 1000.",
+    "notes": [
+      "`EXISTS` costuma ser mais eficiente que `IN` com subqueries grandes, pois para na primeira correspondência encontrada."
+    ],
+    "bestPractices": [
+      "Prefira JOINs a subqueries correlacionadas quando o resultado final precisa de colunas de ambas as tabelas."
+    ],
+    "commonMistakes": [
+      "Usar subquery correlacionada (que roda uma vez por linha externa) quando um JOIN simples resolveria com muito melhor performance."
+    ],
+    "relatedCommands": ["postgres-joins", "postgres-cte"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/functions-subquery.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "subqueries"],
+    "keywords": ["subquery sql", "subconsulta", "exists in sql"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-pagination",
+    "category": "PostgreSQL",
+    "subcategory": "Performance",
+    "title": "Paginação: LIMIT/OFFSET vs Cursor-based",
+    "description": "LIMIT/OFFSET pula um número fixo de linhas antes de retornar a página, ficando cada vez mais lento em páginas distantes; paginação por cursor (keyset pagination) usa o último valor visto como referência, mantendo performance constante.",
+    "syntax": "-- OFFSET (simples, degrada em páginas altas)\nSELECT * FROM tabela ORDER BY id LIMIT 20 OFFSET 1000;\n\n-- Cursor-based (performático)\nSELECT * FROM tabela WHERE id > ultimo_id_visto ORDER BY id LIMIT 20;",
+    "example": "SELECT * FROM produtos WHERE id > 4500 ORDER BY id LIMIT 20;",
+    "result": "Busca a próxima página a partir do último `id` visto, sem precisar escanear e descartar as 4500 linhas anteriores.",
+    "notes": [
+      "OFFSET precisa escanear (e descartar) todas as linhas anteriores até a página solicitada — o custo cresce linearmente com o número da página."
+    ],
+    "bestPractices": [
+      "Use cursor-based pagination em APIs com listas grandes e paginação profunda (feeds, tabelas de milhões de linhas)."
+    ],
+    "commonMistakes": [
+      "Usar `OFFSET` muito alto em tabelas grandes, causando timeouts em páginas distantes de listagens extensas."
+    ],
+    "relatedCommands": ["postgres-create-index"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/queries-limit.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "paginacao", "performance"],
+    "keywords": ["limit offset", "cursor pagination", "keyset pagination"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-data-types",
+    "category": "PostgreSQL",
+    "subcategory": "Tipos de dados",
+    "title": "Tipos de dados: SERIAL, UUID, ARRAY",
+    "description": "SERIAL gera um inteiro auto-incrementável para chaves primárias; UUID gera identificadores globalmente únicos (úteis em sistemas distribuídos); ARRAY armazena listas de valores em uma única coluna.",
+    "syntax": "id SERIAL PRIMARY KEY\nid UUID DEFAULT gen_random_uuid() PRIMARY KEY\ntags TEXT[]",
+    "example": "CREATE TABLE usuarios (\n  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,\n  tags TEXT[] DEFAULT '{}'\n);",
+    "result": "Cada usuário recebe um UUID único como chave primária; `tags` pode armazenar múltiplos valores como `{\"admin\", \"beta\"}`.",
+    "notes": [
+      "UUID evita colisão entre bancos distribuídos/sharded, mas ocupa mais espaço e é menos amigável para indexação sequencial que SERIAL/BIGSERIAL."
+    ],
+    "bestPractices": [
+      "Use UUID para chaves expostas publicamente (evita enumeração sequencial de IDs) e SERIAL/BIGSERIAL para chaves internas de alta performance."
+    ],
+    "commonMistakes": [
+      "Usar ARRAY para relacionamentos que deveriam ser uma tabela separada (many-to-many), perdendo integridade referencial e capacidade de indexar eficientemente."
+    ],
+    "relatedCommands": ["postgres-constraints"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/datatype.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "tipos de dados"],
+    "keywords": ["serial postgres", "uuid postgres", "array postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-partitioning",
+    "category": "PostgreSQL",
+    "subcategory": "Performance",
+    "title": "Particionamento de tabelas",
+    "description": "Divide uma tabela grande em partições menores (por range, list ou hash), tornando consultas e manutenção mais eficientes ao operar só nas partições relevantes.",
+    "syntax": "CREATE TABLE eventos (id BIGINT, criado_em DATE) PARTITION BY RANGE (criado_em);\nCREATE TABLE eventos_2026_01 PARTITION OF eventos\n  FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');",
+    "example": "Particionar uma tabela de logs por mês, permitindo dropar partições antigas inteiras (`DROP TABLE eventos_2025_01`) em vez de um DELETE lento.",
+    "result": "Queries filtradas por data (`WHERE criado_em >= '2026-01-01'`) escaneiam só a partição relevante (partition pruning), não a tabela inteira.",
+    "notes": [
+      "Particionamento por RANGE é comum para dados temporais (logs, eventos); LIST para categorias discretas; HASH para distribuir carga uniformemente."
+    ],
+    "bestPractices": [
+      "Considere particionamento quando uma tabela ultrapassa dezenas de milhões de linhas e queries filtram consistentemente pela coluna de partição."
+    ],
+    "commonMistakes": [
+      "Particionar prematuramente uma tabela pequena, adicionando complexidade operacional sem ganho real de performance."
+    ],
+    "relatedCommands": ["postgres-create-index"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "10+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/ddl-partitioning.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "particionamento", "performance"],
+    "keywords": ["table partitioning", "particionamento postgres", "partition by range"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-replication",
+    "category": "PostgreSQL",
+    "subcategory": "Alta disponibilidade",
+    "title": "Replicação (streaming replication)",
+    "description": "Mantém uma ou mais réplicas (standby) sincronizadas com o servidor primário via streaming do WAL (Write-Ahead Log), usadas para alta disponibilidade e distribuição de carga de leitura.",
+    "syntax": "primary_conninfo = 'host=primario port=5432 user=replicador'\n-- em recovery.conf / postgresql.auto.conf da réplica",
+    "example": "Uma réplica read-only recebe continuamente os WALs do primário, permitindo direcionar SELECTs pesados para ela e aliviar o servidor principal.",
+    "result": "Em caso de falha do primário, uma réplica pode ser promovida (`pg_promote()`) para assumir como novo primário, minimizando downtime.",
+    "notes": [
+      "Replicação pode ser síncrona (garante que a réplica confirmou antes do COMMIT) ou assíncrona (mais rápida, mas com risco de perda de dados recentes em failover)."
+    ],
+    "bestPractices": [
+      "Use réplicas de leitura para relatórios e queries analíticas pesadas, mantendo o primário livre para operações transacionais."
+    ],
+    "commonMistakes": [
+      "Escrever diretamente em uma réplica read-only, o que não é permitido e gera erro de conexão somente-leitura."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos", "cloud"],
+    "language": "sql",
+    "version": "9.0+",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/warm-standby.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "replicacao", "alta disponibilidade"],
+    "keywords": ["streaming replication", "replica postgres", "read replica"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-backup-restore",
+    "category": "PostgreSQL",
+    "subcategory": "Manutenção",
+    "title": "Backup e Restore (pg_dump / pg_restore)",
+    "description": "pg_dump exporta o conteúdo de um banco (ou tabela) para um arquivo; pg_restore (ou psql) reimporta esse arquivo, usado para backups lógicos e migração entre ambientes.",
+    "syntax": "pg_dump -Fc -d <banco> -f backup.dump\npg_restore -d <banco_destino> backup.dump",
+    "example": "pg_dump -Fc -d producao -f producao_2026-07-23.dump\npg_restore -d staging --clean producao_2026-07-23.dump",
+    "result": "O arquivo de backup no formato custom (-Fc) é criado, comprimido e pronto para ser restaurado em outro banco/ambiente.",
+    "flags": [
+      {
+        "flag": "-Fc",
+        "description": "Formato custom, comprimido e compatível com restore paralelo e seletivo."
+      },
+      {
+        "flag": "--clean",
+        "description": "Remove objetos existentes no destino antes de recriá-los durante o restore."
+      }
+    ],
+    "notes": [
+      "pg_dump é um backup lógico (comandos SQL); para bancos muito grandes, backups físicos (pg_basebackup, snapshots de disco) são mais rápidos."
+    ],
+    "bestPractices": [
+      "Teste periodicamente o processo de restore em um ambiente separado — um backup nunca testado não é um backup confiável."
+    ],
+    "commonMistakes": [
+      "Fazer backup só do schema ou só dos dados sem perceber, esquecendo flags como `--schema-only`/`--data-only` aplicadas incorretamente."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/app-pgdump.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "backup", "restore"],
+    "keywords": ["pg_dump", "pg_restore", "backup postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-transaction-isolation",
+    "category": "PostgreSQL",
+    "subcategory": "Transações",
+    "title": "Níveis de isolamento de transação",
+    "description": "Define o quanto uma transação em andamento pode ver de mudanças feitas por outras transações concorrentes: Read Committed (padrão), Repeatable Read e Serializable, cada um evitando fenômenos diferentes de concorrência.",
+    "syntax": "BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;",
+    "example": "BEGIN ISOLATION LEVEL REPEATABLE READ;\nSELECT saldo FROM contas WHERE id = 1;\n-- outra transação altera e commita nesse meio tempo\nSELECT saldo FROM contas WHERE id = 1; -- mesmo valor da primeira leitura\nCOMMIT;",
+    "result": "Em REPEATABLE READ, ambas as leituras retornam o mesmo valor, mesmo que outra transação tenha alterado e commitado o dado no meio.",
+    "notes": [
+      "Read Committed (padrão do Postgres) permite 'non-repeatable reads'; Serializable é o mais estrito, mas pode exigir retry em caso de conflito de serialização."
+    ],
+    "bestPractices": [
+      "Use Serializable apenas quando a lógica de negócio realmente exige garantias fortes de consistência (ex: transferências financeiras concorrentes) e trate erros de serialização com retry."
+    ],
+    "commonMistakes": [
+      "Assumir que o nível padrão (Read Committed) evita todas as condições de corrida, quando ele só evita 'dirty reads', não 'non-repeatable reads'."
+    ],
+    "relatedCommands": ["postgres-transactions"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/transaction-iso.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "transacoes", "isolamento"],
+    "keywords": ["isolation level", "read committed", "serializable postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-alter-table",
+    "category": "PostgreSQL",
+    "subcategory": "Modelagem",
+    "title": "ALTER TABLE",
+    "description": "Modifica a estrutura de uma tabela existente: adicionar/remover colunas, alterar tipos, adicionar constraints, renomear, entre outras operações de DDL.",
+    "syntax": "ALTER TABLE tabela ADD COLUMN coluna tipo;\nALTER TABLE tabela ALTER COLUMN coluna TYPE novo_tipo;\nALTER TABLE tabela DROP COLUMN coluna;",
+    "example": "ALTER TABLE usuarios ADD COLUMN ultimo_login TIMESTAMPTZ;",
+    "result": "A tabela `usuarios` passa a ter a nova coluna `ultimo_login`, com valor NULL para linhas existentes (a menos que um DEFAULT seja especificado).",
+    "notes": [
+      "Adicionar uma coluna com valor DEFAULT em versões antigas do Postgres reescrevia a tabela inteira; desde o Postgres 11, isso é feito instantaneamente para a maioria dos casos."
+    ],
+    "bestPractices": [
+      "Em tabelas grandes de produção, evite `ALTER COLUMN ... TYPE` que exige reescrita completa da tabela em horário de pico — planeje uma migração controlada."
+    ],
+    "commonMistakes": [
+      "Adicionar uma coluna `NOT NULL` sem DEFAULT em uma tabela com dados existentes, o que falha imediatamente por violar a constraint nas linhas já presentes."
+    ],
+    "relatedCommands": ["postgres-constraints", "postgres-migrations"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-altertable.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "ddl"],
+    "keywords": ["alter table", "adicionar coluna", "ddl postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "postgres-sequences",
+    "category": "PostgreSQL",
+    "subcategory": "Tipos de dados",
+    "title": "Sequences",
+    "description": "Objeto gerador de números inteiros sequenciais, usado internamente por SERIAL/BIGSERIAL para auto-incrementar chaves primárias, mas também utilizável diretamente para outros fins.",
+    "syntax": "CREATE SEQUENCE nome START 1 INCREMENT 1;\nSELECT nextval('nome');",
+    "example": "CREATE SEQUENCE numero_pedido_seq START 1000;\nSELECT nextval('numero_pedido_seq'); -- 1000\nSELECT nextval('numero_pedido_seq'); -- 1001",
+    "result": "Cada chamada a `nextval` retorna o próximo número da sequência, de forma segura mesmo com múltiplas conexões concorrentes.",
+    "notes": [
+      "Sequences não são revertidas por ROLLBACK — um valor consumido por uma transação abortada 'some', criando gaps na numeração (comportamento esperado, não um bug)."
+    ],
+    "bestPractices": [
+      "Não confie em sequences para gerar números sem gaps (ex: numeração fiscal sequencial) — use uma tabela de controle com locking explícito para esses casos."
+    ],
+    "commonMistakes": [
+      "Estranhar 'buracos' na numeração de IDs após transações que deram ROLLBACK, achando que é um erro do banco."
+    ],
+    "relatedCommands": ["postgres-data-types"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "language": "sql",
+    "version": "Todas",
+    "officialDocumentation": "https://www.postgresql.org/docs/current/sql-createsequence.html",
+    "externalReferences": [],
+    "tags": ["postgresql", "sql", "sequences"],
+    "keywords": ["create sequence", "nextval", "sequencia postgres"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

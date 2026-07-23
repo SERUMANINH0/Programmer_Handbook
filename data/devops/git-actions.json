@@ -752,5 +752,192 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gha-job-outputs",
+    "category": "GitHub Actions",
+    "subcategory": "Controle de fluxo",
+    "title": "Outputs entre jobs",
+    "description": "Mecanismo para expor um valor calculado em um step ou job, tornando-o acessível a jobs subsequentes que o declarem como dependência via `needs`.",
+    "syntax": "jobs:\\n  <job-a>:\\n    outputs:\\n      <nome>: ${{ steps.<step-id>.outputs.<valor> }}\\n    steps:\\n      - id: <step-id>\\n        run: echo \"valor=x\" >> \"$GITHUB_OUTPUT\"",
+    "example": "jobs:\\n  gerar-versao:\\n    outputs:\\n      versao: ${{ steps.calc.outputs.versao }}\\n    steps:\\n      - id: calc\\n        run: echo \"versao=1.4.0\" >> \"$GITHUB_OUTPUT\"\\n  publicar:\\n    needs: gerar-versao\\n    steps:\\n      - run: echo \"Publicando versao ${{ needs.gerar-versao.outputs.versao }}\"",
+    "result": "O job \"publicar\" lê o valor \"1.4.0\" gerado pelo job \"gerar-versao\", mesmo rodando em um runner completamente separado.",
+    "notes": [
+      "Outputs de job são sempre strings; valores numéricos ou booleanos precisam ser convertidos manualmente ao consumir."
+    ],
+    "bestPractices": [
+      "Use outputs de job para passar valores pequenos (versão, tag, flag) entre jobs; para arquivos, use artifacts em vez disso."
+    ],
+    "commonMistakes": [
+      "Escrever no arquivo `$GITHUB_OUTPUT` com sintaxe antiga (`::set-output`), depreciada e removida das versões recentes dos runners."
+    ],
+    "relatedCommands": ["gha-needs-dependency", "gha-expressions-contexts"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs",
+    "externalReferences": [],
+    "tags": ["github actions", "outputs", "jobs"],
+    "keywords": ["job outputs", "github_output", "passar valor entre jobs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-environments-protection",
+    "category": "GitHub Actions",
+    "subcategory": "Segurança",
+    "title": "Environments com regras de proteção",
+    "description": "Contextos nomeados (ex: 'production', 'staging') associáveis a um job via `environment:`, permitindo exigir aprovação manual, restringir branches e vincular secrets específicos daquele ambiente.",
+    "syntax": "jobs:\\n  deploy:\\n    environment: <nome>\\n    steps: [...]",
+    "example": "jobs:\\n  deploy:\\n    environment:\\n      name: production\\n      url: https://app.exemplo.com\\n    steps:\\n      - run: ./deploy.sh",
+    "result": "O job \"deploy\" fica pausado aguardando aprovação de um dos required reviewers configurados no Environment \"production\" antes de executar.",
+    "notes": [
+      "Cada Environment pode ter seus próprios secrets, visíveis apenas para jobs que o referenciam explicitamente."
+    ],
+    "bestPractices": [
+      "Configure 'required reviewers' e 'deployment branches' (ex: só `main`) em Environments de produção para evitar deploys acidentais."
+    ],
+    "commonMistakes": [
+      "Colocar credenciais de produção em secrets de repositório em vez de secrets do Environment, perdendo o gate de aprovação manual."
+    ],
+    "relatedCommands": ["gha-secrets", "gha-conditional-if"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment",
+    "externalReferences": [],
+    "tags": ["github actions", "environments", "deploy"],
+    "keywords": ["environments github actions", "required reviewers", "gate de deploy"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-docker-login-push",
+    "category": "GitHub Actions",
+    "subcategory": "Deploy",
+    "title": "Build e push de imagem Docker",
+    "description": "Padrão combinando `docker/login-action` (autenticação em um registry) e `docker/build-push-action` (build + push) para publicar imagens Docker a partir de um workflow.",
+    "syntax": "- uses: docker/login-action@v3\\n  with:\\n    username: <usuario>\\n    password: ${{ secrets.<TOKEN> }}\\n- uses: docker/build-push-action@v6\\n  with:\\n    push: true\\n    tags: <repositorio>:<tag>",
+    "example": "- uses: docker/login-action@v3\\n  with:\\n    registry: ghcr.io\\n    username: ${{ github.actor }}\\n    password: ${{ secrets.GITHUB_TOKEN }}\\n- uses: docker/build-push-action@v6\\n  with:\\n    push: true\\n    tags: ghcr.io/${{ github.repository }}:${{ github.sha }}",
+    "result": "A imagem é construída e enviada ao GitHub Container Registry (ghcr.io), taggeada com o SHA do commit atual.",
+    "notes": [
+      "O `GITHUB_TOKEN` padrão já tem permissão para publicar em `ghcr.io` do próprio repositório, sem precisar de um token pessoal adicional."
+    ],
+    "bestPractices": [
+      "Combine com `actions/cache` ou o cache nativo do `build-push-action` (`cache-from`/`cache-to`) para acelerar builds repetidos de imagem."
+    ],
+    "commonMistakes": [
+      "Esquecer `push: true`, fazendo a action apenas construir a imagem localmente no runner sem publicá-la."
+    ],
+    "relatedCommands": ["gha-marketplace", "gha-secrets"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/publishing-packages/publishing-docker-images",
+    "externalReferences": [],
+    "tags": ["github actions", "docker", "deploy"],
+    "keywords": ["docker build-push-action", "publicar imagem docker", "ghcr.io"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-status-badge",
+    "category": "GitHub Actions",
+    "subcategory": "Configuração",
+    "title": "Badge de status do workflow",
+    "description": "Imagem SVG gerada automaticamente pelo GitHub mostrando o resultado da última execução de um workflow, comumente embutida no README do repositório.",
+    "syntax": "![nome](https://github.com/<owner>/<repo>/actions/workflows/<arquivo>.yml/badge.svg)",
+    "example": "![CI](https://github.com/minhaorg/minhaapp/actions/workflows/ci.yml/badge.svg?branch=main)",
+    "result": "Uma imagem 'passing' (verde) ou 'failing' (vermelha) é renderizada no README, refletindo o status mais recente do workflow no branch especificado.",
+    "notes": [
+      "O parâmetro `?branch=` filtra o badge para refletir apenas execuções daquele branch específico, útil quando o repositório tem múltiplos branches ativos."
+    ],
+    "bestPractices": [
+      "Adicione badges de CI, cobertura de testes e versão no topo do README para dar visibilidade imediata da saúde do projeto."
+    ],
+    "relatedCommands": ["gha-workflow-structure"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/monitoring-workflows/adding-a-workflow-status-badge",
+    "externalReferences": [],
+    "tags": ["github actions", "badge", "readme"],
+    "keywords": ["status badge github actions", "badge de ci", "workflow badge svg"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-step-summary",
+    "category": "GitHub Actions",
+    "subcategory": "Configuração",
+    "title": "Job Summary (GITHUB_STEP_SUMMARY)",
+    "description": "Arquivo especial onde qualquer step pode escrever conteúdo Markdown que é renderizado na página de resumo da execução do workflow, sem precisar abrir os logs brutos.",
+    "syntax": "echo \"<markdown>\" >> \"$GITHUB_STEP_SUMMARY\"",
+    "example": "- name: Resumo de cobertura\\n  run: |\\n    echo \"## Cobertura de Testes\" >> \"$GITHUB_STEP_SUMMARY\"\\n    echo \"- Linhas: 87%\" >> \"$GITHUB_STEP_SUMMARY\"",
+    "result": "A página de execução do workflow exibe um bloco formatado com o título 'Cobertura de Testes' e a métrica listada, visível de forma destacada sem abrir os logs.",
+    "notes": [
+      "O conteúdo aceita Markdown completo, incluindo tabelas, listas e blocos de código."
+    ],
+    "bestPractices": [
+      "Use Job Summary para destacar métricas importantes (cobertura, tamanho de bundle, resultados de teste) de forma legível, em vez de deixar só nos logs."
+    ],
+    "relatedCommands": ["gha-jobs-steps"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary",
+    "externalReferences": [],
+    "tags": ["github actions", "job summary", "relatorio"],
+    "keywords": ["github_step_summary", "job summary", "resumo do workflow"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-timeout-minutes",
+    "category": "GitHub Actions",
+    "subcategory": "Configuração",
+    "title": "timeout-minutes",
+    "description": "Chave que define o tempo máximo (em minutos) que um job ou step pode rodar antes de ser cancelado automaticamente pelo GitHub, evitando execuções travadas consumindo minutos indefinidamente.",
+    "syntax": "jobs:\\n  <job-id>:\\n    timeout-minutes: <numero>",
+    "example": "jobs:\\n  test:\\n    timeout-minutes: 15\\n    runs-on: ubuntu-latest",
+    "result": "Se o job \"test\" ultrapassar 15 minutos de execução, ele é cancelado automaticamente e marcado como falho por timeout.",
+    "notes": [
+      "O padrão do GitHub, se não especificado, é 360 minutos (6 horas) por job."
+    ],
+    "bestPractices": [
+      "Defina um `timeout-minutes` realista para todo job, evitando que um processo travado (ex: teste que trava esperando input) consuma toda a cota de minutos do plano."
+    ],
+    "relatedCommands": ["gha-jobs-steps", "gha-concurrency"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow#setting-a-timeout",
+    "externalReferences": [],
+    "tags": ["github actions", "timeout", "configuracao"],
+    "keywords": ["timeout-minutes", "cancelar job travado", "limite de tempo ci"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gha-continue-on-error",
+    "category": "GitHub Actions",
+    "subcategory": "Controle de fluxo",
+    "title": "continue-on-error",
+    "description": "Chave que permite que um step ou job falhe sem interromper a execução dos demais nem marcar o workflow inteiro como falho, útil para verificações não bloqueantes.",
+    "syntax": "- name: <nome>\\n  run: <comando>\\n  continue-on-error: <bool>",
+    "example": "- name: Lint experimental\\n  run: npm run lint:experimental\\n  continue-on-error: true",
+    "result": "Mesmo que o lint experimental falhe, os steps seguintes continuam executando e o workflow como um todo pode terminar com sucesso.",
+    "notes": [
+      "O step marcado com `continue-on-error: true` aparece nos logs com um aviso amarelo, distinguindo-o de um step realmente bem-sucedido."
+    ],
+    "bestPractices": [
+      "Use em verificações experimentais ou não críticas (linters novos, testes flaky conhecidos) que ainda não devem bloquear o merge."
+    ],
+    "commonMistakes": [
+      "Usar `continue-on-error` em steps críticos de segurança ou build, mascarando falhas reais que deveriam bloquear o pipeline."
+    ],
+    "relatedCommands": ["gha-conditional-if"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/actions/using-jobs/setting-continue-on-error-for-a-job",
+    "externalReferences": [],
+    "tags": ["github actions", "continue-on-error", "controle de fluxo"],
+    "keywords": ["continue-on-error", "step nao bloqueante", "permitir falha"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

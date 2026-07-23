@@ -458,5 +458,131 @@
     "keywords": ["quake mode windows terminal", "terminal suspenso", "win acento grave"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "wt-focus-mode",
+    "category": "Windows Terminal",
+    "subcategory": "Configuração",
+    "title": "Focus Mode — ocultar abas e barra de título",
+    "description": "Alterna um modo de exibição minimalista que esconde a barra de abas e maximiza o espaço útil do terminal, útil para gravações de tela ou foco em uma única sessão.",
+    "syntax": "{ \"command\": \"toggleFocusMode\", \"keys\": \"...\" }",
+    "notes": [
+      "Não vem com atalho de teclado padrão; precisa ser mapeado manualmente no array `\"actions\"` do settings.json."
+    ],
+    "relatedCommands": ["wt-keybindings", "wt-settings-json"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/actions#toggle-focus-mode",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "focus mode", "produtividade"],
+    "keywords": ["focus mode windows terminal", "ocultar abas terminal", "modo foco"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "wt-broadcast-input",
+    "category": "Windows Terminal",
+    "subcategory": "Atalhos de abas e painéis",
+    "title": "Broadcast input — digitar em vários painéis ao mesmo tempo",
+    "description": "Ação que replica tudo o que é digitado no painel ativo para todos os outros painéis da mesma aba simultaneamente, útil para executar o mesmo comando em vários servidores/containers ao mesmo tempo.",
+    "syntax": "{ \"command\": \"toggleBroadcastInput\", \"keys\": \"...\" }",
+    "notes": [
+      "Não tem atalho padrão; deve ser configurado via `\"actions\"` no settings.json antes de usar.",
+      "Use com cautela: um comando destrutivo digitado com broadcast ativo é executado em todos os painéis ao mesmo tempo."
+    ],
+    "commonMistakes": [
+      "Esquecer que o Broadcast Input está ativo e digitar um comando destrutivo (ex: `rm -rf`) que se replica para todos os painéis."
+    ],
+    "relatedCommands": ["wt-shortcut-split-pane-vertical", "wt-keybindings"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/actions#toggle-broadcast-input",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "broadcast input", "paineis", "avancado"],
+    "keywords": [
+      "broadcast input windows terminal",
+      "digitar em varios paineis",
+      "replicar comando terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "wt-sixel-images",
+    "category": "Windows Terminal",
+    "subcategory": "Recursos avançados",
+    "title": "Suporte a imagens (Sixel)",
+    "description": "Suporte experimental ao protocolo gráfico Sixel, que permite que aplicativos de linha de comando (rodando localmente ou via SSH/WSL) desenhem imagens diretamente no buffer do terminal.",
+    "notes": [
+      "É um recurso experimental controlado por uma feature flag em `experimental.rendering` no settings.json em algumas versões do Terminal.",
+      "Requer que o programa em execução (ex: `img2sixel`, certos visualizadores de imagem em terminal) suporte o protocolo Sixel para gerar a saída correta."
+    ],
+    "relatedCommands": ["wt-settings-json"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "sixel", "imagens", "avancado"],
+    "keywords": [
+      "sixel windows terminal",
+      "exibir imagem no terminal",
+      "graficos no terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "wt-font-ligatures",
+    "category": "Windows Terminal",
+    "subcategory": "Temas e aparência",
+    "title": "Fontes com ligaduras (font ligatures)",
+    "description": "Configuração de fonte no perfil que habilita ligaduras tipográficas (combinações de caracteres como `=>`, `!=`, `->` desenhadas como um único símbolo), comuns em fontes para programação como Cascadia Code, Fira Code e JetBrains Mono.",
+    "syntax": "\"font\": { \"face\": \"Cascadia Code\", \"features\": { \"calt\": 1, \"liga\": 1 } }",
+    "example": "{ \"font\": { \"face\": \"Cascadia Code\", \"size\": 12 } }",
+    "result": "Sequências como `=>` e `!==` passam a ser renderizadas como símbolos únicos combinados, em vez de caracteres separados.",
+    "notes": [
+      "O Windows Terminal usa renderização baseada em DirectWrite/ATLAS, que suporta ligaduras nativamente para fontes que as fornecem."
+    ],
+    "bestPractices": [
+      "Desabilite ligaduras (`\"liga\": 0`) se preferir ver caracteres individuais exatos, especialmente ao revisar código com atenção a operadores."
+    ],
+    "relatedCommands": ["wt-profile-config", "wt-settings-json"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/profile-appearance",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "fontes", "ligaduras", "aparencia"],
+    "keywords": ["ligaduras windows terminal", "font ligatures", "cascadia code"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "wt-tab-color",
+    "category": "Windows Terminal",
+    "subcategory": "Temas e aparência",
+    "title": "Cor de aba customizada (tabColor)",
+    "description": "Propriedade de perfil ou ação que define uma cor fixa para a aba, facilitando identificar visualmente ambientes diferentes (ex: produção em vermelho, desenvolvimento em verde) em várias abas abertas.",
+    "syntax": "\"tabColor\": \"#RRGGBB\"",
+    "example": "{ \"name\": \"Producao\", \"tabColor\": \"#c0392b\" }",
+    "result": "Toda aba aberta com o perfil \"Producao\" exibe uma faixa vermelha, distinguindo-a visualmente das demais abas.",
+    "notes": [
+      "Também pode ser definida manualmente por aba via clique direito na aba > 'Cor' ou pela ação `setTabColor`."
+    ],
+    "bestPractices": [
+      "Reserve uma cor de alerta (vermelho/laranja) exclusivamente para perfis conectados a ambientes de produção, reduzindo o risco de rodar um comando no ambiente errado."
+    ],
+    "relatedCommands": ["wt-profile-config", "wt-settings-json"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "officialDocumentation": "https://learn.microsoft.com/windows/terminal/customize-settings/profile-appearance#tab-color",
+    "externalReferences": [],
+    "tags": ["windows-terminal", "abas", "cores", "aparencia"],
+    "keywords": [
+      "cor de aba windows terminal",
+      "tabcolor",
+      "identificar ambiente por cor"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

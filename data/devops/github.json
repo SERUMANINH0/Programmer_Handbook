@@ -246,6 +246,7 @@
     "subcategory": "Issues",
     "title": "Issues",
     "description": "Sistema de rastreamento de tarefas, bugs e melhorias do GitHub, permitindo descrever um problema ou pedido, discuti-lo em comentários e acompanhar seu status até o fechamento.",
+    "shortcut": "g i",
     "notes": [
       "Issues podem ser atribuídas a pessoas, receber labels, milestones e ser vinculadas a um Project.",
       "Fechar uma issue não apaga o histórico: ela continua pesquisável e pode ser reaberta a qualquer momento."
@@ -709,6 +710,97 @@
     "updatedAt": "2026-07-22"
   },
   {
+    "id": "gh-shortcut-file-finder",
+    "category": "GitHub",
+    "subcategory": "Atalhos de teclado",
+    "title": "File Finder (busca de arquivos no repositório)",
+    "description": "Atalho que abre um campo de busca fuzzy para localizar rapidamente qualquer arquivo do repositório pelo nome, sem navegar pela árvore de pastas.",
+    "shortcut": "t",
+    "syntax": "t",
+    "example": "Dentro de um repositório, pressionar \"t\" e digitar \"userController\" para pular direto ao arquivo, mesmo sem saber o caminho exato.",
+    "result": "Lista filtrada de arquivos correspondentes ao padrão digitado, navegável com as setas e Enter.",
+    "notes": [
+      "O atalho só funciona navegando pelo código do repositório, não dentro de um arquivo já aberto."
+    ],
+    "bestPractices": [
+      "Use em repositórios grandes em vez de expandir pastas manualmente na árvore de arquivos."
+    ],
+    "commonMistakes": [
+      "Tentar usar \"t\" com o foco em um campo de busca ou comentário, o que apenas digita a letra."
+    ],
+    "relatedCommands": ["gh-shortcut-go-to", "gh-shortcut-command-palette"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "officialDocumentation": "https://docs.github.com/en/repositories/working-with-files/using-files/navigating-code-on-github",
+    "externalReferences": [],
+    "tags": ["github", "atalhos", "produtividade"],
+    "keywords": ["file finder github", "buscar arquivo repositorio", "atalho t github"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-shortcut-help-dialog",
+    "category": "GitHub",
+    "subcategory": "Atalhos de teclado",
+    "title": "Lista de atalhos de teclado (\"?\")",
+    "description": "Abre um painel com todos os atalhos de teclado disponíveis na página atual do GitHub, variando conforme o contexto (repositório, issue, PR, etc.).",
+    "shortcut": "?",
+    "syntax": "?",
+    "example": "Pressionar \"?\" em qualquer página do GitHub para consultar rapidamente quais atalhos estão disponíveis ali.",
+    "result": "Modal sobreposto listando atalhos agrupados por categoria (Site, Repositórios, Issues e PRs, etc.).",
+    "notes": [
+      "Os atalhos disponíveis mudam de acordo com a página — um PR aberto mostra atalhos extras de review que não existem na página inicial."
+    ],
+    "bestPractices": [
+      "Consulte o \"?\" ao chegar em um contexto novo (ex: revisão de PR) para descobrir atalhos específicos daquela tela."
+    ],
+    "commonMistakes": [
+      "Pressionar \"?\" com o foco em um campo de texto, o que apenas insere o caractere em vez de abrir o painel."
+    ],
+    "relatedCommands": ["gh-shortcut-go-to", "gh-shortcut-command-palette"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "officialDocumentation": "https://docs.github.com/en/get-started/accessibility/keyboard-shortcuts",
+    "externalReferences": [],
+    "tags": ["github", "atalhos", "ajuda"],
+    "keywords": [
+      "atalhos de teclado github",
+      "ajuda de atalhos",
+      "keyboard shortcuts github"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-shortcut-permalink",
+    "category": "GitHub",
+    "subcategory": "Atalhos de teclado",
+    "title": "Permalink para a versão exata do arquivo (\"y\")",
+    "description": "Substitui a URL atual (que aponta para o branch, mutável) por um permalink fixado no commit exato que está sendo visualizado, garantindo que o link nunca mude de conteúdo.",
+    "shortcut": "y",
+    "syntax": "y",
+    "example": "Visualizando um arquivo em `main`, pressionar \"y\" transforma a URL de `blob/main/arquivo.ts` para `blob/<hash-do-commit>/arquivo.ts`.",
+    "result": "A URL na barra de endereço é atualizada para incluir o hash do commit, tornando o link permanente e seguro para compartilhar.",
+    "notes": [
+      "Essencial ao compartilhar links de código em documentação ou conversas, já que a URL de branch pode apontar para um conteúdo diferente no futuro."
+    ],
+    "bestPractices": [
+      "Sempre use o permalink (\"y\") em vez do link de branch ao referenciar uma linha específica de código em um PR, issue ou documentação."
+    ],
+    "commonMistakes": [
+      "Compartilhar um link apontando para `main` e, meses depois, o trecho referenciado já ter mudado ou sido removido."
+    ],
+    "relatedCommands": ["gh-shortcut-file-finder"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "officialDocumentation": "https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files",
+    "externalReferences": [],
+    "tags": ["github", "atalhos", "permalink"],
+    "keywords": ["permalink github", "atalho y github", "link permanente de codigo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
     "id": "gh-pages",
     "category": "GitHub",
     "subcategory": "GitHub Pages",
@@ -827,5 +919,146 @@
     "keywords": ["fork", "contribuir open source", "sync fork"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gh-codespaces",
+    "category": "GitHub",
+    "subcategory": "Codespaces",
+    "title": "GitHub Codespaces",
+    "description": "Ambiente de desenvolvimento completo em container, hospedado na nuvem e acessível via navegador ou VS Code, provisionado sob demanda a partir da configuração `.devcontainer` do repositório.",
+    "syntax": "Code → Codespaces → Create codespace on <branch>",
+    "example": "Abrir um Codespace a partir de um PR de contribuidor externo para revisar e rodar o código sem clonar nada localmente.",
+    "result": "Um container com o ambiente já configurado (extensões, dependências, variáveis) é provisionado em segundos, com um editor VS Code completo no navegador.",
+    "notes": [
+      "A configuração do ambiente fica em `.devcontainer/devcontainer.json`, versionada junto com o código."
+    ],
+    "bestPractices": [
+      "Defina um `.devcontainer` no repositório para que qualquer colaborador tenha o ambiente pronto sem passos manuais de setup."
+    ],
+    "commonMistakes": [
+      "Deixar Codespaces ociosos rodando, gerando custo desnecessário — configure o timeout de auto-stop."
+    ],
+    "relatedCommands": ["gh-cli-repo"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/codespaces/overview",
+    "externalReferences": [],
+    "tags": ["github", "codespaces", "ambiente de desenvolvimento"],
+    "keywords": ["github codespaces", "devcontainer", "ambiente na nuvem"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-dependabot",
+    "category": "GitHub",
+    "subcategory": "Segurança e Governança",
+    "title": "Dependabot (alerts e version updates)",
+    "description": "Ferramenta integrada que escaneia dependências em busca de vulnerabilidades conhecidas (alerts) e abre PRs automáticos para atualizar versões desatualizadas (version updates).",
+    "syntax": ".github/dependabot.yml",
+    "example": "version: 2\\nupdates:\\n  - package-ecosystem: \"npm\"\\n    directory: \"/\"\\n    schedule:\\n      interval: \"weekly\"",
+    "result": "Dependabot abre um PR semanal por dependência desatualizada, com changelog resumido e checks de CI rodando automaticamente.",
+    "notes": [
+      "Dependabot Alerts (vulnerabilidades) e Dependabot Version Updates (PRs de atualização) são recursos independentes, habilitados separadamente."
+    ],
+    "bestPractices": [
+      "Combine com branch protection e CI obrigatório para que PRs do Dependabot só sejam mesclados com os testes passando.",
+      "Use `groups` no dependabot.yml para agrupar atualizações relacionadas em um único PR, reduzindo ruído."
+    ],
+    "commonMistakes": [
+      "Ignorar sistematicamente os PRs do Dependabot, acumulando dezenas de dependências desatualizadas e vulneráveis."
+    ],
+    "relatedCommands": ["gh-branch-protection"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/code-security/dependabot",
+    "externalReferences": [],
+    "tags": ["github", "dependabot", "seguranca"],
+    "keywords": ["dependabot", "atualizar dependencias", "alertas de vulnerabilidade"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-security-advisories",
+    "category": "GitHub",
+    "subcategory": "Segurança e Governança",
+    "title": "Security Advisories",
+    "description": "Espaço privado para relatar, discutir e corrigir uma vulnerabilidade de segurança em um repositório antes da divulgação pública, com CVE opcional atribuído pelo próprio GitHub.",
+    "syntax": "Security → Advisories → New draft security advisory",
+    "example": "Criar um advisory privado para uma falha de injeção descoberta, colaborar com o time na correção em um fork temporário e só então publicar.",
+    "result": "O advisory pode ser publicado com CVE, notificando automaticamente usuários do repositório que dependem da versão vulnerável.",
+    "notes": [
+      "Um 'temporary private fork' pode ser criado a partir do advisory para desenvolver a correção sem expor a vulnerabilidade publicamente antes do patch."
+    ],
+    "bestPractices": [
+      "Use Security Advisories em vez de uma issue pública para relatar vulnerabilidades, evitando expor um exploit antes da correção."
+    ],
+    "commonMistakes": [
+      "Discutir detalhes de uma vulnerabilidade em uma issue pública comum, dando tempo para exploração antes do patch."
+    ],
+    "relatedCommands": ["gh-dependabot"],
+    "difficulty": "avancado",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/about-repository-security-advisories",
+    "externalReferences": [],
+    "tags": ["github", "seguranca", "cve"],
+    "keywords": ["security advisories", "cve github", "vulnerabilidade privada"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-gists",
+    "category": "GitHub",
+    "subcategory": "Gists",
+    "title": "Gists",
+    "description": "Repositórios Git leves e independentes para compartilhar trechos de código, notas ou arquivos avulsos, públicos ou secretos, cada um com seu próprio histórico de versões.",
+    "syntax": "gist.github.com → New gist",
+    "example": "Criar um gist público com um script `deploy.sh` para compartilhar rapidamente com um colega, sem precisar criar um repositório completo.",
+    "result": "Uma URL única é gerada para o gist, clonável como um repositório Git normal (`git clone https://gist.github.com/...`) e com suporte a comentários.",
+    "notes": [
+      "Gists 'secretos' não aparecem em buscas nem no perfil público, mas a URL continua acessível a quem a possuir — não são realmente privados."
+    ],
+    "bestPractices": [
+      "Use gists para snippets avulsos e descartáveis; para código que faz parte de um projeto real, prefira um repositório completo."
+    ],
+    "commonMistakes": [
+      "Tratar um gist 'secreto' como totalmente privado, quando na verdade qualquer pessoa com o link pode acessá-lo."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["browser", "cloud"],
+    "officialDocumentation": "https://docs.github.com/en/get-started/writing-on-github/editing-and-sharing-content-with-gists/creating-gists",
+    "externalReferences": [],
+    "tags": ["github", "gists", "compartilhamento"],
+    "keywords": ["gists", "compartilhar snippet", "gist secreto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gh-packages",
+    "category": "GitHub",
+    "subcategory": "GitHub Packages",
+    "title": "GitHub Packages",
+    "description": "Registry de pacotes integrado ao GitHub que hospeda artefatos de múltiplos ecossistemas (npm, Docker/OCI, Maven, NuGet, RubyGems) vinculados diretamente ao repositório de origem.",
+    "syntax": "npm publish --registry=https://npm.pkg.github.com | docker push ghcr.io/<owner>/<imagem>:<tag>",
+    "example": "docker tag minha-app:1.0 ghcr.io/minha-org/minha-app:1.0\\ndocker push ghcr.io/minha-org/minha-app:1.0",
+    "result": "A imagem/pacote fica disponível na aba 'Packages' do repositório, com controle de acesso herdado das permissões do GitHub.",
+    "notes": [
+      "Autenticação usa um GITHUB_TOKEN ou Personal Access Token com escopo `write:packages`/`read:packages`, não uma senha separada."
+    ],
+    "bestPractices": [
+      "Use GitHub Packages (ghcr.io) para imagens Docker de projetos já hospedados no GitHub, evitando gerenciar credenciais de um registry externo separado."
+    ],
+    "commonMistakes": [
+      "Publicar pacotes sem versionamento semântico claro, dificultando saber qual versão é segura para atualizar."
+    ],
+    "relatedCommands": ["gha-docker-login-push"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "officialDocumentation": "https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages",
+    "externalReferences": [],
+    "tags": ["github", "packages", "registry"],
+    "keywords": ["github packages", "ghcr.io", "registry de pacotes github"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

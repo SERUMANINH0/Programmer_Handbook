@@ -423,5 +423,768 @@
     "keywords": ["c", "comment mode", "modo comentario"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "figma-boolean-operations",
+    "category": "Figma",
+    "subcategory": "Edição Vetorial",
+    "title": "Operações booleanas (Union, Subtract, Intersect, Exclude)",
+    "description": "Combina duas ou mais formas vetoriais usando operações booleanas para criar formas compostas complexas, como ícones customizados.",
+    "syntax": "Ctrl+Alt+U (Union) | Ctrl+Alt+S (Subtract) | Ctrl+Alt+I (Intersect) | Ctrl+Alt+X (Exclude)",
+    "shortcut": "Ctrl+Alt+U",
+    "example": "Selecionar um círculo sobreposto a um retângulo e pressionar Ctrl+Alt+S para 'recortar' o círculo da área do retângulo.",
+    "result": "Um novo Boolean Group é criado combinando as formas conforme a operação escolhida, editável posteriormente.",
+    "notes": [
+      "As formas originais continuam editáveis dentro do Boolean Group; é possível reordenar ou trocar a operação depois."
+    ],
+    "bestPractices": [
+      "Use operações booleanas para criar ícones customizados a partir de formas simples em vez de desenhar tudo com a Pen tool."
+    ],
+    "commonMistakes": [
+      "Achatar (flatten) o resultado prematuramente, perdendo a possibilidade de ajustar as formas originais depois."
+    ],
+    "relatedCommands": ["figma-tool-pen", "figma-vector-edit-mode"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040450513-Boolean-operations",
+    "externalReferences": [],
+    "tags": ["figma", "vetor", "boolean"],
+    "keywords": [
+      "boolean operations",
+      "union subtract intersect exclude",
+      "operacoes booleanas figma"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-vector-edit-mode",
+    "category": "Figma",
+    "subcategory": "Edição Vetorial",
+    "title": "Modo de edição de vetor (Vector Edit Mode)",
+    "description": "Entra no modo de edição de pontos de uma forma ou vetor, permitindo mover âncoras, ajustar curvas e adicionar/remover pontos.",
+    "syntax": "Enter (com a forma selecionada) | Duplo clique na forma",
+    "shortcut": "Enter",
+    "example": "Selecionar um retângulo e pressionar Enter para editar seus pontos individualmente, arredondando apenas um dos cantos.",
+    "result": "O canvas entra em modo de edição de vetor, exibindo as âncoras da forma para manipulação direta.",
+    "notes": [
+      "Pressione Esc para sair do modo de edição de vetor e voltar à seleção normal do objeto."
+    ],
+    "bestPractices": [
+      "Use o modo de edição de vetor para ajustes finos de ícones, em vez de recriar a forma do zero."
+    ],
+    "relatedCommands": ["figma-tool-pen", "figma-boolean-operations"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040451373-Create-and-edit-vector-networks",
+    "externalReferences": [],
+    "tags": ["figma", "vetor", "edicao"],
+    "keywords": ["vector edit mode", "editar pontos", "editar vetor figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-prototype-connections",
+    "category": "Figma",
+    "subcategory": "Prototyping",
+    "title": "Conexões de protótipo (Prototype Connections)",
+    "description": "Cria links interativos entre frames na aba Prototype, definindo a navegação de um protótipo clicável.",
+    "syntax": "Aba Prototype > arrastar a partir da alça (+) na borda do frame de origem até o frame de destino",
+    "example": "Arrastar da alça direita do frame 'Login' até o frame 'Home' para criar uma transição de navegação entre as duas telas.",
+    "result": "Uma seta de conexão azul é desenhada entre os frames, configurável com gatilho (trigger) e tipo de transição.",
+    "notes": [
+      "Conexões também podem partir de um elemento específico (botão) dentro do frame, não só do frame inteiro."
+    ],
+    "bestPractices": [
+      "Nomeie os frames de forma descritiva antes de criar conexões, facilitando a leitura do fluxo no modo de apresentação."
+    ],
+    "commonMistakes": [
+      "Conectar a partir do frame inteiro quando a intenção era que só um botão específico disparasse a navegação."
+    ],
+    "relatedCommands": ["figma-prototype-interactions", "figma-smart-animate"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-prototyping-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "prototyping", "navegacao"],
+    "keywords": [
+      "prototype connections",
+      "conexoes de prototipo",
+      "fluxo de navegacao figma"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-prototype-interactions",
+    "category": "Figma",
+    "subcategory": "Prototyping",
+    "title": "Interações (gatilhos e ações do protótipo)",
+    "description": "Configura o gatilho (on click, on drag, while hovering, after delay) e a ação resultante (navigate to, open overlay, swap state) de uma conexão de protótipo.",
+    "syntax": "Painel de interação > selecionar Trigger > selecionar Action",
+    "example": "Definir o trigger 'While Hovering' em um card e a ação 'Change to' um estado com sombra mais forte, simulando hover.",
+    "result": "O protótipo, ao ser executado, reage ao gatilho configurado aplicando a transição definida.",
+    "parameters": [
+      {
+        "name": "Trigger",
+        "description": "Evento que dispara a interação: On Click, On Drag, While Hovering, While Pressing, Key/Gamepad, After Delay.",
+        "required": true
+      },
+      {
+        "name": "Action",
+        "description": "Resultado da interação: Navigate To, Open Overlay, Swap Overlay, Close Overlay, Back, Scroll To, Change To, Set Variable.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "'Open Overlay' é o mecanismo usado para simular modais, dropdowns e tooltips dentro de um protótipo."
+    ],
+    "bestPractices": [
+      "Use 'While Hovering' e 'While Pressing' para simular microinterações de estado em componentes interativos."
+    ],
+    "commonMistakes": [
+      "Usar 'Navigate To' quando a intenção era abrir um modal sobre a tela atual — nesse caso o correto é 'Open Overlay'."
+    ],
+    "relatedCommands": ["figma-prototype-connections", "figma-smart-animate"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-prototyping-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "prototyping", "interacoes"],
+    "keywords": ["triggers figma", "actions figma", "interacoes de prototipo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-smart-animate",
+    "category": "Figma",
+    "subcategory": "Prototyping",
+    "title": "Smart Animate",
+    "description": "Tipo de transição de protótipo que anima automaticamente as diferenças de posição, tamanho, cor e rotação entre duas variantes ou instâncias com camadas de mesmo nome.",
+    "syntax": "Painel de interação > Animation > Smart Animate",
+    "example": "Conectar a variante 'Tab/Inativo' à variante 'Tab/Ativo' com Smart Animate para animar suavemente o indicador deslizando entre as abas.",
+    "result": "Ao navegar entre os dois frames no protótipo, as camadas com nomes correspondentes são interpoladas suavemente em vez de trocar abruptamente.",
+    "notes": [
+      "Smart Animate só interpola camadas com exatamente o mesmo nome entre os dois frames — nomes diferentes fazem a camada aparecer/desaparecer sem animação."
+    ],
+    "bestPractices": [
+      "Mantenha a nomenclatura de camadas idêntica entre variantes/estados para que o Smart Animate funcione corretamente."
+    ],
+    "commonMistakes": [
+      "Renomear ou duplicar camadas de formas diferentes entre os dois frames, quebrando a interpolação esperada."
+    ],
+    "relatedCommands": ["figma-prototype-interactions", "figma-variants"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039818334-Smart-animate-and-transitions-in-prototypes",
+    "externalReferences": [],
+    "tags": ["figma", "prototyping", "animacao"],
+    "keywords": ["smart animate", "animacao de prototipo", "transicoes figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-constraints",
+    "category": "Figma",
+    "subcategory": "Layout",
+    "title": "Constraints (restrições de posicionamento)",
+    "description": "Define como um elemento se comporta quando o frame pai (sem Auto Layout) é redimensionado: fixo em uma borda, escalando ou centralizado.",
+    "syntax": "Painel Design > seção Constraints > escolher horizontal (Left/Right/Left and Right/Center/Scale) e vertical (Top/Bottom/Top and Bottom/Center/Scale)",
+    "example": "Definir um ícone de fechar como 'Right' e 'Top' para que ele permaneça sempre ancorado no canto superior direito ao redimensionar o modal.",
+    "result": "Ao redimensionar o frame pai, o elemento mantém a distância definida da borda configurada em vez de se mover proporcionalmente.",
+    "notes": [
+      "Constraints só têm efeito em frames sem Auto Layout; frames com Auto Layout usam as propriedades Hug/Fill/Fixed em vez disso."
+    ],
+    "bestPractices": [
+      "Use 'Left and Right' (ou 'Top and Bottom') para elementos que devem esticar junto com o frame, como uma barra de busca."
+    ],
+    "commonMistakes": [
+      "Deixar constraints no padrão 'Left'/'Top' em elementos que deveriam acompanhar o redimensionamento, fazendo-os 'descolar' do layout em telas maiores."
+    ],
+    "relatedCommands": ["figma-auto-layout", "figma-tool-frame"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039957734-Constraints",
+    "externalReferences": [],
+    "tags": ["figma", "layout", "constraints"],
+    "keywords": [
+      "constraints figma",
+      "restricoes de posicionamento",
+      "responsividade figma"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-color-styles",
+    "category": "Figma",
+    "subcategory": "Estilos",
+    "title": "Color Styles (estilos de cor)",
+    "description": "Salva uma cor como um estilo reutilizável, permitindo aplicá-la a múltiplos objetos e atualizá-la globalmente em um único lugar.",
+    "syntax": "Painel Fill/Stroke > clicar nos 4 pontinhos > + (criar estilo)",
+    "example": "Criar o estilo 'Primary/500' a partir da cor de um botão e reaplicá-lo em todos os outros elementos que usam a mesma cor de marca.",
+    "result": "A cor passa a existir como um estilo nomeado na biblioteca do arquivo, e alterar o estilo atualiza todos os elementos que o usam.",
+    "notes": [
+      "Estilos podem ser publicados como biblioteca compartilhada para uso em outros arquivos da equipe."
+    ],
+    "bestPractices": [
+      "Nomeie estilos de cor com uma convenção hierárquica (ex: `Primary/500`, `Neutral/900`) para facilitar a busca no painel."
+    ],
+    "commonMistakes": [
+      "Aplicar cores 'soltas' (hex direto) em vez de estilos, dificultando trocar a paleta inteira depois."
+    ],
+    "relatedCommands": [
+      "figma-text-styles",
+      "figma-effect-styles",
+      "figma-shared-libraries"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038665211-Guide-to-styles-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "estilos", "cor"],
+    "keywords": ["color styles", "estilos de cor figma", "design tokens"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-text-styles",
+    "category": "Figma",
+    "subcategory": "Estilos",
+    "title": "Text Styles (estilos de texto)",
+    "description": "Salva uma combinação de fonte, tamanho, peso, espaçamento e altura de linha como um estilo de texto reutilizável.",
+    "syntax": "Painel Text > clicar nos 4 pontinhos > + (criar estilo)",
+    "example": "Criar o estilo 'Heading/H1' a partir de um título e aplicá-lo em todos os outros títulos H1 do arquivo.",
+    "result": "O texto passa a referenciar um estilo nomeado; alterar o estilo atualiza a tipografia de todos os textos que o usam.",
+    "bestPractices": [
+      "Defina uma escala tipográfica pequena e consistente (H1–H6, Body, Caption) em vez de estilos ad-hoc por tela."
+    ],
+    "commonMistakes": [
+      "Duplicar estilos quase idênticos (ex: 'Heading 1' e 'Título Grande') em vez de reutilizar o mesmo estilo já existente."
+    ],
+    "relatedCommands": ["figma-color-styles", "figma-effect-styles"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038665211-Guide-to-styles-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "estilos", "tipografia"],
+    "keywords": ["text styles", "estilos de texto figma", "escala tipografica"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-effect-styles",
+    "category": "Figma",
+    "subcategory": "Estilos",
+    "title": "Effect Styles (sombra, blur)",
+    "description": "Salva uma combinação de efeitos (drop shadow, inner shadow, layer blur, background blur) como um estilo reutilizável.",
+    "syntax": "Painel Effects > + (adicionar efeito) > clicar nos 4 pontinhos > + (criar estilo)",
+    "example": "Criar o estilo 'Shadow/Card' com um drop shadow sutil e aplicá-lo em todos os cards do design system.",
+    "result": "O efeito passa a existir como estilo nomeado; alterar seus parâmetros atualiza todos os objetos que o referenciam.",
+    "bestPractices": [
+      "Padronize uma escala de elevação (ex: `Shadow/sm`, `Shadow/md`, `Shadow/lg`) em vez de valores de sombra arbitrários por componente."
+    ],
+    "commonMistakes": [
+      "Aplicar sombras com valores levemente diferentes em componentes semelhantes, quebrando a consistência visual do produto."
+    ],
+    "relatedCommands": ["figma-color-styles", "figma-text-styles"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038665211-Guide-to-styles-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "estilos", "efeitos"],
+    "keywords": ["effect styles", "sombra figma", "blur figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-dev-mode",
+    "category": "Figma",
+    "subcategory": "Dev Mode",
+    "title": "Dev Mode",
+    "description": "Modo de visualização voltado a desenvolvedores que expõe medidas, espaçamento, cores e código (CSS/iOS/Android) gerado automaticamente a partir do design selecionado.",
+    "syntax": "Shift+D (alternar Dev Mode) | Botão </> no canto superior direito",
+    "shortcut": "Shift+D",
+    "example": "Selecionar um botão em Dev Mode para ver o CSS equivalente (padding, border-radius, cor) pronto para copiar no código.",
+    "result": "O painel direito passa a exibir código e especificações técnicas do elemento selecionado, em vez de propriedades editáveis de design.",
+    "notes": [
+      "Dev Mode é um recurso de planos pagos do Figma e não altera o design — apenas expõe informações para implementação."
+    ],
+    "bestPractices": [
+      "Use anotações e a régua de medidas do Dev Mode para reduzir idas e vindas entre design e desenvolvimento no handoff."
+    ],
+    "commonMistakes": [
+      "Copiar valores de espaçamento 'no olho' via inspeção visual em vez de usar o Dev Mode, introduzindo pequenas inconsistências de pixel."
+    ],
+    "relatedCommands": ["figma-color-styles", "figma-export-assets"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode",
+    "externalReferences": [],
+    "tags": ["figma", "dev mode", "handoff"],
+    "keywords": [
+      "dev mode figma",
+      "handoff design desenvolvimento",
+      "inspecionar css figma"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-version-history",
+    "category": "Figma",
+    "subcategory": "Colaboração",
+    "title": "Histórico de versões (Version History)",
+    "description": "Lista snapshots automáticos e nomeados do arquivo ao longo do tempo, permitindo visualizar ou restaurar um estado anterior do design.",
+    "syntax": "Menu do arquivo > Show version history",
+    "example": "Nomear uma versão como 'Aprovado pelo cliente — v2' antes de continuar iterando, para poder voltar a esse ponto exato depois.",
+    "result": "A versão nomeada fica marcada no histórico, distinguível dos snapshots automáticos e fácil de localizar depois.",
+    "notes": [
+      "Restaurar uma versão antiga cria uma nova entrada no histórico em vez de apagar o trabalho feito depois dela."
+    ],
+    "bestPractices": [
+      "Nomeie manualmente marcos importantes (aprovações, entregas) em vez de depender só dos snapshots automáticos, que têm nomes genéricos."
+    ],
+    "relatedCommands": ["figma-shared-libraries"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038006072-View-a-file-s-version-history",
+    "externalReferences": [],
+    "tags": ["figma", "colaboracao", "versionamento"],
+    "keywords": [
+      "version history figma",
+      "historico de versoes",
+      "restaurar versao anterior"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-shared-libraries",
+    "category": "Figma",
+    "subcategory": "Bibliotecas",
+    "title": "Bibliotecas compartilhadas (Shared Libraries)",
+    "description": "Publica componentes e estilos de um arquivo como biblioteca reutilizável por outros arquivos do time, mantendo um design system centralizado.",
+    "syntax": "Painel Assets > Publish (ícone de biblioteca) > selecionar mudanças > Publish",
+    "example": "Publicar a biblioteca 'Design System — Core' após adicionar um novo componente de Badge, disponibilizando-o para todos os arquivos que a usam.",
+    "result": "Arquivos que têm a biblioteca habilitada recebem uma notificação de atualização e podem sincronizar o novo componente/estilo.",
+    "notes": [
+      "Componentes vindos de uma biblioteca aparecem como instâncias 'remotas', diferenciadas visualmente das instâncias locais."
+    ],
+    "bestPractices": [
+      "Escreva uma mensagem de publicação descritiva a cada update, funcionando como um changelog do design system."
+    ],
+    "commonMistakes": [
+      "Editar diretamente uma instância vinda de biblioteca esperando que a alteração se propague para a fonte, quando na verdade só afeta aquela instância."
+    ],
+    "relatedCommands": ["figma-components", "figma-color-styles"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041051154-Publish-styles-and-components-from-a-library",
+    "externalReferences": [],
+    "tags": ["figma", "bibliotecas", "design system"],
+    "keywords": [
+      "shared libraries figma",
+      "bibliotecas compartilhadas",
+      "publicar design system"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-layout-grid",
+    "category": "Figma",
+    "subcategory": "Layout",
+    "title": "Layout Grid (grid de colunas)",
+    "description": "Aplica um grid de referência (colunas, linhas ou grade uniforme) a um frame, usado para alinhar elementos de forma consistente durante o design.",
+    "syntax": "Painel Design > seção Layout Grid > + (adicionar) | Ctrl+G ativa/desativa a visibilidade do grid ativo",
+    "example": "Aplicar um grid de 12 colunas com 24px de gutter a um frame de 1440px para alinhar seções de uma landing page.",
+    "result": "Linhas guia do grid aparecem sobrepostas ao frame, servindo de referência visual (não afeta o layout dos elementos automaticamente).",
+    "parameters": [
+      {
+        "name": "Type",
+        "description": "Tipo de grid: Columns, Rows ou Grid (grade uniforme).",
+        "required": true
+      },
+      {
+        "name": "Count / Gutter / Margin",
+        "description": "Número de colunas/linhas, espaçamento entre elas e margem lateral do frame.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Layout Grid é puramente visual/de referência — diferente do Auto Layout, ele não reposiciona elementos automaticamente."
+    ],
+    "bestPractices": [
+      "Defina o grid do design system (ex: 12 colunas, 8px gutter) uma vez e reaplique via estilo de grid salvo, em vez de recriar em cada frame."
+    ],
+    "relatedCommands": ["figma-auto-layout", "figma-constraints"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040450513-Explore-layout-grids",
+    "externalReferences": [],
+    "tags": ["figma", "layout", "grid"],
+    "keywords": ["layout grid figma", "grid de colunas", "grade de referencia"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-blend-modes",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Blend Modes (modos de mesclagem)",
+    "description": "Define como as cores de um objeto se combinam visualmente com o conteúdo abaixo dele, como Multiply, Screen, Overlay ou Darken.",
+    "syntax": "Painel Fill > dropdown de opacidade/blend mode ao lado do fill",
+    "example": "Aplicar 'Multiply' em uma textura de ruído sobre uma ilustração para escurecer apenas as áreas de sobreposição.",
+    "result": "A cor do objeto se mescla com o conteúdo abaixo conforme a fórmula do blend mode escolhido, em vez de simplesmente sobrepor opacamente.",
+    "notes": [
+      "Blend modes podem ser aplicados tanto a um fill individual quanto à camada inteira (afetando a interação com tudo abaixo dela)."
+    ],
+    "bestPractices": [
+      "Use 'Multiply' para sombras suaves sobre fundos coloridos e 'Screen' para efeitos de luz/brilho, evitando criar cores fixas manualmente."
+    ],
+    "relatedCommands": ["figma-shadow-blur-effects"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041488394-Apply-blend-modes-and-opacity-to-objects",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "blend mode"],
+    "keywords": ["blend modes figma", "modos de mesclagem", "multiply screen overlay"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-shadow-blur-effects",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Efeitos: Drop Shadow, Inner Shadow e Blur",
+    "description": "Adiciona sombras (externas ou internas) e desfoque (de camada ou de fundo) a um objeto para criar profundidade e hierarquia visual.",
+    "syntax": "Painel Effects > + > escolher Drop Shadow, Inner Shadow, Layer Blur ou Background Blur",
+    "example": "Adicionar um Drop Shadow com blur 12px e opacidade 15% a um card para dar sensação de elevação sobre o fundo.",
+    "result": "O efeito é renderizado ao redor (ou dentro) do objeto conforme os parâmetros de X/Y, blur, spread e cor configurados.",
+    "notes": [
+      "Background Blur desfoca o conteúdo atrás do objeto (efeito 'vidro fosco'), diferente do Layer Blur, que desfoca o próprio objeto."
+    ],
+    "bestPractices": [
+      "Salve combinações de sombra como Effect Style para manter uma escala de elevação consistente pelo design system."
+    ],
+    "commonMistakes": [
+      "Usar sombras muito escuras ou opacas, que destoam da leveza esperada em interfaces modernas."
+    ],
+    "relatedCommands": ["figma-effect-styles", "figma-blend-modes"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360041488714-Add-blur-and-shadow-effects",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "efeitos"],
+    "keywords": ["drop shadow figma", "inner shadow", "blur figma", "background blur"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-export-assets",
+    "category": "Figma",
+    "subcategory": "Exportação",
+    "title": "Exportar assets (Export Settings)",
+    "description": "Configura e exporta uma camada ou frame como arquivo de imagem (PNG, JPG, SVG) ou PDF, em uma ou múltiplas resoluções.",
+    "syntax": "Painel Design > seção Export > + (adicionar preset) > Export",
+    "shortcut": "Ctrl+Shift+E",
+    "example": "Adicionar presets de exportação '1x', '2x' e '3x' em PNG a um ícone e exportar todos de uma vez para os assets do app mobile.",
+    "result": "Os arquivos são baixados na resolução e formato configurados, prontos para uso no código.",
+    "parameters": [
+      {
+        "name": "Formato",
+        "description": "PNG, JPG, SVG ou PDF.",
+        "required": true
+      },
+      {
+        "name": "Escala/Tamanho",
+        "description": "Multiplicador (1x, 2x, 3x) ou dimensão fixa em pixels.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "SVG é o formato recomendado para ícones vetoriais, já que escala sem perda de qualidade em qualquer densidade de tela."
+    ],
+    "bestPractices": [
+      "Nomeie as camadas de forma consistente com o padrão esperado no código (ex: `icon-close`) antes de exportar, evitando renomear arquivos manualmente depois."
+    ],
+    "commonMistakes": [
+      "Exportar PNG em vez de SVG para ícones que serão usados em múltiplos tamanhos, gerando serrilhado ao ampliar."
+    ],
+    "relatedCommands": ["figma-dev-mode"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040028114-Export-frames-layers-and-groups",
+    "externalReferences": [],
+    "tags": ["figma", "exportacao", "assets"],
+    "keywords": ["export assets figma", "exportar png svg", "export settings"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-align-distribute",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Alinhar e distribuir (Align & Distribute)",
+    "description": "Alinha os objetos selecionados entre si (ou ao frame pai) e distribui o espaçamento uniformemente entre eles.",
+    "syntax": "Alt+A (esquerda) | Alt+D (direita) | Alt+H (centro horizontal) | Alt+W (topo) | Alt+S (base) | Alt+V (centro vertical)",
+    "shortcut": "Alt+H",
+    "example": "Selecionar três cards desalinhados e pressionar Alt+W para alinhar todos pelo topo, depois Alt+H para centralizar horizontalmente.",
+    "result": "Os objetos selecionados são reposicionados para compartilhar a mesma linha de alinhamento escolhida.",
+    "notes": [
+      "'Tidy Up' (Shift+Alt+T) distribui e espaça automaticamente objetos soltos como se fossem um grid, sem precisar de Auto Layout."
+    ],
+    "bestPractices": [
+      "Use o painel Align (barra de ferramentas ao selecionar múltiplos objetos) quando os atalhos individuais forem difíceis de lembrar."
+    ],
+    "commonMistakes": [
+      "Alinhar visualmente 'no olho' arrastando objetos em vez de usar Align, resultando em pequenos desalinhamentos de pixel."
+    ],
+    "relatedCommands": ["figma-auto-layout", "figma-constraints"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039956914-Align-and-distribute-layout",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "alinhamento"],
+    "keywords": ["align figma", "distribute figma", "alinhar objetos", "tidy up"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-z-order",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Ordem de empilhamento (Bring to Front / Send to Back)",
+    "description": "Controla a ordem Z dos objetos sobrepostos no canvas, trazendo um elemento para frente ou enviando-o para trás dos demais.",
+    "syntax": "Ctrl+] (avançar um nível) | Ctrl+[ (recuar um nível) | Ctrl+Shift+] (trazer para frente) | Ctrl+Shift+[ (enviar para trás)",
+    "shortcut": "Ctrl+Shift+]",
+    "example": "Selecionar um badge que ficou escondido atrás de um card e pressionar Ctrl+Shift+] para trazê-lo para o topo da pilha.",
+    "result": "A ordem de renderização do objeto selecionado muda, alterando o que fica visível nas áreas de sobreposição.",
+    "notes": [
+      "A ordem Z também é refletida (e reordenável por arrastar) no painel Layers, de cima para baixo."
+    ],
+    "relatedCommands": ["figma-group-selection"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039832054-Frames-groups-and-sections",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "atalhos"],
+    "keywords": [
+      "bring to front figma",
+      "send to back",
+      "ordem de camadas",
+      "z-index figma"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-insert-image",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Inserir imagem (Place Image)",
+    "description": "Insere um arquivo de imagem local no canvas, criando um novo objeto ou preenchendo uma forma já selecionada.",
+    "syntax": "Ctrl+Shift+K",
+    "shortcut": "Ctrl+Shift+K",
+    "example": "Selecionar um retângulo de placeholder e pressionar Ctrl+Shift+K para escolher uma imagem local que preencherá a forma.",
+    "result": "A imagem selecionada é aplicada como fill do objeto (se algo estava selecionado) ou criada como um novo retângulo com a imagem.",
+    "notes": [
+      "Arrastar e soltar um arquivo de imagem direto do explorador de arquivos para o canvas tem o mesmo efeito."
+    ],
+    "bestPractices": [
+      "Prefira formatos otimizados (WebP, JPG comprimido) ao inserir imagens de referência grandes, para não pesar o arquivo do Figma."
+    ],
+    "relatedCommands": ["figma-plugin-unsplash"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360039956994-Place-an-image-in-a-file",
+    "externalReferences": [],
+    "tags": ["figma", "imagens", "atalhos"],
+    "keywords": ["place image figma", "inserir imagem", "ctrl shift k"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-rulers-guides",
+    "category": "Figma",
+    "subcategory": "Navegação no Canvas",
+    "title": "Réguas e guias (Rulers & Guides)",
+    "description": "Exibe réguas nas bordas do canvas e permite criar linhas-guia arrastando a partir delas, usadas como referência de alinhamento manual.",
+    "syntax": "Shift+R (alternar réguas) | Arrastar a partir da régua para criar uma guia",
+    "shortcut": "Shift+R",
+    "example": "Pressionar Shift+R para exibir as réguas e arrastar uma guia horizontal na marca de 64px para alinhar o cabeçalho.",
+    "result": "Uma linha-guia azul fixa é criada na posição solta, visível apenas no editor (não é exportada).",
+    "notes": [
+      "Guias criadas a partir da régua do canvas são globais; guias dentro de um frame específico ficam atreladas àquele frame."
+    ],
+    "relatedCommands": ["figma-layout-grid", "figma-navigate-canvas"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040450513-Explore-layout-grids",
+    "externalReferences": [],
+    "tags": ["figma", "navegacao", "guias"],
+    "keywords": ["rulers figma", "guides figma", "reguas e guias", "shift r"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-duplicate",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Duplicar (Duplicate)",
+    "description": "Cria uma cópia exata do objeto selecionado, posicionada com um leve deslocamento em relação ao original.",
+    "syntax": "Ctrl+D | Alt+Arrastar (duplica e move ao mesmo tempo)",
+    "shortcut": "Ctrl+D",
+    "example": "Selecionar um item de lista e pressionar Ctrl+D repetidamente para criar várias cópias antes de preencher com conteúdos diferentes.",
+    "result": "Uma nova camada idêntica é criada, geralmente logo acima da original na ordem de empilhamento.",
+    "notes": [
+      "Segurar Alt e arrastar um objeto também duplica, permitindo posicionar a cópia manualmente no processo."
+    ],
+    "bestPractices": [
+      "Combine Ctrl+D com Auto Layout para que os itens duplicados se reorganizem automaticamente no espaçamento correto."
+    ],
+    "relatedCommands": ["figma-group-selection", "figma-z-order"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-the-canvas",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "atalhos"],
+    "keywords": ["duplicate figma", "duplicar objeto", "ctrl d figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-hide-lock-layer",
+    "category": "Figma",
+    "subcategory": "Edição",
+    "title": "Ocultar e travar camada (Show/Hide, Lock/Unlock)",
+    "description": "Alterna a visibilidade de uma camada no canvas ou a trava para impedir edições/seleção acidentais, sem removê-la do arquivo.",
+    "syntax": "Ctrl+Shift+H (mostrar/ocultar) | Ctrl+Shift+L (travar/destravar)",
+    "shortcut": "Ctrl+Shift+H",
+    "example": "Travar (Ctrl+Shift+L) o frame de background de uma tela para evitar movê-lo sem querer enquanto edita os elementos acima.",
+    "result": "A camada oculta desaparece do canvas (mas continua no painel Layers); a camada travada não pode mais ser selecionada por clique direto.",
+    "notes": [
+      "Uma camada travada ainda pode ser selecionada e destravada pelo painel Layers, mesmo sem poder clicar nela no canvas."
+    ],
+    "bestPractices": [
+      "Trave elementos de fundo e guias visuais para evitar movê-los sem querer durante a edição de detalhes."
+    ],
+    "relatedCommands": ["figma-z-order"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-the-canvas",
+    "externalReferences": [],
+    "tags": ["figma", "edicao", "atalhos"],
+    "keywords": [
+      "hide layer figma",
+      "lock layer figma",
+      "ocultar camada",
+      "travar camada"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-detach-instance",
+    "category": "Figma",
+    "subcategory": "Componentes",
+    "title": "Destacar instância (Detach Instance)",
+    "description": "Quebra o vínculo de uma instância de componente com seu Main Component, transformando-a em camadas soltas e editáveis livremente.",
+    "syntax": "Ctrl+Alt+B",
+    "shortcut": "Ctrl+Alt+B",
+    "example": "Destacar uma instância de botão para customizar sua estrutura interna de um jeito que o componente principal não permite.",
+    "result": "A instância vira um Frame/Group comum, perdendo a sincronização automática com o Main Component (ação irreversível).",
+    "notes": [
+      "Após destacar, qualquer atualização futura no Main Component deixa de afetar aquele elemento."
+    ],
+    "bestPractices": [
+      "Antes de destacar, avalie se a customização não poderia virar uma nova Variant do componente, preservando a manutenibilidade."
+    ],
+    "commonMistakes": [
+      "Destacar instâncias em massa como atalho para customizar, gerando divergência silenciosa do design system pelo arquivo."
+    ],
+    "relatedCommands": ["figma-components", "figma-variants"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360038663994-Guide-to-components-in-Figma",
+    "externalReferences": [],
+    "tags": ["figma", "componentes", "instancia"],
+    "keywords": ["detach instance figma", "destacar instancia", "quebrar componente"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-instance-swap-properties",
+    "category": "Figma",
+    "subcategory": "Componentes",
+    "title": "Propriedades de instância (Instance Swap, Boolean, Text)",
+    "description": "Propriedades configuráveis de um componente que permitem customizar instâncias sem quebrar o vínculo com o Main Component: trocar um ícone (Instance Swap), alternar visibilidade (Boolean) ou editar texto (Text).",
+    "syntax": "Painel Design da instância > propriedades listadas abaixo do nome do componente",
+    "example": "Definir uma propriedade Instance Swap 'Icon' em um botão, permitindo trocar o ícone exibido em cada instância pelo painel direito.",
+    "result": "Cada instância pode ter uma combinação diferente de valores dessas propriedades, sem precisar destacar (detach) o componente.",
+    "notes": [
+      "Diferente de Variants (que trocam entre componentes pré-definidos), essas propriedades permitem valores mais livres, como qualquer texto ou qualquer componente compatível."
+    ],
+    "bestPractices": [
+      "Use Boolean properties para mostrar/ocultar partes opcionais de um componente (ex: badge de notificação) em vez de criar variantes separadas para cada combinação."
+    ],
+    "relatedCommands": ["figma-variants", "figma-components"],
+    "difficulty": "avancado",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360055471353-Explore-component-properties",
+    "externalReferences": [],
+    "tags": ["figma", "componentes", "instancia"],
+    "keywords": ["component properties figma", "instance swap", "boolean property figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "figma-search-layers",
+    "category": "Figma",
+    "subcategory": "Navegação no Canvas",
+    "title": "Buscar no arquivo (Find in File)",
+    "description": "Busca camadas, componentes, estilos e texto pelo nome em todo o arquivo, útil em documentos grandes com muitas páginas e frames.",
+    "syntax": "Ctrl+F",
+    "shortcut": "Ctrl+F",
+    "example": "Pressionar Ctrl+F e digitar 'Button' para localizar rapidamente todas as camadas e instâncias com esse nome, mesmo em outras páginas.",
+    "result": "Uma lista de resultados aparece, e clicar em um item navega e seleciona diretamente a camada correspondente no canvas.",
+    "bestPractices": [
+      "Nomeie camadas de forma consistente para que a busca seja realmente útil em arquivos grandes."
+    ],
+    "relatedCommands": ["figma-navigate-canvas"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "macos", "browser"],
+    "version": "Figma (2024)",
+    "officialDocumentation": "https://help.figma.com/hc/en-us/articles/360040314193-Guide-to-the-canvas",
+    "externalReferences": [],
+    "tags": ["figma", "navegacao", "busca"],
+    "keywords": ["find in file figma", "buscar camada", "ctrl f figma"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

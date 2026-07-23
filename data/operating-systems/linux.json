@@ -72,5 +72,2295 @@
     "keywords": ["chmod", "permissoes de arquivo", "chmod 755"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "linux-ls",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "ls",
+    "description": "Lista o conteúdo de um diretório: arquivos, subdiretórios e, opcionalmente, metadados como permissões, dono e tamanho.",
+    "syntax": "ls [opcoes] [caminho]",
+    "example": "ls -lah ./projeto",
+    "result": "drwxr-xr-x  5 usuario grupo  4.0K Jul 22 10:03 projeto\n-rw-r--r--  1 usuario grupo  1.2K Jul 22 09:58 README.md",
+    "flags": [
+      {
+        "flag": "-l",
+        "description": "Formato longo: permissões, dono, grupo, tamanho e data."
+      },
+      {
+        "flag": "-a",
+        "description": "Mostra também arquivos ocultos (que começam com ponto)."
+      },
+      {
+        "flag": "-h",
+        "description": "Exibe tamanhos em formato legível (K, M, G) junto com -l."
+      },
+      {
+        "flag": "-t",
+        "description": "Ordena pela data de modificação, mais recente primeiro."
+      }
+    ],
+    "notes": ["Sem argumento, `ls` lista o diretório atual."],
+    "bestPractices": [
+      "Use o alias comum `ls -lah` para uma visão completa e legível do diretório."
+    ],
+    "commonMistakes": [
+      "Esquecer `-a` e não perceber arquivos de configuração ocultos como `.env` ou `.gitignore`."
+    ],
+    "relatedCommands": ["linux-cd-pwd", "linux-chmod", "linux-find"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["ls", "listar arquivos", "listar diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-cd-pwd",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "cd e pwd",
+    "description": "`cd` muda o diretório de trabalho atual da shell; `pwd` imprime o caminho absoluto do diretório em que você está.",
+    "syntax": "cd [caminho]\npwd",
+    "example": "cd /var/www/app\npwd",
+    "result": "/var/www/app",
+    "notes": [
+      "`cd` sem argumento leva para o diretório home do usuário ($HOME).",
+      "`cd -` volta para o diretório anterior em que você estava."
+    ],
+    "bestPractices": [
+      "Use caminhos relativos (`cd ../config`) para navegação rápida e `cd -` para alternar entre dois diretórios de trabalho."
+    ],
+    "commonMistakes": [
+      "Confundir caminho relativo com absoluto e cair em um diretório inesperado."
+    ],
+    "relatedCommands": ["linux-ls", "linux-find"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "navegacao"],
+    "keywords": ["cd linux", "pwd linux", "mudar diretorio", "diretorio atual"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-mkdir",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "mkdir",
+    "description": "Cria um ou mais diretórios novos.",
+    "syntax": "mkdir [-p] diretorio",
+    "example": "mkdir -p projeto/src/components",
+    "result": "Cria a árvore completa de diretórios projeto/src/components, criando os intermediários que não existirem.",
+    "flags": [
+      {
+        "flag": "-p",
+        "description": "Cria diretórios pai intermediários conforme necessário, sem erro se já existirem."
+      }
+    ],
+    "notes": [
+      "Sem `-p`, `mkdir` falha se algum diretório intermediário do caminho não existir."
+    ],
+    "bestPractices": [
+      "Use `-p` sempre que criar estruturas de pastas aninhadas em um único comando."
+    ],
+    "commonMistakes": [
+      "Esquecer `-p` e receber 'No such file or directory' ao criar caminhos com múltiplos níveis."
+    ],
+    "relatedCommands": ["linux-ls", "linux-rm"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/mkdir-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["mkdir", "criar diretorio", "criar pasta"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-rm",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "rm",
+    "description": "Remove arquivos e, com a flag correta, diretórios inteiros. A remoção é imediata e não passa por uma lixeira.",
+    "syntax": "rm [opcoes] arquivo",
+    "example": "rm -rf build/",
+    "result": "O diretório build/ e todo o seu conteúdo são removidos permanentemente, sem confirmação.",
+    "flags": [
+      { "flag": "-r", "description": "Remove diretórios e seu conteúdo recursivamente." },
+      {
+        "flag": "-f",
+        "description": "Força a remoção sem pedir confirmação e ignora arquivos inexistentes."
+      },
+      { "flag": "-i", "description": "Pede confirmação antes de cada remoção." }
+    ],
+    "notes": [
+      "Não existe 'desfazer' para `rm` — o arquivo não vai para uma lixeira como em interfaces gráficas."
+    ],
+    "bestPractices": [
+      "Rode o comando sem `-f` primeiro ou use `ls` no mesmo padrão de glob para conferir o que será apagado antes de rodar `rm -rf`."
+    ],
+    "commonMistakes": [
+      "Rodar `rm -rf` com um caminho errado ou uma variável vazia (`rm -rf $DIR/*` quando $DIR não está definida), apagando o sistema de arquivos inteiro."
+    ],
+    "relatedCommands": ["linux-mkdir", "linux-cp", "linux-mv"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/rm-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["rm", "remover arquivo", "apagar diretorio", "rm -rf"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-cp",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "cp",
+    "description": "Copia arquivos ou diretórios de uma origem para um destino.",
+    "syntax": "cp [opcoes] origem destino",
+    "example": "cp -r ./config ./config.bak",
+    "result": "Cria uma cópia completa do diretório config, incluindo subdiretórios, em config.bak.",
+    "flags": [
+      { "flag": "-r", "description": "Copia diretórios recursivamente." },
+      { "flag": "-v", "description": "Modo verboso: lista cada arquivo copiado." },
+      {
+        "flag": "-p",
+        "description": "Preserva permissões, dono e timestamps do arquivo original."
+      }
+    ],
+    "notes": ["Sem `-r`, `cp` falha ao tentar copiar um diretório."],
+    "bestPractices": [
+      "Use `-p` ao copiar arquivos onde metadados como permissões importam, como scripts executáveis."
+    ],
+    "commonMistakes": ["Copiar um diretório sem `-r` e receber 'omitting directory'."],
+    "relatedCommands": ["linux-mv", "linux-rm"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/cp-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["cp", "copiar arquivo", "copiar diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-mv",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "mv",
+    "description": "Move ou renomeia arquivos e diretórios. Renomear é apenas mover para o mesmo diretório com um nome diferente.",
+    "syntax": "mv origem destino",
+    "example": "mv relatorio-old.txt relatorio.txt",
+    "result": "O arquivo relatorio-old.txt passa a se chamar relatorio.txt.",
+    "notes": [
+      "Se o destino for um diretório existente, `mv` move o arquivo para dentro dele mantendo o nome."
+    ],
+    "bestPractices": [
+      "Use `mv -i` interativamente quando o destino puder já ter um arquivo com o mesmo nome, para evitar sobrescrever sem querer."
+    ],
+    "commonMistakes": [
+      "Mover um arquivo por cima de outro já existente sem confirmação, sobrescrevendo dados sem aviso."
+    ],
+    "relatedCommands": ["linux-cp", "linux-rm"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/mv-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["mv", "mover arquivo", "renomear arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-cat",
+    "category": "Linux",
+    "subcategory": "Visualização de arquivos",
+    "title": "cat",
+    "description": "Concatena e imprime o conteúdo de um ou mais arquivos na saída padrão.",
+    "syntax": "cat [opcoes] arquivo",
+    "example": "cat arquivo1.txt arquivo2.txt > combinado.txt",
+    "result": "combinado.txt passa a conter o conteúdo de arquivo1.txt seguido de arquivo2.txt.",
+    "flags": [
+      { "flag": "-n", "description": "Numera todas as linhas da saída." },
+      {
+        "flag": "-A",
+        "description": "Mostra caracteres não imprimíveis, como fim de linha ($) e tabs (^I)."
+      }
+    ],
+    "notes": [
+      "Para arquivos grandes, `cat` imprime tudo de uma vez sem paginação — use `less` para navegar aos poucos."
+    ],
+    "bestPractices": [
+      "Use `cat` para arquivos pequenos ou para concatenar; prefira `less` para inspecionar arquivos longos."
+    ],
+    "commonMistakes": [
+      "Usar `cat` em arquivos muito grandes ou binários, inundando o terminal com saída ilegível."
+    ],
+    "relatedCommands": ["linux-less", "linux-grep"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": ["cat", "ler arquivo", "imprimir arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-less",
+    "category": "Linux",
+    "subcategory": "Visualização de arquivos",
+    "title": "less (e more)",
+    "description": "Pagina o conteúdo de um arquivo ou de uma entrada, permitindo navegar, buscar e rolar sem carregar tudo de uma vez no terminal.",
+    "syntax": "less arquivo",
+    "example": "less /var/log/syslog",
+    "result": "Abre o arquivo em modo de navegação: setas ou PgUp/PgDn rolam, '/' busca, 'q' sai.",
+    "notes": [
+      "`more` é o predecessor mais simples de `less` (só rola para frente); `less` é o padrão recomendado hoje em quase todas as distribuições.",
+      "Dentro do `less`, pressione `/padrao` para buscar e `n`/`N` para ir à próxima/anterior ocorrência."
+    ],
+    "bestPractices": ["Combine com pipe para paginar saídas longas: `comando | less`."],
+    "commonMistakes": ["Não saber sair do `less` — a tecla é `q`, não Ctrl+C."],
+    "relatedCommands": ["linux-cat", "linux-grep"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU less",
+    "officialDocumentation": "https://www.gnu.org/software/less/",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "paginacao"],
+    "keywords": ["less linux", "more linux", "paginar arquivo", "navegar log"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-ps",
+    "category": "Linux",
+    "subcategory": "Processos",
+    "title": "ps",
+    "description": "Lista os processos em execução no sistema, incluindo PID, uso de recursos e comando que os iniciou.",
+    "syntax": "ps [opcoes]",
+    "example": "ps aux | grep node",
+    "result": "usuario   1234  0.3  1.2 987654 45000 ?  Sl  10:00  0:12 node server.js",
+    "flags": [
+      { "flag": "a", "description": "Mostra processos de todos os usuários." },
+      {
+        "flag": "u",
+        "description": "Exibe formato orientado a usuário, com CPU e memória."
+      },
+      {
+        "flag": "x",
+        "description": "Inclui processos sem terminal controlador (daemons)."
+      }
+    ],
+    "notes": [
+      "`ps aux` é a combinação mais comum para uma visão geral completa do sistema."
+    ],
+    "bestPractices": [
+      "Combine `ps aux` com `grep` para localizar rapidamente o PID de um processo específico antes de usar `kill`."
+    ],
+    "commonMistakes": [
+      "Confundir a sintaxe BSD (`ps aux`, sem hífen) com a sintaxe UNIX (`ps -ef`) e misturar flags incompatíveis."
+    ],
+    "relatedCommands": ["linux-kill", "linux-top-htop"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "procps-ng",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/ps.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processos"],
+    "keywords": ["ps aux", "listar processos", "ver processos linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-top-htop",
+    "category": "Linux",
+    "subcategory": "Processos",
+    "title": "top e htop",
+    "description": "Exibem, em tempo real e de forma interativa, os processos em execução ordenados por uso de CPU/memória. `htop` é uma versão mais amigável de `top`, com cores e navegação por mouse/teclado.",
+    "syntax": "top\nhtop",
+    "example": "htop",
+    "result": "Painel interativo atualizado a cada segundo mostrando CPU, memória e a lista de processos ordenável por coluna.",
+    "notes": [
+      "`htop` normalmente não vem pré-instalado e precisa ser instalado via gerenciador de pacotes.",
+      "Dentro de `top`, pressione 'q' para sair, 'k' para matar um processo, 'M' para ordenar por memória."
+    ],
+    "bestPractices": [
+      "Prefira `htop` quando disponível — é mais legível e permite matar processos diretamente com F9."
+    ],
+    "commonMistakes": [
+      "Deixar `top`/`htop` aberto consumindo o terminal em uma sessão SSH instável sem usar `tmux`/`screen`."
+    ],
+    "relatedCommands": ["linux-ps", "linux-kill"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "procps-ng / htop 3+",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/top.1.html",
+    "externalReferences": [{ "label": "htop", "url": "https://htop.dev/" }],
+    "tags": ["linux", "terminal", "processos", "monitoramento"],
+    "keywords": ["top linux", "htop", "monitorar cpu memoria"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-kill",
+    "category": "Linux",
+    "subcategory": "Processos",
+    "title": "kill e killall",
+    "description": "Enviam sinais a processos em execução, geralmente para encerrá-los. `kill` age por PID; `killall` age por nome do processo.",
+    "syntax": "kill [-sinal] pid\nkillall [-sinal] nome_processo",
+    "example": "kill -9 1234\nkillall node",
+    "result": "O processo de PID 1234 é encerrado imediatamente; todos os processos chamados 'node' são encerrados.",
+    "flags": [
+      {
+        "flag": "-15 (SIGTERM)",
+        "description": "Pede encerramento gracioso (padrão do kill sem flag)."
+      },
+      {
+        "flag": "-9 (SIGKILL)",
+        "description": "Força o encerramento imediato, sem permitir limpeza pelo processo."
+      }
+    ],
+    "notes": [
+      "`kill` não 'mata' por padrão — envia SIGTERM, que o processo pode ignorar ou tratar; `-9` não pode ser ignorado."
+    ],
+    "bestPractices": [
+      "Tente `kill` (SIGTERM) antes de recorrer a `kill -9`, dando chance do processo liberar recursos e fechar conexões corretamente."
+    ],
+    "commonMistakes": [
+      "Usar `kill -9` como primeira opção, o que pode deixar arquivos temporários, locks ou conexões de banco em estado inconsistente."
+    ],
+    "relatedCommands": ["linux-ps", "linux-top-htop"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "procps-ng",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/kill.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processos"],
+    "keywords": ["kill linux", "killall", "matar processo", "kill -9"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-df",
+    "category": "Linux",
+    "subcategory": "Armazenamento",
+    "title": "df",
+    "description": "Mostra o espaço em disco usado e disponível em cada sistema de arquivos montado.",
+    "syntax": "df [opcoes] [caminho]",
+    "example": "df -h",
+    "result": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        50G   32G   16G  67% /",
+    "flags": [
+      { "flag": "-h", "description": "Exibe tamanhos em formato legível (K, M, G)." }
+    ],
+    "notes": [
+      "`df` reporta o uso por sistema de arquivos/partição, diferente de `du`, que reporta por arquivo/diretório."
+    ],
+    "bestPractices": [
+      "Rode `df -h` antes de operações que geram muitos arquivos (builds, logs, backups) para garantir espaço suficiente."
+    ],
+    "commonMistakes": [
+      "Confundir `df` (espaço da partição) com `du` (espaço usado por arquivos/pastas específicos)."
+    ],
+    "relatedCommands": ["linux-du"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "disco"],
+    "keywords": ["df -h", "espaco em disco", "particao linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-du",
+    "category": "Linux",
+    "subcategory": "Armazenamento",
+    "title": "du",
+    "description": "Mostra o espaço em disco ocupado por arquivos e diretórios específicos.",
+    "syntax": "du [opcoes] [caminho]",
+    "example": "du -sh ./node_modules",
+    "result": "512M    ./node_modules",
+    "flags": [
+      {
+        "flag": "-s",
+        "description": "Mostra apenas o total do diretório, sem detalhar subpastas."
+      },
+      { "flag": "-h", "description": "Exibe tamanhos em formato legível." }
+    ],
+    "notes": [
+      "`du -sh */` lista o tamanho total de cada subdiretório do nível atual, útil para achar o que está consumindo espaço."
+    ],
+    "bestPractices": [
+      "Combine com `sort -h` para ordenar diretórios do maior para o menor: `du -h --max-depth=1 | sort -h`."
+    ],
+    "commonMistakes": [
+      "Rodar `du` sem `-s` em uma árvore grande e receber uma lista enorme e pouco útil de todos os subdiretórios."
+    ],
+    "relatedCommands": ["linux-df", "linux-sort-uniq"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "disco"],
+    "keywords": ["du -sh", "tamanho de diretorio", "espaco ocupado pasta"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-tar",
+    "category": "Linux",
+    "subcategory": "Compactação",
+    "title": "tar",
+    "description": "Empacota (e opcionalmente compacta) arquivos e diretórios em um único arquivo, tradicionalmente usado para backups e distribuição.",
+    "syntax": "tar [opcoes] arquivo.tar[.gz] [arquivos...]",
+    "example": "tar -czvf backup.tar.gz ./projeto",
+    "result": "Cria backup.tar.gz contendo o diretório projeto, compactado com gzip.",
+    "flags": [
+      { "flag": "-c", "description": "Cria um novo arquivo tar." },
+      { "flag": "-x", "description": "Extrai o conteúdo de um arquivo tar." },
+      { "flag": "-z", "description": "Compacta/descompacta com gzip." },
+      { "flag": "-v", "description": "Modo verboso, lista cada arquivo processado." },
+      { "flag": "-f", "description": "Especifica o nome do arquivo de destino/origem." }
+    ],
+    "notes": [
+      "Para extrair: `tar -xzvf backup.tar.gz`. A ordem das flags importa pouco, mas `-f` deve vir imediatamente antes do nome do arquivo."
+    ],
+    "bestPractices": [
+      "Use `tar -tzvf arquivo.tar.gz` para listar o conteúdo antes de extrair, evitando sobrescrever arquivos por engano."
+    ],
+    "commonMistakes": [
+      "Esquecer `-z` ao compactar/extrair um `.tar.gz`, resultando em um arquivo corrompido ou erro de leitura."
+    ],
+    "relatedCommands": ["linux-cp", "linux-du"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU tar",
+    "officialDocumentation": "https://www.gnu.org/software/tar/manual/tar.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "compactacao", "backup"],
+    "keywords": ["tar linux", "compactar arquivos", "tar.gz", "backup linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-ssh",
+    "category": "Linux",
+    "subcategory": "Rede e acesso remoto",
+    "title": "ssh",
+    "description": "Abre uma sessão de terminal remota e criptografada em outra máquina via protocolo SSH.",
+    "syntax": "ssh [usuario@]host [-p porta] [-i chave]",
+    "example": "ssh -i ~/.ssh/id_ed25519 deploy@192.168.1.10",
+    "result": "Abre um shell remoto autenticado na máquina 192.168.1.10 usando o usuário deploy e a chave privada informada.",
+    "flags": [
+      { "flag": "-i", "description": "Especifica o arquivo de chave privada a usar." },
+      { "flag": "-p", "description": "Especifica a porta (padrão 22)." },
+      { "flag": "-L", "description": "Cria um túnel de encaminhamento de porta local." }
+    ],
+    "notes": [
+      "Autenticação por chave pública/privada (`~/.ssh/id_ed25519`) é mais segura e prática que senha."
+    ],
+    "bestPractices": [
+      "Configure `~/.ssh/config` com aliases de host para evitar digitar usuário, porta e chave toda vez."
+    ],
+    "commonMistakes": [
+      "Deixar a chave privada com permissões abertas (ex: 644), o que o SSH recusa a usar por segurança — deve ser 600."
+    ],
+    "relatedCommands": ["linux-scp"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "OpenSSH",
+    "officialDocumentation": "https://man.openbsd.org/ssh.1",
+    "externalReferences": [],
+    "tags": ["linux", "ssh", "rede", "remoto"],
+    "keywords": ["ssh linux", "acesso remoto", "conectar servidor ssh"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-scp",
+    "category": "Linux",
+    "subcategory": "Rede e acesso remoto",
+    "title": "scp",
+    "description": "Copia arquivos entre máquinas locais e remotas de forma segura, usando o mesmo protocolo do SSH.",
+    "syntax": "scp [opcoes] origem destino",
+    "example": "scp -r ./dist deploy@servidor:/var/www/app",
+    "result": "Copia recursivamente o diretório dist para /var/www/app no servidor remoto.",
+    "flags": [
+      { "flag": "-r", "description": "Copia diretórios recursivamente." },
+      {
+        "flag": "-P",
+        "description": "Especifica a porta SSH (maiúsculo, diferente do -p do ssh)."
+      }
+    ],
+    "notes": ["A sintaxe usa `:` para separar host de caminho: `usuario@host:/caminho`."],
+    "bestPractices": [
+      "Para sincronizações grandes ou repetidas, prefira `rsync` (mais eficiente, copia só as diferenças)."
+    ],
+    "commonMistakes": [
+      "Usar `-p` (minúsculo) esperando definir a porta, quando na verdade `-p` em scp preserva timestamps — a porta é `-P`."
+    ],
+    "relatedCommands": ["linux-ssh"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "OpenSSH",
+    "officialDocumentation": "https://man.openbsd.org/scp.1",
+    "externalReferences": [],
+    "tags": ["linux", "ssh", "rede", "transferencia de arquivos"],
+    "keywords": ["scp linux", "copiar arquivo remoto", "transferir via ssh"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-curl",
+    "category": "Linux",
+    "subcategory": "Rede",
+    "title": "curl",
+    "description": "Faz requisições HTTP/HTTPS (e outros protocolos) diretamente do terminal, útil para testar APIs e baixar arquivos.",
+    "syntax": "curl [opcoes] url",
+    "example": "curl -X POST https://api.exemplo.com/users -H \"Content-Type: application/json\" -d '{\"nome\":\"Ana\"}'",
+    "result": "Envia um POST com corpo JSON e imprime a resposta do servidor no terminal.",
+    "flags": [
+      {
+        "flag": "-X",
+        "description": "Define o método HTTP (GET, POST, PUT, DELETE...)."
+      },
+      { "flag": "-H", "description": "Adiciona um cabeçalho HTTP à requisição." },
+      { "flag": "-d", "description": "Envia dados no corpo da requisição." },
+      {
+        "flag": "-o",
+        "description": "Salva a resposta em um arquivo em vez de imprimir."
+      },
+      { "flag": "-s", "description": "Modo silencioso, sem barra de progresso." }
+    ],
+    "notes": [
+      "Por padrão, `curl -d` já implica método POST mesmo sem `-X POST` explícito."
+    ],
+    "bestPractices": [
+      "Use `curl -i` para incluir os cabeçalhos de resposta na saída ao depurar uma API."
+    ],
+    "commonMistakes": [
+      "Esquecer `-X POST`/`-d` em requisições que exigem corpo, enviando um GET por padrão."
+    ],
+    "relatedCommands": ["linux-wget"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "curl 7+",
+    "officialDocumentation": "https://curl.se/docs/manpage.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "http", "rede"],
+    "keywords": ["curl linux", "testar api terminal", "curl post"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-wget",
+    "category": "Linux",
+    "subcategory": "Rede",
+    "title": "wget",
+    "description": "Baixa arquivos da web via HTTP, HTTPS ou FTP diretamente para o disco, com suporte a downloads recursivos e retomada.",
+    "syntax": "wget [opcoes] url",
+    "example": "wget -O app.tar.gz https://exemplo.com/releases/app-v1.tar.gz",
+    "result": "Baixa o arquivo remoto e salva localmente como app.tar.gz.",
+    "flags": [
+      { "flag": "-O", "description": "Define o nome do arquivo de saída." },
+      {
+        "flag": "-c",
+        "description": "Retoma um download interrompido em vez de recomeçar do zero."
+      },
+      { "flag": "-q", "description": "Modo silencioso, sem saída no terminal." }
+    ],
+    "notes": [
+      "Diferente do `curl`, o foco do `wget` é salvar em disco; ele não foi feito para inspecionar a resposta interativamente."
+    ],
+    "bestPractices": [
+      "Use `-c` ao baixar arquivos grandes por conexões instáveis, para retomar em vez de baixar tudo de novo."
+    ],
+    "commonMistakes": [
+      "Esperar que `wget` imprima o corpo da resposta no terminal como `curl` faz por padrão — ele sempre salva em arquivo."
+    ],
+    "relatedCommands": ["linux-curl"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU Wget",
+    "officialDocumentation": "https://www.gnu.org/software/wget/manual/wget.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "download", "rede"],
+    "keywords": ["wget linux", "baixar arquivo terminal", "download linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-systemctl",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "systemctl",
+    "description": "Controla serviços gerenciados pelo systemd: iniciar, parar, reiniciar, habilitar no boot e checar status.",
+    "syntax": "systemctl [comando] servico",
+    "example": "sudo systemctl restart nginx",
+    "result": "O serviço nginx é reiniciado; `systemctl status nginx` mostra o novo estado (active/running).",
+    "flags": [
+      { "flag": "start", "description": "Inicia o serviço agora." },
+      { "flag": "stop", "description": "Para o serviço agora." },
+      { "flag": "restart", "description": "Para e inicia o serviço novamente." },
+      {
+        "flag": "enable",
+        "description": "Faz o serviço iniciar automaticamente no boot."
+      },
+      {
+        "flag": "status",
+        "description": "Mostra o estado atual e as últimas linhas de log do serviço."
+      }
+    ],
+    "notes": [
+      "`systemctl` é específico de distribuições baseadas em systemd (Ubuntu, Debian, Fedora, RHEL); não existe em sistemas com init diferente (Alpine com OpenRC, por exemplo)."
+    ],
+    "bestPractices": [
+      "Depois de editar um arquivo `.service`, rode `systemctl daemon-reload` antes de `restart` para o systemd recarregar a definição."
+    ],
+    "commonMistakes": [
+      "Esquecer `enable` e assumir que o serviço vai subir sozinho após um reboot do servidor."
+    ],
+    "relatedCommands": ["linux-journalctl"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "systemd",
+    "officialDocumentation": "https://www.freedesktop.org/software/systemd/man/systemctl.html",
+    "externalReferences": [],
+    "tags": ["linux", "systemd", "servicos", "administracao"],
+    "keywords": ["systemctl", "gerenciar servico linux", "systemd restart"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-journalctl",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "journalctl",
+    "description": "Consulta os logs centralizados coletados pelo systemd-journald, incluindo logs de serviços, kernel e boot.",
+    "syntax": "journalctl [opcoes]",
+    "example": "journalctl -u nginx -f",
+    "result": "Mostra e continua acompanhando (follow) em tempo real os logs do serviço nginx.",
+    "flags": [
+      { "flag": "-u", "description": "Filtra logs de uma unidade/serviço específico." },
+      { "flag": "-f", "description": "Segue o log em tempo real, como `tail -f`." },
+      { "flag": "-b", "description": "Mostra apenas logs do boot atual." },
+      { "flag": "--since", "description": "Filtra logs a partir de uma data/hora." }
+    ],
+    "notes": [
+      "Sem filtros, `journalctl` mostra o log completo do sistema, que pode ser enorme."
+    ],
+    "bestPractices": [
+      "Combine `-u servico -f` para depurar um serviço específico em tempo real durante um deploy."
+    ],
+    "commonMistakes": [
+      "Rodar `journalctl` sem filtro e sem paginação em um servidor com logs antigos, travando o terminal com volume excessivo de saída."
+    ],
+    "relatedCommands": ["linux-systemctl"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "systemd",
+    "officialDocumentation": "https://www.freedesktop.org/software/systemd/man/journalctl.html",
+    "externalReferences": [],
+    "tags": ["linux", "systemd", "logs", "administracao"],
+    "keywords": ["journalctl", "logs linux", "ver log de servico"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-crontab",
+    "category": "Linux",
+    "subcategory": "Automação",
+    "title": "crontab",
+    "description": "Agenda a execução automática e recorrente de comandos ou scripts em horários definidos, gerenciado pelo daemon cron.",
+    "syntax": "crontab -e\n# minuto hora dia mes dia_semana comando",
+    "example": "0 3 * * * /usr/bin/bash /home/deploy/backup.sh",
+    "result": "O script backup.sh é executado automaticamente todos os dias às 3h da manhã.",
+    "flags": [
+      { "flag": "-e", "description": "Edita o crontab do usuário atual." },
+      { "flag": "-l", "description": "Lista as tarefas agendadas do usuário atual." },
+      { "flag": "-r", "description": "Remove todo o crontab do usuário atual." }
+    ],
+    "notes": [
+      "Os 5 campos representam: minuto (0-59), hora (0-23), dia do mês (1-31), mês (1-12) e dia da semana (0-6, domingo=0). `*` significa 'qualquer valor'."
+    ],
+    "bestPractices": [
+      "Sempre use caminhos absolutos dentro de scripts do cron — o ambiente do cron não tem o mesmo PATH do shell interativo."
+    ],
+    "commonMistakes": [
+      "Depender de variáveis de ambiente do `.bashrc` dentro de um script agendado, já que o cron roda com um ambiente mínimo."
+    ],
+    "relatedCommands": ["linux-systemctl"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "cron",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+    "externalReferences": [],
+    "tags": ["linux", "cron", "agendamento", "automacao"],
+    "keywords": ["crontab", "agendar tarefa linux", "cron job"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-find",
+    "category": "Linux",
+    "subcategory": "Busca em arquivos",
+    "title": "find",
+    "description": "Localiza arquivos e diretórios em uma árvore de diretórios com base em nome, tipo, tamanho, data e outros critérios.",
+    "syntax": "find [caminho] [criterios] [acao]",
+    "example": "find . -name \"*.log\" -mtime +7 -delete",
+    "result": "Remove todos os arquivos .log com mais de 7 dias encontrados a partir do diretório atual.",
+    "flags": [
+      { "flag": "-name", "description": "Filtra por padrão de nome (glob)." },
+      {
+        "flag": "-type",
+        "description": "Filtra por tipo: f (arquivo), d (diretório), l (link)."
+      },
+      { "flag": "-mtime", "description": "Filtra por tempo de modificação em dias." },
+      {
+        "flag": "-exec",
+        "description": "Executa um comando para cada resultado encontrado."
+      }
+    ],
+    "notes": [
+      "`-delete` e `-exec rm {} \\;` são destrutivos — sempre teste sem eles primeiro para conferir os resultados."
+    ],
+    "bestPractices": [
+      "Rode o `find` sem `-delete`/`-exec` primeiro para revisar a lista de arquivos afetados antes de uma ação destrutiva."
+    ],
+    "commonMistakes": [
+      "Esquecer `{} \\;` (ou `+`) ao usar `-exec`, o que gera erro de sintaxe."
+    ],
+    "relatedCommands": ["linux-grep", "linux-xargs"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU findutils",
+    "officialDocumentation": "https://www.gnu.org/software/findutils/manual/html_mono/find.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "busca", "arquivos"],
+    "keywords": ["find linux", "buscar arquivo por nome", "find delete"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-awk",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "awk",
+    "description": "Linguagem e ferramenta de processamento de texto orientada a colunas, muito usada para extrair e transformar campos de saídas estruturadas.",
+    "syntax": "awk 'padrao { acao }' arquivo",
+    "example": "ps aux | awk '{ print $2, $11 }'",
+    "result": "Imprime apenas a 2ª coluna (PID) e a 11ª coluna (comando) da saída do ps.",
+    "notes": [
+      "Por padrão, `awk` separa campos por espaços/tabs; `$0` é a linha inteira, `$1`, `$2`... são os campos.",
+      "Use `-F` para definir outro separador, ex: `awk -F',' '{ print $1 }'` para CSV."
+    ],
+    "bestPractices": [
+      "Use `awk` para extrair colunas específicas em vez de `cut` quando o separador for espaço/tab variável (múltiplos espaços)."
+    ],
+    "commonMistakes": [
+      "Usar `awk` para tarefas simples de recorte de coluna quando `cut -d',' -f1` já resolveria com menos complexidade."
+    ],
+    "relatedCommands": ["linux-sed", "linux-grep"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "version": "GNU awk (gawk)",
+    "officialDocumentation": "https://www.gnu.org/software/gawk/manual/gawk.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": ["awk linux", "extrair coluna terminal", "awk print"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-sed",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "sed",
+    "description": "Editor de fluxo (stream editor) que aplica transformações de texto linha a linha, muito usado para busca e substituição em arquivos.",
+    "syntax": "sed 's/padrao/substituto/g' arquivo",
+    "example": "sed -i 's/localhost/127.0.0.1/g' config.env",
+    "result": "Substitui todas as ocorrências de 'localhost' por '127.0.0.1' diretamente no arquivo config.env.",
+    "flags": [
+      {
+        "flag": "-i",
+        "description": "Edita o arquivo no local (in-place) em vez de só imprimir na saída."
+      },
+      {
+        "flag": "-n",
+        "description": "Suprime a impressão automática de cada linha (útil com o comando p)."
+      }
+    ],
+    "notes": [
+      "`s/padrao/substituto/g` substitui todas as ocorrências na linha; sem o `g`, só a primeira."
+    ],
+    "bestPractices": [
+      "Rode sem `-i` primeiro para conferir a saída no terminal antes de aplicar a alteração diretamente no arquivo."
+    ],
+    "commonMistakes": [
+      "Usar `-i` no macOS (BSD sed) sem argumento de sufixo de backup, o que exige sintaxe diferente do GNU sed (`-i ''`)."
+    ],
+    "relatedCommands": ["linux-awk", "linux-grep"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU sed",
+    "officialDocumentation": "https://www.gnu.org/software/sed/manual/sed.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": ["sed linux", "substituir texto terminal", "sed -i"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-sort-uniq",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "sort e uniq",
+    "description": "`sort` ordena linhas de texto; `uniq` remove ou conta linhas repetidas adjacentes. Combinados, formam um padrão comum para contar ocorrências únicas.",
+    "syntax": "sort [opcoes] arquivo\nuniq [-c]",
+    "example": "cat acessos.log | awk '{ print $1 }' | sort | uniq -c | sort -rn",
+    "result": "Lista de IPs com a contagem de ocorrências de cada um, do mais frequente para o menos frequente.",
+    "flags": [
+      {
+        "flag": "-n",
+        "description": "Ordena numericamente em vez de lexicograficamente (sort)."
+      },
+      { "flag": "-r", "description": "Inverte a ordem (decrescente) (sort)." },
+      { "flag": "-c", "description": "Conta quantas vezes cada linha se repete (uniq)." }
+    ],
+    "notes": [
+      "`uniq` só remove duplicatas ADJACENTES — por isso quase sempre é usado depois de `sort`."
+    ],
+    "bestPractices": [
+      "Use o padrão `sort | uniq -c | sort -rn` para rankings rápidos de frequência direto no terminal."
+    ],
+    "commonMistakes": [
+      "Usar `uniq` sem `sort` antes, esperando remover duplicatas espalhadas pelo arquivo inteiro."
+    ],
+    "relatedCommands": ["linux-du", "linux-wc"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": [
+      "sort linux",
+      "uniq linux",
+      "contar linhas repetidas",
+      "ranking terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-wc",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "wc",
+    "description": "Conta linhas, palavras e bytes/caracteres de um arquivo ou de uma entrada.",
+    "syntax": "wc [opcoes] arquivo",
+    "example": "cat app.log | wc -l",
+    "result": "1342",
+    "flags": [
+      { "flag": "-l", "description": "Conta apenas o número de linhas." },
+      { "flag": "-w", "description": "Conta apenas o número de palavras." },
+      { "flag": "-c", "description": "Conta apenas o número de bytes." }
+    ],
+    "notes": [
+      "`wc -l` é o uso mais comum, geralmente combinado com `grep` para contar quantas linhas casam com um padrão."
+    ],
+    "bestPractices": [
+      "Combine `grep padrao arquivo | wc -l` para contar rapidamente ocorrências sem escrever um script."
+    ],
+    "commonMistakes": [
+      "Esperar que `wc -l` conte 'entradas' de um JSON/CSV multi-linha da forma esperada, quando na verdade conta apenas quebras de linha."
+    ],
+    "relatedCommands": ["linux-grep", "linux-sort-uniq"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/wc-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": ["wc -l", "contar linhas arquivo", "contar palavras terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-xargs",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "xargs",
+    "description": "Converte a saída de um comando (via stdin) em argumentos de linha de comando para outro comando, permitindo encadear comandos que não leem stdin diretamente.",
+    "syntax": "comando_gerador | xargs comando_destino",
+    "example": "find . -name \"*.tmp\" | xargs rm",
+    "result": "Todos os arquivos .tmp encontrados por find são passados como argumentos e removidos por rm.",
+    "flags": [
+      {
+        "flag": "-I {}",
+        "description": "Define um placeholder para inserir cada item em posições específicas do comando."
+      },
+      {
+        "flag": "-n",
+        "description": "Limita quantos argumentos são passados por execução do comando."
+      },
+      { "flag": "-P", "description": "Executa em paralelo, com N processos simultâneos." }
+    ],
+    "notes": [
+      "Muitos comandos (como `rm`, `cp`) não leem stdin como lista de arquivos — `xargs` faz essa ponte."
+    ],
+    "bestPractices": [
+      "Combine `find ... -print0 | xargs -0` para lidar com segurança com nomes de arquivo que contêm espaços ou quebras de linha."
+    ],
+    "commonMistakes": [
+      "Não usar `-print0`/`-0` com nomes de arquivo contendo espaços, fazendo `xargs` dividir um único nome em múltiplos argumentos."
+    ],
+    "relatedCommands": ["linux-find"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "version": "GNU findutils",
+    "officialDocumentation": "https://www.gnu.org/software/findutils/manual/html_mono/find.html#xargs-invocation",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": ["xargs linux", "converter stdin em argumento", "find xargs rm"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-ln",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "ln (links simbólicos e físicos)",
+    "description": "Cria links entre arquivos. Um link simbólico (symlink) é um atalho que aponta para um caminho; um link físico (hard link) é outra entrada apontando para os mesmos dados no disco.",
+    "syntax": "ln -s alvo nome_do_link",
+    "example": "ln -s /opt/app/current /opt/app/latest",
+    "result": "/opt/app/latest passa a ser um atalho que aponta para /opt/app/current.",
+    "flags": [
+      {
+        "flag": "-s",
+        "description": "Cria um link simbólico em vez de um link físico (padrão do comando)."
+      }
+    ],
+    "notes": [
+      "Link simbólico quebra se o alvo original for removido/movido; link físico continua válido porque aponta para os mesmos dados (inode).",
+      "Links físicos não funcionam entre sistemas de arquivos/partições diferentes; links simbólicos funcionam."
+    ],
+    "bestPractices": [
+      "Use links simbólicos para apontar para 'a versão atual' de um deploy (ex: `current` -> `releases/v1.2.3`), facilitando rollback."
+    ],
+    "commonMistakes": [
+      "Esquecer `-s` e criar um hard link quando a intenção era um symlink apontando para outro caminho."
+    ],
+    "relatedCommands": ["linux-ls", "linux-mv"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/ln-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos", "symlink"],
+    "keywords": ["ln -s", "link simbolico linux", "symlink", "hard link"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-mount",
+    "category": "Linux",
+    "subcategory": "Armazenamento",
+    "title": "mount e umount",
+    "description": "Anexam (mount) ou desanexam (umount) um sistema de arquivos — de um disco, partição ou dispositivo remoto — a um diretório da árvore do sistema.",
+    "syntax": "mount [dispositivo] [ponto_de_montagem]\numount [ponto_de_montagem]",
+    "example": "sudo mount /dev/sdb1 /mnt/usb",
+    "result": "O conteúdo da partição /dev/sdb1 passa a ser acessível em /mnt/usb.",
+    "notes": [
+      "`mount` sem argumentos lista todos os sistemas de arquivos atualmente montados.",
+      "`/etc/fstab` define montagens automáticas na inicialização do sistema."
+    ],
+    "bestPractices": [
+      "Sempre rode `umount` antes de desconectar fisicamente um dispositivo USB, para evitar corrupção de dados não sincronizados."
+    ],
+    "commonMistakes": [
+      "Tentar `umount` um diretório que ainda está em uso por algum processo, recebendo 'target is busy'."
+    ],
+    "relatedCommands": ["linux-df"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "util-linux",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/mount.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "disco", "administracao"],
+    "keywords": ["mount linux", "umount", "montar particao", "montar dispositivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-chown",
+    "category": "Linux",
+    "subcategory": "Permissões",
+    "title": "chown",
+    "description": "Altera o dono e/ou o grupo de um arquivo ou diretório.",
+    "syntax": "chown [dono][:grupo] arquivo",
+    "example": "sudo chown -R www-data:www-data /var/www/app",
+    "result": "Todos os arquivos e subdiretórios de /var/www/app passam a pertencer ao usuário e grupo www-data.",
+    "flags": [
+      { "flag": "-R", "description": "Aplica a mudança recursivamente em diretórios." }
+    ],
+    "notes": [
+      "Alterar o dono normalmente exige privilégios de root (`sudo`), diferente de `chmod` que o próprio dono já pode fazer."
+    ],
+    "bestPractices": [
+      "Ajuste o dono para o usuário que o serviço/servidor web efetivamente roda (ex: `www-data`, `nginx`), não para `root`."
+    ],
+    "commonMistakes": [
+      "Rodar aplicações como `root` só para evitar lidar com permissões, uma prática de risco em produção."
+    ],
+    "relatedCommands": ["linux-chmod"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/chown-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "permissoes"],
+    "keywords": ["chown linux", "mudar dono arquivo", "chown -R"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-env-vars",
+    "category": "Linux",
+    "subcategory": "Ambiente",
+    "title": "export e variáveis de ambiente",
+    "description": "Variáveis de ambiente são valores acessíveis por processos filhos da shell. `export` promove uma variável de shell comum para o ambiente, tornando-a visível a subprocessos.",
+    "syntax": "export VAR=valor\nenv\necho $VAR",
+    "example": "export NODE_ENV=production\nnode server.js",
+    "result": "O processo node server.js e qualquer subprocesso dele enxergam NODE_ENV=production.",
+    "notes": [
+      "`env` (ou `printenv`) lista todas as variáveis de ambiente atuais.",
+      "Variáveis definidas sem `export` existem só na shell atual e não são herdadas por processos filhos."
+    ],
+    "bestPractices": [
+      "Use arquivos `.env` com uma ferramenta como `dotenv` para gerenciar variáveis por projeto, em vez de exportar manualmente no terminal."
+    ],
+    "commonMistakes": [
+      "Definir uma variável sem `export` e esperar que um script chamado logo em seguida consiga enxergá-la."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Environment.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "variaveis de ambiente"],
+    "keywords": ["export linux", "variavel de ambiente", "env linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-package-managers",
+    "category": "Linux",
+    "subcategory": "Gerenciamento de pacotes",
+    "title": "Gerenciadores de pacotes (apt, dnf/yum)",
+    "description": "Instalam, atualizam e removem softwares e suas dependências a partir de repositórios oficiais da distribuição. `apt` é usado em Debian/Ubuntu; `dnf` (sucessor do `yum`) em Fedora/RHEL/CentOS.",
+    "syntax": "sudo apt update && sudo apt install pacote\nsudo dnf install pacote",
+    "example": "sudo apt update && sudo apt install -y htop",
+    "result": "Atualiza a lista de pacotes disponíveis e instala o htop, resolvendo dependências automaticamente.",
+    "flags": [
+      {
+        "flag": "update",
+        "description": "Atualiza a lista local de pacotes disponíveis nos repositórios."
+      },
+      {
+        "flag": "upgrade",
+        "description": "Atualiza os pacotes instalados para as versões mais recentes."
+      },
+      {
+        "flag": "remove",
+        "description": "Desinstala um pacote, mantendo arquivos de configuração."
+      },
+      {
+        "flag": "purge",
+        "description": "Desinstala um pacote e remove também seus arquivos de configuração (apt)."
+      }
+    ],
+    "notes": [
+      "Cada distribuição tem seu próprio gerenciador: apt (Debian/Ubuntu), dnf/yum (Fedora/RHEL), pacman (Arch), zypper (openSUSE)."
+    ],
+    "bestPractices": [
+      "Rode `apt update` antes de `install` para garantir que a lista de versões disponíveis está atualizada."
+    ],
+    "commonMistakes": [
+      "Misturar instalação via gerenciador de pacotes com instalação manual (compilando do source) do mesmo software, causando conflitos de versão."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux"],
+    "version": "APT 2+ / DNF 4+",
+    "officialDocumentation": "https://manpages.debian.org/bookworm/apt/apt.8.en.html",
+    "externalReferences": [
+      { "label": "DNF Documentation", "url": "https://dnf.readthedocs.io/en/latest/" }
+    ],
+    "tags": ["linux", "pacotes", "apt", "dnf"],
+    "keywords": ["apt install", "dnf install", "gerenciador de pacotes linux", "yum"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-useradd",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "useradd e usermod",
+    "description": "Criam e modificam contas de usuário no sistema, incluindo grupos, diretório home e shell padrão.",
+    "syntax": "sudo useradd [opcoes] nome\nsudo usermod [opcoes] nome",
+    "example": "sudo useradd -m -s /bin/bash -G sudo deploy",
+    "result": "Cria o usuário deploy com diretório home, shell bash e pertencendo ao grupo sudo.",
+    "flags": [
+      { "flag": "-m", "description": "Cria o diretório home do usuário se não existir." },
+      { "flag": "-s", "description": "Define o shell padrão do usuário." },
+      { "flag": "-G", "description": "Adiciona o usuário a grupos secundários." },
+      {
+        "flag": "-aG (usermod)",
+        "description": "Adiciona o usuário a um grupo sem removê-lo dos demais."
+      }
+    ],
+    "notes": [
+      "`passwd nome` define/altera a senha de um usuário existente logo após a criação."
+    ],
+    "bestPractices": [
+      "Use `usermod -aG` (append) em vez de `-G` sozinho ao adicionar um grupo, pois `-G` sozinho substitui todos os grupos secundários."
+    ],
+    "commonMistakes": [
+      "Usar `usermod -G grupo` esperando adicionar um grupo, mas removendo o usuário de todos os outros grupos aos quais já pertencia."
+    ],
+    "relatedCommands": ["linux-chown"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "shadow-utils",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/useradd.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "usuarios", "administracao"],
+    "keywords": [
+      "useradd",
+      "usermod",
+      "criar usuario linux",
+      "adicionar usuario a grupo"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-umask",
+    "category": "Linux",
+    "subcategory": "Permissões",
+    "title": "umask",
+    "description": "Define a máscara de permissões padrão aplicada a novos arquivos e diretórios criados pela shell atual, subtraindo permissões do valor máximo padrão.",
+    "syntax": "umask [valor_octal]",
+    "example": "umask 022",
+    "result": "Novos arquivos passam a ser criados com 644 (rw-r--r--) e novos diretórios com 755 (rwxr-xr-x).",
+    "notes": [
+      "Arquivos partem de um máximo de 666 e diretórios de 777; a umask é subtraída desse valor para definir a permissão final.",
+      "`umask` sem argumento apenas exibe o valor atual."
+    ],
+    "bestPractices": [
+      "Configure a `umask` no `.bashrc`/`.profile` do usuário quando precisar de um padrão de permissões diferente do sistema para todos os arquivos criados."
+    ],
+    "commonMistakes": [
+      "Confundir a umask (o que é SUBTRAÍDO) com o modo final de `chmod` (o valor absoluto desejado) — são conceitos inversos."
+    ],
+    "relatedCommands": ["linux-chmod"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "version": "POSIX",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/umask-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "permissoes"],
+    "keywords": ["umask linux", "mascara de permissao", "permissao padrao arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-head-tail",
+    "category": "Linux",
+    "subcategory": "Visualização de arquivos",
+    "title": "head e tail",
+    "description": "`head` mostra as primeiras linhas de um arquivo; `tail` mostra as últimas, com suporte a acompanhamento em tempo real.",
+    "syntax": "head [-n N] arquivo\ntail [-n N] [-f] arquivo",
+    "example": "tail -f /var/log/app.log",
+    "result": "Mostra as últimas linhas do arquivo e continua imprimindo novas linhas conforme são escritas.",
+    "flags": [
+      { "flag": "-n", "description": "Define quantas linhas mostrar (padrão: 10)." },
+      {
+        "flag": "-f",
+        "description": "Segue o arquivo em tempo real (apenas tail), útil para acompanhar logs."
+      }
+    ],
+    "notes": [
+      "`tail -f` é o comando clássico para acompanhar logs de aplicação em produção em tempo real."
+    ],
+    "bestPractices": [
+      "Use `head -n 50 arquivo` para inspecionar rapidamente o início de um arquivo grande sem abri-lo inteiro."
+    ],
+    "commonMistakes": [
+      "Esquecer de encerrar um `tail -f` (Ctrl+C) em uma sessão SSH, deixando o processo consumindo a conexão."
+    ],
+    "relatedCommands": ["linux-cat", "linux-less"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos", "logs"],
+    "keywords": ["head linux", "tail -f", "acompanhar log terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-history",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "history",
+    "description": "Lista o histórico de comandos já executados na shell atual, permitindo reexecutá-los por número de referência.",
+    "syntax": "history [N]\n!N\n!!",
+    "example": "history | grep docker",
+    "result": "Lista apenas as linhas do histórico que contêm 'docker', cada uma numerada.",
+    "notes": [
+      "`!N` reexecuta o comando de número N do histórico; `!!` reexecuta o último comando.",
+      "O histórico persiste entre sessões no arquivo `~/.bash_history` (ou equivalente da shell)."
+    ],
+    "bestPractices": [
+      "Prefira `Ctrl+R` (busca reversa interativa) a rolar `history` manualmente para achar um comando específico."
+    ],
+    "commonMistakes": [
+      "Assumir que o histórico da sessão atual já está salvo em disco antes de fechar o terminal — em alguns casos só é gravado ao sair da shell."
+    ],
+    "relatedCommands": ["linux-alias"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "Bash/Zsh",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "historico"],
+    "keywords": ["history linux", "historico de comandos", "reexecutar comando"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-alias",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "alias",
+    "description": "Cria um apelido para um comando (ou combinação de comando com flags), reduzindo digitação repetitiva.",
+    "syntax": "alias nome='comando'",
+    "example": "alias ll='ls -lah'",
+    "result": "A partir de agora, digitar `ll` executa `ls -lah` na sessão atual.",
+    "notes": [
+      "Um `alias` definido no terminal só vale para a sessão atual; para persistir, adicione a linha ao `~/.bashrc` ou `~/.zshrc`.",
+      "`unalias nome` remove um alias definido."
+    ],
+    "bestPractices": [
+      "Centralize aliases pessoais em `~/.bashrc`/`~/.zshrc` para que fiquem disponíveis em toda nova sessão de terminal."
+    ],
+    "commonMistakes": [
+      "Definir um alias com o mesmo nome de um comando existente sem perceber, mascarando o comportamento original do comando."
+    ],
+    "relatedCommands": ["linux-history"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "Bash/Zsh",
+    "officialDocumentation": "https://www.gnu.org/software/bash/manual/html_node/Aliases.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "produtividade"],
+    "keywords": ["alias linux", "apelido de comando", "atalho de comando"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-which",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "which e whereis",
+    "description": "`which` mostra o caminho completo do executável que seria chamado ao digitar um comando; `whereis` também localiza binário, código-fonte e páginas de manual.",
+    "syntax": "which comando\nwhereis comando",
+    "example": "which node",
+    "result": "/usr/local/bin/node",
+    "notes": [
+      "Útil para depurar quando há múltiplas versões de um mesmo comando instaladas (ex: via nvm, apt e compilado manualmente)."
+    ],
+    "bestPractices": [
+      "Use `which` para confirmar qual instalação de uma ferramenta (ex: node, python) está ativa na sessão antes de reportar um bug de versão."
+    ],
+    "commonMistakes": [
+      "Confundir `which` (caminho do executável) com `whatis`/`man` (documentação do comando)."
+    ],
+    "relatedCommands": ["linux-env-vars"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils / util-linux",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/which.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "path"],
+    "keywords": [
+      "which linux",
+      "whereis",
+      "localizar executavel",
+      "qual versao do comando"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-sudo-su",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "sudo e su",
+    "description": "`sudo` executa um único comando com privilégios elevados (geralmente de root); `su` troca de usuário para toda a sessão, abrindo um novo shell.",
+    "syntax": "sudo comando\nsu [-] [usuario]",
+    "example": "sudo systemctl restart nginx",
+    "result": "O comando é executado como root após confirmar a senha do usuário atual (se ele tiver permissão de sudo).",
+    "flags": [
+      {
+        "flag": "-i (sudo)",
+        "description": "Simula um login completo como root, carregando o ambiente do root."
+      },
+      {
+        "flag": "- (su)",
+        "description": "Troca de usuário carregando também o ambiente (login shell) do usuário destino."
+      }
+    ],
+    "notes": [
+      "Permissões de `sudo` são controladas pelo arquivo `/etc/sudoers` (editado com `visudo`, nunca diretamente)."
+    ],
+    "bestPractices": [
+      "Prefira `sudo comando` a `su` seguido de vários comandos como root — reduz o tempo em que a sessão inteira roda com privilégios elevados."
+    ],
+    "commonMistakes": [
+      "Rodar serviços de aplicação inteiros com `sudo`/como root por comodidade, ampliando o impacto de qualquer vulnerabilidade explorada."
+    ],
+    "relatedCommands": ["linux-chown", "linux-useradd"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "sudo 1.9+",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/sudo.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "administracao", "seguranca"],
+    "keywords": ["sudo linux", "su linux", "privilegios root", "trocar de usuario"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-ping",
+    "category": "Linux",
+    "subcategory": "Rede",
+    "title": "ping",
+    "description": "Testa a conectividade e a latência com um host, enviando pacotes ICMP echo request e medindo o tempo de resposta.",
+    "syntax": "ping [opcoes] host",
+    "example": "ping -c 4 8.8.8.8",
+    "result": "4 pacotes enviados, mostrando tempo de resposta (ms) de cada um e um resumo com perda de pacotes ao final.",
+    "flags": [
+      {
+        "flag": "-c",
+        "description": "Define quantos pacotes enviar antes de parar (sem isso, roda indefinidamente)."
+      }
+    ],
+    "notes": ["Sem `-c`, `ping` roda continuamente até ser interrompido com Ctrl+C."],
+    "bestPractices": [
+      "Use `ping -c 4` em scripts/diagnósticos para evitar que o comando fique rodando indefinidamente."
+    ],
+    "commonMistakes": [
+      "Interpretar a ausência de resposta ao `ping` como 'servidor fora do ar', quando muitos firewalls simplesmente bloqueiam ICMP mas o serviço está no ar."
+    ],
+    "relatedCommands": ["linux-curl", "linux-ip-addr"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "iputils",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/ping.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "rede", "diagnostico"],
+    "keywords": ["ping linux", "testar conectividade", "latencia rede"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-ip-addr",
+    "category": "Linux",
+    "subcategory": "Rede",
+    "title": "ip a (e ifconfig)",
+    "description": "Mostra as interfaces de rede da máquina e seus endereços IP. `ip a` (do pacote iproute2) é o comando moderno; `ifconfig` é o antigo, hoje considerado obsoleto na maioria das distribuições.",
+    "syntax": "ip a\nip addr show",
+    "example": "ip a",
+    "result": "Lista cada interface (lo, eth0, wlan0...) com seus endereços IPv4/IPv6, estado (UP/DOWN) e MAC address.",
+    "notes": [
+      "`ifconfig` faz parte do pacote `net-tools`, descontinuado; distribuições modernas recomendam `ip` (pacote `iproute2`).",
+      "`ip route` mostra a tabela de rotas, incluindo o gateway padrão."
+    ],
+    "bestPractices": [
+      "Prefira `ip a`/`ip route` a `ifconfig`/`route` em scripts e servidores novos, já que `net-tools` pode nem estar instalado por padrão."
+    ],
+    "commonMistakes": [
+      "Rodar `ifconfig` em uma distribuição minimalista/container e receber 'command not found' por o pacote não vir instalado."
+    ],
+    "relatedCommands": ["linux-ping", "linux-netstat-ss"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "iproute2",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/ip.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "rede", "administracao"],
+    "keywords": ["ip a", "ifconfig linux", "ver ip linux", "interfaces de rede"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-man",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "man",
+    "description": "Abre a página de manual (documentação oficial) de um comando, instalada localmente no sistema.",
+    "syntax": "man comando",
+    "example": "man tar",
+    "result": "Abre em modo paginado (via less) a documentação completa do comando tar: sinopse, descrição, todas as opções e exemplos.",
+    "notes": [
+      "Dentro do `man`, '/' busca texto, 'n' vai para a próxima ocorrência e 'q' sai — os mesmos atalhos de navegação do `less`.",
+      "`man -k palavra` (ou `apropos palavra`) busca comandos relacionados a um termo, quando você não lembra o nome exato."
+    ],
+    "bestPractices": [
+      "Consulte `man comando` antes de recorrer a buscas externas — a documentação instalada já reflete a versão exata instalada no sistema."
+    ],
+    "commonMistakes": [
+      "Não saber sair do `man` — a tecla é `q`, a mesma do `less`, não Ctrl+C."
+    ],
+    "relatedCommands": ["linux-less"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "man-db",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/man.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "documentacao"],
+    "keywords": ["man linux", "manual de comando", "documentacao terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-watch",
+    "category": "Linux",
+    "subcategory": "Processos",
+    "title": "watch",
+    "description": "Executa um comando repetidamente em intervalos regulares, atualizando a saída na tela — útil para observar um valor mudando em tempo real.",
+    "syntax": "watch [-n segundos] comando",
+    "example": "watch -n 2 docker ps",
+    "result": "A saída de `docker ps` é atualizada na tela a cada 2 segundos, até o comando ser interrompido com Ctrl+C.",
+    "flags": [
+      {
+        "flag": "-n",
+        "description": "Define o intervalo em segundos entre as execuções (padrão: 2)."
+      },
+      {
+        "flag": "-d",
+        "description": "Destaca (highlight) as diferenças entre uma execução e a anterior."
+      }
+    ],
+    "notes": [
+      "`watch` é encerrado com Ctrl+C, como qualquer processo em primeiro plano."
+    ],
+    "bestPractices": [
+      "Use `watch -d` para acompanhar visualmente o que mudou entre uma atualização e outra, útil em `watch -d kubectl get pods`."
+    ],
+    "commonMistakes": [
+      "Usar `watch` para comandos muito pesados em intervalos muito curtos, sobrecarregando o sistema."
+    ],
+    "relatedCommands": ["linux-top-htop"],
+    "difficulty": "iniciante",
+    "platform": ["linux"],
+    "version": "procps-ng",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/watch.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "monitoramento"],
+    "keywords": [
+      "watch linux",
+      "executar comando periodicamente",
+      "monitorar saida comando"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-nohup",
+    "category": "Linux",
+    "subcategory": "Processos",
+    "title": "nohup (e disown, &)",
+    "description": "`&` roda um comando em segundo plano; `nohup` impede que o processo seja encerrado quando o terminal/sessão SSH que o iniciou é fechado; `disown` remove um job já em background da tabela de jobs da shell.",
+    "syntax": "nohup comando &\ndisown",
+    "example": "nohup node server.js > server.log 2>&1 &",
+    "result": "O processo node continua rodando em background mesmo depois de fechar a sessão SSH, com a saída redirecionada para server.log.",
+    "notes": [
+      "Sem `nohup`, um processo em `&` ainda recebe SIGHUP e é encerrado quando a sessão do terminal fecha.",
+      "Para produção, ferramentas como `systemd`, `pm2` ou `supervisor` são preferíveis a `nohup` para gerenciar o ciclo de vida do processo."
+    ],
+    "bestPractices": [
+      "Redirecione stdout/stderr (`> log 2>&1`) ao usar `nohup`, senão a saída vai para um arquivo `nohup.out` por padrão."
+    ],
+    "commonMistakes": [
+      "Depender de `nohup &` para serviços de produção em vez de um gerenciador de processos real, perdendo restart automático em caso de crash."
+    ],
+    "relatedCommands": ["linux-ps", "linux-kill"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/nohup-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processos", "background"],
+    "keywords": [
+      "nohup linux",
+      "rodar em background",
+      "disown",
+      "processo continuar apos fechar ssh"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-tmux",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "tmux",
+    "description": "Multiplexador de terminal: cria sessões persistentes com múltiplas janelas/painéis que continuam rodando mesmo após desconectar do SSH, podendo ser retomadas depois.",
+    "syntax": "tmux new -s nome\ntmux attach -t nome\nCtrl+b d (detach)",
+    "example": "tmux new -s deploy",
+    "result": "Abre uma nova sessão tmux chamada 'deploy'; qualquer comando rodando nela continua ativo mesmo se a conexão SSH cair.",
+    "notes": [
+      "`Ctrl+b` é o prefixo padrão de todo atalho do tmux; depois dele: 'd' desconecta (detach), '%' divide verticalmente, '\"' divide horizontalmente.",
+      "`tmux ls` lista todas as sessões ativas; `tmux attach -t nome` reconecta a uma sessão existente."
+    ],
+    "bestPractices": [
+      "Use `tmux` (ou `screen`) para qualquer processo longo rodado via SSH que não pode ser interrompido por queda de conexão."
+    ],
+    "commonMistakes": [
+      "Fechar o terminal com Ctrl+C ou Ctrl+D dentro do tmux (matando a sessão) quando a intenção era apenas 'desconectar' com `Ctrl+b d`."
+    ],
+    "relatedCommands": ["linux-nohup", "linux-ssh"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "tmux 3+",
+    "officialDocumentation": "https://github.com/tmux/tmux/wiki",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "produtividade", "ssh"],
+    "keywords": [
+      "tmux",
+      "screen linux",
+      "sessao persistente terminal",
+      "multiplexador de terminal"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-rsync",
+    "category": "Linux",
+    "subcategory": "Rede e acesso remoto",
+    "title": "rsync",
+    "description": "Sincroniza arquivos e diretórios entre dois locais (locais ou remotos via SSH), transferindo apenas as diferenças em vez do conteúdo inteiro.",
+    "syntax": "rsync [opcoes] origem destino",
+    "example": "rsync -avz --delete ./dist/ deploy@servidor:/var/www/app/",
+    "result": "Sincroniza o conteúdo de dist/ com o servidor remoto, removendo no destino arquivos que não existem mais na origem.",
+    "flags": [
+      {
+        "flag": "-a",
+        "description": "Modo arquivo: preserva permissões, timestamps, links e recursividade."
+      },
+      { "flag": "-v", "description": "Modo verboso." },
+      { "flag": "-z", "description": "Compacta os dados durante a transferência." },
+      {
+        "flag": "--delete",
+        "description": "Remove no destino arquivos que não existem mais na origem."
+      }
+    ],
+    "notes": [
+      "A barra final em `origem/` importa: com barra, copia o CONTEÚDO do diretório; sem barra, copia o diretório em si para dentro do destino."
+    ],
+    "bestPractices": [
+      "Use `--dry-run` antes de `--delete` para conferir exatamente o que seria removido no destino."
+    ],
+    "commonMistakes": [
+      "Esquecer a barra final em `origem/` e acabar criando um subdiretório aninhado inesperado no destino."
+    ],
+    "relatedCommands": ["linux-scp", "linux-ssh"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "rsync 3+",
+    "officialDocumentation": "https://download.samba.org/pub/rsync/rsync.1",
+    "externalReferences": [],
+    "tags": ["linux", "rede", "sincronizacao", "deploy"],
+    "keywords": [
+      "rsync linux",
+      "sincronizar arquivos",
+      "rsync delete",
+      "deploy via rsync"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-zip-unzip",
+    "category": "Linux",
+    "subcategory": "Compactação",
+    "title": "zip e unzip",
+    "description": "Compacta (`zip`) e extrai (`unzip`) arquivos no formato .zip, mais interoperável entre sistemas operacionais do que o .tar.gz nativo do Linux.",
+    "syntax": "zip -r saida.zip pasta\nunzip arquivo.zip",
+    "example": "zip -r build.zip ./dist",
+    "result": "Cria build.zip contendo todo o conteúdo do diretório dist.",
+    "flags": [
+      { "flag": "-r", "description": "Compacta diretórios recursivamente (zip)." },
+      {
+        "flag": "-d (unzip)",
+        "description": "Extrai para um diretório específico em vez do diretório atual."
+      }
+    ],
+    "notes": [
+      "`unzip -l arquivo.zip` lista o conteúdo do zip sem extrair, útil para conferir antes de descompactar."
+    ],
+    "bestPractices": [
+      "Prefira .zip quando o arquivo for compartilhado com usuários Windows/macOS; use .tar.gz para backups/transferências só entre sistemas Unix."
+    ],
+    "commonMistakes": [
+      "Compactar um diretório sem `-r`, gerando um .zip vazio ou incompleto."
+    ],
+    "relatedCommands": ["linux-tar"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "Info-ZIP",
+    "officialDocumentation": "https://linux.die.net/man/1/zip",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "compactacao"],
+    "keywords": ["zip linux", "unzip linux", "compactar zip terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-uname-hostname",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "uname e hostname",
+    "description": "`uname` mostra informações do sistema operacional e kernel; `hostname` mostra (ou define) o nome de rede da máquina.",
+    "syntax": "uname -a\nhostname",
+    "example": "uname -a",
+    "result": "Linux servidor01 6.8.0-generic #1 SMP x86_64 GNU/Linux",
+    "flags": [
+      {
+        "flag": "-a",
+        "description": "Mostra todas as informações disponíveis (kernel, hostname, arquitetura...) (uname)."
+      },
+      { "flag": "-r", "description": "Mostra apenas a versão do kernel (uname)." }
+    ],
+    "notes": [
+      "`uname -a` é o primeiro comando comum para identificar em qual distribuição/versão de kernel você está antes de depurar um problema."
+    ],
+    "bestPractices": [
+      "Rode `uname -a` (ou `cat /etc/os-release`) ao reportar bugs relacionados ao sistema operacional, para dar contexto exato do ambiente."
+    ],
+    "commonMistakes": [
+      "Confundir a versão do kernel (`uname -r`) com a versão da distribuição (que fica em `/etc/os-release`)."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "administracao"],
+    "keywords": [
+      "uname -a",
+      "hostname linux",
+      "versao do kernel",
+      "informacoes do sistema"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-whoami-id",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "whoami e id",
+    "description": "`whoami` mostra o nome do usuário atualmente logado; `id` mostra o UID, GID e todos os grupos aos quais esse usuário pertence.",
+    "syntax": "whoami\nid [usuario]",
+    "example": "id",
+    "result": "uid=1000(deploy) gid=1000(deploy) grupos=1000(deploy),27(sudo),999(docker)",
+    "notes": [
+      "`id` é mais completo que `whoami` — mostra também todos os grupos secundários, essencial para depurar problemas de permissão."
+    ],
+    "bestPractices": [
+      "Use `id` (não só `whoami`) ao depurar 'permission denied' — o problema costuma ser falta de um grupo específico (ex: `docker`)."
+    ],
+    "commonMistakes": [
+      "Adicionar um usuário a um grupo (`usermod -aG`) e esperar que `id` já reflita a mudança na sessão atual sem logout/login novo."
+    ],
+    "relatedCommands": ["linux-useradd", "linux-sudo-su"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/id-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "usuarios"],
+    "keywords": ["whoami linux", "id linux", "ver grupos do usuario", "uid gid"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-netstat-ss",
+    "category": "Linux",
+    "subcategory": "Rede",
+    "title": "netstat e ss",
+    "description": "Mostram conexões de rede ativas e portas em escuta na máquina. `ss` é o substituto moderno e mais rápido de `netstat` (do pacote net-tools, obsoleto).",
+    "syntax": "ss -tuln\nnetstat -tuln",
+    "example": "ss -tuln",
+    "result": "Lista todas as portas TCP/UDP em escuta (listening) na máquina, com o endereço local de cada uma.",
+    "flags": [
+      { "flag": "-t", "description": "Mostra conexões TCP." },
+      { "flag": "-u", "description": "Mostra conexões UDP." },
+      { "flag": "-l", "description": "Mostra apenas sockets em escuta (listening)." },
+      {
+        "flag": "-n",
+        "description": "Mostra endereços/portas numéricos, sem resolver nomes."
+      }
+    ],
+    "notes": [
+      "`ss -tulnp` (com `-p`, como root) também mostra o processo/PID dono de cada porta em escuta."
+    ],
+    "bestPractices": [
+      "Use `ss -tulnp` para descobrir rapidamente qual processo está ocupando uma porta antes de subir um serviço novo nela."
+    ],
+    "commonMistakes": [
+      "Rodar `netstat` em uma distribuição minimalista/container onde o pacote `net-tools` não vem instalado — `ss` é a alternativa quase sempre disponível."
+    ],
+    "relatedCommands": ["linux-ip-addr"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "iproute2",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/ss.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "rede", "diagnostico"],
+    "keywords": ["ss linux", "netstat linux", "portas em escuta", "ver conexoes de rede"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-uptime-free",
+    "category": "Linux",
+    "subcategory": "Administração do sistema",
+    "title": "uptime e free",
+    "description": "`uptime` mostra há quanto tempo o sistema está ligado e a carga média (load average); `free` mostra o uso de memória RAM e swap.",
+    "syntax": "uptime\nfree -h",
+    "example": "free -h",
+    "result": "              total        used        free      shared  buff/cache   available\nMem:           15Gi       4.2Gi       6.1Gi       200Mi       4.7Gi        10Gi",
+    "flags": [
+      {
+        "flag": "-h",
+        "description": "Exibe valores em formato legível (K, M, G) (free)."
+      }
+    ],
+    "notes": [
+      "O load average do `uptime` mostra 3 valores: média de carga nos últimos 1, 5 e 15 minutos.",
+      "Em `free`, a coluna 'available' é mais representativa da memória realmente livre para uso do que 'free' sozinha, já que o Linux usa RAM livre para cache."
+    ],
+    "bestPractices": [
+      "Compare o load average do `uptime` com o número de núcleos de CPU disponíveis para saber se o sistema está sobrecarregado."
+    ],
+    "commonMistakes": [
+      "Interpretar a coluna 'free' de `free -h` como 'memória disponível', ignorando que boa parte do 'used' pode ser cache reaproveitável (veja 'available')."
+    ],
+    "relatedCommands": ["linux-top-htop"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "procps-ng",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/free.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "monitoramento"],
+    "keywords": ["uptime linux", "free -h", "uso de memoria linux", "load average"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-date",
+    "category": "Linux",
+    "subcategory": "Terminal e shell",
+    "title": "date",
+    "description": "Mostra ou define a data e hora do sistema, com suporte a formatação customizada e cálculo de datas relativas.",
+    "syntax": "date [+formato]",
+    "example": "date +\"%Y-%m-%d %H:%M:%S\"",
+    "result": "2026-07-23 14:05:32",
+    "notes": [
+      "`date -d \"+1 day\"` (GNU date) calcula uma data relativa, útil em scripts de agendamento/expiração."
+    ],
+    "bestPractices": [
+      "Use `date -u` (UTC) em scripts e logs de servidores para evitar ambiguidade de fuso horário."
+    ],
+    "commonMistakes": [
+      "Assumir a mesma sintaxe de `date -d` entre GNU date (Linux) e BSD date (macOS) — os formatos de data relativa e flags diferem entre os dois."
+    ],
+    "relatedCommands": ["linux-crontab"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "data e hora"],
+    "keywords": ["date linux", "formatar data terminal", "data atual linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-diff",
+    "category": "Linux",
+    "subcategory": "Processamento de texto",
+    "title": "diff",
+    "description": "Compara dois arquivos (ou diretórios) linha a linha e mostra as diferenças entre eles.",
+    "syntax": "diff [opcoes] arquivo1 arquivo2",
+    "example": "diff -u config.old.env config.env",
+    "result": "--- config.old.env\n+++ config.env\n@@ -1 +1 @@\n-PORT=3000\n+PORT=8080",
+    "flags": [
+      {
+        "flag": "-u",
+        "description": "Mostra o resultado em formato unificado (o mesmo usado por `git diff` e patches)."
+      },
+      { "flag": "-r", "description": "Compara diretórios inteiros recursivamente." }
+    ],
+    "notes": [
+      "A saída de `diff -u` pode ser salva e aplicada depois com `patch`, formando um fluxo simples de distribuição de mudanças."
+    ],
+    "bestPractices": [
+      "Use `diff -u` (não o formato padrão) para uma saída mais legível e compatível com ferramentas de patch/revisão de código."
+    ],
+    "commonMistakes": [
+      "Comparar arquivos com finais de linha diferentes (CRLF vs LF) e receber um diff mostrando toda linha como alterada."
+    ],
+    "relatedCommands": ["linux-sed"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU diffutils",
+    "officialDocumentation": "https://www.gnu.org/software/diffutils/manual/html_node/Invoking-diff.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "processamento de texto"],
+    "keywords": ["diff linux", "comparar arquivos", "diff -u"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-touch-stat",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "touch e stat",
+    "description": "`touch` cria um arquivo vazio (se não existir) ou atualiza seu timestamp de modificação; `stat` mostra metadados detalhados de um arquivo (tamanho, permissões, timestamps, inode).",
+    "syntax": "touch arquivo\nstat arquivo",
+    "example": "stat package.json",
+    "result": "File: package.json\nSize: 1204 ... Access: 2026-07-23 14:00:00 ... Modify: 2026-07-20 09:12:03",
+    "notes": [
+      "`touch` é comumente usado para criar arquivos vazios rapidamente (`touch .env`) ou 'tocar' um arquivo para forçar rebuilds baseados em timestamp."
+    ],
+    "bestPractices": [
+      "Use `stat` em vez de `ls -l` quando precisar do timestamp exato ou do número do inode de um arquivo específico."
+    ],
+    "commonMistakes": [
+      "Usar `touch arquivo` esperando 'limpar' o conteúdo de um arquivo existente — na verdade só atualiza o timestamp, sem alterar o conteúdo."
+    ],
+    "relatedCommands": ["linux-ls"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/touch-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "arquivos"],
+    "keywords": [
+      "touch linux",
+      "stat linux",
+      "criar arquivo vazio",
+      "metadados de arquivo"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-screen",
+    "category": "Linux",
+    "subcategory": "Terminal",
+    "title": "screen",
+    "description": "Multiplexador de terminal mais antigo que o tmux, permitindo criar sessões persistentes que continuam rodando mesmo após desconectar o SSH.",
+    "syntax": "screen -S <nome>\nCtrl+A D (detach)\nscreen -r <nome> (reattach)",
+    "example": "screen -S deploy\n# roda um processo longo\n# Ctrl+A D para desanexar\nscreen -r deploy",
+    "result": "O processo iniciado dentro da sessão `deploy` continua rodando em segundo plano mesmo após fechar o terminal, podendo ser retomado depois.",
+    "notes": [
+      "`screen -ls` lista as sessões ativas; diferente do tmux, screen não tem painéis divididos nativos tão ricos (embora suporte via Ctrl+A S/|)."
+    ],
+    "bestPractices": [
+      "Prefira tmux em ambientes novos por sua configuração mais moderna; use screen quando ele já for a única ferramenta disponível no servidor."
+    ],
+    "commonMistakes": [
+      "Fechar o terminal com Ctrl+C dentro da sessão em vez de desanexar (Ctrl+A D), matando o processo em execução."
+    ],
+    "relatedCommands": ["linux-tmux", "linux-nohup"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "GNU Screen",
+    "officialDocumentation": "https://www.gnu.org/software/screen/manual/screen.html",
+    "externalReferences": [],
+    "tags": ["linux", "terminal", "screen"],
+    "keywords": ["screen linux", "sessao persistente ssh", "multiplexador de terminal"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-lsof",
+    "category": "Linux",
+    "subcategory": "Diagnóstico",
+    "title": "lsof",
+    "description": "Lista arquivos abertos (no sentido amplo do Unix: arquivos, sockets de rede, pipes) por processos em execução, essencial para descobrir o que está usando uma porta ou travando um arquivo.",
+    "syntax": "lsof [opcoes]",
+    "example": "lsof -i :3000",
+    "result": "COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME\nnode    12345  dev   20u  IPv4 123456      0t0  TCP *:3000 (LISTEN)",
+    "flags": [
+      {
+        "flag": "-i",
+        "description": "Filtra por conexões de rede, opcionalmente por porta (`-i :3000`)."
+      },
+      { "flag": "-u", "description": "Filtra por processos de um usuário específico." },
+      {
+        "flag": "-p",
+        "description": "Filtra pelos arquivos abertos por um PID específico."
+      }
+    ],
+    "notes": [
+      "`lsof -i :3000` é o comando clássico para descobrir qual processo está ocupando uma porta antes de conseguir liberá-la com `kill`."
+    ],
+    "bestPractices": [
+      "Combine `lsof -i :<porta>` com `kill` para liberar portas travadas por processos zumbis ou travados."
+    ],
+    "commonMistakes": [
+      "Rodar `lsof` sem `sudo` e não ver processos de outros usuários, concluindo erroneamente que a porta está livre."
+    ],
+    "relatedCommands": ["linux-netstat-ss", "linux-kill", "linux-ps"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "macos"],
+    "version": "lsof",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man8/lsof.8.html",
+    "externalReferences": [],
+    "tags": ["linux", "diagnostico", "rede"],
+    "keywords": ["lsof linux", "quem esta usando a porta", "arquivos abertos processo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-firewall-ufw-iptables",
+    "category": "Linux",
+    "subcategory": "Segurança",
+    "title": "Firewall: ufw e iptables",
+    "description": "`iptables` é a ferramenta de baixo nível para configurar regras de firewall no kernel Linux (netfilter); `ufw` (Uncomplicated Firewall) é uma interface simplificada sobre ela, comum em distribuições Debian/Ubuntu.",
+    "syntax": "ufw allow <porta>/<protocolo>\nufw enable\niptables -A INPUT -p tcp --dport <porta> -j ACCEPT",
+    "example": "ufw allow 22/tcp\nufw allow 443/tcp\nufw enable",
+    "result": "O firewall passa a permitir tráfego de entrada nas portas 22 (SSH) e 443 (HTTPS), bloqueando as demais por padrão.",
+    "notes": [
+      "Sempre libere a porta SSH antes de habilitar o `ufw` em um servidor remoto, para não perder o acesso à máquina."
+    ],
+    "bestPractices": [
+      "Use `ufw` para regras simples do dia a dia; recorra a `iptables`/`nftables` diretamente só quando precisar de lógica de roteamento/NAT mais complexa."
+    ],
+    "commonMistakes": [
+      "Habilitar `ufw enable` sem liberar a porta SSH primeiro, travando o próprio acesso remoto ao servidor."
+    ],
+    "relatedCommands": ["linux-ip-addr"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "ufw / iptables",
+    "officialDocumentation": "https://help.ubuntu.com/community/UFW",
+    "externalReferences": [],
+    "tags": ["linux", "seguranca", "firewall"],
+    "keywords": ["ufw linux", "iptables", "firewall linux", "liberar porta"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-selinux-apparmor",
+    "category": "Linux",
+    "subcategory": "Segurança",
+    "title": "SELinux e AppArmor (controle de acesso obrigatório)",
+    "description": "Sistemas de segurança que impõem políticas de controle de acesso obrigatório (MAC) além das permissões tradicionais de arquivo, restringindo o que cada processo pode fazer mesmo que rode como root.",
+    "syntax": "getenforce / setenforce 0|1   (SELinux)\naa-status / aa-enforce <perfil>   (AppArmor)",
+    "example": "getenforce",
+    "result": "Enforcing",
+    "notes": [
+      "SELinux é padrão em distribuições baseadas em Red Hat (RHEL, Fedora, CentOS); AppArmor é padrão em Ubuntu e derivados.",
+      "'Permissive' registra violações sem bloquear (útil para depurar políticas); 'Enforcing' bloqueia ativamente."
+    ],
+    "bestPractices": [
+      "Ajuste a política específica em vez de desabilitar SELinux/AppArmor inteiramente ao encontrar um bloqueio inesperado em produção."
+    ],
+    "commonMistakes": [
+      "Rodar `setenforce 0` (desabilitar) para 'resolver' um erro de permissão, removendo uma camada inteira de segurança em vez de investigar a política que está bloqueando."
+    ],
+    "relatedCommands": ["linux-chmod", "linux-firewall-ufw-iptables"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "SELinux / AppArmor",
+    "officialDocumentation": "https://www.redhat.com/en/topics/linux/what-is-selinux",
+    "externalReferences": [],
+    "tags": ["linux", "seguranca", "selinux", "apparmor"],
+    "keywords": ["selinux", "apparmor", "controle de acesso obrigatorio", "mac linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-proc-filesystem",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "Sistema de arquivos /proc",
+    "description": "Sistema de arquivos virtual que expõe informações do kernel e de processos em execução como se fossem arquivos comuns, sem ocupar espaço em disco real.",
+    "syntax": "cat /proc/<pid>/status\ncat /proc/cpuinfo\ncat /proc/meminfo",
+    "example": "cat /proc/cpuinfo | grep 'model name' | head -1",
+    "result": "model name : Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz",
+    "notes": [
+      "`/proc/<pid>/` contém informações detalhadas de cada processo (status, cmdline, environ, fd) — muitas ferramentas como `ps` e `top` leem daqui."
+    ],
+    "bestPractices": [
+      "Use `/proc/meminfo` e `/proc/cpuinfo` para diagnósticos rápidos de hardware sem precisar instalar ferramentas adicionais."
+    ],
+    "commonMistakes": [
+      "Tentar editar arquivos de `/proc` como se fossem configuração persistente — a maioria reflete estado em tempo real e não sobrevive a um reboot."
+    ],
+    "relatedCommands": ["linux-ps", "linux-top-htop"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "procfs",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man5/proc.5.html",
+    "externalReferences": [],
+    "tags": ["linux", "proc", "kernel"],
+    "keywords": ["proc filesystem", "procfs", "informacoes do kernel linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-strace-ltrace",
+    "category": "Linux",
+    "subcategory": "Diagnóstico",
+    "title": "strace e ltrace",
+    "description": "`strace` rastreia as chamadas de sistema (syscalls) feitas por um processo; `ltrace` rastreia chamadas a bibliotecas dinâmicas, ambos essenciais para depurar comportamento de baixo nível ou travamentos.",
+    "syntax": "strace [-p <pid>] <comando>\nltrace <comando>",
+    "example": "strace -c ls /tmp",
+    "result": "% time     seconds  usecs/call     calls    syscall\n------ ----------- ----------- --------- ----------------\n 45.00    0.000045          15         3 openat\n...",
+    "flags": [
+      { "flag": "-p", "description": "Anexa a um processo já em execução pelo PID." },
+      {
+        "flag": "-c",
+        "description": "Exibe um resumo estatístico das syscalls em vez do log linha a linha."
+      },
+      {
+        "flag": "-e trace=",
+        "description": "Filtra apenas por um tipo específico de syscall (ex: `-e trace=network`)."
+      }
+    ],
+    "notes": [
+      "Extremamente útil para descobrir por que um processo está 'travado' — muitas vezes preso em uma syscall bloqueante (ex: esperando I/O de rede ou disco)."
+    ],
+    "bestPractices": [
+      "Use `strace -c` para um resumo rápido de quais syscalls dominam o tempo antes de mergulhar no log detalhado."
+    ],
+    "commonMistakes": [
+      "Rodar `strace` em produção sem medir o impacto de performance — o overhead pode ser significativo em processos com muitas syscalls."
+    ],
+    "relatedCommands": ["linux-ps", "linux-lsof"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "strace / ltrace",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/strace.1.html",
+    "externalReferences": [],
+    "tags": ["linux", "debug", "strace"],
+    "keywords": ["strace linux", "ltrace", "rastrear syscalls", "debug de baixo nivel"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-logrotate",
+    "category": "Linux",
+    "subcategory": "Administração",
+    "title": "logrotate",
+    "description": "Ferramenta que gerencia automaticamente a rotação, compressão e remoção de arquivos de log antigos, evitando que eles cresçam indefinidamente e encham o disco.",
+    "syntax": "/etc/logrotate.d/<app>  (arquivo de configuração)\nlogrotate -f <config>  (forçar rotação manual)",
+    "example": "/var/log/minha-app/*.log {\n  daily\n  rotate 7\n  compress\n  missingok\n  notifempty\n}",
+    "result": "O log é rotacionado diariamente, mantendo 7 arquivos comprimidos anteriores e sem erro caso o arquivo não exista.",
+    "parameters": [
+      {
+        "name": "rotate",
+        "description": "Número de arquivos rotacionados a manter antes de descartar os mais antigos.",
+        "required": false
+      },
+      {
+        "name": "compress",
+        "description": "Comprime (gzip) os arquivos rotacionados para economizar espaço.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "logrotate normalmente roda via cron/systemd timer diariamente, processando todos os arquivos de configuração em `/etc/logrotate.d/`."
+    ],
+    "bestPractices": [
+      "Configure `logrotate` para toda aplicação que grava logs em arquivo, evitando que um disco encha silenciosamente em produção."
+    ],
+    "commonMistakes": [
+      "Esquecer `missingok`, fazendo o logrotate falhar (e possivelmente interromper o cron job) quando o arquivo de log ainda não existe."
+    ],
+    "relatedCommands": ["linux-journalctl", "linux-crontab"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "logrotate",
+    "officialDocumentation": "https://linux.die.net/man/8/logrotate",
+    "externalReferences": [],
+    "tags": ["linux", "logs", "administracao"],
+    "keywords": ["logrotate", "rotacionar logs", "comprimir logs antigos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-swap",
+    "category": "Linux",
+    "subcategory": "Administração",
+    "title": "Swap (memória virtual em disco)",
+    "description": "Área de disco usada como extensão da RAM quando a memória física se esgota, permitindo que o sistema continue funcionando (mais lentamente) em vez de matar processos por falta de memória.",
+    "syntax": "swapon --show\nfree -h\nfallocate -l 2G /swapfile && mkswap /swapfile && swapon /swapfile",
+    "example": "free -h",
+    "result": "              total        used        free      shared  buff/cache   available\nMem:           7.8Gi       3.2Gi       1.1Gi       200Mi       3.5Gi       4.2Gi\nSwap:          2.0Gi       512Mi       1.5Gi",
+    "notes": [
+      "Uso alto de swap constante geralmente indica RAM insuficiente para a carga de trabalho, não um problema a ser 'resolvido' apenas com mais swap."
+    ],
+    "bestPractices": [
+      "Em servidores com SSD, prefira aumentar RAM em vez de depender pesadamente de swap, que é ordens de magnitude mais lento."
+    ],
+    "commonMistakes": [
+      "Desabilitar swap totalmente em servidores de produção, o que pode causar o OOM Killer matando processos abruptamente em picos de memória."
+    ],
+    "relatedCommands": ["linux-uptime-free", "linux-df"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "N/A",
+    "officialDocumentation": "https://www.kernel.org/doc/html/latest/admin-guide/mm/index.html",
+    "externalReferences": [],
+    "tags": ["linux", "memoria", "swap"],
+    "keywords": ["swap linux", "memoria virtual", "swapfile", "oom killer"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-fstab",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "/etc/fstab",
+    "description": "Arquivo de configuração que define quais sistemas de arquivos (discos, partições, compartilhamentos de rede) devem ser montados automaticamente na inicialização do sistema.",
+    "syntax": "<dispositivo>  <ponto-de-montagem>  <tipo-fs>  <opcoes>  <dump>  <pass>",
+    "example": "UUID=1234-5678  /data  ext4  defaults  0  2",
+    "result": "Na inicialização, a partição com o UUID especificado é automaticamente montada em `/data` com o sistema de arquivos ext4.",
+    "notes": [
+      "Usar UUID em vez do nome do dispositivo (`/dev/sda1`) evita problemas quando a ordem de detecção dos discos muda entre boots."
+    ],
+    "bestPractices": [
+      "Sempre teste com `mount -a` após editar o `/etc/fstab` antes de reiniciar, para detectar erros de sintaxe sem travar o boot do servidor."
+    ],
+    "commonMistakes": [
+      "Cometer um erro de sintaxe no `/etc/fstab` e só descobrir no próximo reboot, quando o sistema pode falhar ao montar um disco crítico e cair em modo de recuperação."
+    ],
+    "relatedCommands": ["linux-mount", "linux-df"],
+    "difficulty": "avancado",
+    "platform": ["linux"],
+    "version": "N/A",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man5/fstab.5.html",
+    "externalReferences": [],
+    "tags": ["linux", "fstab", "montagem"],
+    "keywords": ["etc fstab", "montar disco automaticamente", "fstab linux"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-at",
+    "category": "Linux",
+    "subcategory": "Automação",
+    "title": "at (agendamento único)",
+    "description": "Agenda a execução de um comando uma única vez em um momento futuro específico, diferente do `cron`/`crontab`, que é para tarefas recorrentes.",
+    "syntax": "at <horario>\n<comando>\nCtrl+D",
+    "example": "at now + 30 minutes\nat> /usr/bin/systemctl restart minha-app\nat> <Ctrl+D>",
+    "result": "job 3 at Thu Jul 23 15:30:00 2026",
+    "notes": [
+      "`atq` lista os jobs agendados pendentes; `atrm <job>` cancela um job antes de ele executar."
+    ],
+    "bestPractices": [
+      "Use `at` para tarefas pontuais (ex: 'reiniciar o serviço em 1 hora') em vez de criar e depois remover uma entrada temporária no crontab."
+    ],
+    "commonMistakes": [
+      "Confundir `at` (execução única) com `cron` (execução recorrente), tentando usar `at` para tarefas que precisam repetir."
+    ],
+    "relatedCommands": ["linux-crontab"],
+    "difficulty": "intermediario",
+    "platform": ["linux"],
+    "version": "at",
+    "officialDocumentation": "https://man7.org/linux/man-pages/man1/at.1p.html",
+    "externalReferences": [],
+    "tags": ["linux", "automacao", "agendamento"],
+    "keywords": ["at linux", "agendar comando unico", "atq", "atrm"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "linux-dd",
+    "category": "Linux",
+    "subcategory": "Sistema de arquivos",
+    "title": "dd",
+    "description": "Copia e converte dados em nível de blocos brutos entre dispositivos ou arquivos, usado para clonar discos, criar pendrives bootáveis e gerar arquivos de teste.",
+    "syntax": "dd if=<origem> of=<destino> bs=<tamanho-bloco> status=progress",
+    "example": "dd if=ubuntu.iso of=/dev/sdb bs=4M status=progress",
+    "result": "O conteúdo da imagem ISO é gravado byte a byte no dispositivo `/dev/sdb`, exibindo progresso em tempo real.",
+    "parameters": [
+      {
+        "name": "if",
+        "description": "Arquivo ou dispositivo de origem (input file).",
+        "required": true
+      },
+      {
+        "name": "of",
+        "description": "Arquivo ou dispositivo de destino (output file).",
+        "required": true
+      },
+      {
+        "name": "bs",
+        "description": "Tamanho do bloco de leitura/escrita; blocos maiores costumam ser mais rápidos até um certo ponto.",
+        "required": false,
+        "defaultValue": "512"
+      }
+    ],
+    "notes": [
+      "Apelidado de 'disk destroyer' na comunidade Linux, pois um `of=` errado pode sobrescrever silenciosamente o disco errado."
+    ],
+    "bestPractices": [
+      "Sempre confira o dispositivo de destino com `lsblk` ou `fdisk -l` antes de rodar `dd`, e nunca aponte `of=` para o disco do sistema em uso."
+    ],
+    "commonMistakes": [
+      "Inverter `if=` e `of=` por engano, copiando dados na direção contrária e destruindo o conteúdo da origem."
+    ],
+    "relatedCommands": ["linux-tar"],
+    "difficulty": "avancado",
+    "platform": ["linux", "macos"],
+    "version": "GNU coreutils",
+    "officialDocumentation": "https://www.gnu.org/software/coreutils/manual/html_node/dd-invocation.html",
+    "externalReferences": [],
+    "tags": ["linux", "disco", "dd"],
+    "keywords": ["dd linux", "clonar disco", "criar pendrive bootavel", "disk destroyer"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

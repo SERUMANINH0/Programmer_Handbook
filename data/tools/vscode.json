@@ -46,7 +46,7 @@
     "commonMistakes": [
       "Usar multi-cursor para renomear um símbolo que também é referenciado em outros arquivos (nesse caso, use 'Rename Symbol' — F2)."
     ],
-    "relatedCommands": ["vscode-command-palette"],
+    "relatedCommands": ["vscode-command-palette", "vscode-rename-symbol"],
     "difficulty": "intermediario",
     "platform": ["windows", "linux", "macos"],
     "version": "Todas",
@@ -56,5 +56,871 @@
     "keywords": ["multi cursor", "multiplos cursores", "ctrl d vscode"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "vscode-quick-open",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Quick Open (busca rápida de arquivos)",
+    "description": "Abre qualquer arquivo do workspace digitando parte do nome, sem precisar navegar pela árvore de pastas.",
+    "syntax": "Ctrl+P (Windows/Linux) | Cmd+P (Mac)",
+    "shortcut": "Ctrl+P",
+    "example": "Pressionar Ctrl+P e digitar \"pagehead\" para abrir page-header.tsx mesmo sem lembrar a pasta exata.",
+    "result": "Lista de arquivos correspondentes ao texto digitado, navegável com as setas e Enter.",
+    "notes": [
+      "Digitar `@` dentro do Quick Open filtra por símbolos do arquivo aberto; `:` seguido de número pula para a linha."
+    ],
+    "bestPractices": [
+      "Combine com fuzzy matching digitando apenas as iniciais das palavras do nome do arquivo (ex: \"pH\" para page-header)."
+    ],
+    "commonMistakes": ["Confundir Ctrl+P (arquivos) com Ctrl+Shift+P (comandos)."],
+    "relatedCommands": ["vscode-command-palette", "vscode-go-to-symbol"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_quick-file-navigation",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["quick open", "ctrl p vscode", "abrir arquivo rapido"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-go-to-line",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Go to Line/Column",
+    "description": "Move o cursor diretamente para um número de linha (e opcionalmente coluna) específico no arquivo atual.",
+    "syntax": "Ctrl+G",
+    "shortcut": "Ctrl+G",
+    "example": "Pressionar Ctrl+G e digitar \"42:10\" para ir até a linha 42, coluna 10.",
+    "result": "O cursor salta para a posição indicada e a linha é destacada momentaneamente.",
+    "notes": [
+      "Também é possível digitar `:<numero>` diretamente dentro do Quick Open (Ctrl+P)."
+    ],
+    "relatedCommands": ["vscode-quick-open"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_go-to-line",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["go to line", "ir para linha", "ctrl g vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-go-to-definition",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Go to Definition",
+    "description": "Navega diretamente até o local onde o símbolo (função, variável, tipo) sob o cursor foi declarado.",
+    "syntax": "F12",
+    "shortcut": "F12",
+    "example": "Posicionar o cursor sobre uma chamada de função e pressionar F12 para abrir o arquivo onde ela é definida.",
+    "result": "O editor abre (ou foca) o arquivo de origem, com o cursor na linha da declaração.",
+    "notes": ["Ctrl+Click sobre o símbolo tem o mesmo efeito que F12."],
+    "bestPractices": [
+      "Combine com Alt+← (voltar) para retornar rapidamente ao ponto de origem após navegar."
+    ],
+    "relatedCommands": ["vscode-peek-definition", "vscode-go-to-symbol"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_go-to-definition",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["go to definition", "f12 vscode", "ir para definicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-peek-definition",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Peek Definition",
+    "description": "Exibe a definição de um símbolo em um painel inline sobreposto ao código atual, sem trocar de arquivo.",
+    "syntax": "Alt+F12",
+    "shortcut": "Alt+F12",
+    "example": "Pressionar Alt+F12 sobre uma função para ver sua implementação sem perder o contexto do arquivo atual.",
+    "result": "Um painel flutuante mostra o trecho da definição; Esc fecha o painel e mantém o foco no arquivo original.",
+    "notes": [
+      "Diferente de Go to Definition (F12), o Peek não navega para outro arquivo — mantém o contexto atual visível."
+    ],
+    "bestPractices": [
+      "Use Peek para conferências rápidas e Go to Definition quando for de fato editar o código de origem."
+    ],
+    "relatedCommands": ["vscode-go-to-definition"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_peek",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["peek definition", "alt f12", "visualizar definicao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-go-to-symbol",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Go to Symbol",
+    "description": "Localiza uma função, classe, método ou variável pelo nome, tanto no arquivo atual quanto em todo o workspace.",
+    "syntax": "Ctrl+Shift+O (arquivo atual) | Ctrl+T (workspace)",
+    "shortcut": "Ctrl+Shift+O",
+    "example": "Pressionar Ctrl+Shift+O e digitar \"handleSubmit\" para pular direto para essa função dentro do arquivo aberto.",
+    "result": "Lista de símbolos do arquivo (ou workspace, com Ctrl+T) filtrada pelo texto digitado.",
+    "notes": [
+      "Digitar `:` após abrir Ctrl+Shift+O agrupa os símbolos por categoria (funções, variáveis, classes)."
+    ],
+    "relatedCommands": ["vscode-quick-open", "vscode-go-to-definition"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_go-to-symbol",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["go to symbol", "ctrl shift o", "buscar simbolo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-rename-symbol",
+    "category": "VS Code",
+    "subcategory": "Refactoring",
+    "title": "Rename Symbol",
+    "description": "Renomeia uma variável, função ou tipo em todas as suas ocorrências no projeto, respeitando o escopo e o contexto da linguagem.",
+    "syntax": "F2",
+    "shortcut": "F2",
+    "example": "Posicionar o cursor no nome de uma variável e pressionar F2 para renomeá-la em todas as referências simultaneamente.",
+    "result": "Um campo inline de edição aparece; ao confirmar com Enter, todas as ocorrências são atualizadas de uma vez.",
+    "notes": [
+      "Depende do Language Server da linguagem para detectar corretamente todas as referências, inclusive entre arquivos."
+    ],
+    "bestPractices": [
+      "Prefira F2 a busca-e-substitui manual para evitar renomear coincidências de texto que não são o mesmo símbolo."
+    ],
+    "commonMistakes": [
+      "Usar multi-cursor (Ctrl+D) para renomear um símbolo referenciado em outros arquivos, deixando referências desatualizadas."
+    ],
+    "relatedCommands": ["vscode-multi-cursor", "vscode-go-to-definition"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/refactoring#_rename-symbol",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "refactoring"],
+    "keywords": ["rename symbol", "f2 vscode", "renomear simbolo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-format-document",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Format Document",
+    "description": "Reformata o arquivo inteiro de acordo com o formatador configurado para a linguagem (ex: Prettier, ESLint).",
+    "syntax": "Shift+Alt+F (Windows/Linux) | Shift+Option+F (Mac)",
+    "shortcut": "Shift+Alt+F",
+    "example": "Colar um trecho de código de outra fonte e pressionar Shift+Alt+F para ajustar indentação e espaçamento ao padrão do projeto.",
+    "result": "O documento é reindentado e reformatado conforme o formatador padrão configurado (`editor.defaultFormatter`).",
+    "notes": [
+      "Se houver mais de um formatador instalado para a linguagem, o VS Code pede para escolher o padrão na primeira vez."
+    ],
+    "bestPractices": [
+      "Ative `editor.formatOnSave` para formatar automaticamente a cada salvamento, evitando diffs de formatação em PRs."
+    ],
+    "commonMistakes": [
+      "Ter dois formatadores concorrentes ativos (ex: Prettier e formatador nativo do TypeScript) gerando resultados inconsistentes."
+    ],
+    "relatedCommands": ["vscode-extensions-marketplace"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_formatting",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "formatacao"],
+    "keywords": ["format document", "shift alt f", "formatar codigo vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-toggle-terminal",
+    "category": "VS Code",
+    "subcategory": "Terminal integrado",
+    "title": "Toggle Terminal (abrir/fechar terminal integrado)",
+    "description": "Mostra ou esconde o painel do terminal integrado sem sair do editor.",
+    "syntax": "Ctrl+` (Windows/Linux/Mac)",
+    "shortcut": "Ctrl+`",
+    "example": "Pressionar Ctrl+` para abrir um terminal integrado e rodar `npm run dev` sem trocar de janela.",
+    "result": "O painel do terminal abre na parte inferior do editor, mantendo o shell padrão configurado.",
+    "notes": [
+      "Ctrl+Shift+` abre um novo terminal; o ícone de `+` no painel também cria terminais adicionais em abas."
+    ],
+    "bestPractices": [
+      "Use múltiplos terminais em abas para separar processos de longa duração (ex: dev server) de comandos pontuais."
+    ],
+    "relatedCommands": ["vscode-command-palette"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/terminal/basics",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "terminal"],
+    "keywords": ["toggle terminal", "ctrl til", "terminal integrado vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-split-editor",
+    "category": "VS Code",
+    "subcategory": "Interface",
+    "title": "Split Editor (dividir editor)",
+    "description": "Divide a área de edição em múltiplos grupos lado a lado (ou empilhados), permitindo visualizar vários arquivos ao mesmo tempo.",
+    "syntax": "Ctrl+\\ (dividir) | Ctrl+1/2/3 (focar grupo)",
+    "shortcut": "Ctrl+\\",
+    "example": "Pressionar Ctrl+\\ para abrir uma cópia do editor ao lado e comparar duas versões do mesmo arquivo lado a lado.",
+    "result": "Um novo grupo de editor aparece ao lado do atual; Ctrl+1/Ctrl+2 alternam o foco entre os grupos.",
+    "bestPractices": [
+      "Use Split Editor para comparar implementação e teste, ou definição de tipo e uso, sem alternar abas constantemente."
+    ],
+    "relatedCommands": ["vscode-quick-open"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/editingevolved#_multiple-editor-panes",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "interface"],
+    "keywords": ["split editor", "ctrl barra invertida", "dividir editor"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-find-in-files",
+    "category": "VS Code",
+    "subcategory": "Busca",
+    "title": "Find in Files (busca no workspace)",
+    "description": "Busca um texto ou expressão regular em todos os arquivos do workspace, com filtros por padrão de arquivo (include/exclude).",
+    "syntax": "Ctrl+Shift+F",
+    "shortcut": "Ctrl+Shift+F",
+    "example": "Pressionar Ctrl+Shift+F e buscar \"TODO\" com o filtro `**/*.ts` para listar apenas ocorrências em arquivos TypeScript.",
+    "result": "Painel lateral lista todos os arquivos e linhas correspondentes, agrupados por arquivo e expansíveis.",
+    "flags": [
+      {
+        "flag": ".*",
+        "description": "Ativa o modo de expressão regular na busca (ícone de regex na caixa de busca)."
+      },
+      { "flag": "Aa", "description": "Diferencia maiúsculas de minúsculas." }
+    ],
+    "notes": [
+      "O campo \"files to exclude\" aceita glob patterns, útil para ignorar `node_modules` ou pastas de build."
+    ],
+    "bestPractices": [
+      "Combine com Replace in Files para refatorações textuais em massa, sempre revisando o preview antes de aplicar."
+    ],
+    "relatedCommands": ["vscode-replace-in-files"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_search-across-files",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "busca"],
+    "keywords": ["find in files", "ctrl shift f", "buscar no projeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-replace-in-files",
+    "category": "VS Code",
+    "subcategory": "Busca",
+    "title": "Replace in Files (substituir no workspace)",
+    "description": "Substitui um texto ou expressão regular em múltiplos arquivos do workspace de uma só vez, com preview das alterações.",
+    "syntax": "Ctrl+Shift+H",
+    "shortcut": "Ctrl+Shift+H",
+    "example": "Pressionar Ctrl+Shift+H para trocar todas as ocorrências de \"antigoNome\" por \"novoNome\" em arquivos .ts, revisando cada match antes de confirmar.",
+    "result": "Painel lateral lista as ocorrências com preview lado a lado do texto antigo e novo; é possível aplicar tudo ou arquivo por arquivo.",
+    "notes": [
+      "Grupos de captura de regex (`$1`, `$2`) podem ser usados no campo de substituição quando o modo regex está ativo."
+    ],
+    "bestPractices": [
+      "Sempre revise o preview de substituição em massa antes de clicar em \"Replace All\" — erros de regex podem afetar arquivos inesperados."
+    ],
+    "commonMistakes": [
+      "Rodar Replace All sem revisar o preview e quebrar strings que continham o termo buscado em outro contexto."
+    ],
+    "relatedCommands": ["vscode-find-in-files"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_search-across-files",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "busca"],
+    "keywords": ["replace in files", "ctrl shift h", "substituir no projeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-toggle-sidebar",
+    "category": "VS Code",
+    "subcategory": "Interface",
+    "title": "Toggle Sidebar",
+    "description": "Mostra ou esconde a barra lateral (explorer, busca, source control, extensões), ganhando espaço horizontal para o editor.",
+    "syntax": "Ctrl+B",
+    "shortcut": "Ctrl+B",
+    "example": "Pressionar Ctrl+B para esconder a árvore de arquivos temporariamente ao trabalhar com telas menores.",
+    "result": "A barra lateral é ocultada ou exibida novamente, mantendo o último painel selecionado.",
+    "relatedCommands": ["vscode-toggle-terminal", "vscode-source-control-panel"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/userinterface",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "interface"],
+    "keywords": ["toggle sidebar", "ctrl b", "esconder barra lateral"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-zen-mode",
+    "category": "VS Code",
+    "subcategory": "Interface",
+    "title": "Zen Mode",
+    "description": "Oculta todos os painéis, barras e abas, deixando apenas o editor centralizado em tela cheia para foco máximo.",
+    "syntax": "Ctrl+K Z",
+    "shortcut": "Ctrl+K Z",
+    "example": "Pressionar Ctrl+K seguido de Z para entrar em Zen Mode ao revisar um arquivo longo sem distrações visuais.",
+    "result": "Toda a interface (sidebar, terminal, abas, barra de status) desaparece, restando só o conteúdo do editor.",
+    "notes": ["Pressionar Esc duas vezes sai do Zen Mode."],
+    "relatedCommands": ["vscode-toggle-sidebar"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/userinterface#_zen-mode",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "interface"],
+    "keywords": ["zen mode", "ctrl k z", "modo foco vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-toggle-comment",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Toggle Line Comment",
+    "description": "Comenta ou descomenta a linha atual (ou as linhas selecionadas) usando a sintaxe de comentário da linguagem do arquivo.",
+    "syntax": "Ctrl+/",
+    "shortcut": "Ctrl+/",
+    "example": "Selecionar um bloco de 5 linhas e pressionar Ctrl+/ para comentar todas de uma vez.",
+    "result": "Cada linha selecionada recebe (ou perde) o prefixo de comentário correspondente à linguagem (ex: `//`, `#`).",
+    "notes": [
+      "Shift+Alt+A alterna comentário de bloco (`/* */`) em vez de comentário de linha."
+    ],
+    "relatedCommands": ["vscode-duplicate-line"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_folding",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["toggle comment", "ctrl barra", "comentar linha vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-duplicate-line",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Duplicar linha",
+    "description": "Copia a linha atual (ou seleção) e insere a cópia imediatamente abaixo, sem precisar copiar e colar manualmente.",
+    "syntax": "Shift+Alt+↓ (duplicar abaixo) | Shift+Alt+↑ (duplicar acima)",
+    "shortcut": "Shift+Alt+Down",
+    "example": "Posicionar o cursor em uma linha de import e pressionar Shift+Alt+Down para duplicá-la antes de editar o caminho.",
+    "result": "Uma cópia idêntica da linha (ou seleção) aparece logo abaixo (ou acima) da original.",
+    "relatedCommands": ["vscode-move-line", "vscode-delete-line"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_line-actions",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["duplicar linha", "shift alt down", "duplicate line vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-move-line",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Move Line Up/Down",
+    "description": "Move a linha atual (ou o bloco selecionado) uma posição para cima ou para baixo, reindentando automaticamente quando necessário.",
+    "syntax": "Alt+↑ (mover acima) | Alt+↓ (mover abaixo)",
+    "shortcut": "Alt+Down",
+    "example": "Pressionar Alt+Down repetidamente para reordenar itens de um array declarados em linhas separadas.",
+    "result": "A linha (ou seleção) troca de posição com a linha vizinha, mantendo o conteúdo intacto.",
+    "relatedCommands": ["vscode-duplicate-line"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_line-actions",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["move line", "alt seta", "mover linha vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-delete-line",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Delete Line",
+    "description": "Remove a linha inteira onde o cursor está posicionado, sem precisar selecioná-la manualmente.",
+    "syntax": "Ctrl+Shift+K",
+    "shortcut": "Ctrl+Shift+K",
+    "example": "Posicionar o cursor em uma linha de log de depuração esquecida e pressionar Ctrl+Shift+K para removê-la de uma vez.",
+    "result": "A linha inteira é excluída e as linhas seguintes sobem uma posição.",
+    "relatedCommands": ["vscode-duplicate-line", "vscode-move-line"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_line-actions",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["delete line", "ctrl shift k", "excluir linha vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-fold-code",
+    "category": "VS Code",
+    "subcategory": "Edição",
+    "title": "Fold/Unfold Code (recolher código)",
+    "description": "Recolhe ou expande blocos de código (funções, objetos, imports) baseado na indentação, reduzindo a área visível do arquivo.",
+    "syntax": "Ctrl+Shift+[ (recolher) | Ctrl+Shift+] (expandir)",
+    "shortcut": "Ctrl+Shift+[",
+    "example": "Pressionar Ctrl+K Ctrl+0 para recolher todos os blocos do arquivo e ver só a estrutura de alto nível.",
+    "result": "O bloco de código sob o cursor é substituído por uma versão recolhida com reticências (`...`) clicável.",
+    "notes": [
+      "Ctrl+K Ctrl+0 recolhe todos os níveis; Ctrl+K Ctrl+J expande tudo novamente."
+    ],
+    "relatedCommands": ["vscode-toggle-comment"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_folding",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "edicao"],
+    "keywords": ["fold code", "recolher codigo", "ctrl shift colchete"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-extensions-marketplace",
+    "category": "VS Code",
+    "subcategory": "Extensões",
+    "title": "Extensions Marketplace",
+    "description": "Painel para buscar, instalar, atualizar e desabilitar extensões que adicionam linguagens, temas, linters e ferramentas ao editor.",
+    "syntax": "Ctrl+Shift+X",
+    "shortcut": "Ctrl+Shift+X",
+    "example": "Pressionar Ctrl+Shift+X e buscar \"ESLint\" para instalar a extensão oficial de lint direto do editor.",
+    "result": "Painel lateral lista extensões correspondentes à busca, com botão de instalação e avaliação de cada uma.",
+    "notes": [
+      "Extensões podem ser instaladas apenas no workspace atual (\"Install Workspace Extension\") em vez de globalmente."
+    ],
+    "bestPractices": [
+      "Use `extensions.json` na pasta `.vscode` para recomendar extensões do projeto a toda a equipe automaticamente."
+    ],
+    "commonMistakes": [
+      "Instalar múltiplas extensões concorrentes para a mesma linguagem (ex: dois linters), causando conflitos de diagnóstico."
+    ],
+    "relatedCommands": ["vscode-format-document"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/extension-marketplace",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "extensoes"],
+    "keywords": ["extensions marketplace", "ctrl shift x", "instalar extensao vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-debug-start",
+    "category": "VS Code",
+    "subcategory": "Debug",
+    "title": "Start Debugging",
+    "description": "Inicia a sessão de depuração usando a configuração ativa em launch.json, anexando o depurador e parando em breakpoints.",
+    "syntax": "F5",
+    "shortcut": "F5",
+    "example": "Definir um breakpoint em uma rota de API e pressionar F5 para iniciar o servidor em modo debug e inspecionar variáveis ao vivo.",
+    "result": "A aplicação inicia e a execução pausa automaticamente no primeiro breakpoint atingido, exibindo o painel de variáveis.",
+    "notes": [
+      "Ctrl+F5 executa sem depurador anexado (Run Without Debugging), útil quando não é necessário inspecionar variáveis."
+    ],
+    "relatedCommands": ["vscode-toggle-breakpoint", "vscode-launch-json"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/debugging",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "debug"],
+    "keywords": ["start debugging", "f5 vscode", "iniciar depuracao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-toggle-breakpoint",
+    "category": "VS Code",
+    "subcategory": "Debug",
+    "title": "Toggle Breakpoint",
+    "description": "Adiciona ou remove um ponto de interrupção na linha atual, pausando a execução ali durante uma sessão de debug.",
+    "syntax": "F9",
+    "shortcut": "F9",
+    "example": "Posicionar o cursor em uma linha suspeita e pressionar F9 para pausar a execução ali na próxima sessão de debug.",
+    "result": "Um marcador vermelho aparece na margem esquerda indicando o breakpoint ativo.",
+    "notes": [
+      "Clicar com o botão direito no marcador permite configurar breakpoints condicionais ou logpoints."
+    ],
+    "bestPractices": [
+      "Use breakpoints condicionais para depurar loops grandes sem precisar avançar manualmente por todas as iterações."
+    ],
+    "relatedCommands": ["vscode-debug-start"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/debugging#_breakpoints",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "debug"],
+    "keywords": ["toggle breakpoint", "f9 vscode", "ponto de interrupcao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-source-control-panel",
+    "category": "VS Code",
+    "subcategory": "Git integrado",
+    "title": "Source Control (painel de controle de versão)",
+    "description": "Painel integrado que mostra arquivos modificados, permite stage/unstage, escrever mensagem de commit e visualizar diffs, sem sair do editor.",
+    "syntax": "Ctrl+Shift+G",
+    "shortcut": "Ctrl+Shift+G",
+    "example": "Pressionar Ctrl+Shift+G, revisar o diff de cada arquivo modificado e commitar com Ctrl+Enter direto na caixa de mensagem.",
+    "result": "Painel lateral lista arquivos em Changes e Staged Changes, com diff inline ao clicar em cada um.",
+    "notes": [
+      "Ctrl+Enter dentro da caixa de mensagem executa o commit dos arquivos em stage."
+    ],
+    "bestPractices": [
+      "Revise o diff de cada arquivo no painel antes de commitar, em vez de confiar apenas na lista de nomes de arquivo."
+    ],
+    "relatedCommands": ["vscode-toggle-sidebar"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/sourcecontrol/overview",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "git"],
+    "keywords": ["source control", "ctrl shift g", "git integrado vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-intellisense-trigger",
+    "category": "VS Code",
+    "subcategory": "IntelliSense",
+    "title": "Trigger Suggest (IntelliSense manual)",
+    "description": "Aciona manualmente as sugestões de autocompletar (IntelliSense) no ponto atual do cursor, mesmo quando não abrem automaticamente.",
+    "syntax": "Ctrl+Space",
+    "shortcut": "Ctrl+Space",
+    "example": "Digitar `obj.` e pressionar Ctrl+Space para forçar a lista de propriedades e métodos disponíveis quando a sugestão automática não aparece.",
+    "result": "Uma lista de sugestões contextuais (baseada no Language Server) aparece para seleção com as setas e Tab/Enter.",
+    "notes": [
+      "Ctrl+Shift+Space mostra a assinatura de parâmetros da função (Parameter Hints) dentro de uma chamada já aberta."
+    ],
+    "relatedCommands": ["vscode-emmet-abbreviations"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/intellisense",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "intellisense"],
+    "keywords": ["trigger suggest", "ctrl space", "intellisense vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-emmet-abbreviations",
+    "category": "VS Code",
+    "subcategory": "Produtividade",
+    "title": "Emmet (abreviações de HTML/CSS)",
+    "description": "Expande abreviações compactas em estruturas completas de HTML ou CSS ao pressionar Tab, suportado nativamente em arquivos HTML, JSX e CSS.",
+    "syntax": "<abreviação> + Tab",
+    "example": "Digitar `ul>li.item*3` e pressionar Tab para gerar uma lista `<ul>` com três `<li class=\"item\">` aninhados.",
+    "result": "A abreviação é expandida para a estrutura HTML completa correspondente, com o cursor posicionado no primeiro campo editável.",
+    "notes": [
+      "Funciona também em JSX/TSX por padrão; pode ser habilitado para outras linguagens via `emmet.includeLanguages`."
+    ],
+    "bestPractices": [
+      "Combine seletores CSS-like (`.classe`, `#id`, `>`, `*n`) para gerar marcação repetitiva sem digitar tag por tag."
+    ],
+    "relatedCommands": ["vscode-intellisense-trigger"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/emmet",
+    "externalReferences": [],
+    "tags": ["vscode", "produtividade", "emmet"],
+    "keywords": ["emmet", "abreviacoes html", "expandir tag vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-settings-json",
+    "category": "VS Code",
+    "subcategory": "Configuração",
+    "title": "settings.json (configurações do editor)",
+    "description": "Arquivo JSON que armazena todas as preferências do editor, podendo ser definido globalmente (usuário) ou por workspace (`.vscode/settings.json`).",
+    "syntax": "{ \"chave\": valor }",
+    "example": "{\n  \"editor.formatOnSave\": true,\n  \"editor.tabSize\": 2,\n  \"files.exclude\": { \"**/node_modules\": true }\n}",
+    "result": "As preferências definidas passam a valer imediatamente, sem precisar reiniciar o editor.",
+    "notes": [
+      "Configurações em `.vscode/settings.json` do workspace têm prioridade sobre as configurações globais do usuário."
+    ],
+    "bestPractices": [
+      "Versione `.vscode/settings.json` no repositório para padronizar formatação e comportamento do editor entre toda a equipe."
+    ],
+    "commonMistakes": [
+      "Definir configurações conflitantes entre o settings.json do usuário e o do workspace, causando comportamento inesperado."
+    ],
+    "relatedCommands": ["vscode-tasks-json", "vscode-launch-json"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/settings",
+    "externalReferences": [],
+    "tags": ["vscode", "configuracao", "settings"],
+    "keywords": ["settings.json", "configuracoes vscode", "preferencias editor"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-tasks-json",
+    "category": "VS Code",
+    "subcategory": "Configuração",
+    "title": "tasks.json (tarefas automatizadas)",
+    "description": "Arquivo de configuração que define comandos de build, teste ou scripts personalizados executáveis direto pelo VS Code, sem abrir o terminal manualmente.",
+    "syntax": "{ \"tasks\": [{ \"label\": \"...\", \"type\": \"shell\", \"command\": \"...\" }] }",
+    "example": "{\n  \"version\": \"2.0.0\",\n  \"tasks\": [\n    {\n      \"label\": \"build\",\n      \"type\": \"shell\",\n      \"command\": \"npm run build\",\n      \"group\": \"build\"\n    }\n  ]\n}",
+    "result": "A tarefa \"build\" passa a aparecer no menu Terminal > Run Task, executável sem digitar o comando manualmente.",
+    "notes": [
+      "Uma tarefa marcada como `\"group\": \"build\", \"isDefault\": true` pode ser disparada com Ctrl+Shift+B."
+    ],
+    "bestPractices": [
+      "Centralize scripts repetitivos do projeto (lint, build, testes) em tasks.json para padronizar o fluxo de toda a equipe."
+    ],
+    "relatedCommands": ["vscode-settings-json", "vscode-launch-json"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/tasks",
+    "externalReferences": [],
+    "tags": ["vscode", "configuracao", "tasks"],
+    "keywords": ["tasks.json", "tarefas vscode", "automatizar build"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-launch-json",
+    "category": "VS Code",
+    "subcategory": "Configuração",
+    "title": "launch.json (configurações de debug)",
+    "description": "Arquivo de configuração que define como o depurador do VS Code inicia a aplicação (runtime, argumentos, variáveis de ambiente, porta de anexação).",
+    "syntax": "{ \"configurations\": [{ \"type\": \"node\", \"request\": \"launch\", ... }] }",
+    "example": "{\n  \"version\": \"0.2.0\",\n  \"configurations\": [\n    {\n      \"type\": \"node\",\n      \"request\": \"launch\",\n      \"name\": \"Debug servidor\",\n      \"program\": \"${workspaceFolder}/src/server.ts\"\n    }\n  ]\n}",
+    "result": "A configuração \"Debug servidor\" passa a aparecer no dropdown do painel Run and Debug, pronta para iniciar com F5.",
+    "notes": [
+      "`\"request\": \"attach\"` conecta o depurador a um processo já em execução em vez de iniciar um novo."
+    ],
+    "bestPractices": [
+      "Versione launch.json no repositório para que qualquer pessoa da equipe consiga depurar a aplicação com F5 sem configuração manual."
+    ],
+    "relatedCommands": ["vscode-debug-start", "vscode-toggle-breakpoint"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/debugging#_launch-configurations",
+    "externalReferences": [],
+    "tags": ["vscode", "configuracao", "debug"],
+    "keywords": ["launch.json", "configurar debug vscode", "debug config"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-user-snippets",
+    "category": "VS Code",
+    "subcategory": "Produtividade",
+    "title": "User Snippets (snippets personalizados)",
+    "description": "Permite criar trechos de código reutilizáveis, disparados por um prefixo digitado seguido de Tab, específicos por linguagem ou globais.",
+    "syntax": "Command Palette > \"Configure User Snippets\"",
+    "example": "{\n  \"React Function Component\": {\n    \"prefix\": \"rfc\",\n    \"body\": [\"export function ${1:Componente}() {\", \"  return <div>$0</div>\", \"}\"]\n  }\n}",
+    "result": "Digitar `rfc` e pressionar Tab em um arquivo .tsx insere o esqueleto do componente, com campos navegáveis via Tab.",
+    "notes": [
+      "`$1`, `$2` definem posições de tabulação (tabstops); `$0` marca a posição final do cursor após preencher os campos."
+    ],
+    "bestPractices": [
+      "Crie snippets para padrões repetitivos do próprio projeto (ex: estrutura de teste, componente padrão) e versione-os em `.vscode`."
+    ],
+    "relatedCommands": ["vscode-emmet-abbreviations"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/userdefinedsnippets",
+    "externalReferences": [],
+    "tags": ["vscode", "produtividade", "snippets"],
+    "keywords": ["user snippets", "snippets personalizados vscode", "criar snippet"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-remote-development",
+    "category": "VS Code",
+    "subcategory": "Remote Development",
+    "title": "Remote Development (WSL / SSH / Dev Containers)",
+    "description": "Conjunto de extensões que conecta o VS Code a um ambiente remoto (WSL, servidor via SSH ou container Docker), rodando a extensão e o terminal dentro desse ambiente enquanto a interface fica local.",
+    "syntax": "Command Palette > \"Remote-SSH: Connect to Host...\" | \"WSL: Connect to WSL\" | \"Dev Containers: Reopen in Container\"",
+    "example": "Abrir a Command Palette, escolher \"Dev Containers: Reopen in Container\" em um projeto com `.devcontainer/devcontainer.json`.",
+    "result": "O VS Code reabre a mesma pasta rodando dentro do container definido, com extensões, terminal e depurador operando no ambiente containerizado.",
+    "notes": [
+      "Extensões instaladas \"no remoto\" ficam isoladas por ambiente — uma extensão instalada dentro de um Dev Container não aparece automaticamente ao voltar para o ambiente local."
+    ],
+    "bestPractices": [
+      "Versione `.devcontainer/devcontainer.json` no repositório para que toda a equipe tenha o mesmo ambiente de desenvolvimento reproduzível."
+    ],
+    "commonMistakes": [
+      "Confundir extensões instaladas localmente com as instaladas no ambiente remoto, esperando que apareçam em ambos automaticamente."
+    ],
+    "relatedCommands": ["vscode-toggle-terminal", "vscode-multi-root-workspace"],
+    "difficulty": "avancado",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/remote/remote-overview",
+    "externalReferences": [],
+    "tags": ["vscode", "remote", "wsl", "ssh", "containers"],
+    "keywords": [
+      "remote development vscode",
+      "dev containers",
+      "wsl vscode",
+      "ssh remote vscode"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-multi-root-workspace",
+    "category": "VS Code",
+    "subcategory": "Workspace",
+    "title": "Multi-root Workspace",
+    "description": "Permite abrir e gerenciar múltiplas pastas independentes (não necessariamente subpastas umas das outras) em uma única janela do VS Code, cada uma com suas próprias configurações.",
+    "syntax": "Command Palette > \"Workspaces: Add Folder to Workspace...\" | arquivo .code-workspace",
+    "example": "{\n  \"folders\": [\n    { \"path\": \"../api\" },\n    { \"path\": \"../frontend\" }\n  ]\n}",
+    "result": "As duas pastas aparecem lado a lado na sidebar como raízes independentes, cada uma podendo ter seu próprio `.vscode/settings.json`.",
+    "notes": [
+      "Um arquivo `.code-workspace` salvo permite reabrir a mesma combinação de pastas com um clique, útil para monorepos com múltiplos serviços."
+    ],
+    "bestPractices": [
+      "Use multi-root workspace para projetos com backend e frontend em repositórios separados que precisam ser editados/debugados juntos."
+    ],
+    "commonMistakes": [
+      "Confundir multi-root workspace com apenas abrir uma pasta que contém subpastas — este último não precisa de workspace, só de um `code .` normal."
+    ],
+    "relatedCommands": ["vscode-settings-json", "vscode-remote-development"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/multi-root-workspaces",
+    "externalReferences": [],
+    "tags": ["vscode", "workspace", "monorepo"],
+    "keywords": ["multi-root workspace", "code-workspace", "workspace vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-keybindings-json",
+    "category": "VS Code",
+    "subcategory": "Configuração",
+    "title": "keybindings.json (atalhos personalizados)",
+    "description": "Arquivo JSON que permite remapear, adicionar ou remover atalhos de teclado do editor, sobrescrevendo os padrões definidos pelo VS Code ou por extensões.",
+    "syntax": "Command Palette > \"Preferences: Open Keyboard Shortcuts (JSON)\"",
+    "example": "[\n  {\n    \"key\": \"ctrl+alt+l\",\n    \"command\": \"editor.action.formatDocument\",\n    \"when\": \"editorTextFocus\"\n  }\n]",
+    "result": "O atalho Ctrl+Alt+L passa a formatar o documento, além (ou em vez) do atalho padrão Shift+Alt+F.",
+    "notes": [
+      "A cláusula `when` restringe o contexto em que o atalho é válido (ex: só com o editor de texto focado), evitando conflitos com outras views."
+    ],
+    "bestPractices": [
+      "Use \"Preferences: Open Keyboard Shortcuts\" (interface visual) para descobrir o `command` exato antes de editar o JSON manualmente."
+    ],
+    "commonMistakes": [
+      "Remapear um atalho sem a cláusula `when` correta, fazendo-o disparar em contextos indesejados (ex: dentro do terminal integrado)."
+    ],
+    "relatedCommands": ["vscode-command-palette", "vscode-settings-json"],
+    "difficulty": "intermediario",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/keybindings",
+    "externalReferences": [],
+    "tags": ["vscode", "configuracao", "atalhos"],
+    "keywords": [
+      "keybindings.json",
+      "atalhos personalizados vscode",
+      "remapear atalho vscode"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-toggle-word-wrap",
+    "category": "VS Code",
+    "subcategory": "Interface",
+    "title": "Toggle Word Wrap (quebra de linha)",
+    "description": "Ativa ou desativa a quebra automática de linhas longas na visualização do editor, sem alterar o conteúdo real do arquivo.",
+    "syntax": "Alt+Z",
+    "shortcut": "Alt+Z",
+    "example": "Abrir um arquivo Markdown com linhas muito longas e pressionar Alt+Z para visualizar sem precisar rolar horizontalmente.",
+    "result": "As linhas passam a quebrar visualmente na largura do editor; nenhum caractere de quebra de linha real é inserido no arquivo.",
+    "notes": [
+      "A configuração `editor.wordWrap` no settings.json permite tornar esse comportamento permanente por linguagem ou globalmente."
+    ],
+    "relatedCommands": ["vscode-settings-json"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/editor/codebasics#_indentation-and-wrapping",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "interface"],
+    "keywords": ["word wrap vscode", "alt z", "quebra de linha vscode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vscode-open-recent",
+    "category": "VS Code",
+    "subcategory": "Navegação",
+    "title": "Open Recent",
+    "description": "Abre rapidamente uma pasta, workspace ou arquivo recentemente acessado, sem precisar navegar pelo seletor de arquivos do sistema operacional.",
+    "syntax": "Ctrl+R",
+    "shortcut": "Ctrl+R",
+    "example": "Pressionar Ctrl+R para alternar rapidamente entre os últimos projetos abertos no VS Code.",
+    "result": "Uma lista com os workspaces e pastas mais recentes aparece, navegável com as setas e Enter.",
+    "notes": [
+      "Esse atalho é diferente do Ctrl+R usado em terminais Unix (busca reversa no histórico) — dentro do VS Code, ele abre a lista de itens recentes."
+    ],
+    "relatedCommands": ["vscode-quick-open"],
+    "difficulty": "iniciante",
+    "platform": ["windows", "linux", "macos"],
+    "version": "Todas",
+    "officialDocumentation": "https://code.visualstudio.com/docs/getstarted/tips-and-tricks",
+    "externalReferences": [],
+    "tags": ["vscode", "atalhos", "navegacao"],
+    "keywords": ["open recent vscode", "ctrl r vscode", "abrir projeto recente"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

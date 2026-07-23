@@ -73,5 +73,791 @@
     "keywords": ["server components", "rsc", "react 19"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "react-usestate",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useState",
+    "description": "Hook que adiciona estado local a um componente funcional, disparando uma nova renderização sempre que o valor é atualizado.",
+    "syntax": "const [estado, setEstado] = useState(valorInicial)",
+    "example": "const [contador, setContador] = useState(0)\n<button onClick={() => setContador(c => c + 1)}>{contador}</button>",
+    "result": "Cada clique incrementa o contador e re-renderiza o componente com o novo valor exibido.",
+    "parameters": [
+      {
+        "name": "valorInicial",
+        "description": "Valor usado apenas na primeira renderização; pode ser um valor direto ou uma função (lazy initialization).",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Passar uma função para `setEstado` (ex: `c => c + 1`) garante o valor mais atual, evitando bugs em atualizações em sequência."
+    ],
+    "bestPractices": [
+      "Use a forma funcional do setter quando o novo estado depende do valor anterior."
+    ],
+    "commonMistakes": [
+      "Mutar o estado diretamente (ex: `array.push(item)`) em vez de criar uma nova referência, o que não dispara re-renderização."
+    ],
+    "relatedCommands": ["react-useeffect", "react-usereducer"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useState",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "usestate"],
+    "keywords": ["usestate", "estado local react", "state hook"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-usecontext",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useContext",
+    "description": "Hook que consome o valor de um Context em qualquer nível da árvore de componentes, sem precisar repassar props manualmente por cada nível intermediário.",
+    "syntax": "const valor = useContext(MeuContext)",
+    "example": "const TemaContext = createContext(\"claro\")\nfunction Botao() {\n  const tema = useContext(TemaContext)\n  return <button className={tema}>Enviar</button>\n}",
+    "result": "O componente `Botao` recebe o valor do `TemaContext` mais próximo acima dele na árvore, sem precisar de props intermediárias.",
+    "notes": [
+      "O componente que usa `useContext` re-renderiza sempre que o valor do Provider correspondente muda."
+    ],
+    "bestPractices": [
+      "Combine com `useMemo` no valor do Provider para evitar re-renderizações desnecessárias em consumidores."
+    ],
+    "commonMistakes": [
+      "Colocar um único Context gigante com muitos valores não relacionados, fazendo qualquer mudança re-renderizar todos os consumidores."
+    ],
+    "relatedCommands": ["react-context-api", "react-prop-drilling"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useContext",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "usecontext"],
+    "keywords": ["usecontext", "consumir contexto react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-useref",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useRef",
+    "description": "Hook que cria uma referência mutável que persiste entre renderizações sem disparar uma nova renderização quando alterada, usado tanto para acessar elementos DOM quanto para guardar valores mutáveis.",
+    "syntax": "const ref = useRef(valorInicial)",
+    "example": "const inputRef = useRef(null)\nfunction focar() { inputRef.current.focus() }\n<input ref={inputRef} />",
+    "result": "Chamar `focar()` foca o elemento `<input>` diretamente via `inputRef.current`.",
+    "notes": [
+      "Alterar `ref.current` não causa re-renderização, diferente de `useState`."
+    ],
+    "bestPractices": [
+      "Use `useRef` para valores que precisam persistir entre renders mas não afetam a UI diretamente (ex: ID de um timer)."
+    ],
+    "commonMistakes": [
+      "Usar `useRef` para guardar estado que deveria refletir na UI, esperando que o componente re-renderize ao mudar `.current`."
+    ],
+    "relatedCommands": ["react-forwardref"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useRef",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "useref"],
+    "keywords": ["useref", "referencia mutavel react", "acessar dom react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-usememo",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useMemo",
+    "description": "Hook que memoriza o resultado de um cálculo custoso, recalculando apenas quando uma das dependências muda, evitando reprocessamento a cada renderização.",
+    "syntax": "const valor = useMemo(() => calcular(a, b), [a, b])",
+    "example": "const totalFiltrado = useMemo(\n  () => pedidos.filter(p => p.status === filtro).length,\n  [pedidos, filtro]\n)",
+    "result": "O filtro só é recalculado quando `pedidos` ou `filtro` mudam, não em toda renderização do componente.",
+    "notes": [
+      "`useMemo` é uma otimização de performance, não uma garantia semântica — o React pode descartar o cache em certos cenários."
+    ],
+    "bestPractices": [
+      "Reserve `useMemo` para cálculos realmente custosos; usá-lo em toda parte adiciona overhead sem benefício real."
+    ],
+    "commonMistakes": [
+      "Usar `useMemo` para memoizar valores triviais (ex: uma soma simples), adicionando complexidade sem ganho de performance."
+    ],
+    "relatedCommands": ["react-useeffect", "react-usecallback"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useMemo",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "usememo", "performance"],
+    "keywords": ["usememo", "memoizar calculo react", "performance react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-usecallback",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useCallback",
+    "description": "Hook que memoriza a referência de uma função entre renderizações, evitando recriá-la a cada render — útil para evitar re-renderizações desnecessárias em componentes filhos memoizados.",
+    "syntax": "const funcao = useCallback(() => { ... }, [dependencias])",
+    "example": "const handleClick = useCallback(() => {\n  enviarEvento(id)\n}, [id])\n<BotaoMemoizado onClick={handleClick} />",
+    "result": "`handleClick` mantém a mesma referência entre renders enquanto `id` não mudar, permitindo que `BotaoMemoizado` (envolto em `React.memo`) não re-renderize à toa.",
+    "notes": ["`useCallback(fn, deps)` é equivalente a `useMemo(() => fn, deps)`."],
+    "bestPractices": [
+      "Use `useCallback` principalmente quando a função é passada como prop para um componente filho memoizado (`React.memo`)."
+    ],
+    "commonMistakes": [
+      "Aplicar `useCallback` em funções que não são passadas a componentes memoizados nem usadas como dependência de outro hook, sem benefício real."
+    ],
+    "relatedCommands": ["react-usememo", "react-memo"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useCallback",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "usecallback", "performance"],
+    "keywords": ["usecallback", "memoizar funcao react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-usereducer",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useReducer",
+    "description": "Hook alternativo ao useState para gerenciar estado mais complexo, centralizando as transições de estado em uma função reducer pura, no estilo Redux.",
+    "syntax": "const [estado, dispatch] = useReducer(reducer, estadoInicial)",
+    "example": "function reducer(state, action) {\n  switch (action.type) {\n    case \"incrementar\": return { count: state.count + 1 }\n    default: return state\n  }\n}\nconst [state, dispatch] = useReducer(reducer, { count: 0 })\ndispatch({ type: \"incrementar\" })",
+    "result": "O estado é atualizado de forma previsível conforme a lógica centralizada na função `reducer`.",
+    "notes": [
+      "Prefira `useReducer` a `useState` quando há múltiplas sub-transições de estado relacionadas ou lógica de atualização complexa."
+    ],
+    "bestPractices": [
+      "Mantenha a função reducer pura (sem efeitos colaterais), retornando sempre um novo objeto de estado."
+    ],
+    "commonMistakes": [
+      "Mutar o estado diretamente dentro do reducer em vez de retornar um novo objeto."
+    ],
+    "relatedCommands": ["react-usestate"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useReducer",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "usereducer"],
+    "keywords": ["usereducer", "reducer react", "gerenciar estado complexo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-custom-hooks",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "Custom Hooks (hooks personalizados)",
+    "description": "Funções JavaScript que começam com 'use' e reutilizam lógica com estado entre múltiplos componentes, combinando hooks nativos internamente.",
+    "syntax": "function useMeuHook(parametro) {\n  const [estado, setEstado] = useState(...)\n  useEffect(() => { ... }, [])\n  return estado\n}",
+    "example": "function useJanelaLargura() {\n  const [largura, setLargura] = useState(window.innerWidth)\n  useEffect(() => {\n    const handler = () => setLargura(window.innerWidth)\n    window.addEventListener(\"resize\", handler)\n    return () => window.removeEventListener(\"resize\", handler)\n  }, [])\n  return largura\n}",
+    "result": "Qualquer componente pode chamar `useJanelaLargura()` para reagir ao redimensionamento da janela, sem duplicar a lógica de listener.",
+    "notes": [
+      "Custom hooks compartilham lógica com estado, mas cada componente que os usa tem sua própria instância isolada de estado."
+    ],
+    "bestPractices": [
+      "Extraia lógica repetida entre componentes (fetch, formulários, listeners) em custom hooks nomeados de forma descritiva."
+    ],
+    "commonMistakes": [
+      "Chamar hooks nativos condicionalmente dentro de um custom hook, violando as Regras dos Hooks."
+    ],
+    "relatedCommands": ["react-useeffect", "react-usestate", "react-custom-hook-fetch"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/learn/reusing-logic-with-custom-hooks",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "custom hooks"],
+    "keywords": ["custom hooks", "hooks personalizados", "reutilizar logica react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-custom-hook-fetch",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "Custom Hook de fetch (useFetch)",
+    "description": "Padrão comum de custom hook que encapsula chamadas assíncronas de API, gerenciando estados de loading, dados e erro.",
+    "syntax": "function useFetch(url) {\n  const [dados, setDados] = useState(null)\n  const [carregando, setCarregando] = useState(true)\n  const [erro, setErro] = useState(null)\n  useEffect(() => { ... }, [url])\n  return { dados, carregando, erro }\n}",
+    "example": "function useFetch(url) {\n  const [dados, setDados] = useState(null)\n  const [carregando, setCarregando] = useState(true)\n  useEffect(() => {\n    fetch(url).then(r => r.json()).then(setDados).finally(() => setCarregando(false))\n  }, [url])\n  return { dados, carregando }\n}",
+    "result": "Componentes usam `const { dados, carregando } = useFetch(\"/api/usuarios\")` sem repetir a lógica de fetch/estado em cada um.",
+    "notes": [
+      "Em projetos maiores, bibliotecas como TanStack Query substituem esse padrão manual com cache, revalidação e retries prontos."
+    ],
+    "bestPractices": [
+      "Cancele a requisição (AbortController) na função de limpeza do useEffect para evitar atualizar estado de um componente já desmontado."
+    ],
+    "commonMistakes": [
+      "Não tratar o caso em que `url` muda antes da requisição anterior terminar, causando 'race conditions' com respostas fora de ordem."
+    ],
+    "relatedCommands": ["react-custom-hooks", "react-useeffect"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/learn/reusing-logic-with-custom-hooks",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "fetch", "api"],
+    "keywords": ["usefetch", "custom hook fetch", "chamar api react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-controlled-vs-uncontrolled",
+    "category": "React",
+    "subcategory": "Formulários",
+    "title": "Controlled vs Uncontrolled Inputs",
+    "description": "Controlled inputs têm seu valor gerenciado pelo estado do React (via `value` + `onChange`); uncontrolled inputs mantêm o próprio estado no DOM, acessado via ref quando necessário.",
+    "syntax": "// Controlled:\n<input value={valor} onChange={e => setValor(e.target.value)} />\n// Uncontrolled:\n<input ref={inputRef} defaultValue=\"...\" />",
+    "example": "function FormularioControlado() {\n  const [nome, setNome] = useState(\"\")\n  return <input value={nome} onChange={e => setNome(e.target.value)} />\n}",
+    "result": "No formulário controlado, o React é a 'fonte da verdade' do valor; no não controlado, o próprio DOM guarda o valor até ser lido via ref.",
+    "notes": [
+      "Inputs não controlados são mais performáticos para formulários grandes com muitos campos, pois evitam re-renderizar a cada tecla digitada."
+    ],
+    "bestPractices": [
+      "Use controlled inputs quando precisar validar, formatar ou reagir ao valor em tempo real; uncontrolled para formulários simples ou grandes."
+    ],
+    "commonMistakes": [
+      "Misturar `value` e `defaultValue` no mesmo input, o que o React trata como um erro de input 'ora controlado, ora não'."
+    ],
+    "relatedCommands": ["react-useref", "react-usestate"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/reference/react-dom/components/input",
+    "externalReferences": [],
+    "tags": ["react", "formularios", "inputs"],
+    "keywords": ["controlled input", "uncontrolled input", "formularios react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-conditional-rendering",
+    "category": "React",
+    "subcategory": "JSX",
+    "title": "Renderização condicional",
+    "description": "Técnicas para exibir diferentes elementos JSX com base em uma condição, usando operadores JavaScript comuns em vez de uma sintaxe própria do React.",
+    "syntax": "{condicao && <Componente />}\n{condicao ? <A /> : <B />}",
+    "example": "{usuario ? <Perfil nome={usuario.nome} /> : <BotaoLogin />}\n{itens.length > 0 && <Lista itens={itens} />}",
+    "result": "O JSX correspondente à condição verdadeira é renderizado; o outro ramo simplesmente não é incluído na árvore.",
+    "notes": [
+      "Cuidado com `{contador && <span>{contador}</span>}` quando `contador` é `0` — o número `0` é renderizado literalmente na tela, já que `0` é falsy mas não `undefined`."
+    ],
+    "bestPractices": [
+      "Prefira o operador ternário quando ambos os ramos (verdadeiro e falso) precisam renderizar algo visível."
+    ],
+    "commonMistakes": [
+      "Usar `&&` com um valor numérico que pode ser 0, fazendo o número aparecer indesejadamente na tela."
+    ],
+    "relatedCommands": ["react-keys-in-lists"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/learn/conditional-rendering",
+    "externalReferences": [],
+    "tags": ["react", "jsx", "renderizacao condicional"],
+    "keywords": [
+      "renderizacao condicional react",
+      "if no jsx",
+      "operador ternario react"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-keys-in-lists",
+    "category": "React",
+    "subcategory": "JSX",
+    "title": "Keys em listas",
+    "description": "Atributo especial que identifica de forma estável cada item em uma lista renderizada, ajudando o React a saber quais itens mudaram, foram adicionados ou removidos entre renderizações.",
+    "syntax": "{itens.map(item => <Item key={item.id} {...item} />)}",
+    "example": "{pedidos.map(pedido => <LinhaPedido key={pedido.id} pedido={pedido} />)}",
+    "result": "O React consegue reconciliar a lista de forma eficiente, reutilizando instâncias de componentes existentes em vez de recriar tudo do zero.",
+    "notes": [
+      "A key deve ser única entre irmãos, mas não precisa ser globalmente única na aplicação."
+    ],
+    "bestPractices": [
+      "Use um identificador estável dos dados (ex: `item.id`) como key, nunca um valor que muda entre renders."
+    ],
+    "commonMistakes": [
+      "Usar o índice do array (`index`) como key em listas que podem ser reordenadas, filtradas ou ter itens removidos do meio, causando bugs de estado 'grudado' no item errado."
+    ],
+    "relatedCommands": ["react-conditional-rendering"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/learn/rendering-lists#why-does-react-need-keys",
+    "externalReferences": [],
+    "tags": ["react", "jsx", "listas", "keys"],
+    "keywords": ["key react", "keys em listas", "index como key"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-memo",
+    "category": "React",
+    "subcategory": "Performance",
+    "title": "React.memo",
+    "description": "Higher-order component que memoriza a renderização de um componente, evitando re-renderizá-lo se suas props não mudaram desde a última renderização.",
+    "syntax": "const ComponenteMemoizado = React.memo(function Componente(props) { ... })",
+    "example": "const LinhaTabela = React.memo(function LinhaTabela({ nome, valor }) {\n  return <tr><td>{nome}</td><td>{valor}</td></tr>\n})",
+    "result": "`LinhaTabela` só re-renderiza quando `nome` ou `valor` mudam, mesmo que o componente pai re-renderize por outro motivo.",
+    "notes": [
+      "Por padrão, `React.memo` compara props com igualdade rasa (shallow equality); é possível passar uma função de comparação customizada como segundo argumento."
+    ],
+    "bestPractices": [
+      "Combine `React.memo` com `useCallback`/`useMemo` nas props passadas, senão novas referências de função/objeto a cada render anulam o benefício do memo."
+    ],
+    "commonMistakes": [
+      "Memoizar componentes que recebem props que mudam a cada renderização de qualquer forma, adicionando overhead de comparação sem ganho."
+    ],
+    "relatedCommands": ["react-usecallback", "react-usememo"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.6+",
+    "officialDocumentation": "https://react.dev/reference/react/memo",
+    "externalReferences": [],
+    "tags": ["react", "performance", "memo"],
+    "keywords": ["react.memo", "memoizar componente", "evitar re-render"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-context-api",
+    "category": "React",
+    "subcategory": "Context API",
+    "title": "Context API (createContext e Provider)",
+    "description": "Mecanismo nativo do React para compartilhar dados (tema, usuário autenticado, idioma) por toda a árvore de componentes sem precisar passar props manualmente em cada nível.",
+    "syntax": "const MeuContext = createContext(valorPadrao)\n<MeuContext.Provider value={valor}>{children}</MeuContext.Provider>",
+    "example": "const AuthContext = createContext(null)\nfunction App() {\n  const [usuario, setUsuario] = useState(null)\n  return (\n    <AuthContext.Provider value={{ usuario, setUsuario }}>\n      <Dashboard />\n    </AuthContext.Provider>\n  )\n}",
+    "result": "Qualquer componente dentro de `<AuthContext.Provider>` pode acessar `{ usuario, setUsuario }` via `useContext(AuthContext)`, não importa a profundidade.",
+    "notes": [
+      "Context resolve o problema de 'prop drilling', mas não substitui uma boa gestão de estado para dados que mudam com muita frequência."
+    ],
+    "bestPractices": [
+      "Crie um custom hook (`useAuth()`) que encapsula `useContext(AuthContext)`, centralizando o acesso e facilitando validação de uso fora do Provider."
+    ],
+    "commonMistakes": [
+      "Usar Context para estado que muda a cada milissegundo (ex: posição do mouse), causando re-renderização excessiva de todos os consumidores."
+    ],
+    "relatedCommands": ["react-usecontext", "react-prop-drilling"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.3+",
+    "officialDocumentation": "https://react.dev/learn/passing-data-deeply-with-context",
+    "externalReferences": [],
+    "tags": ["react", "context api", "estado global"],
+    "keywords": ["context api", "createcontext", "provider react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-prop-drilling",
+    "category": "React",
+    "subcategory": "Context API",
+    "title": "Prop Drilling",
+    "description": "Antipadrão em que uma prop precisa ser repassada manualmente por vários componentes intermediários que não a utilizam diretamente, apenas para chegar a um componente filho profundo.",
+    "syntax": "<A tema={tema}><B tema={tema}><C tema={tema} /></B></A>",
+    "example": "function App() {\n  const tema = \"escuro\"\n  return <Layout tema={tema} />\n}\nfunction Layout({ tema }) { return <Sidebar tema={tema} /> }\nfunction Sidebar({ tema }) { return <Botao tema={tema} /> }",
+    "result": "`Layout` e `Sidebar` precisam conhecer e repassar `tema` mesmo sem usá-lo diretamente, só porque `Botao` precisa dele.",
+    "notes": [
+      "Prop drilling não é sempre ruim em profundidade rasa (1-2 níveis) — vira problema real em árvores profundas ou muito ramificadas."
+    ],
+    "bestPractices": [
+      "Use Context API ou uma biblioteca de gerenciamento de estado quando o prop drilling ultrapassar 2-3 níveis de componentes que não usam a prop."
+    ],
+    "commonMistakes": [
+      "Introduzir Context prematuramente para um único nível de repasse, adicionando complexidade desnecessária."
+    ],
+    "relatedCommands": ["react-context-api"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/learn/passing-data-deeply-with-context",
+    "externalReferences": [],
+    "tags": ["react", "prop drilling", "antipadrao"],
+    "keywords": ["prop drilling", "repassar props", "antipadrao react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-error-boundaries",
+    "category": "React",
+    "subcategory": "Tratamento de erros",
+    "title": "Error Boundaries",
+    "description": "Componentes de classe especiais que capturam erros de JavaScript lançados em qualquer componente filho da árvore, exibindo uma UI de fallback em vez de quebrar a aplicação inteira.",
+    "syntax": "class ErrorBoundary extends React.Component {\n  static getDerivedStateFromError(erro) { return { temErro: true } }\n  componentDidCatch(erro, info) { ... }\n  render() { return this.state.temErro ? <Fallback /> : this.props.children }\n}",
+    "example": "<ErrorBoundary fallback={<p>Algo deu errado.</p>}>\n  <ComponenteQuePodeQuebrar />\n</ErrorBoundary>",
+    "result": "Se `ComponenteQuePodeQuebrar` lançar uma exceção durante a renderização, o Error Boundary captura e exibe o fallback em vez de uma tela branca.",
+    "notes": [
+      "Error Boundaries só podem ser implementados como componentes de classe — não existe equivalente direto em hooks (embora bibliotecas como `react-error-boundary` ofereçam uma API baseada em hooks)."
+    ],
+    "bestPractices": [
+      "Posicione Error Boundaries estrategicamente ao redor de seções independentes da UI, evitando que um erro em um widget derrube a página inteira."
+    ],
+    "commonMistakes": [
+      "Esperar que Error Boundaries capturem erros em event handlers, código assíncrono ou no próprio Error Boundary — eles só capturam erros durante a renderização."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16+",
+    "officialDocumentation": "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary",
+    "externalReferences": [],
+    "tags": ["react", "error boundary", "tratamento de erros"],
+    "keywords": ["error boundary", "capturar erro react", "fallback ui"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-portals",
+    "category": "React",
+    "subcategory": "DOM",
+    "title": "Portals",
+    "description": "API que renderiza um componente filho em um nó DOM diferente do local onde o componente pai está montado na árvore, útil para modais, tooltips e dropdowns.",
+    "syntax": "createPortal(children, nodoDom)",
+    "example": "function Modal({ children }) {\n  return createPortal(\n    <div className=\"modal\">{children}</div>,\n    document.getElementById(\"modal-root\")\n  )\n}",
+    "result": "O conteúdo do Modal é inserido em `#modal-root` no DOM, mas continua fazendo parte da árvore de componentes React normalmente (eventos borbulham como esperado).",
+    "notes": [
+      "Portals são úteis para escapar de estilos CSS restritivos do pai, como `overflow: hidden` ou `z-index` baixo."
+    ],
+    "bestPractices": [
+      "Use Portals para modais, tooltips e menus dropdown que precisam visualmente 'escapar' do container pai."
+    ],
+    "commonMistakes": [
+      "Esquecer que eventos de um Portal continuam borbulhando pela árvore React (não pela árvore DOM), o que pode surpreender ao usar `stopPropagation`."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16+",
+    "officialDocumentation": "https://react.dev/reference/react-dom/createPortal",
+    "externalReferences": [],
+    "tags": ["react", "portals", "dom"],
+    "keywords": ["react portals", "createportal", "modal react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-forwardref",
+    "category": "React",
+    "subcategory": "Refs",
+    "title": "forwardRef",
+    "description": "Permite que um componente encaminhe uma ref recebida de fora para um elemento DOM interno (ou outro componente), possibilitando acesso direto a partir do componente pai.",
+    "syntax": "const Componente = forwardRef((props, ref) => <input ref={ref} {...props} />)",
+    "example": "const InputCustomizado = forwardRef((props, ref) => (\n  <input ref={ref} className=\"input-estilizado\" {...props} />\n))\n// No pai:\nconst inputRef = useRef(null)\n<InputCustomizado ref={inputRef} />",
+    "result": "`inputRef.current` no componente pai aponta diretamente para o elemento `<input>` real dentro de `InputCustomizado`.",
+    "notes": [
+      "Sem `forwardRef`, passar `ref` como prop normal para um componente funcional não tem efeito — `ref` é tratado de forma especial pelo React."
+    ],
+    "bestPractices": [
+      "Use `forwardRef` ao criar componentes de UI reutilizáveis (inputs, botões customizados) que precisam expor o elemento DOM real ao consumidor."
+    ],
+    "commonMistakes": [
+      "Tentar passar `ref` como prop comum (`props.ref`) em um componente funcional sem `forwardRef`, o que é silenciosamente ignorado."
+    ],
+    "relatedCommands": ["react-useref"],
+    "difficulty": "avancado",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.3+",
+    "officialDocumentation": "https://react.dev/reference/react/forwardRef",
+    "externalReferences": [],
+    "tags": ["react", "forwardref", "refs"],
+    "keywords": ["forwardref", "encaminhar ref", "ref em componente funcional"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-suspense",
+    "category": "React",
+    "subcategory": "Suspense",
+    "title": "Suspense",
+    "description": "Componente que exibe um fallback (como um spinner) enquanto seus componentes filhos ainda estão carregando dados ou código de forma assíncrona.",
+    "syntax": "<Suspense fallback={<Carregando />}>\n  <ComponenteAssincrono />\n</Suspense>",
+    "example": "const Grafico = lazy(() => import(\"./Grafico\"))\n<Suspense fallback={<p>Carregando gráfico...</p>}>\n  <Grafico />\n</Suspense>",
+    "result": "Enquanto o módulo `./Grafico` é baixado, o fallback 'Carregando gráfico...' é exibido; assim que pronto, o componente real substitui o fallback.",
+    "notes": [
+      "Em React 19/Server Components, Suspense também funciona com dados assíncronos buscados diretamente em componentes (`await` dentro de Server Components)."
+    ],
+    "bestPractices": [
+      "Combine Suspense com `lazy()` para code-splitting de componentes pesados que não são necessários no carregamento inicial."
+    ],
+    "commonMistakes": [
+      "Esperar que Suspense capture erros de carregamento — para isso é necessário combinar com um Error Boundary."
+    ],
+    "relatedCommands": ["react-lazy-loading", "react-error-boundaries"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "16.6+",
+    "officialDocumentation": "https://react.dev/reference/react/Suspense",
+    "externalReferences": [],
+    "tags": ["react", "suspense", "loading"],
+    "keywords": ["react suspense", "fallback de carregamento", "suspense e lazy"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-lazy-loading",
+    "category": "React",
+    "subcategory": "Suspense",
+    "title": "React.lazy (code splitting)",
+    "description": "Permite carregar um componente sob demanda, dividindo o bundle final em pedaços menores baixados apenas quando necessário, em vez de tudo de uma vez no carregamento inicial.",
+    "syntax": "const Componente = lazy(() => import(\"./Componente\"))",
+    "example": "const PainelAdmin = lazy(() => import(\"./PainelAdmin\"))\n<Suspense fallback={<Spinner />}>\n  {ehAdmin && <PainelAdmin />}\n</Suspense>",
+    "result": "O código de `PainelAdmin` só é baixado quando `ehAdmin` é verdadeiro e o componente é de fato renderizado.",
+    "notes": [
+      "`React.lazy` deve sempre ser usado dentro de um `<Suspense>` com fallback, senão o carregamento não tem UI de espera."
+    ],
+    "bestPractices": [
+      "Use lazy loading para rotas inteiras ou seções pesadas (editores ricos, gráficos, modais complexos) pouco acessadas na maioria das sessões."
+    ],
+    "commonMistakes": [
+      "Usar `React.lazy` para componentes pequenos e muito usados, adicionando latência de rede desnecessária em vez de ganho de performance."
+    ],
+    "relatedCommands": ["react-suspense"],
+    "difficulty": "avancado",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.6+",
+    "officialDocumentation": "https://react.dev/reference/react/lazy",
+    "externalReferences": [],
+    "tags": ["react", "lazy loading", "code splitting"],
+    "keywords": ["react lazy", "code splitting react", "carregamento sob demanda"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-uselayouteffect",
+    "category": "React",
+    "subcategory": "Hooks",
+    "title": "useLayoutEffect",
+    "description": "Variante do useEffect que executa de forma síncrona logo após o React atualizar o DOM, mas antes do navegador pintar a tela, útil para medir ou ajustar layout sem 'piscar' visualmente.",
+    "syntax": "useLayoutEffect(() => { efeito }, [dependencias])",
+    "example": "useLayoutEffect(() => {\n  const altura = elementoRef.current.getBoundingClientRect().height\n  setAltura(altura)\n}, [])",
+    "result": "A altura é medida e o estado atualizado antes do navegador exibir o frame, evitando um 'flash' visual perceptível.",
+    "notes": [
+      "`useLayoutEffect` bloqueia a pintura da tela até terminar — use com moderação, pois pode impactar a performance percebida."
+    ],
+    "bestPractices": [
+      "Use `useLayoutEffect` apenas quando precisar ler ou alterar o layout do DOM antes da tela ser pintada; para o resto, `useEffect` é suficiente."
+    ],
+    "commonMistakes": [
+      "Usar `useLayoutEffect` por padrão em vez de `useEffect`, degradando a performance sem necessidade real de sincronia com o layout."
+    ],
+    "relatedCommands": ["react-useeffect", "react-useref"],
+    "difficulty": "avancado",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.8+",
+    "officialDocumentation": "https://react.dev/reference/react/useLayoutEffect",
+    "externalReferences": [],
+    "tags": ["react", "hooks", "uselayouteffect"],
+    "keywords": ["uselayouteffect", "medir layout react", "efeito sincrono"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-strict-mode",
+    "category": "React",
+    "subcategory": "Ferramentas de desenvolvimento",
+    "title": "StrictMode",
+    "description": "Componente que ativa verificações e avisos adicionais em modo de desenvolvimento, ajudando a detectar efeitos colaterais inesperados, APIs depreciadas e problemas de renderização.",
+    "syntax": "<StrictMode>\n  <App />\n</StrictMode>",
+    "example": "createRoot(document.getElementById(\"root\")).render(\n  <StrictMode>\n    <App />\n  </StrictMode>\n)",
+    "result": "Em desenvolvimento, componentes são renderizados e efeitos executados duas vezes propositalmente, revelando efeitos colaterais não idempotentes.",
+    "notes": [
+      "StrictMode não tem efeito nenhum em produção (build otimizado) — a dupla renderização só acontece em desenvolvimento."
+    ],
+    "bestPractices": [
+      "Mantenha StrictMode ativado durante todo o desenvolvimento para detectar cedo efeitos colaterais mal escritos."
+    ],
+    "commonMistakes": [
+      "Interpretar a dupla execução de efeitos em desenvolvimento como um 'bug do React', quando na verdade é intencional para expor efeitos não idempotentes."
+    ],
+    "relatedCommands": ["react-useeffect"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "16.3+",
+    "officialDocumentation": "https://react.dev/reference/react/StrictMode",
+    "externalReferences": [],
+    "tags": ["react", "strict mode", "desenvolvimento"],
+    "keywords": ["strictmode", "modo estrito react", "double render dev"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-children-prop",
+    "category": "React",
+    "subcategory": "Composição",
+    "title": "children prop",
+    "description": "Prop especial que contém o conteúdo JSX passado entre a tag de abertura e fechamento de um componente, permitindo criar componentes de layout genéricos e reutilizáveis.",
+    "syntax": "function Card({ children }) { return <div className=\"card\">{children}</div> }",
+    "example": "<Card>\n  <h2>Título</h2>\n  <p>Conteúdo qualquer aqui dentro.</p>\n</Card>",
+    "result": "`children` dentro de `Card` recebe o `<h2>` e o `<p>` como elementos React, renderizados no local onde `{children}` aparece.",
+    "notes": [
+      "`children` pode ser qualquer coisa renderizável: texto, elementos, arrays de elementos ou até uma função (padrão render props)."
+    ],
+    "bestPractices": [
+      "Use `children` para criar componentes de layout genéricos (Card, Modal, Layout) em vez de props específicas como `titulo`/`conteudo`."
+    ],
+    "commonMistakes": [
+      "Esquecer de renderizar `{children}` no componente, fazendo o conteúdo passado simplesmente desaparecer."
+    ],
+    "relatedCommands": ["react-composition-vs-inheritance"],
+    "difficulty": "iniciante",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children",
+    "externalReferences": [],
+    "tags": ["react", "children", "composicao"],
+    "keywords": ["children prop", "props.children", "conteudo entre tags"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-composition-vs-inheritance",
+    "category": "React",
+    "subcategory": "Composição",
+    "title": "Composição vs Herança",
+    "description": "O React recomenda composição de componentes (via props e children) em vez de herança de classes para reutilizar comportamento entre componentes.",
+    "syntax": "// Composição: <Layout><Conteudo /></Layout>\n// em vez de: class ConteudoComLayout extends Layout { ... }",
+    "example": "function DialogoAlerta(props) {\n  return (\n    <Dialogo titulo=\"Atenção\" cor=\"vermelho\">\n      <p>{props.mensagem}</p>\n    </Dialogo>\n  )\n}",
+    "result": "`DialogoAlerta` reutiliza o comportamento de `Dialogo` compondo-o com props e children, sem precisar de uma cadeia de herança de classes.",
+    "notes": [
+      "A equipe do React não encontrou casos de uso onde uma hierarquia de herança de componentes fosse recomendável — composição resolve praticamente todos os cenários."
+    ],
+    "bestPractices": [
+      "Prefira componentes pequenos e componíveis a hierarquias de classes profundas ao compartilhar comportamento entre componentes."
+    ],
+    "relatedCommands": ["react-children-prop"],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/learn/thinking-in-react",
+    "externalReferences": [],
+    "tags": ["react", "composicao", "arquitetura"],
+    "keywords": ["composicao vs heranca", "composition over inheritance react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-synthetic-events",
+    "category": "React",
+    "subcategory": "Eventos",
+    "title": "Eventos sintéticos (SyntheticEvent)",
+    "description": "Wrapper multiplataforma que o React cria em torno dos eventos nativos do DOM, normalizando comportamento entre navegadores e otimizando performance via delegação de eventos.",
+    "syntax": "function handleClick(evento) { evento.preventDefault(); ... }\n<button onClick={handleClick}>Enviar</button>",
+    "example": "function Formulario() {\n  function aoEnviar(evento) {\n    evento.preventDefault()\n    console.log(\"Formulário enviado sem recarregar a página\")\n  }\n  return <form onSubmit={aoEnviar}><button>Enviar</button></form>\n}",
+    "result": "`evento.preventDefault()` impede o comportamento padrão de recarregar a página ao submeter o formulário.",
+    "notes": [
+      "Eventos sintéticos têm a mesma interface do evento DOM nativo (`preventDefault`, `stopPropagation`, `target`), mas normalizada entre navegadores."
+    ],
+    "bestPractices": [
+      "Use `evento.stopPropagation()` para impedir que um clique 'borbulhe' para elementos pais quando necessário (ex: um botão dentro de um card clicável)."
+    ],
+    "commonMistakes": [
+      "Guardar a referência do evento sintético para uso assíncrono (ex: dentro de um `setTimeout`) sem acessar os campos necessários antes, já que em versões antigas do React o objeto era reciclado."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["browser"],
+    "language": "javascript",
+    "version": "Todas",
+    "officialDocumentation": "https://react.dev/reference/react-dom/components/common#react-event-object",
+    "externalReferences": [],
+    "tags": ["react", "eventos", "syntheticevent"],
+    "keywords": ["synthetic event", "eventos sinteticos react", "preventdefault react"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-use-client",
+    "category": "React",
+    "subcategory": "React 19",
+    "title": "'use client' (directive)",
+    "description": "Diretiva colocada no topo de um arquivo que marca um componente e suas dependências como Client Component, habilitando interatividade, hooks de estado e event handlers no navegador.",
+    "syntax": "\"use client\"\n\nexport default function Componente() { ... }",
+    "example": "\"use client\"\n\nimport { useState } from \"react\"\n\nexport default function Contador() {\n  const [n, setN] = useState(0)\n  return <button onClick={() => setN(n + 1)}>{n}</button>\n}",
+    "result": "O componente `Contador` e tudo que ele importa passam a ser empacotados e enviados como JavaScript executável no navegador.",
+    "notes": [
+      "'use client' marca o limite (boundary) entre servidor e cliente — componentes importados por um Client Component também viram parte do bundle do cliente."
+    ],
+    "bestPractices": [
+      "Coloque 'use client' no componente folha mais específico possível que realmente precisa de interatividade, não em componentes de layout inteiros."
+    ],
+    "commonMistakes": [
+      "Adicionar 'use client' em um componente de altíssimo nível (como um layout) só porque um botão pequeno dentro dele precisa de estado, inflando o bundle do cliente."
+    ],
+    "relatedCommands": ["react-server-components"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "18+",
+    "officialDocumentation": "https://react.dev/reference/rsc/use-client",
+    "externalReferences": [],
+    "tags": ["react", "use client", "rsc"],
+    "keywords": ["use client", "client component", "diretiva use client"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "react-server-actions",
+    "category": "React",
+    "subcategory": "React 19",
+    "title": "Server Actions",
+    "description": "Funções assíncronas marcadas com 'use server' que rodam exclusivamente no servidor mas podem ser chamadas diretamente a partir de Client Components, como em um submit de formulário, sem criar uma API route manualmente.",
+    "syntax": "async function acao(formData) {\n  \"use server\"\n  await salvar(formData.get(\"nome\"))\n}\n<form action={acao}>...</form>",
+    "example": "async function criarPedido(formData) {\n  \"use server\"\n  const item = formData.get(\"item\")\n  await db.pedidos.create({ item })\n}\n\nexport default function Formulario() {\n  return (\n    <form action={criarPedido}>\n      <input name=\"item\" />\n      <button type=\"submit\">Criar</button>\n    </form>\n  )\n}",
+    "result": "Ao submeter o formulário, `criarPedido` executa no servidor, sem precisar de uma API route (`/api/pedidos`) intermediária nem de `fetch` manual no cliente.",
+    "notes": [
+      "Server Actions funcionam com progressive enhancement: o formulário funciona mesmo com JavaScript desabilitado no navegador."
+    ],
+    "bestPractices": [
+      "Valide e sanitize os dados recebidos dentro da Server Action, já que ela é essencialmente um endpoint público invocável."
+    ],
+    "commonMistakes": [
+      "Confiar que dados vindos de `formData` já estão validados só porque vêm de um formulário controlado pela própria aplicação."
+    ],
+    "relatedCommands": ["react-use-client", "react-server-components"],
+    "difficulty": "avancado",
+    "platform": ["node"],
+    "language": "javascript",
+    "version": "19+",
+    "officialDocumentation": "https://react.dev/reference/rsc/server-functions",
+    "externalReferences": [],
+    "tags": ["react", "server actions", "react 19"],
+    "keywords": ["server actions", "use server", "formulario sem api route"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

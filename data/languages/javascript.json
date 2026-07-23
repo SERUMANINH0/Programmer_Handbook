@@ -75,5 +75,1028 @@
     "keywords": ["async await", "assincrono", "promise"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "js-array-map",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.map()",
+    "description": "Cria um novo array aplicando uma função de transformação a cada elemento do array original, sem alterá-lo.",
+    "syntax": "array.map((elemento, indice, array) => novoValor)",
+    "example": "const dobros = [1, 2, 3].map((n) => n * 2)",
+    "result": "[2, 4, 6]",
+    "returns": "Um novo array com o mesmo comprimento do original, contendo os valores transformados.",
+    "notes": [
+      "`map` sempre retorna um array do mesmo tamanho; para filtrar itens, combine com `filter`."
+    ],
+    "bestPractices": [
+      "Use `map` quando precisar transformar cada item; use `forEach` quando só quiser efeito colateral."
+    ],
+    "commonMistakes": [
+      "Usar `map` apenas para efeito colateral (sem usar o retorno), quando `forEach` seria mais claro."
+    ],
+    "relatedCommands": ["js-array-filter", "js-array-foreach", "js-array-reduce"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/map",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "map", "functional"],
+    "keywords": ["array map", "transformar array", "map javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-filter",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.filter()",
+    "description": "Cria um novo array contendo apenas os elementos que satisfazem a condição de uma função de teste.",
+    "syntax": "array.filter((elemento, indice, array) => condicaoBooleana)",
+    "example": "const pares = [1, 2, 3, 4, 5].filter((n) => n % 2 === 0)",
+    "result": "[2, 4]",
+    "returns": "Um novo array (possivelmente vazio) só com os elementos que retornaram `true` no teste.",
+    "bestPractices": [
+      "Combine `filter` + `map` em vez de um único `reduce` complexo quando a lógica for mais legível separada."
+    ],
+    "commonMistakes": [
+      "Esperar que `filter` altere o array original, quando na verdade ele sempre retorna um novo array."
+    ],
+    "relatedCommands": ["js-array-map", "js-array-find"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/filter",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "filter", "functional"],
+    "keywords": ["array filter", "filtrar array", "filter javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-foreach",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.forEach()",
+    "description": "Executa uma função para cada elemento do array, usada exclusivamente por efeito colateral — não retorna um novo array.",
+    "syntax": "array.forEach((elemento, indice, array) => { ... })",
+    "example": "[1, 2, 3].forEach((n) => console.log(n))",
+    "result": "1\n2\n3",
+    "notes": [
+      "`forEach` sempre retorna `undefined` — não encadeia com outros métodos de array como `map`/`filter`."
+    ],
+    "bestPractices": [
+      "Use `for...of` em vez de `forEach` quando precisar de `break`/`continue`, já que `forEach` não suporta interrupção."
+    ],
+    "commonMistakes": [
+      "Usar `await` dentro de um callback de `forEach` esperando que ele pause a iteração — isso não funciona."
+    ],
+    "relatedCommands": ["js-array-map"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "foreach"],
+    "keywords": ["array foreach", "iterar array", "foreach javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-find",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.find() / findIndex()",
+    "description": "Retorna o primeiro elemento (ou seu índice) que satisfaz uma condição, parando a busca assim que encontra o primeiro resultado.",
+    "syntax": "array.find((elemento) => condicao)\narray.findIndex((elemento) => condicao)",
+    "example": "const usuario = usuarios.find((u) => u.id === 42)",
+    "result": "O objeto de usuário com id 42, ou `undefined` se nenhum for encontrado.",
+    "notes": [
+      "`find` retorna `undefined` quando nada é encontrado; `findIndex` retorna `-1`."
+    ],
+    "bestPractices": [
+      "Use `find` em vez de `filter(...)[0]`, que percorre o array inteiro desnecessariamente."
+    ],
+    "commonMistakes": [
+      "Usar `filter()[0]` para buscar um único item, sendo menos eficiente que `find` em arrays grandes."
+    ],
+    "relatedCommands": ["js-array-filter", "js-array-some-every"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/find",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "find"],
+    "keywords": ["array find", "buscar elemento array", "findindex"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-some-every",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.some() / every()",
+    "description": "`some` retorna `true` se ao menos um elemento satisfaz a condição; `every` retorna `true` só se todos satisfizerem.",
+    "syntax": "array.some((elemento) => condicao)\narray.every((elemento) => condicao)",
+    "example": "const temNegativo = [1, -2, 3].some((n) => n < 0)\nconst todosPositivos = [1, -2, 3].every((n) => n > 0)",
+    "result": "temNegativo = true\ntodosPositivos = false",
+    "notes": [
+      "Ambos param assim que o resultado é decidido (short-circuit), sem percorrer o array inteiro."
+    ],
+    "bestPractices": [
+      "Prefira `some`/`every` a percorrer manualmente com `for` e uma flag booleana."
+    ],
+    "commonMistakes": [
+      "Confundir `some` (ao menos um) com `every` (todos), invertendo a lógica esperada."
+    ],
+    "relatedCommands": ["js-array-find"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/some",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "some", "every"],
+    "keywords": ["array some", "array every", "algum todos array"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-sort",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.sort()",
+    "description": "Ordena os elementos do array in-place (modificando o original), usando uma função de comparação opcional.",
+    "syntax": "array.sort((a, b) => a - b)",
+    "example": "const numeros = [10, 1, 21, 2]\nnumeros.sort((a, b) => a - b)",
+    "result": "[1, 2, 10, 21]",
+    "notes": [
+      "Sem função de comparação, `sort` converte os elementos para string e ordena lexicograficamente — `[10, 1, 2].sort()` vira `[1, 10, 2]`."
+    ],
+    "bestPractices": [
+      "Sempre forneça uma função de comparação ao ordenar números, evitando a ordenação lexicográfica padrão."
+    ],
+    "commonMistakes": [
+      "Esquecer que `sort` muta o array original; use `[...array].sort()` para preservar o array original."
+    ],
+    "relatedCommands": ["js-array-map"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "sort"],
+    "keywords": ["array sort", "ordenar array", "sort javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-flat-flatmap",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.prototype.flat() / flatMap()",
+    "description": "`flat` achata arrays aninhados em um único nível (ou N níveis); `flatMap` aplica `map` e depois `flat(1)` em uma única passada.",
+    "syntax": "array.flat(profundidade)\narray.flatMap((elemento) => arrayOuValor)",
+    "example": "[1, [2, 3], [4, [5]]].flat()\n[1, 2, 3].flatMap((n) => [n, n * 2])",
+    "result": "[1, 2, 3, 4, [5]]\n[1, 2, 2, 4, 3, 6]",
+    "notes": ["`flat(Infinity)` achata arrays aninhados em qualquer profundidade."],
+    "bestPractices": [
+      "Use `flatMap` em vez de `map(...).flat()` separados, que criam um array intermediário desnecessário."
+    ],
+    "commonMistakes": [
+      "Esquecer que `flat()` sem argumento só achata um nível de profundidade."
+    ],
+    "relatedCommands": ["js-array-map"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2019+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/flat",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "flat", "flatmap"],
+    "keywords": ["array flat", "flatmap", "achatar array"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-destructuring",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "Destructuring (desestruturação)",
+    "description": "Extrai valores de arrays ou propriedades de objetos e os atribui a variáveis em uma única expressão declarativa.",
+    "syntax": "const { propriedade } = objeto\nconst [primeiro, segundo] = array",
+    "example": "const { nome, idade = 18 } = usuario\nconst [a, , c] = [1, 2, 3]",
+    "result": "nome e idade recebem os valores correspondentes do objeto; a = 1, c = 3 (o segundo item é ignorado).",
+    "notes": [
+      "Suporta valores padrão, renomeação (`{ nome: nomeUsuario }`) e desestruturação aninhada."
+    ],
+    "bestPractices": [
+      "Use destructuring em parâmetros de função para deixar explícito quais propriedades de um objeto são realmente usadas."
+    ],
+    "commonMistakes": [
+      "Desestruturar uma propriedade que pode ser `undefined` sem definir um valor padrão, gerando erros em cascata."
+    ],
+    "relatedCommands": ["js-spread-rest"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment",
+    "externalReferences": [],
+    "tags": ["javascript", "destructuring", "sintaxe"],
+    "keywords": ["destructuring", "desestruturacao", "desestruturar objeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-spread-rest",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "Spread e Rest operators (...)",
+    "description": "O operador `...` expande (spread) um iterável em elementos individuais, ou agrupa (rest) múltiplos argumentos/elementos em um array.",
+    "syntax": "const copia = [...array]\nfunction soma(...numeros) { }",
+    "example": "const a = [1, 2]\nconst b = [...a, 3, 4]\nfunction total(...valores) { return valores.reduce((s, v) => s + v, 0) }",
+    "result": "b = [1, 2, 3, 4]\ntotal(1, 2, 3) = 6",
+    "notes": [
+      "Spread em objetos (`{ ...obj }`) faz uma cópia rasa (shallow copy), não profunda."
+    ],
+    "bestPractices": [
+      "Use spread para copiar arrays/objetos imutavelmente em vez de mutar o original diretamente."
+    ],
+    "commonMistakes": [
+      "Assumir que `{ ...objeto }` faz cópia profunda, quando objetos aninhados continuam sendo referências compartilhadas."
+    ],
+    "relatedCommands": ["js-destructuring"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+ (ES2018 para objetos)",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Spread_syntax",
+    "externalReferences": [],
+    "tags": ["javascript", "spread", "rest"],
+    "keywords": ["spread operator", "rest operator", "reticencias javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-template-literals",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "Template literals",
+    "description": "Strings delimitadas por crase (`` ` ``) que suportam interpolação de expressões e strings multi-linha nativas.",
+    "syntax": "`texto ${expressao} texto`",
+    "example": "const nome = \"Ana\"\nconsole.log(`Olá, ${nome}! Hoje é ${new Date().getDate()}.`)",
+    "result": "Olá, Ana! Hoje é 23.",
+    "notes": [
+      "Tagged templates (`tag\\`texto\\``) permitem processar a string com uma função customizada antes de renderizá-la."
+    ],
+    "bestPractices": [
+      "Prefira template literals a concatenação com `+` para strings com múltiplas variáveis interpoladas."
+    ],
+    "commonMistakes": [
+      "Misturar aspas simples/duplas com crase por engano, gerando strings literais em vez de interpoladas."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Template_literals",
+    "externalReferences": [],
+    "tags": ["javascript", "template literals", "strings"],
+    "keywords": ["template literals", "template strings", "interpolacao de string"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-closures",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "Closures",
+    "description": "Uma função que 'lembra' e mantém acesso às variáveis do escopo léxico onde foi criada, mesmo depois que esse escopo externo já terminou de executar.",
+    "syntax": "function externa() {\n  let valor = 0\n  return function interna() { return ++valor }\n}",
+    "example": "function criarContador() {\n  let count = 0\n  return () => ++count\n}\nconst contador = criarContador()\ncontador()\ncontador()",
+    "result": "contador() retorna 1, depois 2 — cada chamada acessa a mesma variável `count` preservada no closure.",
+    "notes": [
+      "Cada chamada à função externa cria um novo closure independente, com sua própria cópia das variáveis."
+    ],
+    "bestPractices": [
+      "Use closures para encapsular estado privado sem precisar de classes, como em factory functions."
+    ],
+    "commonMistakes": [
+      "Criar closures dentro de loops referenciando `var` (compartilhada), capturando o valor final em vez do valor da iteração."
+    ],
+    "relatedCommands": ["js-var-let-const"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Closures",
+    "externalReferences": [],
+    "tags": ["javascript", "closures", "fundamentos"],
+    "keywords": ["closures", "escopo lexico", "closure javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-classes-prototypes",
+    "category": "JavaScript",
+    "subcategory": "Orientação a Objetos",
+    "title": "Classes e Prototypes",
+    "description": "JavaScript usa herança prototípica; a sintaxe `class` (ES6+) é açúcar sintático sobre esse mesmo mecanismo de protótipos.",
+    "syntax": "class Nome {\n  constructor(args) { }\n  metodo() { }\n}\nclass Filha extends Nome { }",
+    "example": "class Animal {\n  constructor(nome) { this.nome = nome }\n  falar() { return `${this.nome} faz um som` }\n}\nclass Cachorro extends Animal {\n  falar() { return `${this.nome} late` }\n}",
+    "result": "new Cachorro(\"Rex\").falar() retorna \"Rex late\", sobrescrevendo o método da classe base.",
+    "notes": [
+      "Todo objeto criado com `class` tem seus métodos definidos no `prototype` da classe, compartilhado entre todas as instâncias."
+    ],
+    "bestPractices": [
+      "Use `super()` no constructor de uma subclasse antes de acessar `this`, ou o JavaScript lança erro."
+    ],
+    "commonMistakes": [
+      "Definir métodos dentro do `constructor` (como arrow functions) em vez de no corpo da classe, criando uma cópia por instância desnecessariamente."
+    ],
+    "relatedCommands": ["js-this-binding"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Classes",
+    "externalReferences": [],
+    "tags": ["javascript", "classes", "prototypes", "oop"],
+    "keywords": ["classes javascript", "prototype", "heranca prototipica"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-this-binding",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "this (binding dinâmico)",
+    "description": "O valor de `this` é determinado por como a função é chamada (binding dinâmico), não por onde foi definida — exceto arrow functions, que herdam o `this` do escopo léxico.",
+    "syntax": "objeto.metodo()   // this = objeto\nfuncao.call(contexto)   // this = contexto\nconst arrow = () => { }   // this herdado do escopo externo",
+    "example": "const obj = {\n  nome: \"Ana\",\n  normal: function () { return this.nome },\n  seta: () => { return this?.nome }\n}",
+    "result": "obj.normal() retorna \"Ana\"; obj.seta() retorna `undefined`, pois a arrow function não tem seu próprio `this`.",
+    "notes": [
+      "`call`, `apply` e `bind` permitem definir explicitamente o valor de `this` em uma chamada de função."
+    ],
+    "bestPractices": [
+      "Use arrow functions para callbacks que precisam preservar o `this` do escopo externo (ex: dentro de métodos de classe)."
+    ],
+    "commonMistakes": [
+      "Passar um método de objeto como callback (`setTimeout(obj.metodo)`) perdendo o binding de `this` do objeto original."
+    ],
+    "relatedCommands": ["js-classes-prototypes"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/this",
+    "externalReferences": [],
+    "tags": ["javascript", "this", "fundamentos"],
+    "keywords": ["this javascript", "binding this", "arrow function this"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-promise",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "Promise",
+    "description": "Objeto que representa a eventual conclusão (ou falha) de uma operação assíncrona, com três estados: pending, fulfilled e rejected.",
+    "syntax": "new Promise((resolve, reject) => { ... })\npromise.then(onFulfilled).catch(onRejected).finally(onFinally)",
+    "example": "function esperar(ms) {\n  return new Promise((resolve) => setTimeout(resolve, ms))\n}\nesperar(1000).then(() => console.log(\"pronto\"))",
+    "result": "Após 1 segundo, imprime \"pronto\" no console.",
+    "notes": [
+      "Uma Promise, uma vez resolvida ou rejeitada, não pode mudar de estado novamente (é imutável após settled)."
+    ],
+    "bestPractices": [
+      "Sempre trate rejeições com `.catch()` ou try/catch, evitando `UnhandledPromiseRejection`."
+    ],
+    "commonMistakes": [
+      "Esquecer o `return` dentro de um `.then()` encadeado, quebrando a cadeia de valores da Promise seguinte."
+    ],
+    "relatedCommands": ["js-async-await", "js-promise-combinators"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "externalReferences": [],
+    "tags": ["javascript", "promise", "assincronismo"],
+    "keywords": ["promise javascript", "then catch", "promise pending"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-promise-combinators",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "Promise.all / race / allSettled / any",
+    "description": "Métodos estáticos que combinam múltiplas Promises: `all` espera todas resolverem, `race` retorna a primeira que resolver/rejeitar, `allSettled` espera todas terminarem (sucesso ou falha) e `any` retorna a primeira que resolver com sucesso.",
+    "syntax": "Promise.all([p1, p2])\nPromise.allSettled([p1, p2])\nPromise.race([p1, p2])\nPromise.any([p1, p2])",
+    "example": "const [usuario, pedidos] = await Promise.all([\n  buscarUsuario(id),\n  buscarPedidos(id)\n])",
+    "result": "As duas requisições rodam em paralelo; o `await` só resolve quando ambas terminarem.",
+    "notes": [
+      "`Promise.all` rejeita assim que qualquer uma das Promises rejeitar; `allSettled` nunca rejeita, retornando o status de cada uma."
+    ],
+    "bestPractices": [
+      "Use `Promise.all` para paralelizar chamadas independentes em vez de `await` sequencial, reduzindo o tempo total de espera."
+    ],
+    "commonMistakes": [
+      "Usar `Promise.all` quando algumas falhas são aceitáveis, perdendo os resultados bem-sucedidos por causa de uma única rejeição — nesse caso, `allSettled` é mais adequado."
+    ],
+    "relatedCommands": ["js-promise", "js-async-await"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2020+ (allSettled/any)",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/all",
+    "externalReferences": [],
+    "tags": ["javascript", "promise", "assincronismo"],
+    "keywords": ["promise.all", "promise.race", "promise.allsettled", "promise.any"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-event-loop",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "Event Loop (microtasks e macrotasks)",
+    "description": "Mecanismo que permite ao JavaScript (single-threaded) lidar com operações assíncronas, alternando entre executar código síncrono, microtasks (Promises) e macrotasks (setTimeout, I/O).",
+    "syntax": "console.log(1)\nsetTimeout(() => console.log(2), 0)\nPromise.resolve().then(() => console.log(3))\nconsole.log(4)",
+    "example": "// Ordem de execução do exemplo acima",
+    "result": "1\n4\n3\n2",
+    "notes": [
+      "Microtasks (Promises, queueMicrotask) sempre são processadas antes da próxima macrotask, mesmo com delay 0 no setTimeout."
+    ],
+    "bestPractices": [
+      "Evite bloquear a thread principal com loops síncronos pesados, que impedem o event loop de processar outras tarefas."
+    ],
+    "commonMistakes": [
+      "Assumir que `setTimeout(fn, 0)` executa imediatamente após o código síncrono, ignorando que microtasks pendentes rodam primeiro."
+    ],
+    "relatedCommands": ["js-promise"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "N/A",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Event_loop",
+    "externalReferences": [],
+    "tags": ["javascript", "event loop", "assincronismo"],
+    "keywords": ["event loop", "microtasks", "macrotasks", "call stack"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-generators",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "Generators (function*)",
+    "description": "Funções especiais que podem pausar sua execução em pontos definidos com `yield` e retomá-la depois, produzindo uma sequência de valores sob demanda.",
+    "syntax": "function* nomeGerador() {\n  yield valor1\n  yield valor2\n}",
+    "example": "function* contador() {\n  let n = 0\n  while (true) yield n++\n}\nconst gen = contador()\ngen.next().value\ngen.next().value",
+    "result": "gen.next().value retorna 0, depois 1 — cada chamada retoma de onde parou.",
+    "notes": [
+      "Generators implementam o protocolo iterável, funcionando diretamente em `for...of` e spread."
+    ],
+    "bestPractices": [
+      "Use generators para criar sequências infinitas ou preguiçosas (lazy) sem consumir memória com todos os valores de uma vez."
+    ],
+    "commonMistakes": [
+      "Confundir `yield` (pausa a função) com `return` (encerra o generator definitivamente)."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function*",
+    "externalReferences": [],
+    "tags": ["javascript", "generators", "iteradores"],
+    "keywords": ["generators javascript", "function*", "yield"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-modules-import-export",
+    "category": "JavaScript",
+    "subcategory": "Módulos",
+    "title": "Módulos ES (import / export)",
+    "description": "Sistema nativo de módulos do JavaScript, permitindo dividir código em arquivos separados com exports nomeados ou padrão (default).",
+    "syntax": "export const nome = valor\nexport default funcao\nimport { nome } from \"./arquivo.js\"\nimport padrao from \"./arquivo.js\"",
+    "example": "// utils.js\nexport function somar(a, b) { return a + b }\nexport default function multiplicar(a, b) { return a * b }\n\n// main.js\nimport multiplicar, { somar } from \"./utils.js\"",
+    "result": "As duas funções ficam disponíveis em `main.js` através dos imports correspondentes.",
+    "notes": [
+      "Módulos ES são carregados em modo estrito por padrão e têm seu próprio escopo — nada vaza para o escopo global."
+    ],
+    "bestPractices": [
+      "Prefira exports nomeados a `export default` em módulos com múltiplos utilitários, facilitando refatoração e autocompletar."
+    ],
+    "commonMistakes": [
+      "Misturar `require`/`module.exports` (CommonJS) com `import`/`export` (ES Modules) no mesmo projeto sem configuração adequada."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules",
+    "externalReferences": [],
+    "tags": ["javascript", "modulos", "import", "export"],
+    "keywords": ["import export javascript", "es modules", "modulos javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-map-set",
+    "category": "JavaScript",
+    "subcategory": "Estruturas de dados",
+    "title": "Map e Set",
+    "description": "`Map` armazena pares chave-valor com chaves de qualquer tipo (não só string); `Set` armazena valores únicos, sem duplicatas.",
+    "syntax": "const mapa = new Map()\nmapa.set(chave, valor)\nconst conjunto = new Set([1, 2, 2, 3])",
+    "example": "const cache = new Map()\ncache.set(\"usuario:1\", { nome: \"Ana\" })\nconst unicos = new Set([1, 2, 2, 3]).size",
+    "result": "cache.get(\"usuario:1\") retorna { nome: \"Ana\" }; unicos = 3.",
+    "notes": [
+      "Diferente de objetos literais, `Map` preserva a ordem de inserção e aceita qualquer valor (inclusive objetos) como chave."
+    ],
+    "bestPractices": [
+      "Use `Set` para remover duplicatas de um array rapidamente: `[...new Set(array)]`."
+    ],
+    "commonMistakes": [
+      "Usar objeto literal `{}` como Map quando as chaves não são strings, perdendo o tipo original da chave (tudo vira string)."
+    ],
+    "relatedCommands": ["js-weakmap-weakset"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "externalReferences": [],
+    "tags": ["javascript", "map", "set", "estruturas de dados"],
+    "keywords": ["map javascript", "set javascript", "remover duplicatas array"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-optional-chaining",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "Optional chaining (?.)",
+    "description": "Acessa propriedades aninhadas de um objeto sem lançar erro quando um nível intermediário é `null` ou `undefined`, retornando `undefined` em vez de exceção.",
+    "syntax": "objeto?.propriedade?.subPropriedade\nobjeto?.metodo?.()\narray?.[indice]",
+    "example": "const cidade = usuario?.endereco?.cidade",
+    "result": "`undefined` se `usuario` ou `usuario.endereco` forem `null`/`undefined`, em vez de lançar `TypeError`.",
+    "notes": [
+      "`?.` também funciona para chamadas de método (`objeto?.metodo?.()`) e acesso a índices de array."
+    ],
+    "bestPractices": [
+      "Use optional chaining em vez de múltiplas verificações `if (a && a.b && a.b.c)` encadeadas."
+    ],
+    "commonMistakes": [
+      "Abusar de `?.` em toda a base de código, mascarando bugs de dados que deveriam sempre existir."
+    ],
+    "relatedCommands": ["js-nullish-coalescing"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2020+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Optional_chaining",
+    "externalReferences": [],
+    "tags": ["javascript", "optional chaining", "sintaxe"],
+    "keywords": ["optional chaining", "encadeamento opcional", "?. javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-nullish-coalescing",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "Nullish coalescing (??)",
+    "description": "Retorna o operando da direita apenas quando o da esquerda é `null` ou `undefined` — diferente de `||`, que também trata 0, \"\" e false como falsy.",
+    "syntax": "valor ?? valorPadrao",
+    "example": "const limite = configuracao.limite ?? 10\nconst zero = 0 || 10\nconst zeroCoalesce = 0 ?? 10",
+    "result": "Se `configuracao.limite` for `0`, `limite` fica `0` (correto); `zero` seria `10` (errado); `zeroCoalesce` fica `0` (correto).",
+    "notes": [
+      "`??` só considera `null`/`undefined` como ausência de valor, preservando `0`, `\"\"` e `false` como valores válidos."
+    ],
+    "bestPractices": [
+      "Prefira `??` a `||` para valores padrão numéricos ou booleanos, onde 0/false são valores legítimos."
+    ],
+    "commonMistakes": [
+      "Usar `||` para valor padrão em campos numéricos, tratando erroneamente `0` como ausência de valor."
+    ],
+    "relatedCommands": ["js-optional-chaining"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2020+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing",
+    "externalReferences": [],
+    "tags": ["javascript", "nullish coalescing", "sintaxe"],
+    "keywords": ["nullish coalescing", "?? javascript", "operador coalescencia nula"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-json",
+    "category": "JavaScript",
+    "subcategory": "Utilitários",
+    "title": "JSON.stringify() / JSON.parse()",
+    "description": "Converte um objeto JavaScript para uma string JSON (`stringify`) e vice-versa (`parse`), usado para serialização em APIs, localStorage e arquivos.",
+    "syntax": "JSON.stringify(valor, replacer, espacamento)\nJSON.parse(texto, reviver)",
+    "example": "const texto = JSON.stringify({ nome: \"Ana\", idade: 30 }, null, 2)\nconst obj = JSON.parse('{\"nome\":\"Ana\"}')",
+    "result": "texto = '{\\n  \"nome\": \"Ana\",\\n  \"idade\": 30\\n}'\nobj = { nome: \"Ana\" }",
+    "notes": [
+      "`JSON.stringify` ignora funções, `undefined` e `Symbol`; `Date` vira string ISO automaticamente."
+    ],
+    "bestPractices": [
+      "Use o terceiro argumento de `stringify` (espaçamento) para gerar JSON legível em logs de debug."
+    ],
+    "commonMistakes": [
+      "Usar `JSON.parse(JSON.stringify(obj))` como 'deep clone' sem perceber que perde funções, `Date` vira string e `undefined` some."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES5+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "externalReferences": [],
+    "tags": ["javascript", "json", "serializacao"],
+    "keywords": ["json.stringify", "json.parse", "serializar objeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-array-from",
+    "category": "JavaScript",
+    "subcategory": "Arrays",
+    "title": "Array.from()",
+    "description": "Cria um novo array a partir de um objeto iterável (Set, Map, string) ou array-like (NodeList, arguments), opcionalmente aplicando uma função de mapeamento.",
+    "syntax": "Array.from(iteravel, funcaoMap)",
+    "example": "Array.from({ length: 5 }, (_, i) => i * 2)\nArray.from(\"abc\")",
+    "result": "[0, 2, 4, 6, 8]\n[\"a\", \"b\", \"c\"]",
+    "notes": [
+      "Muito usado para converter `NodeList` (do DOM) ou `arguments` em um array de verdade com todos os métodos de array."
+    ],
+    "bestPractices": [
+      "Use `Array.from({ length: n }, ...)` para gerar sequências numéricas sem precisar de um array pré-existente."
+    ],
+    "commonMistakes": [
+      "Tentar usar métodos de array (`.map`, `.filter`) diretamente em um `NodeList` sem converter primeiro com `Array.from`."
+    ],
+    "relatedCommands": ["js-array-map"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/from",
+    "externalReferences": [],
+    "tags": ["javascript", "array", "array.from"],
+    "keywords": ["array.from", "converter para array", "criar array de sequencia"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-typeof-instanceof",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "typeof vs instanceof",
+    "description": "`typeof` retorna o tipo primitivo de um valor como string; `instanceof` verifica se um objeto é instância de uma classe/construtor específico na cadeia de protótipos.",
+    "syntax": "typeof valor\nobjeto instanceof Construtor",
+    "example": "typeof \"texto\"\ntypeof []\n[] instanceof Array",
+    "result": "\"string\"\n\"object\"\ntrue",
+    "notes": [
+      "`typeof null` retorna `\"object\"` (um bug histórico do JavaScript); use `valor === null` para checar null de verdade.",
+      "`typeof` não distingue array de objeto comum — use `Array.isArray()` para isso."
+    ],
+    "bestPractices": [
+      "Use `Array.isArray(valor)` em vez de `typeof valor === \"object\"` para verificar se algo é um array."
+    ],
+    "commonMistakes": [
+      "Usar `typeof array === \"array\"`, que nunca é verdadeiro — o correto seria `\"object\"` ou `Array.isArray`."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/typeof",
+    "externalReferences": [],
+    "tags": ["javascript", "typeof", "instanceof"],
+    "keywords": ["typeof javascript", "instanceof javascript", "verificar tipo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-try-catch",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "try / catch / finally",
+    "description": "Estrutura para capturar e tratar exceções lançadas durante a execução de um bloco de código, evitando que o erro quebre a aplicação inteira.",
+    "syntax": "try {\n  // código que pode lançar erro\n} catch (erro) {\n  // tratamento\n} finally {\n  // sempre executa\n}",
+    "example": "try {\n  const dados = JSON.parse(textoInvalido)\n} catch (erro) {\n  console.error(\"JSON inválido:\", erro.message)\n} finally {\n  console.log(\"tentativa concluída\")\n}",
+    "result": "O erro de parsing é capturado e tratado sem interromper o restante do programa; \"tentativa concluída\" sempre é impresso.",
+    "notes": [
+      "`finally` executa sempre, mesmo se houver `return` dentro do `try` ou `catch`."
+    ],
+    "bestPractices": [
+      "Capture apenas exceções que você sabe tratar; deixe erros inesperados propagarem para serem logados/monitorados."
+    ],
+    "commonMistakes": [
+      "Usar um `catch` vazio, silenciando erros importantes sem log nem tratamento."
+    ],
+    "relatedCommands": ["js-async-await"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES3+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/try...catch",
+    "externalReferences": [],
+    "tags": ["javascript", "try catch", "excecoes"],
+    "keywords": ["try catch javascript", "tratamento de erro", "excecoes javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-hoisting-tdz",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "Hoisting e Temporal Dead Zone",
+    "description": "Declarações de `var` e funções são 'içadas' para o topo do escopo antes da execução; `let`/`const` também são içadas, mas ficam em uma Temporal Dead Zone (TDZ) até a linha de declaração.",
+    "syntax": "console.log(x) // undefined, não erro\nvar x = 1\n\nconsole.log(y) // ReferenceError\nlet y = 1",
+    "example": "function exemplo() {\n  console.log(a) // undefined\n  var a = 5\n}",
+    "result": "`a` existe desde o topo da função (hoisted) mas só recebe o valor `5` na linha da atribuição.",
+    "notes": [
+      "Funções declaradas com `function nome() {}` são içadas por completo (com o corpo); `const`/`let` ficam inacessíveis (TDZ) até serem declaradas."
+    ],
+    "bestPractices": [
+      "Declare variáveis o mais próximo possível de onde são usadas, mesmo sabendo que `var` seria içada — evita bugs de leitura precoce."
+    ],
+    "commonMistakes": [
+      "Referenciar uma variável `let`/`const` antes de sua declaração, esperando `undefined` (como em `var`) e recebendo `ReferenceError`."
+    ],
+    "relatedCommands": ["js-var-let-const"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES1+ (TDZ desde ES6)",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Glossary/Hoisting",
+    "externalReferences": [],
+    "tags": ["javascript", "hoisting", "tdz"],
+    "keywords": ["hoisting javascript", "temporal dead zone", "icamento de variaveis"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-var-let-const",
+    "category": "JavaScript",
+    "subcategory": "Fundamentos",
+    "title": "var vs let vs const",
+    "description": "Três formas de declarar variáveis com escopos e comportamentos diferentes: `var` tem escopo de função, `let`/`const` têm escopo de bloco; `const` não permite reatribuição.",
+    "syntax": "var a = 1   // escopo de função\nlet b = 2   // escopo de bloco, reatribuível\nconst c = 3 // escopo de bloco, não reatribuível",
+    "example": "if (true) {\n  var x = 1\n  let y = 2\n}\nconsole.log(x) // 1\nconsole.log(y) // ReferenceError",
+    "result": "`x` (var) vaza para fora do bloco `if`; `y` (let) não existe fora do bloco.",
+    "notes": [
+      "`const` impede reatribuição da variável, mas não torna o valor imutável — propriedades de um objeto `const` ainda podem ser alteradas."
+    ],
+    "bestPractices": [
+      "Use `const` por padrão, `let` quando precisar reatribuir, e evite `var` em código novo."
+    ],
+    "commonMistakes": [
+      "Achar que `const objeto = {}` impede modificar `objeto.propriedade = valor` — const só impede reatribuir a variável em si."
+    ],
+    "relatedCommands": ["js-hoisting-tdz", "js-closures"],
+    "difficulty": "iniciante",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "let/const desde ES6",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/let",
+    "externalReferences": [],
+    "tags": ["javascript", "var", "let", "const"],
+    "keywords": ["var let const", "diferenca let const", "escopo de bloco"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-symbol",
+    "category": "JavaScript",
+    "subcategory": "Estruturas de dados",
+    "title": "Symbol",
+    "description": "Tipo primitivo que gera valores únicos e imutáveis, usado principalmente como chave de propriedade para evitar colisões de nomes.",
+    "syntax": "const simbolo = Symbol(\"descricao\")\nobjeto[simbolo] = valor",
+    "example": "const ID = Symbol(\"id\")\nconst usuario = { nome: \"Ana\", [ID]: 42 }",
+    "result": "usuario[ID] retorna 42; a propriedade não aparece em `Object.keys(usuario)` nem `JSON.stringify`.",
+    "notes": [
+      "Cada `Symbol()` é único, mesmo com a mesma descrição: `Symbol(\"x\") !== Symbol(\"x\")`.",
+      "`Symbol.iterator` é usado internamente para tornar objetos iteráveis (compatíveis com `for...of`)."
+    ],
+    "bestPractices": [
+      "Use Symbol para propriedades 'privadas' ou metadados que não devem colidir com propriedades públicas do objeto."
+    ],
+    "commonMistakes": [
+      "Usar `new Symbol()` — Symbols não são construtores e devem ser chamados sem `new`."
+    ],
+    "relatedCommands": ["js-map-set"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "externalReferences": [],
+    "tags": ["javascript", "symbol", "estruturas de dados"],
+    "keywords": ["symbol javascript", "symbol.iterator", "propriedade unica"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-weakmap-weakset",
+    "category": "JavaScript",
+    "subcategory": "Estruturas de dados",
+    "title": "WeakMap e WeakSet",
+    "description": "Variantes de Map/Set cujas chaves (WeakMap) ou valores (WeakSet) são referências fracas — não impedem a coleta de lixo (garbage collection) do objeto referenciado.",
+    "syntax": "const wm = new WeakMap()\nwm.set(objeto, metadado)",
+    "example": "const cachePrivado = new WeakMap()\nfunction associarDados(objeto, dados) {\n  cachePrivado.set(objeto, dados)\n}",
+    "result": "Quando `objeto` não tem mais nenhuma outra referência no programa, ele (e sua entrada no WeakMap) pode ser coletado pelo garbage collector.",
+    "notes": [
+      "WeakMap/WeakSet não são iteráveis (sem `.keys()`, `.forEach()`) justamente por causa da natureza não determinística da coleta de lixo."
+    ],
+    "bestPractices": [
+      "Use WeakMap para associar metadados a objetos (como elementos DOM) sem causar vazamento de memória quando o objeto for removido."
+    ],
+    "commonMistakes": [
+      "Tentar iterar um WeakMap com `for...of`, o que não é suportado — só Map/Set normais são iteráveis."
+    ],
+    "relatedCommands": ["js-map-set"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES6+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "externalReferences": [],
+    "tags": ["javascript", "weakmap", "weakset", "memoria"],
+    "keywords": ["weakmap javascript", "weakset", "garbage collection javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-iife",
+    "category": "JavaScript",
+    "subcategory": "Sintaxe",
+    "title": "IIFE (Immediately Invoked Function Expression)",
+    "description": "Função anônima definida e executada imediatamente, criando um escopo isolado para evitar poluir o escopo global — padrão comum antes dos módulos ES.",
+    "syntax": "(function () {\n  // código isolado\n})()",
+    "example": "(function () {\n  const contador = 0\n  console.log(\"executado imediatamente\")\n})()",
+    "result": "executado imediatamente\n(a variável `contador` não vaza para o escopo externo)",
+    "notes": [
+      "Com módulos ES e `let`/`const` de escopo de bloco, IIFEs são menos necessárias hoje, mas ainda aparecem em bibliotecas legadas e bundlers."
+    ],
+    "bestPractices": [
+      "Prefira módulos ES a IIFE em código novo; use IIFE principalmente ao ler/entender código legado."
+    ],
+    "commonMistakes": [
+      "Esquecer os parênteses ao redor da função (`(function(){})()`), o que causa erro de sintaxe."
+    ],
+    "relatedCommands": ["js-modules-import-export"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES1+",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Glossary/IIFE",
+    "externalReferences": [],
+    "tags": ["javascript", "iife", "sintaxe"],
+    "keywords": [
+      "iife javascript",
+      "funcao autoexecutavel",
+      "immediately invoked function"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-debounce-throttle",
+    "category": "JavaScript",
+    "subcategory": "Padrões",
+    "title": "Debounce e Throttle",
+    "description": "Técnicas para limitar a frequência de execução de uma função disparada repetidamente (scroll, resize, digitação): debounce espera um intervalo de silêncio; throttle garante um espaçamento mínimo fixo entre execuções.",
+    "syntax": "function debounce(fn, ms) {\n  let timeoutId\n  return (...args) => {\n    clearTimeout(timeoutId)\n    timeoutId = setTimeout(() => fn(...args), ms)\n  }\n}",
+    "example": "const buscarComDebounce = debounce((termo) => buscarApi(termo), 300)\ninput.addEventListener(\"input\", (e) => buscarComDebounce(e.target.value))",
+    "result": "A busca só é disparada 300ms após o usuário parar de digitar, evitando uma chamada de API a cada tecla pressionada.",
+    "notes": [
+      "Debounce é ideal para busca em tempo real (autocomplete); throttle é ideal para eventos contínuos como scroll ou redimensionamento."
+    ],
+    "bestPractices": [
+      "Use debounce em campos de busca/autocomplete e throttle em handlers de scroll/resize para não travar a UI."
+    ],
+    "commonMistakes": [
+      "Confundir debounce (espera silêncio) com throttle (espaçamento fixo), aplicando a técnica errada para o caso de uso."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "N/A",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/API/setTimeout",
+    "externalReferences": [],
+    "tags": ["javascript", "debounce", "throttle", "padroes"],
+    "keywords": ["debounce javascript", "throttle javascript", "limitar chamadas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-currying",
+    "category": "JavaScript",
+    "subcategory": "Padrões",
+    "title": "Currying",
+    "description": "Técnica funcional que transforma uma função de múltiplos argumentos em uma sequência de funções, cada uma recebendo um único argumento por vez.",
+    "syntax": "const curried = (a) => (b) => (c) => a + b + c",
+    "example": "const somar = (a) => (b) => a + b\nconst somar5 = somar(5)\nsomar5(3)",
+    "result": "8",
+    "notes": [
+      "Currying facilita criar funções especializadas reutilizáveis (aplicação parcial) a partir de uma função genérica."
+    ],
+    "bestPractices": [
+      "Use currying para criar variações configuráveis de uma função, como validadores ou handlers de evento parametrizados."
+    ],
+    "commonMistakes": [
+      "Aplicar currying em funções que sempre são chamadas com todos os argumentos de uma vez, adicionando complexidade sem benefício real."
+    ],
+    "relatedCommands": ["js-closures"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "N/A",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Glossary/Currying",
+    "externalReferences": [],
+    "tags": ["javascript", "currying", "funcional"],
+    "keywords": ["currying javascript", "aplicacao parcial", "funcoes de ordem superior"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-memoization",
+    "category": "JavaScript",
+    "subcategory": "Padrões",
+    "title": "Memoization",
+    "description": "Técnica de otimização que armazena em cache o resultado de chamadas de função custosas, retornando o valor cacheado quando os mesmos argumentos se repetem.",
+    "syntax": "function memoize(fn) {\n  const cache = new Map()\n  return (...args) => {\n    const chave = JSON.stringify(args)\n    if (cache.has(chave)) return cache.get(chave)\n    const resultado = fn(...args)\n    cache.set(chave, resultado)\n    return resultado\n  }\n}",
+    "example": "const fibonacciMemo = memoize(function fib(n) {\n  return n <= 1 ? n : fibonacciMemo(n - 1) + fibonacciMemo(n - 2)\n})",
+    "result": "Chamadas repetidas com o mesmo `n` retornam instantaneamente do cache, em vez de recalcular a recursão inteira.",
+    "notes": [
+      "Memoization só é segura para funções puras (mesmo input sempre produz mesmo output, sem efeitos colaterais)."
+    ],
+    "bestPractices": [
+      "Use memoization para funções puras e custosas chamadas repetidamente com os mesmos argumentos, como cálculos recursivos ou parsing pesado."
+    ],
+    "commonMistakes": [
+      "Memoizar funções impuras (que dependem de estado externo mutável), retornando resultados cacheados desatualizados."
+    ],
+    "relatedCommands": ["js-closures", "js-map-set"],
+    "difficulty": "avancado",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "N/A",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Glossary/Memoization",
+    "externalReferences": [],
+    "tags": ["javascript", "memoization", "performance"],
+    "keywords": ["memoization javascript", "cache de funcao", "otimizacao recursao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "js-fetch",
+    "category": "JavaScript",
+    "subcategory": "Assincronismo",
+    "title": "Fetch API",
+    "description": "API nativa do navegador (e do Node.js moderno) para fazer requisições HTTP, retornando uma Promise que resolve com a resposta.",
+    "syntax": "fetch(url, opcoes).then((resposta) => resposta.json())",
+    "example": "async function buscarUsuario(id) {\n  const resposta = await fetch(`/api/usuarios/${id}`)\n  if (!resposta.ok) throw new Error(`Erro ${resposta.status}`)\n  return resposta.json()\n}",
+    "result": "Retorna o corpo da resposta já parseado como objeto JavaScript, ou lança erro se o status não for 2xx.",
+    "notes": [
+      "`fetch` só rejeita a Promise em erros de rede — respostas com status 404 ou 500 ainda são consideradas 'sucesso' pelo fetch, por isso é preciso checar `resposta.ok` manualmente."
+    ],
+    "bestPractices": [
+      "Sempre verifique `resposta.ok` antes de assumir que a requisição foi bem-sucedida."
+    ],
+    "commonMistakes": [
+      "Assumir que `fetch` lança erro automaticamente em respostas 4xx/5xx, deixando de tratar falhas da API."
+    ],
+    "relatedCommands": ["js-async-await", "js-promise", "js-json"],
+    "difficulty": "intermediario",
+    "platform": ["browser", "node"],
+    "language": "javascript",
+    "version": "ES2015+ (nativo no Node 18+)",
+    "officialDocumentation": "https://developer.mozilla.org/docs/Web/API/Fetch_API",
+    "externalReferences": [],
+    "tags": ["javascript", "fetch", "http", "assincronismo"],
+    "keywords": ["fetch api", "fetch javascript", "requisicao http javascript"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

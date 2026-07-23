@@ -54,7 +54,7 @@
     "commonMistakes": [
       "Anexar a política gerenciada `AdministratorAccess` a serviços/aplicações por comodidade."
     ],
-    "relatedCommands": ["aws-s3-cp"],
+    "relatedCommands": ["aws-s3-cp", "aws-iam-role-create", "aws-sts-assume-role"],
     "difficulty": "avancado",
     "platform": ["cloud"],
     "version": "N/A",
@@ -64,5 +64,1244 @@
     "keywords": ["least privilege", "menor privilegio", "iam policy"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "aws-configure",
+    "category": "AWS",
+    "subcategory": "CLI e credenciais",
+    "title": "aws configure",
+    "description": "Configura interativamente as credenciais padrão (access key, secret key), região e formato de saída usados pela AWS CLI.",
+    "syntax": "aws configure [--profile <nome>]",
+    "example": "aws configure --profile producao",
+    "result": "AWS Access Key ID [None]: ****\nAWS Secret Access Key [None]: ****\nDefault region name [None]: us-east-1\nDefault output format [None]: json",
+    "flags": [
+      {
+        "flag": "--profile",
+        "description": "Cria/edita um perfil nomeado em vez do perfil default."
+      }
+    ],
+    "notes": [
+      "As credenciais ficam salvas em `~/.aws/credentials` e as configurações em `~/.aws/config`."
+    ],
+    "bestPractices": [
+      "Use múltiplos perfis nomeados (`--profile`) para separar contas de dev, staging e produção.",
+      "Prefira SSO (`aws configure sso`) a access keys de longa duração quando a organização usar AWS Identity Center."
+    ],
+    "commonMistakes": [
+      "Commitar `~/.aws/credentials` ou embutir access keys diretamente no código-fonte."
+    ],
+    "relatedCommands": ["aws-sts-get-caller-identity", "aws-iam-least-privilege"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html",
+    "externalReferences": [],
+    "tags": ["aws", "cli", "credenciais"],
+    "keywords": ["aws configure", "profile aws", "credenciais aws cli"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-sts-get-caller-identity",
+    "category": "AWS",
+    "subcategory": "CLI e credenciais",
+    "title": "aws sts get-caller-identity",
+    "description": "Retorna a identidade (conta, ARN e user id) associada às credenciais atualmente em uso, útil para confirmar qual conta/perfil está ativo antes de rodar comandos sensíveis.",
+    "syntax": "aws sts get-caller-identity [--profile <nome>]",
+    "example": "aws sts get-caller-identity --profile producao",
+    "result": "{\n  \"UserId\": \"AIDAEXAMPLE\",\n  \"Account\": \"123456789012\",\n  \"Arn\": \"arn:aws:iam::123456789012:user/dev\"\n}",
+    "notes": [
+      "É o primeiro comando recomendado para verificar se as credenciais/perfil corretos estão ativos."
+    ],
+    "bestPractices": [
+      "Rode este comando antes de operações destrutivas para confirmar que não está na conta errada (ex: produção)."
+    ],
+    "commonMistakes": [
+      "Executar comandos destrutivos sem antes conferir a conta ativa, afetando o ambiente errado."
+    ],
+    "relatedCommands": ["aws-configure", "aws-sts-assume-role"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html",
+    "externalReferences": [],
+    "tags": ["aws", "sts", "cli"],
+    "keywords": ["get-caller-identity", "conta ativa aws", "verificar credenciais aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-sts-assume-role",
+    "category": "AWS",
+    "subcategory": "IAM",
+    "title": "aws sts assume-role",
+    "description": "Obtém credenciais temporárias assumindo um IAM role, permitindo acesso cross-account ou elevação temporária de permissões sem chaves de longa duração.",
+    "syntax": "aws sts assume-role --role-arn <arn> --role-session-name <nome>",
+    "example": "aws sts assume-role --role-arn arn:aws:iam::123456789012:role/DeployRole --role-session-name deploy-ci",
+    "result": "Retorna AccessKeyId, SecretAccessKey e SessionToken temporários (expiram em até 1h por padrão).",
+    "parameters": [
+      {
+        "name": "--role-arn",
+        "description": "ARN do role a ser assumido.",
+        "required": true
+      },
+      {
+        "name": "--role-session-name",
+        "description": "Nome identificador da sessão, aparece em logs do CloudTrail.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "As credenciais retornadas são temporárias e devem ser exportadas como variáveis de ambiente para uso subsequente."
+    ],
+    "bestPractices": [
+      "Prefira roles assumidos via OIDC (ex: GitHub Actions) a armazenar access keys em pipelines de CI/CD."
+    ],
+    "commonMistakes": [
+      "Esquecer que as credenciais expiram e depender delas em processos de longa duração sem renovação."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege", "aws-sts-get-caller-identity"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/sts/assume-role.html",
+    "externalReferences": [],
+    "tags": ["aws", "sts", "iam", "seguranca"],
+    "keywords": ["assume role", "credenciais temporarias aws", "cross account"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-iam-role-create",
+    "category": "AWS",
+    "subcategory": "IAM",
+    "title": "Criar IAM Role",
+    "description": "Um IAM Role é uma identidade com políticas de permissão associadas, mas sem credenciais fixas — pode ser assumida por usuários, serviços AWS (ex: Lambda, EC2) ou contas externas.",
+    "syntax": "aws iam create-role --role-name <nome> --assume-role-policy-document file://trust-policy.json",
+    "example": "aws iam create-role --role-name lambda-execucao --assume-role-policy-document file://trust-policy.json",
+    "result": "Role criado com o ARN retornado; ainda sem permissões até uma policy ser anexada com `attach-role-policy`.",
+    "notes": [
+      "O `assume-role-policy-document` (trust policy) define QUEM pode assumir o role; policies anexadas definem O QUE ele pode fazer."
+    ],
+    "bestPractices": [
+      "Dê nomes descritivos por função (ex: `lambda-leitura-s3`) em vez de reaproveitar um role genérico para tudo."
+    ],
+    "commonMistakes": [
+      "Confundir trust policy (quem assume) com permission policy (o que pode fazer) — são documentos diferentes."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege", "aws-lambda-invoke"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html",
+    "externalReferences": [],
+    "tags": ["aws", "iam", "role"],
+    "keywords": ["criar iam role", "trust policy", "execution role"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-ec2-run-instances",
+    "category": "AWS",
+    "subcategory": "EC2",
+    "title": "aws ec2 run-instances",
+    "description": "Cria (lança) uma ou mais instâncias EC2 a partir de uma AMI, com tipo de instância, rede e chave SSH especificados.",
+    "syntax": "aws ec2 run-instances --image-id <ami> --instance-type <tipo> --key-name <chave> --count <n>",
+    "example": "aws ec2 run-instances --image-id ami-0abcdef1234567890 --instance-type t3.micro --key-name minha-chave --count 1",
+    "result": "Retorna um JSON com o InstanceId, estado inicial (\"pending\") e detalhes de rede da instância criada.",
+    "flags": [
+      {
+        "flag": "--instance-type",
+        "description": "Define a família/tamanho da instância (ex: t3.micro, m5.large)."
+      },
+      {
+        "flag": "--key-name",
+        "description": "Par de chaves SSH usado para acesso à instância."
+      },
+      {
+        "flag": "--security-group-ids",
+        "description": "Security groups aplicados à instância."
+      }
+    ],
+    "notes": [
+      "A instância leva alguns segundos para sair do estado \"pending\" e ficar \"running\"."
+    ],
+    "bestPractices": [
+      "Sempre associe um Security Group restritivo em vez de liberar todas as portas para 0.0.0.0/0."
+    ],
+    "commonMistakes": [
+      "Esquecer de especificar `--key-name`, tornando impossível acessar a instância via SSH depois."
+    ],
+    "relatedCommands": ["aws-ec2-describe-instances", "aws-elb-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html",
+    "externalReferences": [],
+    "tags": ["aws", "ec2", "cli"],
+    "keywords": ["criar instancia ec2", "run-instances", "lancar ec2"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-ec2-describe-instances",
+    "category": "AWS",
+    "subcategory": "EC2",
+    "title": "aws ec2 describe-instances",
+    "description": "Lista e detalha instâncias EC2 existentes na conta/região, incluindo estado, IP, tipo e tags.",
+    "syntax": "aws ec2 describe-instances [--filters \"Name=<campo>,Values=<valor>\"]",
+    "example": "aws ec2 describe-instances --filters \"Name=instance-state-name,Values=running\" --query \"Reservations[].Instances[].[InstanceId,PublicIpAddress]\" --output table",
+    "result": "Tabela com InstanceId e IP público de todas as instâncias no estado \"running\".",
+    "flags": [
+      {
+        "flag": "--filters",
+        "description": "Filtra instâncias por campo (estado, tag, tipo, etc.)."
+      },
+      {
+        "flag": "--query",
+        "description": "Aplica uma expressão JMESPath para extrair só os campos desejados da resposta."
+      }
+    ],
+    "notes": [
+      "`--query` combinado com `--output table` é a forma mais legível de inspecionar rapidamente várias instâncias."
+    ],
+    "bestPractices": [
+      "Use tags consistentes (ex: `Environment=prod`) para poder filtrar instâncias por ambiente com `--filters`."
+    ],
+    "commonMistakes": [
+      "Rodar sem filtros em contas com centenas de instâncias, gerando uma saída gigante e difícil de ler."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances"],
+    "difficulty": "iniciante",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html",
+    "externalReferences": [],
+    "tags": ["aws", "ec2", "cli"],
+    "keywords": ["listar instancias ec2", "describe-instances", "status ec2"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-lambda-deploy",
+    "category": "AWS",
+    "subcategory": "Lambda",
+    "title": "aws lambda update-function-code",
+    "description": "Atualiza o código de uma função Lambda existente a partir de um pacote .zip local ou de um objeto no S3, sem recriar a função.",
+    "syntax": "aws lambda update-function-code --function-name <nome> --zip-file fileb://<arquivo.zip>",
+    "example": "aws lambda update-function-code --function-name processa-pedido --zip-file fileb://dist/function.zip",
+    "result": "Retorna o JSON da função atualizada, incluindo a nova versão do código (CodeSha256) e o LastModified.",
+    "flags": [
+      {
+        "flag": "--zip-file",
+        "description": "Caminho local do pacote (precisa do prefixo `fileb://`)."
+      },
+      {
+        "flag": "--s3-bucket",
+        "description": "Alternativa: referencia um bucket S3 com o pacote."
+      }
+    ],
+    "notes": [
+      "O prefixo `fileb://` (binary file) é obrigatório para arquivos .zip; `file://` é para conteúdo texto."
+    ],
+    "bestPractices": [
+      "Em pipelines de CI/CD, publique uma nova versão (`publish-version`) e use aliases para controlar qual versão está em produção."
+    ],
+    "commonMistakes": [
+      "Usar `file://` em vez de `fileb://` para o zip, causando erro de codificação no upload."
+    ],
+    "relatedCommands": ["aws-lambda-invoke", "aws-iam-role-create"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-code.html",
+    "externalReferences": [],
+    "tags": ["aws", "lambda", "cli", "deploy"],
+    "keywords": ["deploy lambda", "update-function-code", "atualizar funcao lambda"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-lambda-invoke",
+    "category": "AWS",
+    "subcategory": "Lambda",
+    "title": "aws lambda invoke",
+    "description": "Invoca (executa) uma função Lambda diretamente via CLI, útil para testes manuais sem precisar de um gatilho HTTP/evento real.",
+    "syntax": "aws lambda invoke --function-name <nome> --payload '<json>' <arquivo-saida.json>",
+    "example": "aws lambda invoke --function-name processa-pedido --payload '{\"pedidoId\": 42}' --cli-binary-format raw-in-base64-out saida.json",
+    "result": "Cria saida.json com o retorno da função e imprime o StatusCode (200 em caso de sucesso) no terminal.",
+    "flags": [
+      {
+        "flag": "--payload",
+        "description": "JSON enviado como evento de entrada para a função."
+      },
+      {
+        "flag": "--cli-binary-format",
+        "description": "Necessário na CLI v2 para enviar payload JSON como texto puro."
+      }
+    ],
+    "notes": [
+      "O corpo da resposta HTTP da função (quando aplicável) fica dentro do arquivo de saída, não no terminal."
+    ],
+    "bestPractices": [
+      "Use `--log-type Tail` para receber os últimos logs da execução direto na resposta, sem abrir o CloudWatch."
+    ],
+    "commonMistakes": [
+      "Esquecer `--cli-binary-format raw-in-base64-out` na CLI v2, causando erro de base64 no payload."
+    ],
+    "relatedCommands": ["aws-lambda-deploy", "aws-cloudwatch-logs-tail"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/lambda/invoke.html",
+    "externalReferences": [],
+    "tags": ["aws", "lambda", "cli"],
+    "keywords": ["invocar lambda", "testar lambda", "lambda invoke"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-s3-sync",
+    "category": "AWS",
+    "subcategory": "S3",
+    "title": "aws s3 sync",
+    "description": "Sincroniza o conteúdo entre uma pasta local e um bucket S3 (ou entre buckets), transferindo apenas arquivos novos ou modificados.",
+    "syntax": "aws s3 sync <origem> <destino> [--delete]",
+    "example": "aws s3 sync ./dist s3://meu-bucket/site --delete",
+    "result": "upload: dist/index.html to s3://meu-bucket/site/index.html\ndelete: s3://meu-bucket/site/old.js",
+    "flags": [
+      {
+        "flag": "--delete",
+        "description": "Remove no destino arquivos que não existem mais na origem."
+      },
+      {
+        "flag": "--exclude",
+        "description": "Exclui arquivos que casem com o padrão informado."
+      }
+    ],
+    "notes": [
+      "Diferente de `cp --recursive`, o `sync` compara timestamp/tamanho e só transfere o que mudou."
+    ],
+    "bestPractices": [
+      "Use `--delete` com cuidado e sempre teste antes com `--dryrun` para não apagar arquivos por engano."
+    ],
+    "commonMistakes": [
+      "Usar `--delete` sem `--dryrun` em produção e remover arquivos que ainda eram necessários."
+    ],
+    "relatedCommands": ["aws-s3-cp"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html",
+    "externalReferences": [],
+    "tags": ["aws", "s3", "cli"],
+    "keywords": ["aws s3 sync", "sincronizar bucket", "deploy site s3"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-s3-presign",
+    "category": "AWS",
+    "subcategory": "S3",
+    "title": "aws s3 presign",
+    "description": "Gera uma URL assinada temporária que permite acesso (leitura ou upload) a um objeto S3 privado sem expor credenciais.",
+    "syntax": "aws s3 presign s3://<bucket>/<chave> [--expires-in <segundos>]",
+    "example": "aws s3 presign s3://meu-bucket/relatorios/2026.pdf --expires-in 3600",
+    "result": "https://meu-bucket.s3.amazonaws.com/relatorios/2026.pdf?X-Amz-Algorithm=...&X-Amz-Expires=3600&...",
+    "flags": [
+      {
+        "flag": "--expires-in",
+        "description": "Tempo de validade da URL em segundos (padrão: 3600)."
+      }
+    ],
+    "notes": [
+      "Qualquer pessoa com a URL consegue acessar o objeto até ela expirar — trate a URL como um segredo."
+    ],
+    "bestPractices": [
+      "Use o menor tempo de expiração viável para o caso de uso, especialmente em links compartilhados externamente."
+    ],
+    "commonMistakes": [
+      "Gerar URLs presigned com validade muito longa para conteúdo sensível, ampliando a janela de exposição."
+    ],
+    "relatedCommands": ["aws-s3-cp", "aws-s3-sync"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html",
+    "externalReferences": [],
+    "tags": ["aws", "s3", "cli", "seguranca"],
+    "keywords": ["presigned url", "url temporaria s3", "aws s3 presign"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-rds-create-instance",
+    "category": "AWS",
+    "subcategory": "RDS",
+    "title": "aws rds create-db-instance",
+    "description": "Cria uma instância de banco de dados gerenciado (RDS) — MySQL, PostgreSQL, MariaDB, SQL Server ou Oracle — com backups e patches automatizados pela AWS.",
+    "syntax": "aws rds create-db-instance --db-instance-identifier <id> --db-instance-class <classe> --engine <engine> --master-username <usuario> --master-user-password <senha> --allocated-storage <gb>",
+    "example": "aws rds create-db-instance --db-instance-identifier app-db --db-instance-class db.t3.micro --engine postgres --master-username admin --master-user-password \"SenhaForte123!\" --allocated-storage 20",
+    "result": "Instância criada com status inicial \"creating\"; leva alguns minutos até ficar \"available\".",
+    "notes": [
+      "Nunca deixe a instância publicamente acessível (`--no-publicly-accessible`) em ambientes de produção."
+    ],
+    "bestPractices": [
+      "Ative Multi-AZ em produção para failover automático em caso de falha da zona de disponibilidade.",
+      "Habilite backups automáticos (`--backup-retention-period`) em vez de depender só de snapshots manuais."
+    ],
+    "commonMistakes": [
+      "Deixar a instância publicamente acessível sem necessidade, expondo o banco diretamente à internet."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/rds/create-db-instance.html",
+    "externalReferences": [],
+    "tags": ["aws", "rds", "banco de dados"],
+    "keywords": ["criar rds", "banco gerenciado aws", "create-db-instance"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cloudformation-deploy",
+    "category": "AWS",
+    "subcategory": "CloudFormation",
+    "title": "aws cloudformation deploy",
+    "description": "Cria ou atualiza uma stack de infraestrutura como código a partir de um template (JSON/YAML), aplicando apenas as mudanças necessárias (changeset).",
+    "syntax": "aws cloudformation deploy --template-file <arquivo> --stack-name <nome> [--capabilities CAPABILITY_IAM]",
+    "example": "aws cloudformation deploy --template-file infra.yaml --stack-name app-infra --capabilities CAPABILITY_IAM",
+    "result": "Waiting for changeset to be created..\nWaiting for stack create/update to complete\nSuccessfully created/updated stack - app-infra",
+    "flags": [
+      {
+        "flag": "--capabilities",
+        "description": "Autoriza explicitamente a criação de recursos IAM pelo template."
+      }
+    ],
+    "notes": [
+      "Internamente, `deploy` cria um changeset e o executa — é a forma recomendada em vez de `create-stack`/`update-stack` diretos."
+    ],
+    "bestPractices": [
+      "Versione os templates junto com o código da aplicação e valide com `aws cloudformation validate-template` antes do deploy."
+    ],
+    "commonMistakes": [
+      "Esquecer `--capabilities CAPABILITY_IAM` ao criar templates que definem roles/policies, causando falha no deploy."
+    ],
+    "relatedCommands": ["aws-iam-role-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html",
+    "externalReferences": [],
+    "tags": ["aws", "cloudformation", "iac"],
+    "keywords": ["infraestrutura como codigo aws", "cloudformation deploy", "changeset"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cloudwatch-logs-tail",
+    "category": "AWS",
+    "subcategory": "CloudWatch",
+    "title": "aws logs tail",
+    "description": "Acompanha em tempo quase real (\"tail -f\") os logs de um log group do CloudWatch, útil para depurar Lambdas, ECS e outros serviços sem abrir o console.",
+    "syntax": "aws logs tail <log-group> [--follow] [--since <periodo>]",
+    "example": "aws logs tail /aws/lambda/processa-pedido --follow --since 10m",
+    "result": "Imprime continuamente novas linhas de log conforme chegam, filtradas pelos últimos 10 minutos.",
+    "flags": [
+      {
+        "flag": "--follow",
+        "description": "Mantém o comando rodando, exibindo novos eventos em tempo real."
+      },
+      {
+        "flag": "--since",
+        "description": "Define a partir de quando buscar logs (ex: 5m, 1h)."
+      }
+    ],
+    "notes": ["Log groups de Lambda seguem o padrão `/aws/lambda/<nome-da-funcao>`."],
+    "bestPractices": [
+      "Combine com `--filter-pattern` para reduzir ruído ao investigar um erro específico."
+    ],
+    "commonMistakes": [
+      "Esquecer que logs antigos podem já ter expirado conforme a política de retenção do log group."
+    ],
+    "relatedCommands": ["aws-lambda-invoke", "aws-cloudwatch-alarm-create"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/logs/tail.html",
+    "externalReferences": [],
+    "tags": ["aws", "cloudwatch", "logs", "observabilidade"],
+    "keywords": ["cloudwatch logs", "aws logs tail", "acompanhar logs aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cloudwatch-alarm-create",
+    "category": "AWS",
+    "subcategory": "CloudWatch",
+    "title": "aws cloudwatch put-metric-alarm",
+    "description": "Cria um alarme que monitora uma métrica (CPU, erros, latência etc.) e dispara uma ação (ex: notificação SNS, auto scaling) quando um limiar é ultrapassado.",
+    "syntax": "aws cloudwatch put-metric-alarm --alarm-name <nome> --metric-name <metrica> --namespace <namespace> --statistic Average --period 60 --threshold <valor> --comparison-operator GreaterThanThreshold --evaluation-periods 3",
+    "example": "aws cloudwatch put-metric-alarm --alarm-name cpu-alta --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 60 --threshold 80 --comparison-operator GreaterThanThreshold --evaluation-periods 3 --alarm-actions arn:aws:sns:us-east-1:123456789012:alertas",
+    "result": "Alarme criado; entra em estado ALARM se a CPU média ficar acima de 80% por 3 períodos consecutivos de 60s.",
+    "notes": [
+      "`--evaluation-periods` evita alarmes falsos por picos momentâneos, exigindo violações consecutivas."
+    ],
+    "bestPractices": [
+      "Sempre conecte alarmes críticos a um tópico SNS com notificação real (e-mail, Slack, PagerDuty)."
+    ],
+    "commonMistakes": [
+      "Criar alarmes sem `--alarm-actions`, então o alarme dispara mas ninguém é notificado."
+    ],
+    "relatedCommands": ["aws-cloudwatch-logs-tail", "aws-sns-publish"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/put-metric-alarm.html",
+    "externalReferences": [],
+    "tags": ["aws", "cloudwatch", "alarme", "observabilidade"],
+    "keywords": ["alarme cloudwatch", "put-metric-alarm", "monitoramento aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-ecs-update-service",
+    "category": "AWS",
+    "subcategory": "ECS",
+    "title": "aws ecs update-service",
+    "description": "Atualiza um serviço ECS (ex: para forçar um novo deploy com a imagem mais recente da task definition), fazendo rolling update dos containers em execução.",
+    "syntax": "aws ecs update-service --cluster <cluster> --service <servico> --force-new-deployment",
+    "example": "aws ecs update-service --cluster producao --service api --force-new-deployment",
+    "result": "O ECS substitui gradualmente as tasks antigas por novas, respeitando o desiredCount e as health checks configuradas.",
+    "flags": [
+      {
+        "flag": "--force-new-deployment",
+        "description": "Força um novo deploy mesmo sem alterar a task definition (útil após atualizar a imagem :latest)."
+      },
+      {
+        "flag": "--desired-count",
+        "description": "Ajusta o número de tasks desejadas em execução."
+      }
+    ],
+    "notes": [
+      "O rollout respeita a configuração de `deploymentConfiguration` (minimum/maximum healthy percent) do serviço."
+    ],
+    "bestPractices": [
+      "Configure health checks no Application Load Balancer para o ECS só considerar uma task saudável antes de encerrar a antiga."
+    ],
+    "commonMistakes": [
+      "Usar a tag `:latest` na imagem e esperar que `update-service` sem `--force-new-deployment` puxe a nova versão."
+    ],
+    "relatedCommands": ["aws-lambda-deploy", "aws-cloudwatch-logs-tail"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/ecs/update-service.html",
+    "externalReferences": [],
+    "tags": ["aws", "ecs", "containers", "deploy"],
+    "keywords": ["ecs update-service", "rolling update ecs", "deploy container aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-dynamodb-put-item",
+    "category": "AWS",
+    "subcategory": "DynamoDB",
+    "title": "aws dynamodb put-item",
+    "description": "Insere ou substitui um item completo em uma tabela DynamoDB, o banco NoSQL gerenciado e serverless da AWS.",
+    "syntax": "aws dynamodb put-item --table-name <tabela> --item '<json-com-tipos>'",
+    "example": "aws dynamodb put-item --table-name Pedidos --item '{\"id\": {\"S\": \"123\"}, \"total\": {\"N\": \"49.90\"}}'",
+    "result": "Item inserido/substituído na tabela; sem retorno por padrão (use `--return-values ALL_OLD` para ver o item anterior).",
+    "notes": [
+      "O DynamoDB exige que cada atributo declare seu tipo (`S` string, `N` number, `BOOL`, `M` map, etc.)."
+    ],
+    "bestPractices": [
+      "Modele a chave de partição pensando no padrão de acesso mais comum, não na estrutura relacional do dado."
+    ],
+    "commonMistakes": [
+      "Usar `put-item` para atualizar apenas um atributo — isso substitui o item inteiro; para atualização parcial use `update-item`."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html",
+    "externalReferences": [],
+    "tags": ["aws", "dynamodb", "nosql"],
+    "keywords": ["dynamodb put-item", "inserir item dynamodb", "nosql aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-sns-publish",
+    "category": "AWS",
+    "subcategory": "SNS/SQS",
+    "title": "aws sns publish",
+    "description": "Publica uma mensagem em um tópico SNS (Simple Notification Service), que a distribui a todos os assinantes (e-mail, SMS, Lambda, SQS, etc.).",
+    "syntax": "aws sns publish --topic-arn <arn> --message '<texto>'",
+    "example": "aws sns publish --topic-arn arn:aws:sns:us-east-1:123456789012:alertas --message \"Deploy concluído com sucesso\"",
+    "result": "{\n  \"MessageId\": \"a1b2c3d4-...\"\n}",
+    "notes": [
+      "SNS segue o padrão pub/sub: um único publish pode alcançar múltiplos assinantes de tipos diferentes ao mesmo tempo."
+    ],
+    "bestPractices": [
+      "Use filter policies nas assinaturas para que cada assinante receba só as mensagens relevantes para ele."
+    ],
+    "commonMistakes": [
+      "Confundir SNS (pub/sub, push para vários assinantes) com SQS (fila, consumida por um worker por vez)."
+    ],
+    "relatedCommands": ["aws-sqs-receive-message", "aws-cloudwatch-alarm-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/sns/publish.html",
+    "externalReferences": [],
+    "tags": ["aws", "sns", "mensageria"],
+    "keywords": ["sns publish", "notificacao aws", "pub sub aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-sqs-receive-message",
+    "category": "AWS",
+    "subcategory": "SNS/SQS",
+    "title": "aws sqs receive-message",
+    "description": "Consome (lê) mensagens de uma fila SQS (Simple Queue Service), usada para desacoplar processamento assíncrono entre serviços.",
+    "syntax": "aws sqs receive-message --queue-url <url> [--max-number-of-messages <n>] [--wait-time-seconds <s>]",
+    "example": "aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/pedidos --wait-time-seconds 10",
+    "result": "Retorna até 10 mensagens (padrão) com Body, MessageId e ReceiptHandle, necessários para depois deletar a mensagem processada.",
+    "flags": [
+      {
+        "flag": "--wait-time-seconds",
+        "description": "Habilita long polling, reduzindo chamadas vazias e custo."
+      }
+    ],
+    "notes": [
+      "A mensagem não é removida automaticamente — é preciso chamar `delete-message` com o `ReceiptHandle` após processá-la."
+    ],
+    "bestPractices": [
+      "Use long polling (`--wait-time-seconds` > 0) em vez de polling curto repetido, para reduzir custo e latência."
+    ],
+    "commonMistakes": [
+      "Esquecer de deletar a mensagem após processá-la, fazendo com que ela reapareça na fila após o visibility timeout."
+    ],
+    "relatedCommands": ["aws-sns-publish"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/sqs/receive-message.html",
+    "externalReferences": [],
+    "tags": ["aws", "sqs", "mensageria", "fila"],
+    "keywords": ["sqs receive-message", "fila aws", "long polling sqs"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-route53-change-record",
+    "category": "AWS",
+    "subcategory": "Route 53",
+    "title": "aws route53 change-resource-record-sets",
+    "description": "Cria, altera ou remove registros DNS (A, CNAME, ALIAS, etc.) em uma hosted zone do Route 53, o serviço de DNS gerenciado da AWS.",
+    "syntax": "aws route53 change-resource-record-sets --hosted-zone-id <id> --change-batch file://mudancas.json",
+    "example": "aws route53 change-resource-record-sets --hosted-zone-id Z123EXAMPLE --change-batch file://alias-cloudfront.json",
+    "result": "Retorna um ChangeInfo com status \"PENDING\"; a propagação costuma levar de segundos a poucos minutos.",
+    "notes": [
+      "Registros do tipo ALIAS (exclusivos da AWS) apontam para recursos como CloudFront/ELB sem custo de consulta extra."
+    ],
+    "bestPractices": [
+      "Use `aws route53 get-change` com o ChangeId retornado para confirmar quando a alteração foi propagada (INSYNC)."
+    ],
+    "commonMistakes": [
+      "Definir um TTL alto em registros que mudam com frequência, atrasando a propagação de futuras alterações."
+    ],
+    "relatedCommands": ["aws-cloudfront-invalidate"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/route53/change-resource-record-sets.html",
+    "externalReferences": [],
+    "tags": ["aws", "route53", "dns"],
+    "keywords": ["route53", "dns aws", "change-resource-record-sets"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cloudfront-invalidate",
+    "category": "AWS",
+    "subcategory": "CloudFront",
+    "title": "aws cloudfront create-invalidation",
+    "description": "Invalida (força a expirar) objetos em cache no CloudFront, garantindo que a próxima requisição busque a versão mais recente da origem.",
+    "syntax": "aws cloudfront create-invalidation --distribution-id <id> --paths <padroes>",
+    "example": "aws cloudfront create-invalidation --distribution-id E1EXAMPLE --paths \"/*\"",
+    "result": "Retorna um objeto Invalidation com status \"InProgress\"; costuma levar alguns minutos até concluir.",
+    "flags": [
+      {
+        "flag": "--paths",
+        "description": "Padrões de caminho a invalidar (ex: /*, /index.html, /assets/*)."
+      }
+    ],
+    "notes": [
+      "Invalidações têm uma cota gratuita mensal; acima dela, cada path invalidado tem custo."
+    ],
+    "bestPractices": [
+      "Invalide caminhos específicos (ex: `/index.html`) em vez de `/*` sempre que possível, para reduzir custo e tempo."
+    ],
+    "commonMistakes": [
+      "Esperar que a invalidação seja instantânea e testar a URL antes da propagação terminar."
+    ],
+    "relatedCommands": ["aws-s3-sync", "aws-route53-change-record"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/cloudfront/create-invalidation.html",
+    "externalReferences": [],
+    "tags": ["aws", "cloudfront", "cdn", "cache"],
+    "keywords": ["invalidar cache cloudfront", "create-invalidation", "cdn aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-secretsmanager-get-secret",
+    "category": "AWS",
+    "subcategory": "Secrets Manager",
+    "title": "aws secretsmanager get-secret-value",
+    "description": "Recupera o valor de um segredo (senha, chave de API, string de conexão) armazenado de forma criptografada no Secrets Manager.",
+    "syntax": "aws secretsmanager get-secret-value --secret-id <nome-ou-arn>",
+    "example": "aws secretsmanager get-secret-value --secret-id prod/db/senha --query SecretString --output text",
+    "result": "{\"usuario\":\"admin\",\"senha\":\"S3nh4Forte!\"}",
+    "notes": [
+      "Segredos podem ter rotação automática configurada, atualizando a senha periodicamente sem downtime."
+    ],
+    "bestPractices": [
+      "Nunca imprima segredos em logs de CI/CD; use variáveis mascaradas ou injete diretamente no runtime da aplicação."
+    ],
+    "commonMistakes": [
+      "Guardar segredos em variáveis de ambiente estáticas no lugar de buscar do Secrets Manager em runtime."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege", "aws-rds-create-instance"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html",
+    "externalReferences": [],
+    "tags": ["aws", "secrets manager", "seguranca"],
+    "keywords": ["secrets manager aws", "buscar segredo", "get-secret-value"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-autoscaling-update-group",
+    "category": "AWS",
+    "subcategory": "Auto Scaling",
+    "title": "aws autoscaling update-auto-scaling-group",
+    "description": "Ajusta a capacidade (mínima, máxima e desejada) de um Auto Scaling Group, que adiciona ou remove instâncias EC2 automaticamente conforme demanda.",
+    "syntax": "aws autoscaling update-auto-scaling-group --auto-scaling-group-name <nome> --min-size <n> --max-size <n> --desired-capacity <n>",
+    "example": "aws autoscaling update-auto-scaling-group --auto-scaling-group-name app-asg --min-size 2 --max-size 10 --desired-capacity 3",
+    "result": "Grupo atualizado; o Auto Scaling ajusta gradualmente o número de instâncias para atingir a capacidade desejada.",
+    "notes": [
+      "Scaling policies (baseadas em CPU, requisições, etc.) ajustam `desired-capacity` automaticamente entre min e max."
+    ],
+    "bestPractices": [
+      "Combine com um Application Load Balancer e health checks para substituir automaticamente instâncias não saudáveis."
+    ],
+    "commonMistakes": [
+      "Definir `min-size` igual a `max-size`, eliminando na prática a elasticidade do Auto Scaling."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances", "aws-elb-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/autoscaling/update-auto-scaling-group.html",
+    "externalReferences": [],
+    "tags": ["aws", "auto scaling", "ec2"],
+    "keywords": ["auto scaling group", "escalar ec2", "update-auto-scaling-group"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-elb-create",
+    "category": "AWS",
+    "subcategory": "Load Balancer",
+    "title": "aws elbv2 create-load-balancer",
+    "description": "Cria um Application Load Balancer (ALB), que distribui tráfego HTTP/HTTPS entre múltiplas instâncias, containers ou funções alvo.",
+    "syntax": "aws elbv2 create-load-balancer --name <nome> --subnets <subnet-ids> --security-groups <sg-ids>",
+    "example": "aws elbv2 create-load-balancer --name app-alb --subnets subnet-abc subnet-def --security-groups sg-123",
+    "result": "Retorna o LoadBalancerArn e o DNSName público usado para acessar a aplicação através do balanceador.",
+    "notes": [
+      "Um ALB precisa de pelo menos duas subnets em zonas de disponibilidade diferentes para alta disponibilidade."
+    ],
+    "bestPractices": [
+      "Configure health checks no Target Group para o ALB parar de enviar tráfego a instâncias não saudáveis automaticamente."
+    ],
+    "commonMistakes": [
+      "Criar o ALB em apenas uma subnet/AZ, perdendo a redundância entre zonas de disponibilidade."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances", "aws-autoscaling-update-group"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html",
+    "externalReferences": [],
+    "tags": ["aws", "load balancer", "alb", "rede"],
+    "keywords": ["application load balancer", "criar alb", "create-load-balancer"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-vpc-create",
+    "category": "AWS",
+    "subcategory": "VPC",
+    "title": "aws ec2 create-vpc",
+    "description": "Cria uma Virtual Private Cloud (VPC), uma rede isolada logicamente dentro da AWS onde instâncias, bancos e outros recursos são provisionados.",
+    "syntax": "aws ec2 create-vpc --cidr-block <bloco-cidr>",
+    "example": "aws ec2 create-vpc --cidr-block 10.0.0.0/16",
+    "result": "Retorna o VpcId criado; ainda sem subnets, internet gateway ou route tables associados.",
+    "notes": [
+      "Uma VPC sozinha não tem acesso à internet — é preciso criar subnets, um Internet Gateway e route tables."
+    ],
+    "bestPractices": [
+      "Planeje o bloco CIDR com folga (ex: /16) e separe subnets públicas e privadas por camada da aplicação."
+    ],
+    "commonMistakes": [
+      "Usar blocos CIDR que colidem com outras VPCs que precisarão de peering no futuro."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances", "aws-elb-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/ec2/create-vpc.html",
+    "externalReferences": [],
+    "tags": ["aws", "vpc", "rede"],
+    "keywords": ["criar vpc", "rede privada aws", "create-vpc"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-apigateway-create-api",
+    "category": "AWS",
+    "subcategory": "API Gateway",
+    "title": "aws apigatewayv2 create-api",
+    "description": "Cria uma API HTTP no API Gateway, usada como porta de entrada gerenciada para expor funções Lambda ou outros backends como endpoints HTTP.",
+    "syntax": "aws apigatewayv2 create-api --name <nome> --protocol-type HTTP --target <arn-lambda>",
+    "example": "aws apigatewayv2 create-api --name pedidos-api --protocol-type HTTP --target arn:aws:lambda:us-east-1:123456789012:function:processa-pedido",
+    "result": "Retorna o ApiId e o ApiEndpoint público que já roteia requisições diretamente para a Lambda alvo.",
+    "notes": [
+      "APIs HTTP (v2) são mais simples e baratas que APIs REST (v1); use REST apenas quando precisar de recursos específicos dela."
+    ],
+    "bestPractices": [
+      "Habilite throttling e um plano de uso (usage plan) para proteger o backend contra picos inesperados de tráfego."
+    ],
+    "commonMistakes": [
+      "Expor a API sem nenhuma autenticação/autorização (Lambda authorizer, IAM, Cognito) em endpoints sensíveis."
+    ],
+    "relatedCommands": ["aws-lambda-deploy", "aws-iam-role-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/apigatewayv2/create-api.html",
+    "externalReferences": [],
+    "tags": ["aws", "api gateway", "serverless"],
+    "keywords": ["api gateway aws", "criar api http", "create-api"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cost-explorer-get-cost",
+    "category": "AWS",
+    "subcategory": "Billing e custos",
+    "title": "aws ce get-cost-and-usage",
+    "description": "Consulta pelo Cost Explorer os custos e uso da conta AWS em um período, agrupados por serviço, tag ou outra dimensão.",
+    "syntax": "aws ce get-cost-and-usage --time-period Start=<data>,End=<data> --granularity MONTHLY --metrics BlendedCost --group-by Type=DIMENSION,Key=SERVICE",
+    "example": "aws ce get-cost-and-usage --time-period Start=2026-07-01,End=2026-07-23 --granularity MONTHLY --metrics BlendedCost --group-by Type=DIMENSION,Key=SERVICE",
+    "result": "JSON com o custo total agrupado por serviço (EC2, S3, Lambda, etc.) no período informado.",
+    "notes": [
+      "O Cost Explorer precisa estar habilitado na conta antes de a API retornar dados históricos."
+    ],
+    "bestPractices": [
+      "Use tags de custo (`Cost Allocation Tags`) em todos os recursos para conseguir agrupar gastos por time/projeto/ambiente."
+    ],
+    "commonMistakes": [
+      "Não configurar alertas de orçamento (AWS Budgets) e só perceber um gasto anormal no fechamento da fatura."
+    ],
+    "relatedCommands": ["aws-cloudwatch-alarm-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/cli/latest/reference/ce/get-cost-and-usage.html",
+    "externalReferences": [],
+    "tags": ["aws", "custos", "billing"],
+    "keywords": ["cost explorer", "custo aws", "get-cost-and-usage"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-eks-create-cluster",
+    "category": "AWS",
+    "subcategory": "EKS",
+    "title": "eksctl create cluster",
+    "description": "Cria um cluster Amazon EKS (Kubernetes gerenciado) usando eksctl, a ferramenta oficial que provisiona control plane, node group e VPC em um único comando.",
+    "syntax": "eksctl create cluster --name <cluster> --region <regiao> --nodes <n>",
+    "example": "eksctl create cluster --name meu-cluster --region us-east-1 --nodes 3",
+    "result": "O EKS provisiona o control plane gerenciado e um node group de EC2, configurando automaticamente o kubectl local para o novo cluster.",
+    "flags": [
+      { "flag": "--nodes", "description": "Número de nós no node group padrão." },
+      { "flag": "--node-type", "description": "Tipo de instância EC2 usada nos nós." },
+      {
+        "flag": "--fargate",
+        "description": "Cria o cluster usando Fargate em vez de nós EC2 gerenciados."
+      }
+    ],
+    "notes": [
+      "Diferente do ECS (orquestrador proprietário da AWS), o EKS roda Kubernetes padrão, portável para outros provedores."
+    ],
+    "bestPractices": [
+      "Use Fargate para cargas esporádicas sem gerenciar nós; use node groups gerenciados para cargas constantes com melhor custo-benefício."
+    ],
+    "commonMistakes": [
+      "Confundir EKS (Kubernetes gerenciado, portável) com ECS (orquestrador proprietário da AWS, não portável), escolhendo o serviço errado para o caso de uso."
+    ],
+    "relatedCommands": ["aws-ecs-update-service"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "eksctl / EKS",
+    "officialDocumentation": "https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html",
+    "externalReferences": [],
+    "tags": ["aws", "eks", "kubernetes"],
+    "keywords": ["eks", "eksctl create cluster", "kubernetes na aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-step-functions",
+    "category": "AWS",
+    "subcategory": "Step Functions",
+    "title": "AWS Step Functions",
+    "description": "Orquestra múltiplas funções Lambda e outros serviços AWS como uma máquina de estados visual, definida em JSON (Amazon States Language), com retries e tratamento de erro nativos.",
+    "syntax": "aws stepfunctions create-state-machine --name <nome> --definition file://<definicao.json> --role-arn <arn>",
+    "example": "aws stepfunctions create-state-machine --name processar-pedido --definition file://workflow.json --role-arn arn:aws:iam::123456789012:role/step-functions-role",
+    "result": "A máquina de estados é criada e pode ser iniciada (`start-execution`), orquestrando os passos definidos em sequência, paralelo ou condicionalmente.",
+    "notes": [
+      "Suporta 'Standard' (execuções longas, auditáveis) e 'Express' (alta vazão, curta duração, mais barato) como tipos de fluxo."
+    ],
+    "bestPractices": [
+      "Use Step Functions para orquestrar workflows com múltiplos passos e tratamento de erro complexo, em vez de encadear Lambdas manualmente via eventos."
+    ],
+    "relatedCommands": ["aws-lambda-deploy", "aws-lambda-invoke"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html",
+    "externalReferences": [],
+    "tags": ["aws", "step functions", "orquestracao"],
+    "keywords": ["step functions", "maquina de estados aws", "orquestrar lambdas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-kinesis-streams",
+    "category": "AWS",
+    "subcategory": "Kinesis",
+    "title": "Amazon Kinesis Data Streams",
+    "description": "Serviço de streaming de dados em tempo real para ingestão contínua de grandes volumes de eventos (logs, cliques, telemetria), consumidos por múltiplos aplicativos em paralelo.",
+    "syntax": "aws kinesis create-stream --stream-name <nome> --shard-count <n>\naws kinesis put-record --stream-name <nome> --partition-key <chave> --data <dados>",
+    "example": "aws kinesis create-stream --stream-name eventos-cliques --shard-count 2\naws kinesis put-record --stream-name eventos-cliques --partition-key user123 --data \"eyJldmVudG8iOiJjbGlxdWUifQ==\"",
+    "result": "O stream é criado com os shards especificados; cada `put-record` adiciona um evento, distribuído entre shards conforme a partition-key.",
+    "notes": [
+      "O throughput do stream é limitado pelo número de shards; cada shard suporta até 1000 registros/segundo ou 1MB/segundo de entrada."
+    ],
+    "bestPractices": [
+      "Escolha uma partition-key com boa distribuição (ex: ID de usuário) para evitar 'hot shards' sobrecarregados."
+    ],
+    "relatedCommands": ["aws-sqs-receive-message"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/kinesis/latest/dev/introduction.html",
+    "externalReferences": [],
+    "tags": ["aws", "kinesis", "streaming"],
+    "keywords": [
+      "kinesis data streams",
+      "streaming de dados aws",
+      "eventos em tempo real"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-elasticache",
+    "category": "AWS",
+    "subcategory": "ElastiCache",
+    "title": "Amazon ElastiCache",
+    "description": "Serviço gerenciado de cache em memória compatível com Redis ou Memcached, usado para reduzir latência de leitura e aliviar carga de bancos de dados.",
+    "syntax": "aws elasticache create-cache-cluster --cache-cluster-id <id> --engine redis --cache-node-type <tipo> --num-cache-nodes <n>",
+    "example": "aws elasticache create-cache-cluster --cache-cluster-id minha-app-cache --engine redis --cache-node-type cache.t3.micro --num-cache-nodes 1",
+    "result": "Um cluster de cache Redis é provisionado, acessível pela aplicação via endpoint interno na VPC.",
+    "notes": [
+      "Redis suporta replicação e failover automático (Multi-AZ); Memcached é mais simples e voltado a cache puro sem persistência."
+    ],
+    "bestPractices": [
+      "Defina um TTL adequado nas chaves de cache para evitar dados obsoletos (stale) servidos indefinidamente."
+    ],
+    "relatedCommands": ["aws-rds-create-instance"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html",
+    "externalReferences": [],
+    "tags": ["aws", "elasticache", "cache", "redis"],
+    "keywords": ["elasticache", "redis na aws", "cache gerenciado aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-x-ray",
+    "category": "AWS",
+    "subcategory": "Observabilidade",
+    "title": "AWS X-Ray",
+    "description": "Serviço de rastreamento distribuído (distributed tracing) que mapeia requisições atravessando múltiplos serviços (Lambda, ECS, API Gateway), identificando gargalos de latência.",
+    "syntax": "aws xray get-trace-summaries --start-time <timestamp> --end-time <timestamp>",
+    "example": "aws xray get-trace-summaries --start-time $(date -d '-1 hour' +%s) --end-time $(date +%s)",
+    "result": "Lista os traces do período, cada um mostrando a duração total e o tempo gasto em cada serviço atravessado pela requisição.",
+    "notes": [
+      "Requer instrumentação do código com o X-Ray SDK (ou auto-instrumentação em Lambda) para gerar os segmentos de trace."
+    ],
+    "bestPractices": [
+      "Use X-Ray em arquiteturas de microsserviços/serverless para identificar qual serviço específico está causando latência em uma cadeia de chamadas."
+    ],
+    "relatedCommands": ["aws-cloudwatch-logs-tail", "aws-lambda-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html",
+    "externalReferences": [],
+    "tags": ["aws", "x-ray", "observabilidade", "tracing"],
+    "keywords": ["aws x-ray", "distributed tracing aws", "rastreamento distribuido"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-codepipeline",
+    "category": "AWS",
+    "subcategory": "CI/CD",
+    "title": "AWS CodePipeline / CodeBuild / CodeDeploy",
+    "description": "Trio de serviços nativos de CI/CD da AWS: CodePipeline orquestra os estágios, CodeBuild compila/testa, e CodeDeploy realiza o deploy em EC2, ECS ou Lambda.",
+    "syntax": "aws codepipeline create-pipeline --pipeline file://<pipeline.json>\naws codebuild create-project --cli-input-json file://<project.json>",
+    "example": "aws codepipeline create-pipeline --pipeline file://pipeline.json",
+    "result": "Um pipeline com estágios (Source, Build, Deploy) é criado, disparado automaticamente a cada push no repositório de origem configurado.",
+    "notes": [
+      "CodeDeploy suporta estratégias de deploy avançadas como blue/green e canary nativamente, sem scripts adicionais."
+    ],
+    "bestPractices": [
+      "Use CodePipeline quando o time já opera inteiramente dentro do ecossistema AWS; para setups multi-cloud, GitHub Actions ou GitLab CI costumam ser mais portáveis."
+    ],
+    "relatedCommands": ["aws-cloudformation-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html",
+    "externalReferences": [],
+    "tags": ["aws", "codepipeline", "ci-cd"],
+    "keywords": ["codepipeline", "codebuild", "codedeploy", "ci cd aws nativo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-systems-manager-session-manager",
+    "category": "AWS",
+    "subcategory": "Systems Manager",
+    "title": "AWS Systems Manager — Session Manager",
+    "description": "Permite abrir uma sessão de shell segura em uma instância EC2 sem precisar de SSH aberto, chave pública ou IP público, via IAM e o agente SSM.",
+    "syntax": "aws ssm start-session --target <instance-id>",
+    "example": "aws ssm start-session --target i-0abcd1234efgh5678",
+    "result": "Uma sessão de terminal interativa é aberta na instância, autenticada e autorizada inteiramente via políticas IAM.",
+    "notes": [
+      "A instância precisa ter o agente SSM instalado e uma role IAM com a policy `AmazonSSMManagedInstanceCore` anexada."
+    ],
+    "bestPractices": [
+      "Prefira Session Manager a manter a porta 22 (SSH) aberta publicamente em grupos de segurança, reduzindo a superfície de ataque."
+    ],
+    "commonMistakes": [
+      "Manter regras de Security Group liberando SSH de `0.0.0.0/0` quando o Session Manager elimina essa necessidade."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances", "aws-systems-manager-parameter-store"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html",
+    "externalReferences": [],
+    "tags": ["aws", "systems manager", "ssm", "seguranca"],
+    "keywords": ["session manager aws", "ssm start-session", "acesso ec2 sem ssh"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-systems-manager-parameter-store",
+    "category": "AWS",
+    "subcategory": "Systems Manager",
+    "title": "AWS Systems Manager — Parameter Store",
+    "description": "Armazenamento gerenciado e gratuito (na camada Standard) de configurações e segredos como pares chave-valor hierárquicos, com versionamento e criptografia opcional via KMS.",
+    "syntax": "aws ssm put-parameter --name <caminho> --value <valor> --type SecureString\naws ssm get-parameter --name <caminho> --with-decryption",
+    "example": "aws ssm put-parameter --name /minha-app/prod/db-password --value \"s3nh4\" --type SecureString\naws ssm get-parameter --name /minha-app/prod/db-password --with-decryption",
+    "result": "O parâmetro é salvo criptografado; `get-parameter --with-decryption` retorna o valor original em texto plano, sujeito a permissão IAM.",
+    "notes": [
+      "Diferente do Secrets Manager (pago, com rotação automática nativa), o Parameter Store Standard é gratuito e mais simples, mas sem rotação automática."
+    ],
+    "bestPractices": [
+      "Use nomes hierárquicos (`/app/ambiente/chave`) para organizar parâmetros e aplicar políticas IAM por prefixo de caminho."
+    ],
+    "commonMistakes": [
+      "Salvar segredos como tipo `String` em vez de `SecureString`, deixando-os em texto plano no armazenamento."
+    ],
+    "relatedCommands": [
+      "aws-secretsmanager-get-secret",
+      "aws-systems-manager-session-manager"
+    ],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html",
+    "externalReferences": [],
+    "tags": ["aws", "parameter store", "ssm", "configuracao"],
+    "keywords": [
+      "parameter store aws",
+      "ssm put-parameter",
+      "configuracao gerenciada aws"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-cloudtrail",
+    "category": "AWS",
+    "subcategory": "Auditoria",
+    "title": "AWS CloudTrail",
+    "description": "Registra automaticamente todas as chamadas de API feitas na conta AWS (console, CLI, SDKs), incluindo quem fez, quando e de onde, essencial para auditoria e investigação de incidentes.",
+    "syntax": "aws cloudtrail lookup-events --lookup-attributes AttributeKey=<atributo>,AttributeValue=<valor>",
+    "example": "aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=DeleteBucket",
+    "result": "Lista os eventos que correspondem ao filtro, incluindo o usuário/role que executou a ação, o timestamp e o IP de origem.",
+    "notes": [
+      "CloudTrail fica habilitado por padrão para os últimos 90 dias (Event History); para retenção maior, é preciso criar um 'Trail' com destino em S3."
+    ],
+    "bestPractices": [
+      "Configure um Trail persistente com logs enviados a um bucket S3 com versionamento e acesso restrito, para investigações que exijam histórico maior que 90 dias."
+    ],
+    "commonMistakes": [
+      "Assumir que o CloudTrail está gravando um histórico ilimitado sem configurar um Trail dedicado, perdendo eventos após 90 dias."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html",
+    "externalReferences": [],
+    "tags": ["aws", "cloudtrail", "auditoria", "seguranca"],
+    "keywords": ["cloudtrail", "auditoria aws", "log de api calls"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-waf",
+    "category": "AWS",
+    "subcategory": "Segurança",
+    "title": "AWS WAF (Web Application Firewall)",
+    "description": "Firewall de camada de aplicação que filtra tráfego HTTP/HTTPS malicioso (SQL injection, XSS, bots) antes que chegue ao CloudFront, ALB ou API Gateway, via regras configuráveis.",
+    "syntax": "aws wafv2 create-web-acl --name <nome> --scope REGIONAL --default-action Allow={} --rules file://<regras.json>",
+    "example": "aws wafv2 create-web-acl --name protecao-api --scope REGIONAL --default-action Allow={} --rules file://regras.json",
+    "result": "Uma Web ACL é criada, associável a um ALB, API Gateway ou CloudFront distribution, filtrando requisições conforme as regras definidas.",
+    "notes": [
+      "A AWS oferece 'Managed Rule Groups' prontos (ex: proteção contra OWASP Top 10) que podem ser adicionados sem escrever regras do zero."
+    ],
+    "bestPractices": [
+      "Comece novas regras em modo 'Count' (só registra, não bloqueia) antes de mudar para 'Block', evitando falsos positivos em produção."
+    ],
+    "relatedCommands": ["aws-cloudfront-invalidate", "aws-elb-create"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html",
+    "externalReferences": [],
+    "tags": ["aws", "waf", "seguranca"],
+    "keywords": ["aws waf", "web application firewall", "protecao contra sql injection"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-elastic-beanstalk",
+    "category": "AWS",
+    "subcategory": "Elastic Beanstalk",
+    "title": "AWS Elastic Beanstalk",
+    "description": "Plataforma como serviço (PaaS) que provisiona automaticamente EC2, load balancer, auto scaling e monitoramento a partir de um pacote de aplicação, sem gerenciar cada recurso manualmente.",
+    "syntax": "eb init\neb create <nome-do-ambiente>\neb deploy",
+    "example": "eb init minha-app --platform node.js --region us-east-1\neb create producao\neb deploy",
+    "result": "Um ambiente completo (EC2 + ELB + Auto Scaling Group) é provisionado e a aplicação é implantada automaticamente.",
+    "notes": [
+      "Beanstalk é uma camada de abstração sobre recursos padrão da AWS (visíveis e editáveis individualmente se necessário), diferente de serviços totalmente serverless."
+    ],
+    "bestPractices": [
+      "Use Beanstalk para aplicações monolíticas tradicionais que precisam subir rápido sem configurar infraestrutura manualmente; para microsserviços, prefira ECS/EKS."
+    ],
+    "relatedCommands": ["aws-ec2-run-instances", "aws-elb-create"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "EB CLI",
+    "officialDocumentation": "https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html",
+    "externalReferences": [],
+    "tags": ["aws", "elastic beanstalk", "paas"],
+    "keywords": ["elastic beanstalk", "eb deploy", "paas aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-organizations",
+    "category": "AWS",
+    "subcategory": "Governança",
+    "title": "AWS Organizations",
+    "description": "Gerencia múltiplas contas AWS centralizadamente, aplicando políticas de controle (SCPs), consolidando faturamento e organizando contas em unidades organizacionais (OUs).",
+    "syntax": "aws organizations create-account --email <email> --account-name <nome>\naws organizations create-policy --content file://<scp.json> --type SERVICE_CONTROL_POLICY",
+    "example": "aws organizations create-account --email conta-staging@empresa.com --account-name Staging",
+    "result": "Uma nova conta AWS é provisionada dentro da organização, herdando as políticas de controle (SCPs) aplicadas à sua unidade organizacional.",
+    "notes": [
+      "SCPs definem o teto máximo de permissões possível para uma conta — mesmo um usuário admin não pode exceder o que a SCP permite."
+    ],
+    "bestPractices": [
+      "Separe contas por ambiente (dev/staging/prod) e por time, usando SCPs para impedir ações de risco (ex: desabilitar CloudTrail) mesmo por administradores."
+    ],
+    "relatedCommands": ["aws-iam-least-privilege"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html",
+    "externalReferences": [],
+    "tags": ["aws", "organizations", "governanca", "multi-conta"],
+    "keywords": ["aws organizations", "scp", "multi-account", "governanca aws"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "aws-config",
+    "category": "AWS",
+    "subcategory": "Governança",
+    "title": "AWS Config",
+    "description": "Monitora e registra continuamente o estado de configuração dos recursos AWS, avaliando-os contra regras (ex: 'buckets S3 não podem ser públicos') e alertando sobre não conformidade.",
+    "syntax": "aws configservice put-config-rule --config-rule file://<regra.json>\naws configservice get-compliance-details-by-config-rule --config-rule-name <nome>",
+    "example": "aws configservice get-compliance-details-by-config-rule --config-rule-name s3-bucket-public-read-prohibited",
+    "result": "Lista os recursos avaliados pela regra e seu status de conformidade (COMPLIANT/NON_COMPLIANT), com histórico de mudanças de configuração.",
+    "notes": [
+      "Diferente do CloudTrail (registra ações/API calls), o Config registra o estado resultante da configuração dos recursos ao longo do tempo."
+    ],
+    "bestPractices": [
+      "Habilite regras gerenciadas prontas (ex: detecção de buckets públicos, volumes não criptografados) antes de escrever regras customizadas via Lambda."
+    ],
+    "relatedCommands": ["aws-cloudtrail", "aws-iam-least-privilege"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "CLI v2",
+    "officialDocumentation": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html",
+    "externalReferences": [],
+    "tags": ["aws", "config", "compliance", "governanca"],
+    "keywords": ["aws config", "compliance aws", "conformidade de recursos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

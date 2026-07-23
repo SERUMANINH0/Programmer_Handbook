@@ -118,5 +118,1473 @@
     "keywords": ["stash", "guardar alteracoes", "wip"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "git-init",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git init",
+    "description": "Cria um novo repositório Git vazio no diretório atual, iniciando o versionamento.",
+    "syntax": "git init [diretorio]",
+    "example": "git init meu-projeto",
+    "result": "Initialized empty Git repository in /caminho/meu-projeto/.git/",
+    "parameters": [
+      {
+        "name": "diretorio",
+        "description": "Pasta onde o repositório será criado; se omitido, usa o diretório atual.",
+        "required": false
+      }
+    ],
+    "flags": [
+      {
+        "flag": "-b",
+        "description": "Define o nome do branch inicial (ex: -b main)."
+      }
+    ],
+    "notes": [
+      "Cria a pasta oculta `.git` que armazena todo o histórico e a configuração do repositório."
+    ],
+    "bestPractices": [
+      "Configure `git init -b main` para já nascer com o branch padrão correto, evitando renomear depois."
+    ],
+    "commonMistakes": [
+      "Rodar `git init` dentro de uma pasta que já é subdiretório de outro repositório, criando repositórios aninhados."
+    ],
+    "relatedCommands": ["git-clone", "git-config", "git-status"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-init",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "init"],
+    "keywords": ["git init", "criar repositorio", "novo repositorio git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-clone",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git clone",
+    "description": "Copia um repositório remoto (e todo seu histórico) para uma pasta local, já configurando o remote `origin`.",
+    "syntax": "git clone <url> [pasta-destino]",
+    "example": "git clone https://github.com/usuario/projeto.git",
+    "result": "Cloning into 'projeto'...\nremote: Enumerating objects... done.\nReceiving objects: 100% (120/120), done.",
+    "flags": [
+      {
+        "flag": "--depth",
+        "description": "Clona apenas os N commits mais recentes (shallow clone), reduzindo tempo e espaço."
+      },
+      {
+        "flag": "-b",
+        "description": "Clona já apontando para um branch específico em vez do branch padrão."
+      }
+    ],
+    "notes": ["O remote `origin` já vem apontando automaticamente para a URL clonada."],
+    "bestPractices": [
+      "Use `--depth 1` em pipelines de CI que só precisam do código atual, sem histórico completo."
+    ],
+    "commonMistakes": [
+      "Clonar repositórios grandes sem `--depth` em ambientes com pouca banda, deixando o clone extremamente lento."
+    ],
+    "relatedCommands": ["git-init", "git-remote", "git-fetch"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-clone",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "clone"],
+    "keywords": ["git clone", "clonar repositorio", "baixar repositorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-add",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git add",
+    "description": "Move alterações do working directory para a staging area (index), preparando-as para o próximo commit.",
+    "syntax": "git add <arquivo|padrao>",
+    "example": "git add src/utils/auth.ts",
+    "result": "Nenhuma saída no terminal; `git status` passa a listar o arquivo como \"Changes to be committed\".",
+    "parameters": [
+      {
+        "name": "arquivo",
+        "description": "Caminho do arquivo, pasta ou padrão glob a ser adicionado.",
+        "required": true
+      }
+    ],
+    "flags": [
+      {
+        "flag": ".",
+        "description": "Adiciona todas as mudanças do diretório atual em diante."
+      },
+      {
+        "flag": "-A",
+        "description": "Adiciona todas as mudanças do repositório inteiro (incluindo remoções)."
+      },
+      {
+        "flag": "-p",
+        "description": "Modo interativo (patch), permitindo escolher trechos (hunks) de cada arquivo."
+      }
+    ],
+    "notes": [
+      "`git add -p` é útil para dividir um arquivo com mudanças não relacionadas em commits separados."
+    ],
+    "bestPractices": [
+      "Revise `git status` e `git diff --staged` antes de commitar para conferir exatamente o que foi adicionado."
+    ],
+    "commonMistakes": [
+      "Usar `git add .` sem revisar e acabar commitando arquivos temporários ou credenciais por engano."
+    ],
+    "relatedCommands": ["git-status", "git-commit", "git-diff"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-add",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "staging"],
+    "keywords": ["git add", "staging area", "adicionar arquivos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-status",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git status",
+    "description": "Mostra o estado atual do working directory e da staging area: arquivos modificados, staged, untracked e o branch atual.",
+    "syntax": "git status [-s]",
+    "example": "git status -s",
+    "result": " M src/app.ts\n?? notas.txt",
+    "flags": [
+      {
+        "flag": "-s",
+        "description": "Formato curto (short), uma linha por arquivo com código de status."
+      }
+    ],
+    "notes": [
+      "No formato curto, `M` = modificado, `A` = adicionado, `??` = untracked, `D` = deletado."
+    ],
+    "bestPractices": [
+      "Rode `git status` com frequência, especialmente antes de `add`, `commit` e `checkout`."
+    ],
+    "commonMistakes": [
+      "Ignorar o status e assumir o que está staged, causando commits incompletos."
+    ],
+    "relatedCommands": ["git-add", "git-diff", "git-commit"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-status",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "status"],
+    "keywords": ["git status", "estado do repositorio", "arquivos modificados"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-push",
+    "category": "Git",
+    "subcategory": "Colaboração",
+    "title": "git push",
+    "description": "Envia os commits locais de um branch para o repositório remoto correspondente.",
+    "syntax": "git push [remote] [branch]",
+    "example": "git push origin main",
+    "result": "To github.com:usuario/projeto.git\n   1a2b3c4..5d6e7f8  main -> main",
+    "flags": [
+      {
+        "flag": "-u",
+        "description": "Define o upstream (rastreamento) do branch local com o remoto, permitindo usar só `git push` depois."
+      },
+      {
+        "flag": "--force-with-lease",
+        "description": "Sobrescreve o histórico remoto, mas aborta se alguém mais fez push antes de você (mais seguro que --force)."
+      }
+    ],
+    "notes": [
+      "Sem upstream configurado, o Git recusa `git push` sozinho e pede para especificar remote e branch."
+    ],
+    "bestPractices": [
+      "Prefira `--force-with-lease` a `--force` puro para não sobrescrever silenciosamente o trabalho de outra pessoa."
+    ],
+    "commonMistakes": [
+      "Usar `git push --force` em branches compartilhados sem avisar o time, apagando commits alheios."
+    ],
+    "relatedCommands": ["git-pull", "git-fetch", "git-remote"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-push",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "push", "colaboracao"],
+    "keywords": ["git push", "enviar commits", "subir alteracoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-pull",
+    "category": "Git",
+    "subcategory": "Colaboração",
+    "title": "git pull",
+    "description": "Busca as mudanças do repositório remoto e as integra ao branch local, equivalente a `git fetch` seguido de `git merge` (ou `rebase`).",
+    "syntax": "git pull [remote] [branch]",
+    "example": "git pull origin main",
+    "result": "Updating 1a2b3c4..5d6e7f8\nFast-forward\n src/app.ts | 4 ++--",
+    "flags": [
+      {
+        "flag": "--rebase",
+        "description": "Em vez de criar um merge commit, reaplica seus commits locais sobre o topo do remoto."
+      }
+    ],
+    "notes": [
+      "Se o histórico local e remoto divergiram, `git pull` sem `--rebase` cria um merge commit automático."
+    ],
+    "bestPractices": [
+      "Use `git pull --rebase` para manter um histórico linear em times que preferem evitar merge commits desnecessários."
+    ],
+    "commonMistakes": [
+      "Fazer `git pull` com alterações não commitadas e gerar conflitos desnecessários; melhor commitar ou dar stash antes."
+    ],
+    "relatedCommands": ["git-fetch", "git-merge", "git-push"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-pull",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "pull", "colaboracao"],
+    "keywords": ["git pull", "baixar alteracoes", "atualizar branch"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-fetch",
+    "category": "Git",
+    "subcategory": "Colaboração",
+    "title": "git fetch",
+    "description": "Baixa commits, branches e tags do repositório remoto sem integrá-los automaticamente ao branch atual.",
+    "syntax": "git fetch [remote]",
+    "example": "git fetch origin",
+    "result": "remote: Counting objects: 12, done.\n   1a2b3c4..5d6e7f8  main -> origin/main",
+    "notes": [
+      "Diferente de `git pull`, `git fetch` só atualiza as referências remotas (ex: `origin/main`), sem mexer no branch local."
+    ],
+    "bestPractices": [
+      "Use `git fetch` seguido de `git log main..origin/main` para revisar o que mudou antes de integrar."
+    ],
+    "commonMistakes": [
+      "Confundir `fetch` com `pull` e esperar que o branch local seja atualizado automaticamente."
+    ],
+    "relatedCommands": ["git-pull", "git-merge", "git-remote"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-fetch",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "fetch", "colaboracao"],
+    "keywords": ["git fetch", "buscar alteracoes remotas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-branch",
+    "category": "Git",
+    "subcategory": "Branches",
+    "title": "git branch",
+    "description": "Lista, cria, renomeia ou remove branches locais.",
+    "syntax": "git branch [nome] | git branch -d <nome>",
+    "example": "git branch feature/checkout",
+    "result": "Nenhuma saída; o branch é criado apontando para o commit atual (mas o HEAD não muda para ele).",
+    "flags": [
+      { "flag": "-d", "description": "Remove um branch já mesclado (safe delete)." },
+      {
+        "flag": "-D",
+        "description": "Força a remoção de um branch, mesmo sem estar mesclado."
+      },
+      { "flag": "-m", "description": "Renomeia o branch atual." },
+      { "flag": "-a", "description": "Lista branches locais e remotos." }
+    ],
+    "notes": [
+      "`git branch` sem argumentos apenas lista os branches locais, destacando o atual com `*`."
+    ],
+    "bestPractices": [
+      "Use nomes de branch descritivos com prefixo (feature/, fix/, chore/) para facilitar organização."
+    ],
+    "commonMistakes": [
+      "Tentar `-d` em um branch com commits não mesclados e ignorar o aviso, usando `-D` sem revisar antes."
+    ],
+    "relatedCommands": ["git-checkout", "git-switch", "git-merge"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-branch",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "branch"],
+    "keywords": ["git branch", "criar branch", "listar branches", "deletar branch"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-checkout",
+    "category": "Git",
+    "subcategory": "Branches",
+    "title": "git checkout",
+    "description": "Comando multiuso para trocar de branch, restaurar arquivos do working directory ou navegar para um commit específico (detached HEAD).",
+    "syntax": "git checkout <branch> | git checkout -- <arquivo>",
+    "example": "git checkout -b feature/login",
+    "result": "Switched to a new branch 'feature/login'",
+    "flags": [
+      {
+        "flag": "-b",
+        "description": "Cria e já troca para o novo branch em um único comando."
+      },
+      {
+        "flag": "--",
+        "description": "Descarta mudanças locais de um arquivo, restaurando a versão do último commit."
+      }
+    ],
+    "notes": [
+      "Desde o Git 2.23, as responsabilidades de `checkout` foram divididas entre `git switch` (branches) e `git restore` (arquivos), mais explícitos."
+    ],
+    "bestPractices": [
+      "Prefira `git switch` e `git restore` em vez de `checkout` quando disponível, por serem mais claros sobre a intenção."
+    ],
+    "commonMistakes": [
+      "Usar `git checkout -- arquivo` achando que é reversível como um stash — na verdade descarta a mudança permanentemente."
+    ],
+    "relatedCommands": ["git-switch", "git-branch", "git-stash"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-checkout",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "checkout", "branch"],
+    "keywords": ["git checkout", "trocar de branch", "descartar alteracoes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-switch",
+    "category": "Git",
+    "subcategory": "Branches",
+    "title": "git switch",
+    "description": "Comando moderno e explícito (Git 2.23+) dedicado exclusivamente à troca entre branches, substituindo parte das funções de `git checkout`.",
+    "syntax": "git switch <branch> | git switch -c <novo-branch>",
+    "example": "git switch -c fix/bug-login",
+    "result": "Switched to a new branch 'fix/bug-login'",
+    "flags": [
+      { "flag": "-c", "description": "Cria e troca para um novo branch." },
+      {
+        "flag": "-",
+        "description": "Volta para o branch anterior, como um 'voltar' rápido."
+      }
+    ],
+    "notes": [
+      "`git switch -` funciona de forma análoga ao `cd -` do shell, alternando entre os dois últimos branches usados."
+    ],
+    "bestPractices": [
+      "Adote `git switch` no lugar de `checkout` para trocar de branch — reduz ambiguidade em scripts e no dia a dia."
+    ],
+    "commonMistakes": [
+      "Tentar usar `git switch` para restaurar arquivos (essa é a função de `git restore`, não de `switch`)."
+    ],
+    "relatedCommands": ["git-checkout", "git-branch"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.23+",
+    "officialDocumentation": "https://git-scm.com/docs/git-switch",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "switch", "branch"],
+    "keywords": ["git switch", "trocar branch", "novo branch"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-merge",
+    "category": "Git",
+    "subcategory": "Branches",
+    "title": "git merge",
+    "description": "Integra o histórico de um branch no branch atual, criando um merge commit (ou fazendo fast-forward quando possível).",
+    "syntax": "git merge <branch>",
+    "example": "git merge feature/checkout",
+    "result": "Merge made by the 'ort' strategy.\n src/checkout.ts | 30 +++++++++++++++",
+    "flags": [
+      {
+        "flag": "--no-ff",
+        "description": "Sempre cria um merge commit, mesmo quando um fast-forward seria possível."
+      },
+      {
+        "flag": "--abort",
+        "description": "Cancela um merge em andamento e retorna ao estado anterior."
+      }
+    ],
+    "notes": [
+      "Fast-forward acontece quando o branch atual não tem commits próprios além do ponto em que divergiu — o ponteiro apenas avança."
+    ],
+    "bestPractices": [
+      "Use `--no-ff` para preservar no histórico o contexto de que uma feature foi desenvolvida em branch separado."
+    ],
+    "commonMistakes": [
+      "Fazer merge de branches desatualizados sem antes dar `pull`/`fetch`, gerando conflitos evitáveis."
+    ],
+    "relatedCommands": ["git-rebase-interactive", "git-branch", "git-log"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-merge",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "merge", "branch"],
+    "keywords": ["git merge", "mesclar branches", "fast-forward"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-merge-conflicts",
+    "category": "Git",
+    "subcategory": "Fluxo de trabalho",
+    "title": "Resolvendo conflitos de merge",
+    "description": "Processo de identificar e corrigir manualmente trechos onde o Git não consegue combinar automaticamente alterações concorrentes de dois branches.",
+    "syntax": "<<<<<<< HEAD\n<versao atual>\n=======\n<versao do outro branch>\n>>>>>>> branch-nome",
+    "example": "git status  # lista arquivos em conflito\n# editar o arquivo removendo os marcadores <<<<<<<, =======, >>>>>>>\ngit add arquivo.ts\ngit commit",
+    "result": "Após resolver todos os conflitos e commitar, o merge (ou rebase) é finalizado normalmente.",
+    "notes": [
+      "Os marcadores `<<<<<<<`, `=======` e `>>>>>>>` indicam onde o Git não conseguiu decidir automaticamente qual versão manter."
+    ],
+    "bestPractices": [
+      "Use `git diff` durante o conflito para entender as duas versões antes de decidir como combiná-las.",
+      "Ferramentas visuais (`git mergetool`, VS Code, GitKraken) facilitam a resolução em conflitos complexos."
+    ],
+    "commonMistakes": [
+      "Esquecer de remover os marcadores de conflito antes de commitar, deixando código quebrado no histórico.",
+      "Resolver o conflito escolhendo só um lado sem revisar se a lógica das duas mudanças deveria ser combinada."
+    ],
+    "relatedCommands": ["git-merge", "git-rebase-interactive", "git-diff"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-merge#_how_to_resolve_conflicts",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "conflito", "merge"],
+    "keywords": ["conflito de merge", "resolver conflito git", "merge conflict"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-log",
+    "category": "Git",
+    "subcategory": "Histórico",
+    "title": "git log",
+    "description": "Exibe o histórico de commits do branch atual, com autor, data, hash e mensagem.",
+    "syntax": "git log [opcoes]",
+    "example": "git log --oneline --graph --decorate -10",
+    "result": "* 5d6e7f8 (HEAD -> main) feat: adiciona autenticação\n* 1a2b3c4 fix: corrige validação de email",
+    "flags": [
+      {
+        "flag": "--oneline",
+        "description": "Mostra um commit por linha, formato resumido."
+      },
+      {
+        "flag": "--graph",
+        "description": "Desenha a topologia de branches e merges em ASCII."
+      },
+      { "flag": "-p", "description": "Mostra o diff completo de cada commit." },
+      { "flag": "--author", "description": "Filtra commits por autor." }
+    ],
+    "notes": [
+      "`git log --oneline --graph --all` é uma combinação popular para visualizar todo o histórico de branches."
+    ],
+    "bestPractices": [
+      "Crie um alias (`git lg`) para a combinação de flags que você mais usa no dia a dia."
+    ],
+    "commonMistakes": [
+      "Rodar `git log` sem paginação em repositórios grandes e perder tempo navegando no pager (`q` sai do less)."
+    ],
+    "relatedCommands": ["git-diff", "git-blame", "git-reflog"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-log",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "log", "historico"],
+    "keywords": ["git log", "historico de commits", "ver commits"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-diff",
+    "category": "Git",
+    "subcategory": "Histórico",
+    "title": "git diff",
+    "description": "Mostra as diferenças linha a linha entre working directory, staging area, commits ou branches.",
+    "syntax": "git diff [opcoes] [<commit1>] [<commit2>]",
+    "example": "git diff --staged",
+    "result": "diff --git a/src/app.ts b/src/app.ts\n+  console.log(\"novo log\")",
+    "flags": [
+      {
+        "flag": "--staged",
+        "description": "Mostra o diff entre a staging area e o último commit (também aceita --cached)."
+      },
+      {
+        "flag": "HEAD~1",
+        "description": "Compara o working directory com um commit específico ou anterior."
+      }
+    ],
+    "notes": [
+      "Sem argumentos, `git diff` compara o working directory com a staging area (mudanças ainda não adicionadas)."
+    ],
+    "bestPractices": [
+      "Revise `git diff --staged` sempre antes de commitar, como último checkpoint do que vai entrar no snapshot."
+    ],
+    "commonMistakes": [
+      "Confundir `git diff` (não staged) com `git diff --staged` (staged) e revisar o conteúdo errado."
+    ],
+    "relatedCommands": ["git-status", "git-add", "git-log"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-diff",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "diff"],
+    "keywords": ["git diff", "comparar alteracoes", "ver mudancas"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-reset",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git reset",
+    "description": "Move o ponteiro do branch atual para outro commit, com três modos que controlam o que acontece com staging area e working directory.",
+    "syntax": "git reset [--soft|--mixed|--hard] <commit>",
+    "example": "git reset --soft HEAD~1",
+    "result": "O último commit é desfeito, mas as mudanças voltam para a staging area (prontas para recommitar).",
+    "flags": [
+      {
+        "flag": "--soft",
+        "description": "Move o HEAD, mantém staging area e working directory intactos."
+      },
+      {
+        "flag": "--mixed",
+        "description": "Move o HEAD e limpa a staging area, mas preserva o working directory (padrão)."
+      },
+      {
+        "flag": "--hard",
+        "description": "Move o HEAD e descarta todas as mudanças, tanto staged quanto no working directory."
+      }
+    ],
+    "notes": [
+      "`--hard` é destrutivo e irreversível para mudanças não commitadas — use com extrema cautela."
+    ],
+    "bestPractices": [
+      "Prefira `git revert` em vez de `reset --hard` em commits já enviados a um branch compartilhado."
+    ],
+    "commonMistakes": [
+      "Usar `git reset --hard` sem ter certeza do commit alvo, perdendo trabalho não commitado permanentemente."
+    ],
+    "relatedCommands": ["git-revert", "git-reflog", "git-checkout"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-reset",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "reset"],
+    "keywords": ["git reset", "desfazer commit", "reset soft hard mixed"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-revert",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git revert",
+    "description": "Cria um novo commit que desfaz as alterações de um commit anterior, sem reescrever o histórico existente.",
+    "syntax": "git revert <commit>",
+    "example": "git revert 1a2b3c4",
+    "result": "[main 9f8e7d6] Revert \"feat: adiciona autenticação de usuário\"\n 2 files changed, 40 deletions(-)",
+    "flags": [
+      {
+        "flag": "--no-commit",
+        "description": "Aplica o revert na staging area sem criar o commit automaticamente, permitindo revisar antes."
+      }
+    ],
+    "notes": [
+      "Ao contrário de `reset`, o `revert` é seguro para commits já enviados, pois não apaga histórico."
+    ],
+    "bestPractices": [
+      "Prefira `git revert` a `reset --hard` para desfazer mudanças em branches compartilhados como main/master."
+    ],
+    "commonMistakes": [
+      "Tentar reverter um merge commit sem especificar `-m` para indicar qual linha de pai (parent) manter."
+    ],
+    "relatedCommands": ["git-reset", "git-log", "git-cherry-pick"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-revert",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "revert"],
+    "keywords": ["git revert", "desfazer commit sem reescrever", "reverter alteracao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-tag",
+    "category": "Git",
+    "subcategory": "Releases",
+    "title": "git tag",
+    "description": "Marca um commit específico com um rótulo fixo, tipicamente usado para versionar releases (ex: v1.0.0).",
+    "syntax": "git tag [-a] <nome> [-m \"<mensagem>\"]",
+    "example": "git tag -a v1.2.0 -m \"Release 1.2.0\"",
+    "result": "Nenhuma saída; a tag anotada v1.2.0 passa a existir apontando para o commit atual.",
+    "flags": [
+      {
+        "flag": "-a",
+        "description": "Cria uma tag anotada (com autor, data e mensagem), recomendada para releases."
+      },
+      { "flag": "-d", "description": "Remove uma tag local." }
+    ],
+    "notes": [
+      "Tags não são enviadas ao remoto automaticamente com `git push` — é preciso `git push --tags` ou `git push origin <tag>`."
+    ],
+    "bestPractices": [
+      "Siga Semantic Versioning (MAJOR.MINOR.PATCH) e use tags anotadas (`-a`) para releases oficiais."
+    ],
+    "commonMistakes": [
+      "Criar tags leves (sem `-a`) para releases, perdendo metadados como autor e mensagem."
+    ],
+    "relatedCommands": ["git-log", "git-push"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-tag",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "tag", "release"],
+    "keywords": ["git tag", "versionar release", "marcar commit"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-remote",
+    "category": "Git",
+    "subcategory": "Colaboração",
+    "title": "git remote",
+    "description": "Gerencia as conexões com repositórios remotos (adicionar, listar, remover, renomear).",
+    "syntax": "git remote [add|remove|rename|-v] <nome> [url]",
+    "example": "git remote add upstream https://github.com/org/projeto-original.git",
+    "result": "Nenhuma saída; `git remote -v` passa a listar 'upstream' junto de 'origin'.",
+    "flags": [
+      { "flag": "-v", "description": "Lista os remotes com suas URLs (fetch e push)." },
+      { "flag": "add", "description": "Adiciona um novo remote com nome e URL." }
+    ],
+    "notes": [
+      "É comum usar `upstream` como convenção para o repositório original em fluxos de fork."
+    ],
+    "bestPractices": [
+      "Mantenha `origin` apontando para seu fork e `upstream` para o repositório original ao contribuir em open source."
+    ],
+    "commonMistakes": [
+      "Dar push acidental para `upstream` em vez de `origin` por não conferir o remote antes do comando."
+    ],
+    "relatedCommands": ["git-clone", "git-fetch", "git-push"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-remote",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "remote"],
+    "keywords": ["git remote", "adicionar remoto", "upstream origin"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-cherry-pick",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git cherry-pick",
+    "description": "Aplica um commit específico de outro branch no branch atual, sem trazer o restante do histórico daquele branch.",
+    "syntax": "git cherry-pick <commit>",
+    "example": "git cherry-pick 5d6e7f8",
+    "result": "[main a1b2c3d] fix: corrige validação de CPF",
+    "notes": [
+      "Cria um novo commit com hash diferente, mas mesmo conteúdo e mensagem do commit original."
+    ],
+    "bestPractices": [
+      "Use para levar hotfixes pontuais entre branches sem fazer merge completo de features não relacionadas."
+    ],
+    "commonMistakes": [
+      "Cherry-pickar commits com dependências de outros commits do branch original, causando erros ou conflitos."
+    ],
+    "relatedCommands": ["git-rebase-interactive", "git-merge", "git-log"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-cherry-pick",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "cherry-pick"],
+    "keywords": ["git cherry-pick", "aplicar commit especifico", "portar commit"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-blame",
+    "category": "Git",
+    "subcategory": "Histórico",
+    "title": "git blame",
+    "description": "Mostra, linha a linha de um arquivo, qual foi o último commit (e autor) que a modificou.",
+    "syntax": "git blame <arquivo>",
+    "example": "git blame src/utils/auth.ts",
+    "result": "1a2b3c4 (Maria Silva 2026-06-10 12:00:00) export function login() {",
+    "flags": [
+      {
+        "flag": "-L",
+        "description": "Restringe a análise a um intervalo de linhas específico."
+      }
+    ],
+    "notes": [
+      "Apesar do nome, o objetivo não é 'culpar' ninguém — é rastrear contexto histórico de uma mudança."
+    ],
+    "bestPractices": [
+      "Use `-L` para focar apenas nas linhas relevantes em arquivos grandes, evitando saída excessiva."
+    ],
+    "commonMistakes": [
+      "Assumir que a linha sempre reflete a intenção original do autor, ignorando que pode ter sido movida por refatoração."
+    ],
+    "relatedCommands": ["git-log", "git-diff"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-blame",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "blame"],
+    "keywords": ["git blame", "quem alterou a linha", "historico de linha"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-bisect",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git bisect",
+    "description": "Usa busca binária sobre o histórico de commits para encontrar automaticamente qual commit introduziu um bug.",
+    "syntax": "git bisect start\ngit bisect bad\ngit bisect good <commit>",
+    "example": "git bisect start\ngit bisect bad\ngit bisect good v1.0.0\n# testar e marcar cada commit sugerido como 'good' ou 'bad'",
+    "result": "1a2b3c4 is the first bad commit",
+    "notes": [
+      "A cada passo o Git faz checkout automático de um commit no meio do intervalo restante para você testar."
+    ],
+    "bestPractices": [
+      "Combine com `git bisect run <script>` para automatizar completamente a busca com um teste que retorna código de saída."
+    ],
+    "commonMistakes": [
+      "Esquecer de rodar `git bisect reset` ao final, deixando o repositório em estado de detached HEAD."
+    ],
+    "relatedCommands": ["git-log", "git-checkout"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-bisect",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "bisect", "debug"],
+    "keywords": ["git bisect", "encontrar commit com bug", "busca binaria git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-submodule",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git submodule",
+    "description": "Referencia outro repositório Git como uma pasta dentro do repositório atual, apontando para um commit fixo.",
+    "syntax": "git submodule add <url> <pasta>",
+    "example": "git submodule add https://github.com/org/lib-compartilhada.git libs/compartilhada",
+    "result": "Cloning into 'libs/compartilhada'...\nO arquivo .gitmodules é criado registrando o submódulo.",
+    "notes": [
+      "Ao clonar um repositório com submódulos, é preciso `git submodule update --init --recursive` para baixá-los."
+    ],
+    "bestPractices": [
+      "Documente no README que o repositório usa submódulos e o comando necessário para inicializá-los."
+    ],
+    "commonMistakes": [
+      "Esquecer de commitar a atualização do ponteiro do submódulo após alterá-lo, deixando o time em uma versão desatualizada."
+    ],
+    "relatedCommands": ["git-clone", "git-worktree"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.5.3+",
+    "officialDocumentation": "https://git-scm.com/docs/git-submodule",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "submodule"],
+    "keywords": ["git submodule", "repositorio dentro de repositorio", "dependencia git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-worktree",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git worktree",
+    "description": "Cria uma pasta adicional vinculada ao mesmo repositório, permitindo ter múltiplos branches com checkout simultâneo, sem clonar de novo.",
+    "syntax": "git worktree add <pasta> <branch>",
+    "example": "git worktree add ../projeto-hotfix hotfix/urgente",
+    "result": "Preparing worktree (checking out 'hotfix/urgente')\nHEAD is now at 5d6e7f8 fix urgente",
+    "notes": [
+      "Cada worktree compartilha o mesmo histórico e objetos do repositório original, economizando espaço em disco."
+    ],
+    "bestPractices": [
+      "Use worktrees para trabalhar em um hotfix urgente sem precisar dar stash no trabalho em andamento do branch atual."
+    ],
+    "commonMistakes": [
+      "Tentar fazer checkout do mesmo branch em dois worktrees ao mesmo tempo — o Git bloqueia essa operação."
+    ],
+    "relatedCommands": ["git-branch", "git-clone"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.5+",
+    "officialDocumentation": "https://git-scm.com/docs/git-worktree",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "worktree"],
+    "keywords": [
+      "git worktree",
+      "multiplos branches simultaneos",
+      "pasta de trabalho extra"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-clean",
+    "category": "Git",
+    "subcategory": "Fluxo de trabalho",
+    "title": "git clean",
+    "description": "Remove arquivos untracked (não versionados) do working directory, útil para limpar builds e temporários esquecidos.",
+    "syntax": "git clean [-n|-f] [-d]",
+    "example": "git clean -nd",
+    "result": "Would remove dist/\nWould remove tmp.log",
+    "flags": [
+      {
+        "flag": "-n",
+        "description": "Modo dry-run: mostra o que seria removido, sem apagar nada."
+      },
+      { "flag": "-f", "description": "Força a remoção efetiva dos arquivos untracked." },
+      { "flag": "-d", "description": "Inclui diretórios untracked, não só arquivos." },
+      { "flag": "-x", "description": "Remove também arquivos ignorados pelo .gitignore." }
+    ],
+    "notes": [
+      "Arquivos removidos com `git clean -f` NÃO vão para a lixeira nem podem ser recuperados pelo Git."
+    ],
+    "bestPractices": [
+      "Sempre rode com `-n` primeiro para conferir a lista antes de usar `-f` de fato."
+    ],
+    "commonMistakes": [
+      "Rodar `git clean -fdx` sem revisar antes e apagar arquivos de configuração local não versionados por engano."
+    ],
+    "relatedCommands": ["git-status", "git-reset"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-clean",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "clean"],
+    "keywords": ["git clean", "remover arquivos untracked", "limpar working directory"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-config",
+    "category": "Git",
+    "subcategory": "Configuração",
+    "title": "git config",
+    "description": "Lê ou define configurações do Git em três níveis: sistema, global (usuário) e local (repositório).",
+    "syntax": "git config [--global] <chave> <valor>",
+    "example": "git config --global user.name \"Maria Silva\"\ngit config --global user.email \"maria@exemplo.com\"",
+    "result": "Nenhuma saída; as configurações passam a valer para todos os repositórios do usuário.",
+    "flags": [
+      {
+        "flag": "--global",
+        "description": "Aplica a configuração para todos os repositórios do usuário atual."
+      },
+      {
+        "flag": "--local",
+        "description": "Aplica só ao repositório atual (padrão quando executado dentro de um repo)."
+      },
+      {
+        "flag": "--list",
+        "description": "Lista todas as configurações ativas e sua origem."
+      }
+    ],
+    "notes": [
+      "Configurações locais (por repositório) sempre têm prioridade sobre as globais."
+    ],
+    "bestPractices": [
+      "Configure `user.name` e `user.email` logo após instalar o Git, antes do primeiro commit."
+    ],
+    "commonMistakes": [
+      "Commitar com o e-mail pessoal errado por não configurar `user.email` localmente em um repositório corporativo."
+    ],
+    "relatedCommands": ["git-init", "git-commit"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-config",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "config"],
+    "keywords": ["git config", "configurar usuario git", "user.name user.email"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-gitignore",
+    "category": "Git",
+    "subcategory": "Configuração",
+    "title": ".gitignore",
+    "description": "Arquivo de texto que lista padrões de arquivos e pastas que o Git deve ignorar, nunca rastreando nem sugerindo adicioná-los.",
+    "syntax": "<padrao>\n!<excecao>\n<pasta>/",
+    "example": "node_modules/\n.env\ndist/\n*.log\n!important.log",
+    "result": "Arquivos e pastas listados somem de `git status` e não podem ser adicionados com `git add` (a menos que forçado com -f).",
+    "notes": [
+      "O `.gitignore` só afeta arquivos ainda não rastreados; arquivos já commitados continuam sendo versionados."
+    ],
+    "bestPractices": [
+      "Use templates prontos (github.com/github/gitignore) como ponto de partida para cada linguagem/framework.",
+      "Nunca versione `.env` ou arquivos com segredos — sempre adicione ao .gitignore desde o primeiro commit."
+    ],
+    "commonMistakes": [
+      "Adicionar um arquivo ao .gitignore depois de ele já ter sido commitado, sem rodar `git rm --cached` para efetivamente pará-lo de ser rastreado."
+    ],
+    "relatedCommands": ["git-rm", "git-add", "git-status"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/gitignore",
+    "externalReferences": [
+      {
+        "label": "Coleção oficial de templates .gitignore",
+        "url": "https://github.com/github/gitignore"
+      }
+    ],
+    "tags": ["git", "vcs", "gitignore"],
+    "keywords": ["gitignore", "ignorar arquivos git", "nao versionar"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-reflog",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git reflog",
+    "description": "Mostra um registro local de todos os movimentos do HEAD (commits, resets, rebases, checkouts), servindo como rede de segurança para recuperar trabalho 'perdido'.",
+    "syntax": "git reflog",
+    "example": "git reflog",
+    "result": "5d6e7f8 HEAD@{0}: commit: feat: adiciona autenticação\n1a2b3c4 HEAD@{1}: reset: moving to HEAD~1",
+    "notes": [
+      "O reflog é local e temporário (expira por padrão após 90 dias) — não é compartilhado via push/pull."
+    ],
+    "bestPractices": [
+      "Use `git reflog` como primeiro recurso ao 'perder' commits após um `reset --hard` ou rebase mal feito."
+    ],
+    "commonMistakes": [
+      "Assumir que commits removidos por `reset --hard` estão perdidos para sempre, sem verificar o reflog antes."
+    ],
+    "relatedCommands": ["git-reset", "git-rebase-interactive"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-reflog",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "reflog", "recuperacao"],
+    "keywords": ["git reflog", "recuperar commit perdido", "historico de HEAD"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-rm",
+    "category": "Git",
+    "subcategory": "Comandos básicos",
+    "title": "git rm",
+    "description": "Remove um arquivo do working directory e o marca para remoção na próxima commit (staging).",
+    "syntax": "git rm [--cached] <arquivo>",
+    "example": "git rm --cached .env",
+    "result": "rm '.env'",
+    "flags": [
+      {
+        "flag": "--cached",
+        "description": "Remove o arquivo apenas do controle de versão, mantendo-o no disco local."
+      },
+      { "flag": "-r", "description": "Remove diretórios recursivamente." }
+    ],
+    "notes": [
+      "`git rm --cached` é o comando certo para parar de rastrear um arquivo que foi commitado por engano, mantendo-o localmente."
+    ],
+    "bestPractices": [
+      "Combine `git rm --cached` com a adição do arquivo ao `.gitignore` para evitar que volte a ser rastreado."
+    ],
+    "commonMistakes": [
+      "Usar `git rm` (sem --cached) achando que só vai parar de versionar, e acabar apagando o arquivo do disco também."
+    ],
+    "relatedCommands": ["git-gitignore", "git-add", "git-status"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-rm",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "rm"],
+    "keywords": ["git rm", "remover arquivo do git", "parar de rastrear arquivo"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-lfs",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "Git LFS (Large File Storage)",
+    "description": "Extensão que substitui arquivos binários grandes (imagens, vídeos, modelos) por ponteiros de texto leves no repositório, armazenando o conteúdo real em um servidor separado sob demanda.",
+    "syntax": "git lfs install\ngit lfs track \"<padrao>\"\ngit add .gitattributes",
+    "example": "git lfs install\ngit lfs track \"*.psd\"\ngit add .gitattributes\ngit add design.psd\ngit commit -m \"feat: adiciona arquivo de design\"",
+    "result": "O repositório passa a versionar apenas um ponteiro para `design.psd`; o binário real é enviado ao storage do LFS no push.",
+    "notes": [
+      "Sem `git lfs install` configurado, um clone normal do repositório baixa apenas os ponteiros, não o conteúdo real dos arquivos rastreados."
+    ],
+    "bestPractices": [
+      "Configure `git lfs track` antes de adicionar arquivos binários grandes, nunca depois de já commitados sem LFS no histórico."
+    ],
+    "commonMistakes": [
+      "Adicionar arquivos binários grandes ao Git normal (sem LFS), inchando o histórico do repositório permanentemente."
+    ],
+    "relatedCommands": ["git-gitignore", "git-add"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "Git LFS 3.x",
+    "officialDocumentation": "https://git-lfs.com/",
+    "externalReferences": [],
+    "tags": ["git", "lfs", "arquivos grandes"],
+    "keywords": ["git lfs", "large file storage", "versionar arquivos grandes git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-hooks",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "Git Hooks",
+    "description": "Scripts locais (em `.git/hooks/`) executados automaticamente em determinados eventos do Git (antes de um commit, antes de um push, após um merge), usados para validações e automações.",
+    "syntax": ".git/hooks/<nome-do-hook>  # ex: pre-commit, pre-push, commit-msg",
+    "example": "#!/bin/sh\n# .git/hooks/pre-commit\nnpm run lint || exit 1",
+    "result": "Toda tentativa de `git commit` roda o lint primeiro; se ele falhar (exit code != 0), o commit é abortado.",
+    "notes": [
+      "Hooks em `.git/hooks/` não são versionados por padrão; ferramentas como Husky copiam hooks para dentro do repositório e os instalam automaticamente via um script de `postinstall`."
+    ],
+    "bestPractices": [
+      "Use uma ferramenta como Husky ou pre-commit para versionar e compartilhar hooks entre todos os membros do time."
+    ],
+    "commonMistakes": [
+      "Depender de hooks locais não versionados para garantir qualidade, assumindo que todo o time os configurou manualmente."
+    ],
+    "relatedCommands": ["git-commit", "git-push"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.0+",
+    "officialDocumentation": "https://git-scm.com/docs/githooks",
+    "externalReferences": [],
+    "tags": ["git", "hooks", "automacao"],
+    "keywords": ["git hooks", "pre-commit hook", "husky git hooks"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-sparse-checkout",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git sparse-checkout",
+    "description": "Faz checkout apenas de uma parte da árvore de arquivos de um repositório, útil em monorepos grandes onde clonar/baixar tudo seria desnecessário e lento.",
+    "syntax": "git sparse-checkout init --cone\ngit sparse-checkout set <pasta1> <pasta2>",
+    "example": "git clone --filter=blob:none --sparse https://github.com/org/monorepo.git\ncd monorepo\ngit sparse-checkout set packages/api",
+    "result": "Apenas os arquivos dentro de `packages/api` (além dos da raiz) aparecem no working directory, mesmo o repositório tendo dezenas de outros pacotes.",
+    "notes": [
+      "Combinado com `--filter=blob:none` no clone, evita até baixar o conteúdo de blobs fora do escopo definido, acelerando bastante o clone inicial."
+    ],
+    "bestPractices": [
+      "Use sparse-checkout em monorepos grandes quando o time só precisa trabalhar em um subconjunto específico de pastas no dia a dia."
+    ],
+    "commonMistakes": [
+      "Configurar sparse-checkout depois de um clone completo já feito, sem perceber que o benefício de economia de banda só vale para clones novos com `--filter`."
+    ],
+    "relatedCommands": ["git-clone"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.25+",
+    "officialDocumentation": "https://git-scm.com/docs/git-sparse-checkout",
+    "externalReferences": [],
+    "tags": ["git", "sparse-checkout", "monorepo"],
+    "keywords": ["git sparse checkout", "clone parcial git", "monorepo git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-notes",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git notes",
+    "description": "Anexa metadados a um commit existente sem alterar seu hash SHA, útil para adicionar informações posteriores (ex: resultado de CI, revisão) sem reescrever histórico.",
+    "syntax": "git notes add -m \"<mensagem>\" <commit>\ngit notes show <commit>",
+    "example": "git notes add -m \"Aprovado em code review por @maria\" HEAD~2",
+    "result": "A nota fica associada ao commit `HEAD~2`, visível com `git log --show-notes` ou `git notes show`, sem alterar o hash do commit original.",
+    "notes": [
+      "Notes não são transferidas automaticamente em `git push`/`git fetch`; requerem refspec explícito (`refs/notes/*`) para sincronizar entre repositórios."
+    ],
+    "bestPractices": [
+      "Use notes para anotações que surgem depois do commit (status de deploy, aprovação) em vez de tentar reescrever a mensagem original do commit."
+    ],
+    "commonMistakes": [
+      "Esperar que `git notes` sincronize automaticamente com `git push`/`pull` como qualquer outra ref, sem configurar o refspec necessário."
+    ],
+    "relatedCommands": ["git-log", "git-commit"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.6+",
+    "officialDocumentation": "https://git-scm.com/docs/git-notes",
+    "externalReferences": [],
+    "tags": ["git", "notes", "metadados"],
+    "keywords": ["git notes", "anotar commit", "metadados de commit"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-describe",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git describe",
+    "description": "Gera um identificador legível para o commit atual baseado na tag anotada mais próxima, seguida do número de commits à frente dela e um hash abreviado.",
+    "syntax": "git describe [--tags] [--dirty]",
+    "example": "git describe --tags --dirty",
+    "result": "v2.3.0-14-gA1b2c3d",
+    "notes": [
+      "O formato `<tag>-<N>-g<hash>` indica: última tag alcançável, N commits à frente dela, e o hash abreviado do commit atual.",
+      "`--dirty` adiciona um sufixo se houver mudanças não commitadas no working directory."
+    ],
+    "bestPractices": [
+      "Use `git describe` em scripts de build para gerar versões automáticas legíveis a partir de tags, sem precisar hardcodear números de versão."
+    ],
+    "commonMistakes": [
+      "Rodar `git describe` sem `--tags` em um repositório que só tem tags leves (lightweight), recebendo erro por padrão considerar apenas tags anotadas."
+    ],
+    "relatedCommands": ["git-tag", "git-log"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-describe",
+    "externalReferences": [],
+    "tags": ["git", "describe", "versionamento"],
+    "keywords": ["git describe", "versao a partir de tag", "identificador de build git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-commit-signing",
+    "category": "Git",
+    "subcategory": "Segurança",
+    "title": "Assinatura de commits (git commit -S / GPG)",
+    "description": "Assina digitalmente commits e tags com uma chave GPG (ou SSH), permitindo verificar criptograficamente que foram realmente criados por quem diz ser o autor.",
+    "syntax": "git config --global user.signingkey <id-da-chave>\ngit commit -S -m \"<mensagem>\"",
+    "example": "git config --global commit.gpgsign true\ngit commit -m \"feat: adiciona validacao de cpf\"",
+    "result": "Todo commit passa a ser assinado automaticamente; plataformas como GitHub exibem o selo 'Verified' ao lado do commit.",
+    "notes": [
+      "Desde versões recentes do Git, também é possível assinar com uma chave SSH (`gpg.format = ssh`) em vez de GPG, reaproveitando a chave já usada para autenticação."
+    ],
+    "bestPractices": [
+      "Habilite `commit.gpgsign true` globalmente em vez de lembrar de usar `-S` manualmente em cada commit."
+    ],
+    "commonMistakes": [
+      "Configurar a chave de assinatura errada (não correspondente ao e-mail do Git), fazendo commits aparecerem como 'Unverified' mesmo assinados."
+    ],
+    "relatedCommands": ["git-commit", "git-config", "git-tag"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---gpg-sign",
+    "externalReferences": [],
+    "tags": ["git", "seguranca", "gpg", "assinatura"],
+    "keywords": ["git commit -s", "assinar commit gpg", "verified commit github"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-gitattributes",
+    "category": "Git",
+    "subcategory": "Configuração",
+    "title": ".gitattributes",
+    "description": "Arquivo que define atributos por padrão de caminho, controlando normalização de line endings, estratégia de merge, diff binário e quais arquivos o Git LFS deve rastrear.",
+    "syntax": "<padrao> <atributo>=<valor>",
+    "example": "* text=auto eol=lf\n*.png binary\n*.psd filter=lfs diff=lfs merge=lfs -text\npackage-lock.json -diff",
+    "result": "Arquivos de texto são normalizados para LF ao serem commitados; `.png` é tratado como binário (sem diff textual); `package-lock.json` é ignorado em diffs.",
+    "notes": [
+      "`text=auto eol=lf` é uma prática comum para evitar problemas de line ending (CRLF vs LF) entre colaboradores Windows e Linux/macOS."
+    ],
+    "bestPractices": [
+      "Versione um `.gitattributes` na raiz de todo repositório com colaboradores em sistemas operacionais diferentes, evitando diffs gigantes causados só por mudança de line ending."
+    ],
+    "commonMistakes": [
+      "Não definir `.gitattributes`, deixando o line ending de arquivos de texto inconsistente entre commits de diferentes sistemas operacionais."
+    ],
+    "relatedCommands": ["git-gitignore", "git-lfs"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/gitattributes",
+    "externalReferences": [],
+    "tags": ["git", "gitattributes", "configuracao"],
+    "keywords": ["gitattributes", "line ending git", "eol lf crlf git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-format-patch",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git format-patch / git am",
+    "description": "Gera arquivos de patch a partir de commits (`format-patch`) e os aplica em outro repositório (`am`), preservando autor, mensagem e data — base do fluxo de contribuição por e-mail usado em projetos como o Kernel Linux.",
+    "syntax": "git format-patch <base>..<head>\ngit am <arquivo.patch>",
+    "example": "git format-patch main..feature/checkout -o ./patches\ngit am ./patches/0001-feat-adiciona-checkout.patch",
+    "result": "Um arquivo `.patch` por commit é gerado; `git am` os aplica no repositório de destino recriando os commits originais com autor e mensagem preservados.",
+    "notes": [
+      "Diferente de `git diff` (que gera um patch sem metadados), `format-patch` inclui informações completas de commit, compatíveis com `git am`."
+    ],
+    "bestPractices": [
+      "Use esse fluxo em projetos que aceitam contribuições via lista de e-mail em vez de pull request (padrão de alguns projetos open source de infraestrutura)."
+    ],
+    "commonMistakes": [
+      "Aplicar um patch gerado a partir de uma base muito divergente do repositório de destino, gerando conflitos difíceis de resolver com `git am`."
+    ],
+    "relatedCommands": ["git-diff", "git-cherry-pick"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-format-patch",
+    "externalReferences": [],
+    "tags": ["git", "format-patch", "email workflow"],
+    "keywords": ["git format-patch", "git am", "patch por email git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-gc-fsck",
+    "category": "Git",
+    "subcategory": "Manutenção",
+    "title": "git gc e git fsck",
+    "description": "`git gc` compacta objetos soltos em pacotes e remove lixo (garbage collection) para otimizar espaço e performance; `git fsck` verifica a integridade do banco de objetos, detectando corrupção.",
+    "syntax": "git gc [--aggressive]\ngit fsck [--full]",
+    "example": "git gc --aggressive\ngit fsck --full",
+    "result": "`git gc` reduz o tamanho do `.git` compactando objetos; `git fsck` reporta qualquer objeto corrompido ou inacessível encontrado no repositório.",
+    "notes": [
+      "O Git roda `gc` automaticamente em background sob certas condições (muitos objetos soltos); a execução manual raramente é necessária no dia a dia."
+    ],
+    "bestPractices": [
+      "Rode `git fsck` ao suspeitar de corrupção do repositório (ex: após uma queda de energia durante uma operação) antes de tentar outras correções."
+    ],
+    "commonMistakes": [
+      "Rodar `git gc --aggressive` rotineiramente em repositórios grandes, já que é uma operação pesada e raramente necessária com essa frequência."
+    ],
+    "relatedCommands": ["git-reflog"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-gc",
+    "externalReferences": [],
+    "tags": ["git", "manutencao", "gc", "fsck"],
+    "keywords": [
+      "git gc",
+      "git fsck",
+      "compactar repositorio git",
+      "verificar integridade git"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-rerere",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git rerere (reuse recorded resolution)",
+    "description": "Grava automaticamente como um conflito de merge foi resolvido e reaplica a mesma resolução se o conflito idêntico aparecer novamente, útil em rebases longos ou merges repetidos entre os mesmos branches.",
+    "syntax": "git config --global rerere.enabled true",
+    "example": "git config --global rerere.enabled true\ngit rebase main  # ao resolver um conflito, a resolução fica gravada\n# em um rebase futuro com o mesmo conflito, o Git a reaplica automaticamente",
+    "result": "Conflitos idênticos que já foram resolvidos manualmente uma vez passam a ser resolvidos automaticamente nas próximas ocorrências.",
+    "notes": [
+      "Especialmente útil ao rebasear repetidamente um branch de longa duração contra `main`, evitando resolver o mesmo conflito várias vezes."
+    ],
+    "bestPractices": [
+      "Habilite `rerere.enabled` globalmente uma vez; ele fica silenciosamente ativo, sem exigir nenhuma ação extra no dia a dia."
+    ],
+    "commonMistakes": [
+      "Não perceber que uma resolução automática do rerere está incorreta, replicando um erro de resolução de conflito sem revisão."
+    ],
+    "relatedCommands": ["git-merge-conflicts", "git-rebase-interactive"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.5+",
+    "officialDocumentation": "https://git-scm.com/docs/git-rerere",
+    "externalReferences": [],
+    "tags": ["git", "rerere", "merge conflicts"],
+    "keywords": [
+      "git rerere",
+      "reaplicar resolucao conflito",
+      "reuse recorded resolution"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-shortlog",
+    "category": "Git",
+    "subcategory": "Histórico",
+    "title": "git shortlog",
+    "description": "Resume o histórico de commits agrupado por autor, útil para gerar changelogs e relatórios de contribuição.",
+    "syntax": "git shortlog [-s] [-n] [<intervalo>]",
+    "example": "git shortlog -sn v1.0.0..v1.1.0",
+    "result": "  23  Maria Silva\n  14  João Santos\n   5  Ana Costa",
+    "flags": [
+      {
+        "flag": "-s",
+        "description": "Mostra apenas a contagem de commits por autor, sem listar as mensagens."
+      },
+      {
+        "flag": "-n",
+        "description": "Ordena os autores por número de commits, do maior para o menor."
+      }
+    ],
+    "notes": [
+      "Aceita os mesmos intervalos de revisão que `git log` (ex: `v1.0.0..v1.1.0`), útil para relatórios de release."
+    ],
+    "bestPractices": [
+      "Use `git shortlog -sn <tag-anterior>..<tag-atual>` para gerar rapidamente a lista de contribuintes de uma release."
+    ],
+    "commonMistakes": [
+      "Interpretar a contagem como medida de produtividade — número de commits não reflete tamanho ou impacto do trabalho."
+    ],
+    "relatedCommands": ["git-log", "git-tag"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-shortlog",
+    "externalReferences": [],
+    "tags": ["git", "vcs", "shortlog", "changelog"],
+    "keywords": ["git shortlog", "commits por autor", "changelog git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-bundle",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git bundle",
+    "description": "Empacota commits, branches e tags em um único arquivo binário portátil, permitindo transferir histórico do Git sem rede (via pendrive, e-mail) ou fazer backup offline.",
+    "syntax": "git bundle create <arquivo.bundle> <branch|intervalo>\ngit clone <arquivo.bundle> <pasta>",
+    "example": "git bundle create backup.bundle --all\ngit clone backup.bundle projeto-restaurado",
+    "result": "O arquivo `backup.bundle` contém todo o histórico de todos os branches; `git clone` a partir dele recria um repositório completo funcional.",
+    "notes": [
+      "Um bundle pode ser verificado com `git bundle verify <arquivo>` antes de confiar nele para restauração."
+    ],
+    "bestPractices": [
+      "Use bundles para transferir alterações a ambientes sem acesso à rede (air-gapped) ou como backup adicional fora do provedor Git remoto."
+    ],
+    "commonMistakes": [
+      "Criar um bundle sem `--all` esperando que ele contenha todos os branches, quando na verdade só empacota as refs especificadas."
+    ],
+    "relatedCommands": ["git-clone", "git-fetch"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.0+",
+    "officialDocumentation": "https://git-scm.com/docs/git-bundle",
+    "externalReferences": [],
+    "tags": ["git", "bundle", "backup"],
+    "keywords": ["git bundle", "backup de repositorio git", "transferir git sem rede"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-subtree",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git subtree",
+    "description": "Incorpora o histórico de outro repositório dentro de uma subpasta do repositório atual, como alternativa a submodules que não exige clone separado nem inicialização adicional pelos colaboradores.",
+    "syntax": "git subtree add --prefix=<pasta> <url> <branch> --squash",
+    "example": "git subtree add --prefix=libs/compartilhada https://github.com/org/lib-compartilhada.git main --squash",
+    "result": "O conteúdo da branch `main` do repositório externo é copiado (com histórico squashed) para dentro de `libs/compartilhada`, versionado normalmente junto do resto do projeto.",
+    "notes": [
+      "Diferente de submodules, os arquivos ficam fisicamente no repositório principal — quem clona não precisa de nenhum passo extra para ter o conteúdo completo."
+    ],
+    "bestPractices": [
+      "Prefira subtree a submodule quando o time preferir simplicidade de clone/checkout em vez de manter o histórico externo separado."
+    ],
+    "commonMistakes": [
+      "Editar diretamente os arquivos dentro da pasta do subtree sem depois usar `git subtree push` para propagar as mudanças de volta ao repositório original."
+    ],
+    "relatedCommands": ["git-submodule"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "1.7.11+",
+    "officialDocumentation": "https://git-scm.com/docs/git-subtree",
+    "externalReferences": [],
+    "tags": ["git", "subtree", "dependencia"],
+    "keywords": ["git subtree", "alternativa a submodule", "incorporar repositorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-range-diff",
+    "category": "Git",
+    "subcategory": "Avançado",
+    "title": "git range-diff",
+    "description": "Compara duas versões de uma mesma série de commits (ex: antes e depois de um rebase interativo), mostrando o que mudou em cada commit correspondente entre as duas versões.",
+    "syntax": "git range-diff <base1>..<head1> <base2>..<head2>",
+    "example": "git range-diff main..feature-antiga main..feature-nova",
+    "result": "Uma lista dos commits pareados entre as duas séries, destacando quais são idênticos, quais tiveram o conteúdo alterado e quais foram adicionados/removidos.",
+    "notes": [
+      "Muito usado para revisar o efeito de um `rebase -i` ou `push --force-with-lease`, confirmando que só as mudanças pretendidas foram feitas."
+    ],
+    "bestPractices": [
+      "Rode `git range-diff` antes de um `push --force` após um rebase, para confirmar exatamente o que mudou em relação à versão anterior enviada."
+    ],
+    "commonMistakes": [
+      "Confundir `range-diff` com `git diff` simples entre dois branches — range-diff compara commit a commit pareado, não o diff agregado final."
+    ],
+    "relatedCommands": ["git-rebase-interactive", "git-diff"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.19+",
+    "officialDocumentation": "https://git-scm.com/docs/git-range-diff",
+    "externalReferences": [],
+    "tags": ["git", "range-diff", "rebase"],
+    "keywords": ["git range-diff", "comparar series de commits", "revisar rebase"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "git-maintenance",
+    "category": "Git",
+    "subcategory": "Manutenção",
+    "title": "git maintenance",
+    "description": "Agenda e executa tarefas de manutenção do repositório (gc, prefetch de remotos, otimização do commit-graph) em background, de forma mais granular e configurável que `git gc` isolado.",
+    "syntax": "git maintenance start\ngit maintenance run --task=<tarefa>",
+    "example": "git maintenance start",
+    "result": "Tarefas de manutenção (gc, commit-graph, prefetch, loose-objects, incremental-repack) passam a rodar automaticamente em background, conforme agendamento do sistema operacional.",
+    "notes": [
+      "`git maintenance start` registra as tarefas no agendador do SO (cron no Linux/macOS, Agendador de Tarefas no Windows)."
+    ],
+    "bestPractices": [
+      "Prefira `git maintenance start` a chamadas manuais e esporádicas de `git gc` em repositórios grandes usados diariamente."
+    ],
+    "commonMistakes": [
+      "Rodar `git maintenance start` em múltiplos repositórios sem perceber o acúmulo de tarefas agendadas concorrentes em máquinas com muitos repositórios locais."
+    ],
+    "relatedCommands": ["git-gc-fsck"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "2.30+",
+    "officialDocumentation": "https://git-scm.com/docs/git-maintenance",
+    "externalReferences": [],
+    "tags": ["git", "manutencao", "maintenance"],
+    "keywords": ["git maintenance", "manutencao automatica git", "agendar gc git"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

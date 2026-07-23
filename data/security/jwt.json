@@ -19,7 +19,7 @@
       "Confiar no conteúdo do payload sem verificar a assinatura, permitindo que um token forjado seja aceito.",
       "Armazenar o JWT em localStorage sem considerar o risco de XSS (cookies httpOnly costumam ser mais seguros)."
     ],
-    "relatedCommands": ["jwt-verify-signature", "oauth-flows"],
+    "relatedCommands": ["jwt-verify-signature", "jwt-oauth2-oidc-relation"],
     "difficulty": "intermediario",
     "platform": ["agnostic"],
     "version": "RFC 7519",
@@ -58,5 +58,324 @@
     "keywords": ["verificar assinatura jwt", "jwt verify", "hs256 rs256"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "jwt-refresh-tokens",
+    "category": "JWT",
+    "subcategory": "Sessão",
+    "title": "Access Token vs Refresh Token",
+    "description": "Padrão que combina um Access Token de vida curta (usado em cada requisição) com um Refresh Token de vida longa (usado só para obter um novo Access Token), reduzindo o impacto de um token vazado.",
+    "syntax": "POST /token/refresh { refreshToken } → { accessToken, refreshToken }",
+    "example": "const { accessToken } = await fetch(\"/token/refresh\", {\n  method: \"POST\",\n  body: JSON.stringify({ refreshToken }),\n}).then(r => r.json())",
+    "result": "Um novo Access Token de curta duração é emitido sem exigir que o usuário faça login novamente.",
+    "notes": [
+      "O Access Token costuma expirar em minutos; o Refresh Token, em dias ou semanas, e geralmente é armazenado em cookie httpOnly."
+    ],
+    "bestPractices": [
+      "Rotacione o Refresh Token a cada uso (refresh token rotation), invalidando o anterior, para detectar reuso indevido."
+    ],
+    "commonMistakes": [
+      "Dar ao Access Token uma expiração longa 'para simplificar', eliminando a vantagem de conter o dano de um vazamento."
+    ],
+    "relatedCommands": ["jwt-token-revocation", "jwt-client-storage"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc6749#section-1.5",
+    "externalReferences": [],
+    "tags": ["jwt", "seguranca", "refresh-token"],
+    "keywords": ["refresh token", "access token", "renovar sessao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-token-revocation",
+    "category": "JWT",
+    "subcategory": "Sessão",
+    "title": "Revogação de tokens (blacklist)",
+    "description": "Estratégias para invalidar um JWT antes de sua expiração natural, já que o token por si só é stateless e válido até o `exp`, mesmo após logout.",
+    "syntax": "Denylist: SET token_id EX <segundos-restantes> em um cache (Redis)",
+    "example": "await redis.set(`revoked:${jti}`, \"1\", \"EX\", tempoRestanteAteExpirar)",
+    "result": "Requisições subsequentes com esse `jti` (token ID) são rejeitadas mesmo com assinatura válida.",
+    "notes": [
+      "Uma denylist (blacklist) reintroduz estado no servidor, um trade-off consciente contra o benefício stateless do JWT puro."
+    ],
+    "bestPractices": [
+      "Prefira expirações curtas de Access Token combinadas com revogação apenas do Refresh Token, evitando checar uma denylist em toda requisição."
+    ],
+    "commonMistakes": [
+      "Assumir que 'fazer logout' invalida o token automaticamente — sem uma denylist, o JWT continua válido até expirar."
+    ],
+    "relatedCommands": ["jwt-refresh-tokens", "jwt-stateless-vs-stateful"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519",
+    "externalReferences": [],
+    "tags": ["jwt", "seguranca", "revogacao"],
+    "keywords": ["revogar jwt", "blacklist token", "logout jwt"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-client-storage",
+    "category": "JWT",
+    "subcategory": "Segurança",
+    "title": "Onde armazenar o token no cliente",
+    "description": "Compara as opções de armazenamento de um JWT no navegador — localStorage/sessionStorage vs cookie httpOnly — e os riscos de segurança associados a cada uma.",
+    "syntax": "localStorage.setItem(\"token\", jwt)  // acessível via JS\ndocument.cookie  // cookie httpOnly não é acessível via JS",
+    "example": "// Servidor define o cookie na resposta:\nSet-Cookie: token=eyJhbGci...; HttpOnly; Secure; SameSite=Strict",
+    "result": "Um cookie httpOnly não pode ser lido por JavaScript, reduzindo o risco de roubo via XSS.",
+    "notes": [
+      "localStorage é vulnerável a XSS (qualquer script malicioso injetado pode lê-lo); cookies são vulneráveis a CSRF se não usarem `SameSite`."
+    ],
+    "bestPractices": [
+      "Combine cookie httpOnly + Secure + SameSite=Strict/Lax para o Refresh Token, mitigando XSS e CSRF simultaneamente."
+    ],
+    "commonMistakes": [
+      "Guardar o token em localStorage 'porque é mais simples de acessar no fetch', ignorando a superfície de ataque de XSS."
+    ],
+    "relatedCommands": ["jwt-refresh-tokens", "http-cookies-set-cookie"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html",
+    "externalReferences": [],
+    "tags": ["jwt", "seguranca", "armazenamento"],
+    "keywords": ["localstorage vs cookie", "onde guardar jwt", "xss csrf jwt"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-jwks",
+    "category": "JWT",
+    "subcategory": "Validação",
+    "title": "JWKS (JSON Web Key Set)",
+    "description": "Endpoint público que expõe as chaves públicas usadas para verificar assinaturas de JWTs assinados com algoritmos assimétricos (RS256, ES256), permitindo rotação de chaves sem redistribuir segredos manualmente.",
+    "syntax": "GET /.well-known/jwks.json → { keys: [{ kid, kty, n, e, ... }] }",
+    "example": "const { data: jwks } = await axios.get(\"https://auth.exemplo.com/.well-known/jwks.json\")\nconst chave = jwks.keys.find(k => k.kid === header.kid)",
+    "result": "A aplicação verificadora busca a chave pública correspondente ao `kid` (Key ID) do header do token e a usa para validar a assinatura.",
+    "notes": [
+      "O header do JWT inclui `kid`, indicando qual chave do JWKS foi usada para assiná-lo — essencial quando há rotação de múltiplas chaves ativas."
+    ],
+    "bestPractices": [
+      "Faça cache do JWKS localmente com um TTL curto, evitando buscar o endpoint a cada validação de token."
+    ],
+    "commonMistakes": [
+      "Fixar (hardcode) uma única chave pública no código, quebrando a validação assim que o provedor de identidade rotaciona as chaves."
+    ],
+    "relatedCommands": ["jwt-verify-signature", "jwt-symmetric-vs-asymmetric-keys"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "RFC 7517",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7517",
+    "externalReferences": [],
+    "tags": ["jwt", "jwks", "chaves publicas"],
+    "keywords": ["jwks", "json web key set", "rotacao de chaves"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-standard-claims",
+    "category": "JWT",
+    "subcategory": "Fundamentos",
+    "title": "Claims padrão (iss, sub, aud, exp, iat, nbf)",
+    "description": "Conjunto de claims registradas pelo RFC 7519 com significado convencional, usadas para identificar emissor, destinatário e validade temporal do token.",
+    "syntax": "{ \"iss\": \"...\", \"sub\": \"...\", \"aud\": \"...\", \"exp\": 0, \"iat\": 0, \"nbf\": 0 }",
+    "example": "{\n  \"iss\": \"https://auth.exemplo.com\",\n  \"sub\": \"usuario-123\",\n  \"aud\": \"api.exemplo.com\",\n  \"exp\": 1735689600,\n  \"iat\": 1735686000\n}",
+    "result": "Bibliotecas de verificação usam essas claims para rejeitar automaticamente tokens expirados, de emissor desconhecido ou destinados a outra audiência.",
+    "parameters": [
+      {
+        "name": "iss",
+        "description": "Issuer — quem emitiu o token.",
+        "required": false
+      },
+      {
+        "name": "sub",
+        "description": "Subject — a quem o token se refere (geralmente o ID do usuário).",
+        "required": false
+      },
+      {
+        "name": "aud",
+        "description": "Audience — para qual API/serviço o token é destinado.",
+        "required": false
+      },
+      {
+        "name": "exp",
+        "description": "Expiration — timestamp Unix após o qual o token é inválido.",
+        "required": false
+      },
+      {
+        "name": "nbf",
+        "description": "Not Before — timestamp antes do qual o token ainda não é válido.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "Claims customizadas (não padrão) devem evitar nomes reservados e, idealmente, usar um namespace próprio para não colidir com futuras claims registradas."
+    ],
+    "bestPractices": [
+      "Sempre valide `exp` e, quando aplicável, `aud` e `iss` — muitas vulnerabilidades vêm de validar só a assinatura e ignorar essas claims."
+    ],
+    "commonMistakes": [
+      "Não validar `aud`, permitindo que um token emitido para um serviço seja aceito indevidamente por outro."
+    ],
+    "relatedCommands": ["jwt-structure", "jwt-verify-signature"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "RFC 7519",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519#section-4.1",
+    "externalReferences": [],
+    "tags": ["jwt", "claims", "fundamentos"],
+    "keywords": ["claims jwt", "iss sub aud exp", "claims padrao"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-stateless-vs-stateful",
+    "category": "JWT",
+    "subcategory": "Fundamentos",
+    "title": "Autenticação stateless (JWT) vs stateful (sessão)",
+    "description": "Compara dois modelos de autenticação: sessões tradicionais (servidor guarda o estado, cliente só tem um ID de sessão) vs JWT (o próprio token carrega os dados, servidor não guarda nada).",
+    "syntax": "Sessão: cookie session_id → lookup no servidor (Redis/banco)\nJWT: cookie/header com token → dados decodificados direto do token",
+    "example": "Sessão: `req.session.userId` após consultar o Redis pelo `session_id` do cookie.\nJWT: `jwt.decode(token).sub` sem nenhuma consulta ao banco.",
+    "result": "JWT elimina a necessidade de um armazenamento central de sessões, facilitando escalar horizontalmente sem sticky sessions.",
+    "notes": [
+      "O trade-off principal: revogar uma sessão é trivial (apagar do Redis); revogar um JWT exige mecanismos extras (denylist, expiração curta)."
+    ],
+    "bestPractices": [
+      "Use JWT quando escalabilidade horizontal e desacoplamento entre serviços forem prioridade; use sessões quando revogação imediata for crítica (ex: banco/saúde)."
+    ],
+    "relatedCommands": ["jwt-token-revocation"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519",
+    "externalReferences": [],
+    "tags": ["jwt", "sessao", "arquitetura"],
+    "keywords": ["stateless vs stateful", "jwt vs sessao", "autenticacao stateless"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-alg-none-attack",
+    "category": "JWT",
+    "subcategory": "Segurança",
+    "title": "Ataque \"alg: none\"",
+    "description": "Vulnerabilidade clássica em bibliotecas mal configuradas: um atacante altera o header do token para `\"alg\": \"none\"` e remove a assinatura; se o verificador aceitar o algoritmo declarado no próprio token, ele passa a validar o token sem checar assinatura alguma.",
+    "syntax": "{ \"alg\": \"none\", \"typ\": \"JWT\" }.<payload-alterado>.",
+    "example": "// Token malicioso sem assinatura, apenas com header/payload alterados:\neyJhbGciOiJub25lIn0.eyJzdWIiOiJhZG1pbiJ9.",
+    "result": "Uma biblioteca vulnerável aceita o token como válido, tratando o payload alterado (ex: `sub: admin`) como legítimo.",
+    "notes": [
+      "A causa raiz é permitir que o algoritmo de verificação seja determinado pelo próprio token em vez de fixado no código do servidor."
+    ],
+    "bestPractices": [
+      "Sempre especifique explicitamente os algoritmos permitidos (`algorithms: [\"RS256\"]`) na função de verificação, nunca deixando a biblioteca inferir do header."
+    ],
+    "commonMistakes": [
+      "Usar bibliotecas desatualizadas ou mal configuradas que aceitam `alg: none` por padrão."
+    ],
+    "relatedCommands": ["jwt-verify-signature"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html",
+    "externalReferences": [
+      {
+        "label": "Auth0 — Critical vulnerabilities in JSON Web Token libraries",
+        "url": "https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/"
+      }
+    ],
+    "tags": ["jwt", "seguranca", "vulnerabilidade"],
+    "keywords": ["alg none attack", "ataque jwt", "vulnerabilidade jwt"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-oauth2-oidc-relation",
+    "category": "JWT",
+    "subcategory": "Fundamentos",
+    "title": "JWT, OAuth 2.0 e OpenID Connect",
+    "description": "Esclarece a relação entre três conceitos frequentemente confundidos: JWT é um formato de token; OAuth 2.0 é um protocolo de autorização (delegar acesso); OpenID Connect (OIDC) é uma camada de autenticação construída sobre o OAuth 2.0, que usa JWT como formato do ID Token.",
+    "syntax": "OAuth 2.0 → Access Token (formato livre, pode ou não ser JWT)\nOIDC → ID Token (sempre um JWT, com claims de identidade padronizadas)",
+    "example": "Um app 'Login com Google' usa OIDC: recebe um `id_token` (JWT) com claims como `email` e `name`, além de um `access_token` OAuth para chamar APIs do Google.",
+    "result": "O ID Token (JWT) prova a identidade do usuário; o Access Token OAuth autoriza chamadas a APIs específicas em nome dele.",
+    "notes": [
+      "É possível usar OAuth 2.0 sem JWT (tokens opacos) e é possível usar JWT sem OAuth (autenticação própria simples) — a combinação completa (JWT + OAuth + OIDC) é o padrão de mercado para 'Login social'."
+    ],
+    "bestPractices": [
+      "Para autenticação de usuários (login), prefira implementar OIDC sobre um provedor consolidado em vez de reinventar o fluxo com JWT puro."
+    ],
+    "commonMistakes": [
+      "Tratar 'JWT' e 'OAuth' como sinônimos, quando são conceitos ortogonais que frequentemente aparecem juntos."
+    ],
+    "relatedCommands": ["jwt-structure"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://openid.net/specs/openid-connect-core-1_0.html",
+    "externalReferences": [],
+    "tags": ["jwt", "oauth2", "oidc"],
+    "keywords": ["jwt vs oauth", "openid connect", "id token vs access token"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-symmetric-vs-asymmetric-keys",
+    "category": "JWT",
+    "subcategory": "Validação",
+    "title": "Chaves simétricas (HS256) vs assimétricas (RS256/ES256)",
+    "description": "Compara os dois modelos de assinatura de JWT: HS256 usa uma única chave secreta compartilhada entre emissor e verificador; RS256/ES256 usam um par de chaves, onde só o emissor tem a chave privada e qualquer verificador pode usar a chave pública.",
+    "syntax": "HS256: jwt.sign(payload, segredoCompartilhado)\nRS256: jwt.sign(payload, chavePrivada, { algorithm: \"RS256\" })",
+    "example": "Um serviço de autenticação central assina com RS256; dezenas de microsserviços verificam usando apenas a chave pública, sem nunca ter acesso à chave privada.",
+    "result": "Com RS256, comprometer um verificador não permite forjar novos tokens, já que ele não possui a chave privada — diferente do HS256, onde a mesma chave assina e verifica.",
+    "notes": [
+      "HS256 é mais simples e rápido, mas exige que todo serviço que verifica o token também possa assiná-lo (mesma chave)."
+    ],
+    "bestPractices": [
+      "Use RS256/ES256 em arquiteturas de microsserviços onde múltiplos serviços só precisam verificar tokens, não emiti-los."
+    ],
+    "commonMistakes": [
+      "Distribuir a chave secreta do HS256 para múltiplos serviços 'só para verificar', dando a todos eles também a capacidade de forjar tokens."
+    ],
+    "relatedCommands": ["jwt-verify-signature", "jwt-jwks"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7518",
+    "externalReferences": [],
+    "tags": ["jwt", "criptografia", "hs256", "rs256"],
+    "keywords": ["hs256 vs rs256", "chave simetrica assimetrica jwt", "assinatura jwt"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "jwt-token-expiration-strategy",
+    "category": "JWT",
+    "subcategory": "Sessão",
+    "title": "Estratégia de expiração de tokens",
+    "description": "Define por quanto tempo um Access Token permanece válido, balanceando segurança (janela de exposição em caso de vazamento) contra experiência do usuário (frequência de renovação).",
+    "syntax": "{ \"exp\": Math.floor(Date.now() / 1000) + duracaoEmSegundos }",
+    "example": "jwt.sign(payload, chave, { expiresIn: \"15m\" })  // Access Token de 15 minutos",
+    "result": "O token se torna inválido automaticamente 15 minutos após ser emitido, exigindo um refresh para continuar a sessão.",
+    "notes": [
+      "É comum tolerar uma pequena margem de 'clock skew' (alguns segundos) entre servidores ao validar `exp`/`nbf` em sistemas distribuídos."
+    ],
+    "bestPractices": [
+      "Access Tokens: minutos. Refresh Tokens: dias a semanas. Tokens de reset de senha: minutos, de uso único."
+    ],
+    "commonMistakes": [
+      "Usar a mesma expiração longa para todo tipo de token, independentemente da sensibilidade da operação que ele autoriza."
+    ],
+    "relatedCommands": ["jwt-refresh-tokens", "jwt-standard-claims"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "version": "N/A",
+    "officialDocumentation": "https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.4",
+    "externalReferences": [],
+    "tags": ["jwt", "expiracao", "seguranca"],
+    "keywords": ["expiracao de token", "exp jwt", "duracao access token"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

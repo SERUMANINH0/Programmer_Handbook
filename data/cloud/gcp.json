@@ -759,5 +759,442 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "gcp-gke-create-cluster",
+    "category": "Google Cloud",
+    "subcategory": "GKE",
+    "title": "gcloud container clusters create",
+    "description": "Cria um cluster Google Kubernetes Engine (GKE), gerenciado ou Autopilot, provisionando o control plane e os nós de trabalho.",
+    "syntax": "gcloud container clusters create <nome> --num-nodes <n> --zone <zona>",
+    "example": "gcloud container clusters create meu-cluster --num-nodes 3 --zone us-central1-a",
+    "result": "O cluster é provisionado em alguns minutos; o comando configura automaticamente as credenciais do kubectl local ao terminar.",
+    "flags": [
+      { "flag": "--num-nodes", "description": "Número de nós por zona no pool padrão." },
+      {
+        "flag": "--zone",
+        "description": "Zona onde o cluster zonal será criado (alternativa: --region para clusters regionais)."
+      },
+      {
+        "flag": "--enable-autoscaling",
+        "description": "Habilita autoscaling do node pool entre um mínimo e máximo definidos."
+      }
+    ],
+    "notes": [
+      "O modo 'Autopilot' (`--autopilot`) gerencia nós automaticamente, cobrando por pod em vez de por VM provisionada."
+    ],
+    "bestPractices": [
+      "Use clusters regionais (`--region`) em produção para maior disponibilidade, já que o control plane fica replicado entre zonas."
+    ],
+    "commonMistakes": [
+      "Criar clusters zonais para produção, tornando o control plane indisponível durante uma manutenção ou queda da zona."
+    ],
+    "relatedCommands": ["gcp-cli-config-set-project"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/sdk/gcloud/reference/container/clusters/create",
+    "externalReferences": [],
+    "tags": ["gcp", "gke", "kubernetes"],
+    "keywords": [
+      "gke create cluster",
+      "kubernetes engine gcp",
+      "gcloud container clusters"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-bigquery-query",
+    "category": "Google Cloud",
+    "subcategory": "BigQuery",
+    "title": "bq query",
+    "description": "Executa uma consulta SQL contra datasets do BigQuery, o data warehouse serverless do GCP, diretamente via linha de comando.",
+    "syntax": "bq query --use_legacy_sql=false '<SQL>'",
+    "example": "bq query --use_legacy_sql=false \\\n  'SELECT pais, COUNT(*) AS total FROM `meu-projeto.vendas.pedidos` GROUP BY pais ORDER BY total DESC LIMIT 10'",
+    "result": "A tabela de resultados é impressa no terminal, com o custo estimado da consulta processado sobre os bytes escaneados.",
+    "flags": [
+      {
+        "flag": "--use_legacy_sql",
+        "description": "Define se usa a sintaxe SQL legada (false = Standard SQL, recomendado)."
+      },
+      {
+        "flag": "--destination_table",
+        "description": "Salva o resultado da consulta em uma tabela em vez de exibir no terminal."
+      }
+    ],
+    "notes": [
+      "BigQuery cobra por volume de dados escaneado na consulta, não por tempo de execução — particionar e clusterizar tabelas reduz custo."
+    ],
+    "bestPractices": [
+      "Sempre filtre por colunas de partição (geralmente data) antes de agregações em tabelas grandes, para escanear menos dados."
+    ],
+    "commonMistakes": [
+      "Rodar `SELECT *` em tabelas grandes sem necessidade, escaneando (e pagando por) colunas que não serão usadas."
+    ],
+    "relatedCommands": ["gcp-cloud-sql-overview"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI / BigQuery",
+    "officialDocumentation": "https://cloud.google.com/bigquery/docs/bq-command-line-tool",
+    "externalReferences": [],
+    "tags": ["gcp", "bigquery", "sql"],
+    "keywords": ["bq query", "bigquery", "data warehouse gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-cloud-tasks",
+    "category": "Google Cloud",
+    "subcategory": "Mensageria",
+    "title": "Cloud Tasks",
+    "description": "Serviço gerenciado de filas de tarefas para executar chamadas HTTP assíncronas de forma confiável, com controle de taxa, retries e agendamento.",
+    "syntax": "gcloud tasks queues create <fila>\ngcloud tasks create-http-task --queue=<fila> --url=<endpoint>",
+    "example": "gcloud tasks queues create processamento-pedidos\ngcloud tasks create-http-task --queue=processamento-pedidos --url=https://minha-api.exemplo.com/processar --method=POST",
+    "result": "A tarefa é enfileirada e entregue ao endpoint HTTP configurado, respeitando os limites de taxa e política de retry da fila.",
+    "notes": [
+      "Diferente do Pub/Sub (broadcast a múltiplos assinantes), Cloud Tasks é voltado a chamadas ponto-a-ponto controladas, com garantia de execução única por tarefa."
+    ],
+    "bestPractices": [
+      "Use Cloud Tasks para processar trabalho pesado fora do ciclo de requisição principal, evitando timeouts em endpoints síncronos."
+    ],
+    "relatedCommands": ["gcp-pubsub-overview", "gcp-cloud-functions-deploy"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/tasks/docs",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud tasks", "filas"],
+    "keywords": ["cloud tasks gcp", "filas de tarefas", "processamento assincrono gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-cloud-cdn",
+    "category": "Google Cloud",
+    "subcategory": "Rede",
+    "title": "Cloud CDN",
+    "description": "Rede de distribuição de conteúdo (CDN) integrada ao Google Cloud Load Balancing, fazendo cache de conteúdo estático nas bordas globais do Google para reduzir latência.",
+    "syntax": "gcloud compute backend-services update <backend-service> --enable-cdn",
+    "example": "gcloud compute backend-services update meu-backend --enable-cdn --global",
+    "result": "O cache de borda é habilitado para o backend service; respostas cacheáveis passam a ser servidas dos pontos de presença do Google mais próximos do usuário.",
+    "notes": [
+      "Requer um Load Balancer HTTP(S) global configurado na frente do backend — não se aplica diretamente a um serviço sem load balancer."
+    ],
+    "bestPractices": [
+      "Configure cabeçalhos `Cache-Control` corretos na origem para controlar precisamente o que e por quanto tempo o Cloud CDN armazena em cache."
+    ],
+    "relatedCommands": [],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/cdn/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "cdn", "rede"],
+    "keywords": ["cloud cdn gcp", "cache de borda", "load balancer cdn"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-firestore",
+    "category": "Google Cloud",
+    "subcategory": "Bancos de dados",
+    "title": "Firestore",
+    "description": "Banco de dados NoSQL de documentos, serverless e com sincronização em tempo real, usado tanto em backends quanto diretamente por apps mobile/web via SDKs cliente.",
+    "syntax": "gcloud firestore databases create --location <regiao>\ngcloud firestore indexes composite create --collection-group <colecao> --field-config <campos>",
+    "example": "gcloud firestore databases create --location southamerica-east1",
+    "result": "Banco Firestore provisionado no modo Native, pronto para uso via SDKs (Admin SDK no backend, SDKs cliente no app).",
+    "notes": [
+      "Modo Native oferece consultas em tempo real e SDKs mobile/web; modo Datastore mantém compatibilidade com a API legada do App Engine Datastore."
+    ],
+    "bestPractices": [
+      "Modele os dados em torno dos padrões de consulta da aplicação, já que o Firestore não suporta joins nem consultas ad-hoc complexas."
+    ],
+    "commonMistakes": [
+      "Usar regras de segurança do Firestore permissivas (`allow read, write: if true`) esquecidas em produção, expondo os dados publicamente."
+    ],
+    "relatedCommands": ["gcp-cloud-sql-overview"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/firestore/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "firestore", "nosql"],
+    "keywords": ["firestore gcp", "banco nosql google cloud", "firestore native mode"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-memorystore-redis",
+    "category": "Google Cloud",
+    "subcategory": "Bancos de dados",
+    "title": "Memorystore for Redis",
+    "description": "Serviço gerenciado do Redis usado como cache em memória, sessão ou fila leve, com alta disponibilidade opcional via réplica.",
+    "syntax": "gcloud redis instances create <nome> --size <gb> --region <regiao> --tier <basic|standard>",
+    "example": "gcloud redis instances create cache-app --size 1 --region southamerica-east1 --tier standard",
+    "result": "Instância Redis provisionada; a aplicação se conecta pelo IP privado dentro da mesma VPC (Memorystore não expõe IP público).",
+    "notes": [
+      "Tier 'basic' não tem réplica nem SLA de failover; 'standard' inclui réplica com failover automático."
+    ],
+    "bestPractices": [
+      "Coloque a aplicação na mesma região/VPC da instância Memorystore, já que o acesso é sempre via rede privada."
+    ],
+    "commonMistakes": [
+      "Tentar acessar o Memorystore de fora da VPC (ex: de uma máquina local) sem um túnel/VPN, já que ele não tem IP público."
+    ],
+    "relatedCommands": ["gcp-vpc-firewall-rules"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/memorystore/docs/redis/redis-overview",
+    "externalReferences": [],
+    "tags": ["gcp", "memorystore", "redis", "cache"],
+    "keywords": ["memorystore gcp", "redis google cloud", "cache gerenciado gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-load-balancing-http",
+    "category": "Google Cloud",
+    "subcategory": "Rede",
+    "title": "Cloud Load Balancing (HTTP(S) global)",
+    "description": "Balanceador de carga global de camada 7 que distribui tráfego HTTP(S) entre backends em múltiplas regiões usando um único IP anycast, com roteamento por path/host.",
+    "syntax": "gcloud compute backend-services create <nome> --global\ngcloud compute url-maps create <nome> --default-service <backend-service>",
+    "example": "gcloud compute backend-services create backend-api --global --protocol HTTP\ngcloud compute url-maps create lb-app --default-service backend-api",
+    "result": "Um IP público único é provisionado; requisições HTTP(S) são roteadas ao backend mais próximo/saudável em qualquer região configurada.",
+    "notes": [
+      "Diferente do Cloud CDN (cache), o Load Balancing HTTP(S) cuida do roteamento e distribuição do tráfego em si, e pode ser combinado com o CDN habilitado no mesmo backend service."
+    ],
+    "bestPractices": [
+      "Configure health checks específicos por backend service para remover automaticamente instâncias não saudáveis do roteamento."
+    ],
+    "commonMistakes": [
+      "Confundir o Load Balancer HTTP(S) global (camada 7, um IP para o mundo todo) com o Network Load Balancer regional (camada 4), que tem propósito e escopo diferentes."
+    ],
+    "relatedCommands": ["gcp-cloud-cdn", "gcp-vpc-firewall-rules"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "gcloud CLI",
+    "officialDocumentation": "https://cloud.google.com/load-balancing/docs/https",
+    "externalReferences": [],
+    "tags": ["gcp", "load-balancing", "rede"],
+    "keywords": [
+      "cloud load balancing gcp",
+      "http load balancer google cloud",
+      "backend service"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-cloud-armor",
+    "category": "Google Cloud",
+    "subcategory": "Segurança",
+    "title": "Cloud Armor",
+    "description": "Serviço de WAF (Web Application Firewall) e proteção contra DDoS integrado ao Load Balancing HTTP(S) global, com regras baseadas em IP, geolocalização e assinaturas de ataques comuns (OWASP).",
+    "syntax": "gcloud compute security-policies create <politica>\ngcloud compute security-policies rules create <prioridade> --security-policy <politica> --action deny-403 --src-ip-ranges <cidr>",
+    "example": "gcloud compute security-policies create politica-app\ngcloud compute security-policies rules create 1000 --security-policy politica-app --action deny-403 --src-ip-ranges 203.0.113.0/24",
+    "result": "Requisições originadas do bloco de IP configurado passam a receber HTTP 403 antes mesmo de chegar ao backend.",
+    "notes": [
+      "Regras pré-configuradas (WAF rules) detectam padrões comuns de SQLi, XSS e outros ataques do OWASP Top 10 sem precisar escrever regras manuais."
+    ],
+    "bestPractices": [
+      "Comece novas regras em modo 'preview' (só registra, não bloqueia) para validar falsos positivos antes de aplicar em produção."
+    ],
+    "commonMistakes": [
+      "Aplicar uma regra de bloqueio ampla direto em produção sem testar, bloqueando tráfego legítimo inesperadamente."
+    ],
+    "relatedCommands": ["gcp-load-balancing-http"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/armor/docs/cloud-armor-overview",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-armor", "seguranca", "waf"],
+    "keywords": ["cloud armor gcp", "waf google cloud", "protecao ddos gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-api-gateway",
+    "category": "Google Cloud",
+    "subcategory": "API",
+    "title": "API Gateway",
+    "description": "Gateway gerenciado que expõe backends serverless (Cloud Functions, Cloud Run) como APIs REST documentadas via OpenAPI, cuidando de autenticação, quotas e chaves de API.",
+    "syntax": "gcloud api-gateway apis create <api-id>\ngcloud api-gateway api-configs create <config-id> --api <api-id> --openapi-spec <arquivo.yaml>\ngcloud api-gateway gateways create <gateway-id> --api <api-id> --api-config <config-id> --location <regiao>",
+    "example": "gcloud api-gateway apis create minha-api\ngcloud api-gateway api-configs create v1 --api minha-api --openapi-spec openapi.yaml\ngcloud api-gateway gateways create gw-minha-api --api minha-api --api-config v1 --location southamerica-east1",
+    "result": "Uma URL pública do gateway é provisionada, roteando requisições conforme definido na especificação OpenAPI para os backends configurados.",
+    "notes": [
+      "Diferente do Apigee (solução enterprise completa de gestão de API), o API Gateway é uma opção mais simples e barata voltada a backends serverless do GCP."
+    ],
+    "bestPractices": [
+      "Defina autenticação (API key ou JWT) diretamente na especificação OpenAPI para centralizar a política de acesso no gateway."
+    ],
+    "commonMistakes": [
+      "Expor o Cloud Run/Function diretamente ao público além do gateway, permitindo contornar quotas e autenticação configuradas nele."
+    ],
+    "relatedCommands": ["gcp-cloud-run-deploy", "gcp-cloud-functions-deploy"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/api-gateway/docs/about-api-gateway",
+    "externalReferences": [],
+    "tags": ["gcp", "api-gateway", "api"],
+    "keywords": ["api gateway gcp", "gateway serverless google cloud", "openapi gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-cloud-scheduler",
+    "category": "Google Cloud",
+    "subcategory": "Mensageria",
+    "title": "Cloud Scheduler",
+    "description": "Serviço de cron jobs totalmente gerenciado que dispara chamadas HTTP, mensagens Pub/Sub ou tarefas Cloud Tasks em horários programados via expressão cron.",
+    "syntax": "gcloud scheduler jobs create http <nome> --schedule \"<cron>\" --uri <url> --http-method <metodo>",
+    "example": "gcloud scheduler jobs create http limpeza-noturna --schedule \"0 3 * * *\" --uri https://minha-api.exemplo.com/limpeza --http-method POST --time-zone \"America/Sao_Paulo\"",
+    "result": "Todo dia às 03:00 (horário de São Paulo), o Cloud Scheduler faz uma requisição POST ao endpoint configurado.",
+    "notes": [
+      "Suporta fuso horário explícito por job, evitando a necessidade de converter manualmente o horário para UTC."
+    ],
+    "bestPractices": [
+      "Combine Cloud Scheduler com Cloud Tasks quando o job disparado precisar de retry/controle de taxa mais sofisticado que o retry básico do Scheduler."
+    ],
+    "commonMistakes": [
+      "Não configurar autenticação (OIDC token) no job, deixando o endpoint de destino acessível por qualquer chamada HTTP externa, não só pelo Scheduler."
+    ],
+    "relatedCommands": ["gcp-cloud-tasks", "gcp-cloud-functions-deploy"],
+    "difficulty": "intermediario",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/scheduler/docs",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-scheduler", "cron"],
+    "keywords": ["cloud scheduler gcp", "cron job google cloud", "agendar tarefa gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-organization-policy",
+    "category": "Google Cloud",
+    "subcategory": "Governança",
+    "title": "Organization Policy",
+    "description": "Restrições configuráveis no nível da organização, pasta ou projeto que limitam quais configurações de recursos são permitidas (ex: proibir IPs públicos em VMs, restringir regiões permitidas), independente das permissões IAM concedidas.",
+    "syntax": "gcloud resource-manager org-policies set-policy <arquivo-policy.yaml> --project <project-id>",
+    "example": "# policy.yaml\nconstraint: constraints/compute.vmExternalIpAccess\nlistPolicy:\n  allValues: DENY\n\n# gcloud resource-manager org-policies set-policy policy.yaml --project meu-projeto-123",
+    "result": "Tentativas de criar VMs com IP externo no projeto passam a ser bloqueadas, mesmo que o usuário tenha permissão IAM para criar VMs.",
+    "notes": [
+      "Organization Policy atua como uma camada de guardrails acima do IAM: mesmo um Owner do projeto não consegue violar uma constraint herdada da organização."
+    ],
+    "bestPractices": [
+      "Defina policies de baseline (restringir regiões, proibir IP público, exigir OS Login) no nível da organização para que se apliquem automaticamente a novos projetos."
+    ],
+    "commonMistakes": [
+      "Aplicar uma constraint restritiva direto na organização inteira sem testar antes em um projeto/pasta isolado, quebrando workloads existentes."
+    ],
+    "relatedCommands": ["gcp-iam-add-policy-binding", "gcp-projects-billing"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/resource-manager/docs/organization-policy/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "organization-policy", "governanca"],
+    "keywords": ["organization policy gcp", "governanca google cloud", "constraints gcp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-workload-identity-federation",
+    "category": "Google Cloud",
+    "subcategory": "IAM",
+    "title": "Workload Identity Federation",
+    "description": "Permite que cargas de trabalho externas (GitHub Actions, AWS, outro provedor de identidade) se autentiquem no GCP trocando um token de curta duração por credenciais temporárias, sem precisar de uma chave JSON de service account de longa duração.",
+    "syntax": "gcloud iam workload-identity-pools create <pool> --location global\ngcloud iam workload-identity-pools providers create-oidc <provider> --workload-identity-pool <pool> --issuer-uri <url-do-oidc>",
+    "example": "gcloud iam workload-identity-pools create pool-github --location global\ngcloud iam workload-identity-pools providers create-oidc provider-github --workload-identity-pool pool-github --issuer-uri https://token.actions.githubusercontent.com",
+    "result": "Um workflow do GitHub Actions pode se autenticar no GCP usando o token OIDC nativo do GitHub, sem armazenar nenhuma chave JSON como secret do repositório.",
+    "notes": [
+      "É a alternativa recomendada pelo Google a distribuir chaves JSON de service account em pipelines de CI/CD externos."
+    ],
+    "bestPractices": [
+      "Restrinja o `attribute-condition` do provider ao repositório/branch específico que deve ter permissão de assumir a identidade, evitando que qualquer repositório da organização GitHub consiga autenticar."
+    ],
+    "commonMistakes": [
+      "Configurar o provider sem restringir por atributo (repositório, branch), permitindo que qualquer workload externo do provedor de identidade configurado se autentique."
+    ],
+    "relatedCommands": ["gcp-iam-service-account", "gcp-iam-add-policy-binding"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/iam/docs/workload-identity-federation",
+    "externalReferences": [],
+    "tags": ["gcp", "iam", "workload-identity", "seguranca"],
+    "keywords": [
+      "workload identity federation gcp",
+      "oidc gcp",
+      "autenticar ci cd sem chave"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-cloud-spanner",
+    "category": "Google Cloud",
+    "subcategory": "Bancos de dados",
+    "title": "Cloud Spanner",
+    "description": "Banco de dados relacional distribuído globalmente com consistência forte e escalabilidade horizontal praticamente ilimitada, combinando características de bancos SQL tradicionais com a escala de sistemas NoSQL.",
+    "syntax": "gcloud spanner instances create <nome> --config <configuracao-regional> --nodes <n> --description \"<descricao>\"",
+    "example": "gcloud spanner instances create instancia-app --config regional-southamerica-east1 --nodes 1 --description \"Instancia de producao\"",
+    "result": "Instância Spanner provisionada; databases e tabelas são criados dentro dela via DDL SQL padrão.",
+    "notes": [
+      "Cobrança é por nó (ou 'processing unit', unidade fracionária de nó) provisionado, independente do volume de dados armazenado."
+    ],
+    "bestPractices": [
+      "Reserve Spanner para cargas que realmente precisam de escala global com consistência forte; para a maioria das aplicações, Cloud SQL é mais simples e barato."
+    ],
+    "commonMistakes": [
+      "Escolher Spanner por padrão em projetos pequenos, pagando um custo mínimo por nó muito superior ao necessário para a carga real."
+    ],
+    "relatedCommands": ["gcp-cloud-sql-overview"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/spanner/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "cloud-spanner", "banco-de-dados"],
+    "keywords": ["cloud spanner gcp", "banco distribuido global", "spanner vs cloud sql"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "gcp-vpc-service-controls",
+    "category": "Google Cloud",
+    "subcategory": "Segurança",
+    "title": "VPC Service Controls",
+    "description": "Cria um perímetro de segurança em torno de recursos de serviços gerenciados do GCP (Cloud Storage, BigQuery, etc.), bloqueando exfiltração de dados mesmo por identidades com permissões IAM válidas, caso o acesso venha de fora do perímetro.",
+    "syntax": "gcloud access-context-manager perimeters create <nome> --title \"<titulo>\" --resources projects/<numero-do-projeto> --restricted-services storage.googleapis.com,bigquery.googleapis.com",
+    "example": "gcloud access-context-manager perimeters create perimetro-dados --title \"Perimetro Dados Sensiveis\" --resources projects/123456789012 --restricted-services storage.googleapis.com",
+    "result": "Chamadas às APIs restritas (ex: Cloud Storage) originadas de fora do perímetro são bloqueadas, mesmo com credenciais IAM válidas.",
+    "notes": [
+      "Protege contra o cenário em que uma credencial vazada ou um insider mal-intencionado tenta copiar dados para um projeto/conta fora do perímetro autorizado."
+    ],
+    "bestPractices": [
+      "Comece em modo 'dry-run' (só registra violações, não bloqueia) para mapear todo o tráfego legítimo antes de aplicar o perímetro de fato."
+    ],
+    "commonMistakes": [
+      "Ativar o perímetro em modo de aplicação (enforced) sem mapear antes integrações legítimas entre projetos, quebrando pipelines de dados existentes."
+    ],
+    "relatedCommands": ["gcp-organization-policy", "gcp-iam-add-policy-binding"],
+    "difficulty": "avancado",
+    "platform": ["cloud"],
+    "version": "N/A",
+    "officialDocumentation": "https://cloud.google.com/vpc-service-controls/docs/overview",
+    "externalReferences": [],
+    "tags": ["gcp", "vpc-service-controls", "seguranca"],
+    "keywords": [
+      "vpc service controls gcp",
+      "perimetro de seguranca",
+      "exfiltracao de dados gcp"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

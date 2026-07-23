@@ -541,5 +541,430 @@
     "keywords": ["ctrl f10", "run to cursor", "executar ate o cursor"],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "vs-conditional-breakpoint",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Breakpoint condicional",
+    "description": "Configura um breakpoint para só pausar a execução quando uma expressão booleana for verdadeira, ou após um número específico de vezes atingido, evitando paradas desnecessárias.",
+    "syntax": "Botão direito no breakpoint > Conditions...",
+    "example": "Definir a condição `pedido.Total > 10000` em um breakpoint dentro de um loop que processa milhares de pedidos.",
+    "result": "O depurador só pausa quando a condição é satisfeita, ignorando silenciosamente as demais iterações.",
+    "notes": [
+      "Também é possível configurar 'Hit Count' (parar só na N-ésima vez) e 'Actions' (imprimir mensagem sem parar, como um tracepoint)."
+    ],
+    "bestPractices": [
+      "Use breakpoints condicionais em vez de adicionar `if` temporário no código só para depurar um caso específico."
+    ],
+    "commonMistakes": [
+      "Escrever uma condição com efeito colateral (que modifica estado), alterando o comportamento do programa durante a depuração."
+    ],
+    "relatedCommands": ["vs-toggle-breakpoint", "vs-run-to-cursor"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/using-breakpoints#conditions",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "breakpoint"],
+    "keywords": ["breakpoint condicional", "conditional breakpoint", "hit count"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-immediate-window",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Immediate Window",
+    "description": "Janela de depuração que permite executar expressões e comandos C#/VB arbitrários no contexto atual da execução pausada, útil para inspecionar ou alterar valores em tempo real.",
+    "syntax": "Ctrl+Alt+I",
+    "shortcut": "Ctrl+Alt+I",
+    "example": "Durante uma pausa no debug, digitar `pedido.Total = 500` no Immediate Window para simular um valor diferente sem reiniciar a execução.",
+    "result": "A expressão é avaliada imediatamente no contexto atual, podendo inclusive alterar o estado das variáveis em memória.",
+    "notes": [
+      "Diferente do Watch Window (que só observa), o Immediate Window executa código, inclusive com efeitos colaterais."
+    ],
+    "bestPractices": [
+      "Use para testar hipóteses rapidamente durante uma sessão de debug, sem precisar parar e reiniciar a aplicação."
+    ],
+    "commonMistakes": [
+      "Executar código com efeitos colaterais destrutivos (como uma chamada que grava no banco) sem perceber o impacto real."
+    ],
+    "relatedCommands": ["vs-call-stack", "vs-step-over"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/reference/immediate-window",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "immediate window"],
+    "keywords": ["immediate window", "ctrl alt i", "executar expressao debug"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-call-stack",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Call Stack (pilha de chamadas)",
+    "description": "Exibe a sequência de métodos que levaram até o ponto atual de execução, permitindo navegar entre os quadros (frames) da pilha para inspecionar o estado em cada nível.",
+    "syntax": "Ctrl+Alt+C",
+    "shortcut": "Ctrl+Alt+C",
+    "example": "Durante uma exceção não tratada, abrir a Call Stack para identificar qual método originou a chamada que falhou.",
+    "result": "A janela lista cada método da pilha, do mais recente ao mais antigo; clicar em um quadro reposiciona o contexto de inspeção de variáveis para aquele nível.",
+    "notes": [
+      "Duplo clique em um quadro da pilha ('non-user code' oculto por padrão) navega até a linha correspondente no editor."
+    ],
+    "bestPractices": [
+      "Habilite 'Show External Code' apenas quando precisar depurar dentro de bibliotecas de terceiros ou do próprio .NET."
+    ],
+    "relatedCommands": ["vs-immediate-window", "vs-step-into"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/how-to-use-the-call-stack-window",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "call stack"],
+    "keywords": ["call stack", "pilha de chamadas", "ctrl alt c"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-live-unit-testing",
+    "category": "Visual Studio",
+    "subcategory": "Testes",
+    "title": "Live Unit Testing",
+    "description": "Executa continuamente os testes unitários afetados em segundo plano enquanto o código é editado, mostrando cobertura e resultado diretamente na margem do editor.",
+    "syntax": "Test > Live Unit Testing > Start",
+    "example": "Ativar o Live Unit Testing e editar um método de serviço: os ícones de check verde/x vermelho aparecem ao lado das linhas cobertas pelos testes afetados.",
+    "result": "A cada alteração salva, apenas os testes relacionados ao código modificado são reexecutados automaticamente, sem precisar rodar a suíte inteira manualmente.",
+    "notes": ["Disponível apenas nas edições Enterprise do Visual Studio."],
+    "bestPractices": [
+      "Use em projetos com suíte de testes rápida; em bases muito grandes, pode gerar overhead perceptível de CPU."
+    ],
+    "commonMistakes": [
+      "Deixar ativado permanentemente em máquinas com recursos limitados, degradando a responsividade do editor."
+    ],
+    "relatedCommands": ["vs-test-explorer"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022 Enterprise",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/test/live-unit-testing",
+    "externalReferences": [],
+    "tags": ["visual studio", "testes", "live unit testing"],
+    "keywords": ["live unit testing", "testes em tempo real", "cobertura de testes"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-test-explorer",
+    "category": "Visual Studio",
+    "subcategory": "Testes",
+    "title": "Test Explorer",
+    "description": "Painel central que lista todos os testes automatizados da solução, permitindo executá-los, depurá-los e ver seus resultados individualmente ou em grupo.",
+    "syntax": "Ctrl+E, T",
+    "shortcut": "Ctrl+E, T",
+    "example": "Abrir o Test Explorer, filtrar por 'Failed' após uma execução completa e clicar com o botão direito em um teste para depurá-lo isoladamente.",
+    "result": "A árvore de testes mostra ícones de status (passou/falhou/não executado) e permite agrupar por projeto, classe ou resultado.",
+    "notes": [
+      "'Run All Tests in Context' (clique direito) roda só os testes do namespace/classe selecionado."
+    ],
+    "bestPractices": [
+      "Agrupe testes por 'Outcome' logo após uma execução em CI para focar rapidamente nas falhas."
+    ],
+    "commonMistakes": [
+      "Rodar a suíte inteira repetidamente durante o desenvolvimento em vez de filtrar só os testes relevantes à mudança atual."
+    ],
+    "relatedCommands": ["vs-live-unit-testing"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/test/run-unit-tests-with-test-explorer",
+    "externalReferences": [],
+    "tags": ["visual studio", "testes", "test explorer"],
+    "keywords": ["test explorer", "executar testes", "ctrl e t"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-intellitrace",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "IntelliTrace",
+    "description": "Grava um histórico de eventos e chamadas durante a depuração (exceções, chamadas de método, breakpoints), permitindo 'voltar no tempo' para inspecionar estados anteriores sem precisar reproduzir o bug de novo.",
+    "syntax": "Debug > Windows > IntelliTrace",
+    "example": "Após uma exceção, abrir o painel IntelliTrace e clicar em um evento anterior para ver o estado das variáveis naquele ponto passado da execução.",
+    "result": "O contexto de depuração é temporariamente restaurado ao momento do evento selecionado, sem precisar reiniciar a aplicação.",
+    "notes": [
+      "Disponível de forma completa nas edições Enterprise; a Community/Professional têm suporte limitado."
+    ],
+    "bestPractices": [
+      "Use IntelliTrace para investigar bugs intermitentes difíceis de reproduzir manualmente passo a passo."
+    ],
+    "relatedCommands": ["vs-call-stack", "vs-step-into"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022 Enterprise",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/intellitrace",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "intellitrace"],
+    "keywords": ["intellitrace", "historico de debug", "voltar no tempo debug"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-codelens",
+    "category": "Visual Studio",
+    "subcategory": "Navegação",
+    "title": "CodeLens",
+    "description": "Exibe indicadores inline acima de métodos e classes com informações contextuais, como número de referências, histórico de commits Git e status de testes relacionados, sem sair do editor.",
+    "syntax": "Indicadores automáticos acima de declarações no editor",
+    "example": "Ver '3 references | 2 changes | 1/1 passing' acima de um método, e clicar em '3 references' para abrir a lista sem usar Shift+F12.",
+    "result": "Um popup inline mostra as referências, o histórico de alterações Git ou o resultado dos testes associados, dependendo do indicador clicado.",
+    "notes": [
+      "Pode ser desativado individualmente (referências, testes, Git) em Tools > Options > Text Editor > All Languages > CodeLens."
+    ],
+    "bestPractices": [
+      "Desative os indicadores que não usa no dia a dia para reduzir ruído visual e leve overhead de performance."
+    ],
+    "relatedCommands": ["vs-find-all-references", "vs-git-changes"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/find-code-changes-and-other-history-with-codelens",
+    "externalReferences": [],
+    "tags": ["visual studio", "codelens", "navegacao"],
+    "keywords": ["codelens", "referencias inline", "historico git inline"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-diagnostic-tools",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": "Diagnostic Tools (janela de diagnóstico)",
+    "description": "Painel exibido durante a depuração com gráficos em tempo real de uso de CPU e memória, além de eventos de exceção, sem precisar de um profiler separado.",
+    "syntax": "Debug > Windows > Show Diagnostic Tools",
+    "example": "Rodar a aplicação em debug e observar um pico no gráfico de memória logo após uma operação de carregamento de dados suspeita de vazamento.",
+    "result": "Os gráficos de CPU/memória atualizam em tempo real; é possível tirar um 'snapshot' de memória para comparar antes/depois de uma operação.",
+    "notes": [
+      "A aba 'Events' registra automaticamente breakpoints atingidos e exceções lançadas durante a sessão."
+    ],
+    "bestPractices": [
+      "Tire dois snapshots de memória (antes e depois de uma ação suspeita) e compare os objetos retidos para investigar vazamentos."
+    ],
+    "relatedCommands": ["vs-intellitrace"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/profiling/diagnostic-tools-debugger",
+    "externalReferences": [],
+    "tags": ["visual studio", "debug", "performance", "memoria"],
+    "keywords": ["diagnostic tools", "uso de memoria", "profiler integrado"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-git-changes",
+    "category": "Visual Studio",
+    "subcategory": "Git",
+    "title": "Git Changes (painel de controle de versão)",
+    "description": "Painel integrado para stage, commit, push, pull e resolução de conflitos usando Git, sem sair do Visual Studio.",
+    "syntax": "View > Git Changes",
+    "example": "Digitar a mensagem de commit no painel Git Changes, revisar o diff de cada arquivo modificado e clicar em 'Commit All' seguido de 'Push'.",
+    "result": "As alterações em stage são commitadas localmente e, com Push, enviadas ao repositório remoto configurado.",
+    "notes": [
+      "O ícone de 'Git Repository' na barra de status inferior mostra a branch atual e permite trocar de branch rapidamente."
+    ],
+    "bestPractices": [
+      "Revise o diff de cada arquivo no painel antes de commitar, mesmo em commits pequenos, para evitar incluir alterações não intencionais."
+    ],
+    "commonMistakes": [
+      "Commitar direto sem revisar, incluindo arquivos de configuração local ou temporários esquecidos no stage."
+    ],
+    "relatedCommands": ["vs-codelens"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/version-control/git-with-visual-studio",
+    "externalReferences": [],
+    "tags": ["visual studio", "git", "controle de versao"],
+    "keywords": [
+      "git changes",
+      "commit no visual studio",
+      "controle de versao integrado"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-xaml-designer",
+    "category": "Visual Studio",
+    "subcategory": "XAML",
+    "title": "XAML Designer",
+    "description": "Editor visual com pré-visualização em tempo real para interfaces WPF, UWP e .NET MAUI descritas em XAML, com edição sincronizada entre o designer e o código-fonte.",
+    "syntax": "Abrir um arquivo .xaml — split view (designer + código) por padrão",
+    "example": "Arrastar um controle Button da caixa de ferramentas (Toolbox) para o canvas do designer e ajustar suas propriedades no painel Properties.",
+    "result": "O XAML correspondente ao controle arrastado é gerado automaticamente no painel de código, sincronizado em tempo real.",
+    "notes": [
+      "'XAML Hot Reload' permite ver alterações de estilo/layout refletidas na aplicação em execução, sem reiniciar."
+    ],
+    "bestPractices": [
+      "Prefira editar diretamente o XAML para layouts complexos; use o designer visual principalmente para prototipagem rápida."
+    ],
+    "relatedCommands": ["vs-hot-reload"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/xaml-tools/xaml-designer-for-wpf",
+    "externalReferences": [],
+    "tags": ["visual studio", "xaml", "wpf", "designer"],
+    "keywords": ["xaml designer", "editor visual wpf", "designer uwp"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-hot-reload",
+    "category": "Visual Studio",
+    "subcategory": "Debug",
+    "title": ".NET Hot Reload",
+    "description": "Aplica alterações de código C#/XAML a uma aplicação já em execução (em debug ou não) sem precisar recompilar e reiniciar o processo inteiro.",
+    "syntax": "Ícone de raio (🔥) na barra de ferramentas, ou Ctrl+Alt+F10",
+    "shortcut": "Ctrl+Alt+F10",
+    "example": "Com a aplicação rodando, alterar o texto de um label no código e salvar: a mudança aparece na UI em execução em segundos.",
+    "result": "A aplicação continua rodando com seu estado atual preservado, apenas refletindo a alteração de código feita.",
+    "notes": [
+      "Nem toda alteração é aplicável a quente — mudanças estruturais grandes (como alterar assinatura de método) ainda exigem reinício."
+    ],
+    "bestPractices": [
+      "Use Hot Reload para iterar rapidamente em ajustes de UI e pequenas correções de lógica, evitando reinícios completos da aplicação."
+    ],
+    "commonMistakes": [
+      "Esperar que alterações estruturais (nova classe, mudança de assinatura pública) sejam aplicadas sem reinício."
+    ],
+    "relatedCommands": ["vs-xaml-designer", "vs-start-debugging"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/debugger/hot-reload",
+    "externalReferences": [],
+    "tags": ["visual studio", "hot reload", "produtividade"],
+    "keywords": ["hot reload", "aplicar mudancas sem reiniciar", "net hot reload"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-code-snippets",
+    "category": "Visual Studio",
+    "subcategory": "Edição",
+    "title": "Code Snippets",
+    "description": "Trechos de código reutilizáveis inseridos digitando um atalho textual seguido de Tab, expandindo automaticamente estruturas comuns como loops e classes.",
+    "syntax": "<atalho> + Tab + Tab",
+    "example": "Digitar `prop` e pressionar Tab duas vezes para gerar automaticamente uma propriedade auto-implementada em C#.",
+    "result": "O snippet `public int MyProperty { get; set; }` é inserido com o nome do tipo e da propriedade prontos para edição via placeholders navegáveis com Tab.",
+    "notes": [
+      "Snippets customizados podem ser criados via Tools > Code Snippets Manager, em arquivos .snippet XML."
+    ],
+    "bestPractices": [
+      "Crie snippets próprios para padrões repetitivos específicos do seu time (ex: estrutura de um controller de API)."
+    ],
+    "relatedCommands": ["vs-format-document"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/code-snippets",
+    "externalReferences": [],
+    "tags": ["visual studio", "snippets", "produtividade"],
+    "keywords": ["code snippets", "prop tab tab", "snippets customizados"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-extensions-marketplace",
+    "category": "Visual Studio",
+    "subcategory": "Extensões",
+    "title": "Extensions and Updates (Marketplace)",
+    "description": "Gerenciador integrado para instalar, atualizar e remover extensões da comunidade e da Microsoft que adicionam funcionalidades ao Visual Studio.",
+    "syntax": "Extensions > Manage Extensions",
+    "example": "Buscar 'ReSharper' ou 'Rainbow Braces' no marketplace, instalar e reiniciar o Visual Studio para ativar a extensão.",
+    "result": "A extensão é baixada e instalada; a maioria requer reiniciar o IDE (VSIX Installer) para entrar em vigor.",
+    "notes": [
+      "Extensões instaladas podem impactar a performance de inicialização do Visual Studio — desative as que não usa com frequência."
+    ],
+    "bestPractices": [
+      "Prefira extensões com boa avaliação e atualização recente; extensões abandonadas podem quebrar em novas versões do VS."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/ide/finding-and-using-visual-studio-extensions",
+    "externalReferences": [],
+    "tags": ["visual studio", "extensoes", "marketplace"],
+    "keywords": ["extensoes visual studio", "vsix", "marketplace"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-server-explorer",
+    "category": "Visual Studio",
+    "subcategory": "Ferramentas de dados",
+    "title": "Server Explorer",
+    "description": "Painel para conectar e navegar em recursos externos — bancos de dados SQL Server, serviços do Azure, filas, event hubs — diretamente de dentro do IDE.",
+    "syntax": "View > Server Explorer",
+    "example": "Adicionar uma nova conexão de banco de dados (Data Connections > Add Connection) para explorar tabelas de um SQL Server sem sair do Visual Studio.",
+    "result": "As tabelas, views e stored procedures do banco conectado ficam navegáveis em árvore, com suporte a consultas rápidas e edição de dados.",
+    "notes": [
+      "Recursos do Azure (App Services, SQL Databases) aparecem automaticamente após login com uma conta Microsoft/Azure vinculada ao VS."
+    ],
+    "bestPractices": [
+      "Use o Server Explorer para inspeção rápida de dados durante o desenvolvimento; prefira ferramentas dedicadas (Azure Data Studio) para administração pesada."
+    ],
+    "relatedCommands": [],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/data-tools/connect-to-data-in-server-explorer",
+    "externalReferences": [],
+    "tags": ["visual studio", "server explorer", "banco de dados"],
+    "keywords": [
+      "server explorer",
+      "conectar banco de dados visual studio",
+      "azure no visual studio"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vs-publish-deploy",
+    "category": "Visual Studio",
+    "subcategory": "Publicação",
+    "title": "Publish (publicar / deploy)",
+    "description": "Assistente integrado para publicar uma aplicação em destinos como Azure App Service, IIS, pasta local ou container, empacotando o build de release automaticamente.",
+    "syntax": "Botão direito no projeto > Publish...",
+    "example": "Selecionar 'Azure App Service' como destino, autenticar com a conta Azure vinculada e clicar em Publish para enviar a versão de release.",
+    "result": "O Visual Studio compila em modo Release, empacota os artefatos e os envia ao destino configurado, exibindo o progresso do deploy.",
+    "notes": [
+      "Perfis de publicação (.pubxml) podem ser versionados no repositório para reproduzir o mesmo destino em outra máquina."
+    ],
+    "bestPractices": [
+      "Use pipelines de CI/CD (Azure DevOps, GitHub Actions) para deploys de produção; reserve o Publish do IDE para ambientes de teste/demo."
+    ],
+    "commonMistakes": [
+      "Publicar direto para produção a partir da máquina local, sem passar por um pipeline com testes automatizados."
+    ],
+    "relatedCommands": ["vs-nuget-package-manager"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "Visual Studio 2022",
+    "officialDocumentation": "https://learn.microsoft.com/visualstudio/deployment/quickstart-deploy-to-azure",
+    "externalReferences": [],
+    "tags": ["visual studio", "publish", "deploy", "azure"],
+    "keywords": [
+      "publish visual studio",
+      "deploy azure app service",
+      "publicar aplicacao"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

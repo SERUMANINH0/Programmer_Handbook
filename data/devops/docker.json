@@ -23,7 +23,7 @@
     "commonMistakes": [
       "Confundir a ordem do mapeamento de porta (`host:container`) e publicar a porta errada."
     ],
-    "relatedCommands": ["docker-build", "docker-compose-up"],
+    "relatedCommands": ["docker-build", "compose-up"],
     "difficulty": "iniciante",
     "platform": ["linux", "windows", "macos"],
     "version": "20+",
@@ -62,5 +62,1024 @@
     "keywords": ["multi-stage build", "imagem docker enxuta"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "docker-build",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker build",
+    "description": "Constrói uma imagem Docker a partir de um Dockerfile e de um contexto de build (diretório com os arquivos-fonte).",
+    "syntax": "docker build [opcoes] -t <nome:tag> <contexto>",
+    "example": "docker build -t minha-app:1.0 .",
+    "result": "Imagem `minha-app:1.0` criada localmente a partir do Dockerfile no diretório atual.",
+    "flags": [
+      { "flag": "-t", "description": "Nomeia e marca a imagem (repositorio:tag)." },
+      { "flag": "-f", "description": "Especifica um Dockerfile alternativo." },
+      {
+        "flag": "--no-cache",
+        "description": "Ignora o cache de camadas e reconstrói tudo do zero."
+      },
+      {
+        "flag": "--build-arg",
+        "description": "Passa uma variável de build (ARG) para o Dockerfile."
+      }
+    ],
+    "notes": [
+      "O `.` no final do comando indica o contexto de build: tudo dentro dessa pasta é enviado ao daemon Docker."
+    ],
+    "bestPractices": [
+      "Ordene as instruções do Dockerfile das que mudam menos para as que mudam mais, aproveitando o cache de camadas."
+    ],
+    "commonMistakes": [
+      "Esquecer o `.dockerignore`, enviando `node_modules` e `.git` inteiros como contexto de build."
+    ],
+    "relatedCommands": ["docker-run", "docker-tag", "docker-dockerignore"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/buildx/build/",
+    "externalReferences": [],
+    "tags": ["docker", "build", "imagem"],
+    "keywords": ["docker build", "construir imagem", "criar imagem docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-ps",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker ps",
+    "description": "Lista os containers em execução (ou todos, com `-a`), mostrando ID, imagem, status, portas e nome.",
+    "syntax": "docker ps [opcoes]",
+    "example": "docker ps -a",
+    "result": "CONTAINER ID   IMAGE           STATUS                    NAMES\nabc123         node:20-alpine  Exited (0) 2 minutes ago  app",
+    "flags": [
+      { "flag": "-a", "description": "Mostra também containers parados." },
+      {
+        "flag": "-q",
+        "description": "Exibe apenas os IDs, útil para combinar com outros comandos."
+      },
+      { "flag": "--filter", "description": "Filtra por status, nome, label, etc." }
+    ],
+    "notes": ["Sem `-a`, apenas containers em execução no momento aparecem na listagem."],
+    "bestPractices": [
+      "Combine `docker ps -q` com `xargs` para aplicar comandos em lote a vários containers."
+    ],
+    "commonMistakes": [
+      "Assumir que um container 'sumiu' quando na verdade só está parado e não aparece sem `-a`."
+    ],
+    "relatedCommands": ["docker-stop-start-restart", "docker-rm", "docker-logs"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/ls/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "listar"],
+    "keywords": ["docker ps", "listar containers", "containers ativos"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-images",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker images",
+    "description": "Lista as imagens Docker armazenadas localmente, com repositório, tag, ID e tamanho.",
+    "syntax": "docker images [opcoes]",
+    "example": "docker images --filter \"dangling=true\"",
+    "result": "REPOSITORY   TAG       IMAGE ID       SIZE\n<none>       <none>    a1b2c3d4e5f6   120MB",
+    "flags": [
+      { "flag": "-a", "description": "Mostra também imagens intermediárias." },
+      {
+        "flag": "--filter",
+        "description": "Filtra por critérios como `dangling=true` (imagens órfãs)."
+      },
+      { "flag": "-q", "description": "Exibe apenas os IDs das imagens." }
+    ],
+    "notes": [
+      "Imagens `<none>` (dangling) geralmente sobram de builds antigos sobrescritos pela mesma tag."
+    ],
+    "bestPractices": [
+      "Rode `docker image prune` periodicamente para remover imagens dangling e liberar espaço em disco."
+    ],
+    "commonMistakes": [
+      "Confundir o tamanho reportado por `docker images` (por camada) com o espaço real em disco, que é compartilhado entre imagens."
+    ],
+    "relatedCommands": ["docker-rmi", "docker-system-prune", "docker-build"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/image/ls/",
+    "externalReferences": [],
+    "tags": ["docker", "imagem", "listar"],
+    "keywords": ["docker images", "listar imagens", "imagens locais"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-exec",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker exec",
+    "description": "Executa um comando dentro de um container já em execução, útil para depuração e inspeção sem parar o processo principal.",
+    "syntax": "docker exec [opcoes] <container> <comando>",
+    "example": "docker exec -it app sh",
+    "result": "Abre um shell interativo dentro do container `app`, mantendo o processo principal rodando normalmente.",
+    "flags": [
+      {
+        "flag": "-it",
+        "description": "Combina modo interativo (-i) com pseudo-TTY (-t), necessário para sessões de shell."
+      },
+      {
+        "flag": "-u",
+        "description": "Executa o comando como um usuário específico dentro do container."
+      },
+      { "flag": "-w", "description": "Define o diretório de trabalho do comando." }
+    ],
+    "notes": [
+      "Diferente de `docker run`, `exec` roda em um container que já existe e está ativo, não cria um novo."
+    ],
+    "bestPractices": [
+      "Use `docker exec` para depurar em containers de imagens de produção, evitando reconstruir a imagem só para investigar."
+    ],
+    "commonMistakes": [
+      "Esquecer `-it` ao tentar abrir um shell interativo, resultando em um terminal que não aceita entrada corretamente."
+    ],
+    "relatedCommands": ["docker-run", "docker-logs", "docker-ps"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/exec/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "debug"],
+    "keywords": ["docker exec", "entrar no container", "shell no container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-logs",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker logs",
+    "description": "Exibe a saída padrão (stdout/stderr) gerada por um container, incluindo o histórico desde que ele foi iniciado.",
+    "syntax": "docker logs [opcoes] <container>",
+    "example": "docker logs -f --tail 100 app",
+    "result": "Mostra as últimas 100 linhas de log do container `app` e continua acompanhando novas linhas em tempo real.",
+    "flags": [
+      {
+        "flag": "-f",
+        "description": "Acompanha os logs em tempo real (follow), como `tail -f`."
+      },
+      { "flag": "--tail", "description": "Limita a saída às N últimas linhas." },
+      {
+        "flag": "--since",
+        "description": "Mostra apenas logs a partir de um timestamp ou duração relativa."
+      }
+    ],
+    "notes": [
+      "Só funciona bem se a aplicação escreve logs em stdout/stderr; logs gravados apenas em arquivo dentro do container não aparecem aqui."
+    ],
+    "bestPractices": [
+      "Combine `-f` e `--tail` para evitar despejar todo o histórico de logs de um container antigo na tela."
+    ],
+    "commonMistakes": [
+      "Esperar ver logs de uma aplicação que grava apenas em arquivo local, sem redirecionar para stdout."
+    ],
+    "relatedCommands": ["docker-exec", "docker-ps", "docker-inspect"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/logs/",
+    "externalReferences": [],
+    "tags": ["docker", "logs", "debug"],
+    "keywords": ["docker logs", "ver logs container", "log em tempo real"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-stop-start-restart",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker stop / start / restart",
+    "description": "Controlam o ciclo de vida de um container: `stop` envia SIGTERM (e depois SIGKILL) para pará-lo, `start` reinicia um container parado e `restart` faz as duas coisas em sequência.",
+    "syntax": "docker stop <container>\ndocker start <container>\ndocker restart <container>",
+    "example": "docker restart app",
+    "result": "O container `app` é finalizado de forma graciosa e iniciado novamente, mantendo o mesmo ID e configuração.",
+    "notes": [
+      "`docker stop` aguarda um tempo de graça (padrão 10s) antes de forçar o encerramento com SIGKILL."
+    ],
+    "bestPractices": [
+      "Prefira `docker stop` a `docker kill` sempre que possível, para dar tempo da aplicação encerrar conexões corretamente."
+    ],
+    "commonMistakes": [
+      "Usar `docker rm` quando a intenção era apenas parar o container, perdendo o estado e o ID original."
+    ],
+    "relatedCommands": ["docker-ps", "docker-rm", "docker-kill"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/stop/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "ciclo de vida"],
+    "keywords": ["docker stop", "docker start", "docker restart", "parar container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-kill",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker kill",
+    "description": "Encerra um container imediatamente, enviando SIGKILL (ou outro sinal especificado) sem aguardar tempo de graça.",
+    "syntax": "docker kill [opcoes] <container>",
+    "example": "docker kill --signal=SIGINT app",
+    "result": "O container `app` recebe o sinal SIGINT imediatamente, sem o intervalo de espera usado por `docker stop`.",
+    "flags": [
+      {
+        "flag": "--signal",
+        "description": "Define qual sinal enviar (padrão é SIGKILL)."
+      }
+    ],
+    "notes": [
+      "Diferente de `docker stop`, não há tentativa de encerramento gracioso por padrão."
+    ],
+    "bestPractices": [
+      "Reserve `docker kill` para containers travados que não respondem a `docker stop`."
+    ],
+    "commonMistakes": [
+      "Usar `docker kill` rotineiramente em vez de `docker stop`, arriscando perda de dados em processos que precisam encerrar conexões."
+    ],
+    "relatedCommands": ["docker-stop-start-restart", "docker-ps"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/kill/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "sinal"],
+    "keywords": ["docker kill", "forcar parada container", "sigkill"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-rm",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker rm",
+    "description": "Remove um ou mais containers parados, apagando seu estado e camada gravável (o sistema de arquivos criado durante a execução).",
+    "syntax": "docker rm [opcoes] <container> [container...]",
+    "example": "docker rm -f $(docker ps -aq)",
+    "result": "Todos os containers, inclusive os em execução (por causa de `-f`), são removidos.",
+    "flags": [
+      {
+        "flag": "-f",
+        "description": "Força a remoção de um container em execução (equivale a kill + rm)."
+      },
+      {
+        "flag": "-v",
+        "description": "Remove também os volumes anônimos associados ao container."
+      }
+    ],
+    "notes": [
+      "Um container removido perde qualquer dado que não esteja em um volume nomeado ou bind mount."
+    ],
+    "bestPractices": [
+      "Prefira rodar containers descartáveis com `--rm` em vez de limpar manualmente com `docker rm` depois."
+    ],
+    "commonMistakes": [
+      "Remover um container sem antes conferir se dados importantes estavam apenas na camada gravável, não em um volume."
+    ],
+    "relatedCommands": ["docker-ps", "docker-stop-start-restart", "docker-rmi"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/rm/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "remover"],
+    "keywords": ["docker rm", "remover container", "apagar container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-rmi",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker rmi",
+    "description": "Remove uma ou mais imagens Docker armazenadas localmente, liberando espaço em disco.",
+    "syntax": "docker rmi [opcoes] <imagem> [imagem...]",
+    "example": "docker rmi minha-app:1.0",
+    "result": "Untagged: minha-app:1.0\nDeleted: sha256:a1b2c3...",
+    "flags": [
+      {
+        "flag": "-f",
+        "description": "Força a remoção mesmo que a imagem esteja referenciada por containers parados."
+      }
+    ],
+    "notes": [
+      "Uma imagem em uso por um container em execução não pode ser removida sem antes parar/remover o container."
+    ],
+    "bestPractices": [
+      "Use `docker image prune -a` para remover em lote todas as imagens sem container associado, em vez de listar manualmente."
+    ],
+    "commonMistakes": [
+      "Tentar remover uma imagem base ainda referenciada por outras imagens derivadas, recebendo erro de dependência."
+    ],
+    "relatedCommands": ["docker-images", "docker-rm", "docker-system-prune"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/image/rm/",
+    "externalReferences": [],
+    "tags": ["docker", "imagem", "remover"],
+    "keywords": ["docker rmi", "remover imagem", "apagar imagem docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-network",
+    "category": "Docker",
+    "subcategory": "Redes",
+    "title": "docker network create / ls / connect",
+    "description": "Gerencia redes virtuais que permitem containers se comunicarem entre si por nome, isolando tráfego de outros grupos de containers.",
+    "syntax": "docker network create <nome>\ndocker network ls\ndocker network connect <rede> <container>",
+    "example": "docker network create app-net\ndocker run -d --network app-net --name db postgres:16\ndocker run -d --network app-net --name api minha-api",
+    "result": "Os containers `db` e `api` conseguem se comunicar usando o nome do serviço como hostname (ex: `db:5432`).",
+    "notes": [
+      "Por padrão, o driver `bridge` isola containers na mesma rede dos containers de outras redes, mas permite comunicação por nome dentro dela."
+    ],
+    "bestPractices": [
+      "Crie uma rede dedicada por aplicação em vez de usar a rede `bridge` padrão, para ter resolução de nomes automática."
+    ],
+    "commonMistakes": [
+      "Tentar acessar um container pelo nome quando ambos estão na rede `bridge` padrão, que não resolve nomes automaticamente."
+    ],
+    "relatedCommands": ["docker-run", "docker-inspect"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/network/",
+    "externalReferences": [],
+    "tags": ["docker", "rede", "network"],
+    "keywords": ["docker network", "rede entre containers", "docker network create"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-volume",
+    "category": "Docker",
+    "subcategory": "Volumes",
+    "title": "docker volume create / ls / rm",
+    "description": "Gerencia volumes nomeados, o mecanismo recomendado pelo Docker para persistir dados fora da camada gravável do container.",
+    "syntax": "docker volume create <nome>\ndocker volume ls\ndocker volume rm <nome>",
+    "example": "docker volume create db-data\ndocker run -d -v db-data:/var/lib/postgresql/data postgres:16",
+    "result": "O diretório `/var/lib/postgresql/data` do container é persistido no volume `db-data`, sobrevivendo à remoção do container.",
+    "notes": [
+      "Volumes nomeados são gerenciados pelo Docker (geralmente em `/var/lib/docker/volumes`) e sobrevivem à remoção de containers."
+    ],
+    "bestPractices": [
+      "Prefira volumes nomeados a bind mounts para dados de bancos de dados em produção, por portabilidade e performance."
+    ],
+    "commonMistakes": [
+      "Rodar `docker rm -v` acreditando que remove só o container, quando também apaga volumes anônimos associados."
+    ],
+    "relatedCommands": ["docker-run", "docker-rm"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/volume/",
+    "externalReferences": [],
+    "tags": ["docker", "volume", "persistencia"],
+    "keywords": ["docker volume", "persistir dados docker", "volume nomeado"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-bind-mount-vs-volume",
+    "category": "Docker",
+    "subcategory": "Volumes",
+    "title": "Bind mount vs. volume",
+    "description": "Duas formas de persistir/compartilhar dados com um container: bind mount aponta para um caminho específico do host, enquanto volume é gerenciado inteiramente pelo Docker.",
+    "syntax": "docker run -v <caminho-host>:<caminho-container> ...   # bind mount\ndocker run -v <nome-volume>:<caminho-container> ...    # volume",
+    "example": "docker run -v $(pwd)/src:/app/src -v node-modules:/app/node_modules minha-app",
+    "result": "O código-fonte local é montado ao vivo no container (bind mount), enquanto `node_modules` fica isolado em um volume gerenciado pelo Docker.",
+    "notes": [
+      "Bind mounts são ideais para desenvolvimento (hot reload); volumes são preferíveis para dados persistentes em produção."
+    ],
+    "bestPractices": [
+      "Use bind mounts para código durante o desenvolvimento e volumes nomeados para dados de banco em qualquer ambiente."
+    ],
+    "commonMistakes": [
+      "Usar bind mount para `node_modules`, sobrescrevendo com a pasta (possivelmente vazia ou incompatível) do host."
+    ],
+    "relatedCommands": ["docker-volume", "docker-run"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/engine/storage/",
+    "externalReferences": [],
+    "tags": ["docker", "volume", "bind mount"],
+    "keywords": ["bind mount vs volume", "montar pasta docker", "persistencia docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-inspect",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker inspect",
+    "description": "Retorna metadados detalhados em JSON sobre um container, imagem, volume ou rede: configuração, estado, IP, mounts, variáveis de ambiente e mais.",
+    "syntax": "docker inspect [opcoes] <objeto>",
+    "example": "docker inspect --format '{{.NetworkSettings.IPAddress}}' app",
+    "result": "172.17.0.2",
+    "flags": [
+      {
+        "flag": "--format",
+        "description": "Usa template Go para extrair apenas um campo específico do JSON."
+      }
+    ],
+    "notes": [
+      "Funciona para containers, imagens, volumes e redes — o tipo de objeto é inferido automaticamente."
+    ],
+    "bestPractices": [
+      "Use `--format` em scripts para extrair só o dado necessário, em vez de fazer parsing manual do JSON completo."
+    ],
+    "commonMistakes": [
+      "Fazer parsing manual da saída completa do `docker inspect` com grep/sed em vez de usar `--format` ou `jq`."
+    ],
+    "relatedCommands": ["docker-ps", "docker-network"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/inspect/",
+    "externalReferences": [],
+    "tags": ["docker", "inspect", "debug"],
+    "keywords": ["docker inspect", "metadados container", "ip do container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-tag",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker tag",
+    "description": "Cria uma nova referência (repositório:tag) apontando para uma imagem já existente, sem duplicar dados em disco.",
+    "syntax": "docker tag <imagem-origem> <novo-repositorio:tag>",
+    "example": "docker tag minha-app:latest registry.exemplo.com/time/minha-app:1.2.0",
+    "result": "A imagem local `minha-app:latest` passa a ter também a tag `registry.exemplo.com/time/minha-app:1.2.0`, pronta para `docker push`.",
+    "notes": [
+      "`docker tag` não copia a imagem; apenas cria um novo apontamento (referência) para as mesmas camadas."
+    ],
+    "bestPractices": [
+      "Use versionamento semântico nas tags (`1.2.0`) em vez de depender só de `latest` em produção."
+    ],
+    "commonMistakes": [
+      "Fazer `docker push` sem antes taguear a imagem com o nome completo do registry de destino."
+    ],
+    "relatedCommands": ["docker-build", "docker-push-pull"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/image/tag/",
+    "externalReferences": [],
+    "tags": ["docker", "tag", "versionamento"],
+    "keywords": ["docker tag", "versionar imagem", "renomear imagem docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-push-pull",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker push / pull",
+    "description": "Envia (`push`) uma imagem local para um registry remoto ou baixa (`pull`) uma imagem de um registry para uso local.",
+    "syntax": "docker push <repositorio:tag>\ndocker pull <repositorio:tag>",
+    "example": "docker push registry.exemplo.com/time/minha-app:1.2.0",
+    "result": "As camadas da imagem são enviadas ao registry; camadas já existentes remotamente são puladas automaticamente.",
+    "notes": ["Requer login prévio no registry de destino via `docker login`."],
+    "bestPractices": [
+      "Sempre especifique uma tag explícita ao fazer pull em produção; evite depender de `latest`, que pode mudar sem aviso."
+    ],
+    "commonMistakes": [
+      "Esquecer de fazer `docker login` antes do push e receber erro de autenticação/permissão negada."
+    ],
+    "relatedCommands": ["docker-tag", "docker-login"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/image/push/",
+    "externalReferences": [],
+    "tags": ["docker", "registry", "push", "pull"],
+    "keywords": ["docker push", "docker pull", "enviar imagem", "baixar imagem"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-login",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker login",
+    "description": "Autentica o CLI local em um registry de imagens (Docker Hub ou registry privado), armazenando as credenciais para uso em `push`/`pull`.",
+    "syntax": "docker login [registry] [-u <usuario>]",
+    "example": "docker login registry.exemplo.com -u meu-usuario",
+    "result": "Password: ****\nLogin Succeeded",
+    "flags": [
+      {
+        "flag": "-u",
+        "description": "Informa o usuário diretamente na linha de comando."
+      },
+      {
+        "flag": "--password-stdin",
+        "description": "Lê a senha/token via stdin, evitando expô-la no histórico do shell."
+      }
+    ],
+    "notes": ["Sem argumento de registry, o login é feito no Docker Hub por padrão."],
+    "bestPractices": [
+      "Use `--password-stdin` com um token de acesso em vez de digitar a senha diretamente, evitando que fique no histórico do shell."
+    ],
+    "commonMistakes": [
+      "Colocar a senha em texto plano na linha de comando (`-p senha`), o que fica registrado no histórico do terminal."
+    ],
+    "relatedCommands": ["docker-push-pull"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/login/",
+    "externalReferences": [],
+    "tags": ["docker", "registry", "autenticacao"],
+    "keywords": ["docker login", "autenticar registry", "docker hub login"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-system-prune",
+    "category": "Docker",
+    "subcategory": "Manutenção",
+    "title": "docker system prune",
+    "description": "Remove em lote recursos não utilizados: containers parados, redes não usadas por nenhum container, imagens dangling e (opcionalmente) cache de build.",
+    "syntax": "docker system prune [-a] [--volumes]",
+    "example": "docker system prune -a --volumes",
+    "result": "Solicita confirmação e depois remove containers parados, imagens não referenciadas por nenhum container e volumes não utilizados, liberando espaço.",
+    "flags": [
+      {
+        "flag": "-a",
+        "description": "Remove também todas as imagens não usadas por nenhum container (não só as dangling)."
+      },
+      { "flag": "--volumes", "description": "Inclui volumes não utilizados na limpeza." },
+      { "flag": "-f", "description": "Não pede confirmação antes de executar." }
+    ],
+    "notes": [
+      "É uma operação destrutiva e irreversível: dados em volumes não referenciados são apagados permanentemente com `--volumes`."
+    ],
+    "bestPractices": [
+      "Rode sem `-f` primeiro para revisar o que será removido antes de confirmar."
+    ],
+    "commonMistakes": [
+      "Usar `--volumes` sem verificar antes, apagando dados de volumes que ainda seriam necessários."
+    ],
+    "relatedCommands": ["docker-images", "docker-rm", "docker-volume"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/system/prune/",
+    "externalReferences": [],
+    "tags": ["docker", "limpeza", "manutencao"],
+    "keywords": ["docker system prune", "limpar docker", "liberar espaco docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-cp",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker cp",
+    "description": "Copia arquivos ou diretórios entre o sistema de arquivos local e o de um container, em qualquer direção, sem precisar de rede ou volume compartilhado.",
+    "syntax": "docker cp <origem> <destino>",
+    "example": "docker cp app:/app/logs/error.log ./error.log",
+    "result": "O arquivo `error.log` do container `app` é copiado para o diretório atual do host.",
+    "notes": [
+      "Funciona mesmo com o container parado, desde que ele ainda exista (não tenha sido removido)."
+    ],
+    "bestPractices": [
+      "Use para depuração pontual; para sincronização contínua de arquivos, prefira volumes ou bind mounts."
+    ],
+    "commonMistakes": [
+      "Inverter a ordem origem/destino, sobrescrevendo um arquivo local sem querer."
+    ],
+    "relatedCommands": ["docker-exec", "docker-volume"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/cp/",
+    "externalReferences": [],
+    "tags": ["docker", "arquivos", "cp"],
+    "keywords": ["docker cp", "copiar arquivo container", "extrair arquivo do container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-stats",
+    "category": "Docker",
+    "subcategory": "Monitoramento",
+    "title": "docker stats",
+    "description": "Exibe em tempo real o uso de CPU, memória, I/O de rede e disco de um ou mais containers em execução.",
+    "syntax": "docker stats [container...]",
+    "example": "docker stats app db",
+    "result": "CONTAINER   CPU %   MEM USAGE / LIMIT     NET I/O\napp         2.35%   85.4MiB / 512MiB       1.2kB / 648B",
+    "flags": [
+      {
+        "flag": "--no-stream",
+        "description": "Exibe apenas uma amostra e sai, em vez de atualizar continuamente."
+      }
+    ],
+    "notes": [
+      "Sem argumentos, mostra estatísticas de todos os containers em execução simultaneamente."
+    ],
+    "bestPractices": [
+      "Use `--no-stream` ao integrar a saída em scripts de monitoramento, evitando um processo que nunca termina."
+    ],
+    "commonMistakes": [
+      "Confundir o `%` de CPU exibido (relativo a um core) com o uso total da máquina em ambientes multi-core."
+    ],
+    "relatedCommands": ["docker-ps", "docker-inspect"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/stats/",
+    "externalReferences": [],
+    "tags": ["docker", "monitoramento", "performance"],
+    "keywords": ["docker stats", "uso de cpu container", "monitorar container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-dockerignore",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": ".dockerignore",
+    "description": "Arquivo que lista padrões de arquivos e pastas a excluir do contexto de build enviado ao daemon Docker, análogo ao `.gitignore`.",
+    "syntax": "<padrao>\n<padrao>\n...",
+    "example": "node_modules\n.git\n*.log\n.env\ndist",
+    "result": "Os diretórios `node_modules` e `.git`, arquivos `.log` e `.env`, e a pasta `dist` deixam de ser enviados como contexto de build.",
+    "notes": [
+      "Reduz o tempo de build e o tamanho do contexto enviado, além de evitar vazar segredos (`.env`) para dentro da imagem."
+    ],
+    "bestPractices": [
+      "Sempre inclua `node_modules`, `.git` e arquivos de segredo no `.dockerignore` de projetos Node.js."
+    ],
+    "commonMistakes": [
+      "Não ter `.dockerignore` e enviar `node_modules` inteiro como contexto, deixando o build lento e pesado."
+    ],
+    "relatedCommands": ["docker-build"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/build/concepts/context/#dockerignore-files",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "dockerignore"],
+    "keywords": ["dockerignore", "excluir arquivos build", "contexto de build docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-run-vs-cmd-vs-entrypoint",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "RUN vs. CMD vs. ENTRYPOINT",
+    "description": "Três instruções do Dockerfile frequentemente confundidas: RUN executa durante o build (cria uma camada), enquanto CMD e ENTRYPOINT definem o que roda quando o container inicia.",
+    "syntax": "RUN <comando>          # executa no build\nCMD [\"executavel\", \"arg\"]        # comando padrão, sobrescrevível\nENTRYPOINT [\"executavel\"]        # comando fixo, recebe args extras",
+    "example": "FROM node:20\nRUN npm install -g pnpm\nENTRYPOINT [\"node\"]\nCMD [\"server.js\"]",
+    "result": "`docker run imagem` executa `node server.js`; `docker run imagem outro.js` executa `node outro.js` (CMD é sobrescrito, ENTRYPOINT não).",
+    "notes": [
+      "Combinar ENTRYPOINT + CMD é um padrão comum: ENTRYPOINT fixa o binário, CMD fornece argumentos padrão sobrescrevíveis."
+    ],
+    "bestPractices": [
+      "Use a forma exec (`[\"comando\", \"arg\"]`) em vez da forma shell (`comando arg`) para que sinais como SIGTERM cheguem corretamente ao processo."
+    ],
+    "commonMistakes": [
+      "Usar CMD na forma shell (`CMD npm start`), o que faz o processo rodar como filho de `/bin/sh -c`, dificultando o encerramento gracioso."
+    ],
+    "relatedCommands": ["docker-multi-stage-build", "docker-healthcheck"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#cmd",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "cmd", "entrypoint"],
+    "keywords": ["run vs cmd vs entrypoint", "cmd dockerfile", "entrypoint dockerfile"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-copy-vs-add",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "COPY vs. ADD",
+    "description": "Duas instruções do Dockerfile para trazer arquivos ao contexto da imagem: COPY apenas copia arquivos locais; ADD faz o mesmo mas também extrai arquivos .tar automaticamente e aceita URLs remotas.",
+    "syntax": "COPY <origem> <destino>\nADD <origem-ou-url> <destino>",
+    "example": "COPY package.json package-lock.json ./\nADD app.tar.gz /app",
+    "result": "COPY copia os arquivos de dependência tal como estão; ADD extrai automaticamente o conteúdo de `app.tar.gz` dentro de `/app`.",
+    "notes": [
+      "O comportamento 'mágico' de ADD (extração automática, download de URL) é considerado uma fonte de builds não previsíveis."
+    ],
+    "bestPractices": [
+      "Prefira COPY na maioria dos casos; use ADD só quando precisar extrair um tarball automaticamente."
+    ],
+    "commonMistakes": [
+      "Usar ADD com uma URL remota para baixar um arquivo, quando `RUN curl` daria mais controle sobre cache e erros."
+    ],
+    "relatedCommands": ["docker-run-vs-cmd-vs-entrypoint", "docker-build"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#add",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "copy", "add"],
+    "keywords": ["copy vs add", "add dockerfile", "copy dockerfile"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-env-arg",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "ENV vs. ARG",
+    "description": "ENV define variáveis de ambiente disponíveis durante o build E em tempo de execução do container; ARG define variáveis disponíveis apenas durante o build.",
+    "syntax": "ARG <nome>[=<padrao>]\nENV <nome>=<valor>",
+    "example": "ARG NODE_ENV=production\nENV NODE_ENV=$NODE_ENV\nENV PORT=3000",
+    "result": "`NODE_ENV` fica disponível tanto no build (via ARG) quanto dentro do container em execução (via ENV); `PORT` fica fixo como variável de runtime.",
+    "notes": [
+      "Valores de ARG não persistem no container final, a menos que sejam repassados para uma ENV, como no exemplo."
+    ],
+    "bestPractices": [
+      "Nunca coloque segredos (senhas, tokens) em ARG ou ENV — eles ficam visíveis no histórico da imagem via `docker history`."
+    ],
+    "commonMistakes": [
+      "Achar que uma variável definida com ARG estará disponível dentro do container depois que ele for iniciado."
+    ],
+    "relatedCommands": ["docker-build", "docker-run"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#env",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "env", "arg"],
+    "keywords": ["env vs arg", "variavel de ambiente docker", "arg dockerfile"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-expose-workdir",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "EXPOSE e WORKDIR",
+    "description": "EXPOSE documenta a porta em que a aplicação escuta dentro do container (não publica a porta sozinha); WORKDIR define o diretório de trabalho para instruções subsequentes.",
+    "syntax": "WORKDIR <caminho>\nEXPOSE <porta>[/protocolo]",
+    "example": "WORKDIR /app\nCOPY . .\nEXPOSE 3000",
+    "result": "As instruções seguintes rodam a partir de `/app`; a imagem documenta que a aplicação escuta na porta 3000, mas ainda é necessário `-p 3000:3000` no `docker run` para publicá-la.",
+    "notes": [
+      "EXPOSE é apenas documentação/metadado — não substitui o `-p`/`--publish` no `docker run` para expor a porta ao host."
+    ],
+    "bestPractices": [
+      "Use WORKDIR em vez de encadear `RUN cd pasta && ...`, que não persiste entre instruções."
+    ],
+    "commonMistakes": [
+      "Achar que `EXPOSE 3000` sozinho já torna a aplicação acessível pelo host, sem publicar a porta com `-p`."
+    ],
+    "relatedCommands": ["docker-run", "docker-build"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#expose",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "expose", "workdir"],
+    "keywords": ["expose dockerfile", "workdir dockerfile", "porta docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-layer-caching",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "Cache de camadas (layer caching)",
+    "description": "Cada instrução do Dockerfile gera uma camada; o Docker reaproveita camadas de builds anteriores enquanto a instrução e seus arquivos de entrada não mudarem, acelerando builds subsequentes.",
+    "syntax": "# ordem que maximiza cache:\nCOPY package*.json ./\nRUN npm ci\nCOPY . .",
+    "example": "FROM node:20\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nCMD [\"node\", \"server.js\"]",
+    "result": "Enquanto `package.json`/`package-lock.json` não mudarem, o `npm ci` reaproveita o cache mesmo que o código-fonte tenha sido alterado.",
+    "notes": [
+      "O cache de uma camada é invalidado assim que qualquer instrução anterior (ou seus arquivos de entrada) muda — todas as camadas seguintes são reconstruídas."
+    ],
+    "bestPractices": [
+      "Copie primeiro os arquivos que mudam com menos frequência (manifestos de dependência) e só depois o restante do código."
+    ],
+    "commonMistakes": [
+      "Copiar todo o código-fonte antes de instalar dependências, invalidando o cache de instalação a cada mudança de código."
+    ],
+    "relatedCommands": ["docker-build", "docker-dockerignore"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/build/cache/",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "cache", "performance"],
+    "keywords": ["cache de camadas docker", "layer caching", "build cache docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-healthcheck",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "HEALTHCHECK",
+    "description": "Instrução do Dockerfile que define um comando periódico para verificar se o container está saudável, refletindo o status (healthy/unhealthy) em `docker ps`.",
+    "syntax": "HEALTHCHECK [--interval=<tempo>] [--timeout=<tempo>] [--retries=<n>] CMD <comando>",
+    "example": "HEALTHCHECK --interval=30s --timeout=3s --retries=3 \\\n  CMD curl -f http://localhost:3000/health || exit 1",
+    "result": "A cada 30 segundos, o Docker executa o curl; após 3 falhas consecutivas, o container é marcado como `unhealthy` em `docker ps`.",
+    "notes": [
+      "O comando deve retornar código de saída 0 (saudável) ou 1 (não saudável)."
+    ],
+    "bestPractices": [
+      "Combine HEALTHCHECK com orquestradores (Docker Swarm, Kubernetes) para reiniciar automaticamente containers não saudáveis."
+    ],
+    "commonMistakes": [
+      "Definir um endpoint de healthcheck que depende de serviços externos, gerando falsos negativos quando a dependência está fora do ar."
+    ],
+    "relatedCommands": ["docker-run-vs-cmd-vs-entrypoint", "docker-ps"],
+    "difficulty": "avancado",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#healthcheck",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "healthcheck"],
+    "keywords": ["healthcheck dockerfile", "container saudavel", "docker healthcheck"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-save-load",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker save / load",
+    "description": "Exporta (`save`) uma ou mais imagens para um arquivo `.tar` e importa (`load`) esse arquivo de volta como imagem, sem depender de um registry.",
+    "syntax": "docker save -o <arquivo.tar> <imagem>\ndocker load -i <arquivo.tar>",
+    "example": "docker save -o minha-app.tar minha-app:1.0\ndocker load -i minha-app.tar",
+    "result": "O arquivo `minha-app.tar` contém todas as camadas da imagem; `docker load` a recria localmente, disponível em `docker images`.",
+    "flags": [
+      { "flag": "-o", "description": "Define o arquivo de saída em `docker save`." },
+      { "flag": "-i", "description": "Define o arquivo de entrada em `docker load`." }
+    ],
+    "notes": [
+      "Diferente de `docker export`/`import` (que trabalham com o sistema de arquivos de um container), `save`/`load` preservam histórico de camadas e metadados da imagem."
+    ],
+    "bestPractices": [
+      "Use `docker save`/`load` para transferir imagens entre ambientes sem acesso a um registry, como redes isoladas (air-gapped)."
+    ],
+    "commonMistakes": [
+      "Confundir `docker save` (imagem) com `docker export` (container), que gera um tar sem histórico de camadas."
+    ],
+    "relatedCommands": ["docker-images", "docker-tag", "docker-push-pull"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/image/save/",
+    "externalReferences": [],
+    "tags": ["docker", "imagem", "backup"],
+    "keywords": [
+      "docker save",
+      "docker load",
+      "exportar imagem docker",
+      "importar imagem docker"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-commit",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "docker commit",
+    "description": "Cria uma nova imagem a partir do estado atual de um container em execução ou parado, congelando suas alterações na camada gravável.",
+    "syntax": "docker commit [opcoes] <container> <novo-repositorio:tag>",
+    "example": "docker commit -m \"debug com pacotes extras\" app app-debug:1.0",
+    "result": "A imagem `app-debug:1.0` é criada com o estado atual do container `app`, incluindo qualquer alteração feita em tempo de execução.",
+    "flags": [
+      { "flag": "-m", "description": "Adiciona uma mensagem descrevendo o commit." },
+      { "flag": "-a", "description": "Define o autor da imagem." }
+    ],
+    "notes": [
+      "Gera imagens não reproduzíveis (não há Dockerfile associado), por isso é considerado antipadrão para builds de produção."
+    ],
+    "bestPractices": [
+      "Prefira sempre reconstruir a imagem a partir de um Dockerfile versionado; use `commit` só para depuração pontual ou prototipagem rápida."
+    ],
+    "commonMistakes": [
+      "Usar `docker commit` como substituto de um pipeline de build reproduzível, perdendo rastreabilidade de como a imagem foi criada."
+    ],
+    "relatedCommands": ["docker-build", "docker-exec"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/cli/docker/container/commit/",
+    "externalReferences": [],
+    "tags": ["docker", "imagem", "commit"],
+    "keywords": ["docker commit", "criar imagem de container", "congelar container"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-user-instruction",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "Instrução USER",
+    "description": "Define o usuário (e opcionalmente grupo) sob o qual as instruções seguintes do Dockerfile — e o processo principal do container — são executadas, evitando rodar como root.",
+    "syntax": "USER <usuario>[:<grupo>]",
+    "example": "RUN addgroup -S app && adduser -S app -G app\nUSER app\nCMD [\"node\", \"server.js\"]",
+    "result": "O processo `node server.js` roda com o usuário não privilegiado `app`, em vez de root (padrão quando USER não é definido).",
+    "notes": [
+      "Sem USER explícito, o container roda como root por padrão, o que amplia o impacto de uma eventual falha de segurança na aplicação."
+    ],
+    "bestPractices": [
+      "Crie um usuário dedicado e sem privilégios no Dockerfile para qualquer imagem exposta publicamente."
+    ],
+    "commonMistakes": [
+      "Definir USER mas esquecer de ajustar permissões dos arquivos copiados (COPY), causando erros de 'permission denied' em runtime."
+    ],
+    "relatedCommands": ["docker-run-vs-cmd-vs-entrypoint", "docker-build"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#user",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "seguranca", "user"],
+    "keywords": ["user dockerfile", "container sem root", "seguranca docker"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-label",
+    "category": "Docker",
+    "subcategory": "Dockerfile",
+    "title": "Instrução LABEL",
+    "description": "Adiciona metadados chave-valor a uma imagem, como versão, mantenedor ou link do repositório, consultáveis via `docker inspect`.",
+    "syntax": "LABEL <chave>=\"<valor>\" [<chave>=\"<valor>\" ...]",
+    "example": "LABEL maintainer=\"time-plataforma@empresa.com\" \\\n      version=\"1.2.0\" \\\n      org.opencontainers.image.source=\"https://github.com/empresa/minha-app\"",
+    "result": "Os metadados ficam associados à imagem e aparecem em `docker inspect minha-app` sob a chave `Config.Labels`.",
+    "notes": [
+      "Ferramentas de segurança e orquestradores costumam usar labels para filtrar, agrupar ou aplicar políticas a imagens/containers."
+    ],
+    "bestPractices": [
+      "Use as chaves padronizadas do OCI Image Spec (`org.opencontainers.image.*`) para metadados interoperáveis entre ferramentas."
+    ],
+    "commonMistakes": [
+      "Usar LABEL para armazenar segredos ou configuração sensível, já que labels ficam visíveis publicamente em `docker inspect`."
+    ],
+    "relatedCommands": ["docker-inspect", "docker-build"],
+    "difficulty": "iniciante",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/reference/dockerfile/#label",
+    "externalReferences": [],
+    "tags": ["docker", "dockerfile", "metadados", "label"],
+    "keywords": ["label dockerfile", "metadados imagem docker", "docker inspect labels"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "docker-restart-policy",
+    "category": "Docker",
+    "subcategory": "Comandos básicos",
+    "title": "Política de reinício (--restart)",
+    "description": "Define o comportamento automático de reinício de um container quando ele para ou o daemon Docker é reiniciado, sem depender de um supervisor externo.",
+    "syntax": "docker run --restart=<politica> ...",
+    "example": "docker run -d --restart=unless-stopped --name api minha-api",
+    "result": "O container `api` reinicia automaticamente em caso de falha ou reboot do host, exceto se tiver sido parado manualmente com `docker stop`.",
+    "parameters": [
+      {
+        "name": "politica",
+        "description": "`no` (padrão), `on-failure[:N]`, `always` ou `unless-stopped`.",
+        "required": true
+      }
+    ],
+    "notes": [
+      "`always` reinicia mesmo containers parados manualmente após um restart do daemon; `unless-stopped` respeita uma parada manual anterior."
+    ],
+    "bestPractices": [
+      "Use `unless-stopped` para serviços de longa duração em produção, permitindo parar manualmente sem que o Docker reinicie o container no próximo boot."
+    ],
+    "commonMistakes": [
+      "Usar `always` em containers de tarefas pontuais (jobs), fazendo-os reiniciar indefinidamente mesmo após terminarem com sucesso."
+    ],
+    "relatedCommands": ["docker-run", "docker-stop-start-restart"],
+    "difficulty": "intermediario",
+    "platform": ["linux", "windows", "macos"],
+    "version": "20+",
+    "officialDocumentation": "https://docs.docker.com/engine/containers/start-containers-automatically/",
+    "externalReferences": [],
+    "tags": ["docker", "container", "restart", "producao"],
+    "keywords": [
+      "docker restart policy",
+      "reiniciar container automaticamente",
+      "unless-stopped"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

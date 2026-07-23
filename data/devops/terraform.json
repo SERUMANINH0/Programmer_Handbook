@@ -972,5 +972,286 @@
     ],
     "favorite": false,
     "updatedAt": "2026-07-22"
+  },
+  {
+    "id": "tf-locals",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Bloco locals",
+    "description": "Define valores locais nomeados, calculados a partir de expressões, para evitar repetição e dar nomes descritivos a lógicas usadas várias vezes na configuração.",
+    "syntax": "locals {\n  <nome> = <expressao>\n}",
+    "example": "locals {\n  ambiente     = terraform.workspace\n  nome_projeto = \"app-${local.ambiente}\"\n  tags_comuns  = { Projeto = \"app\", Ambiente = local.ambiente }\n}\n\nresource \"aws_s3_bucket\" \"assets\" {\n  bucket = \"${local.nome_projeto}-assets\"\n  tags   = local.tags_comuns\n}",
+    "result": "O bucket é nomeado dinamicamente conforme o workspace ativo, e as tags comuns ficam centralizadas em um único lugar em vez de repetidas em cada recurso.",
+    "notes": [
+      "Diferente de `variable`, um `local` não recebe valor de fora da configuração — é sempre calculado internamente a partir de expressões."
+    ],
+    "bestPractices": [
+      "Use locals para centralizar nomes, tags comuns e expressões repetidas entre múltiplos recursos, reduzindo duplicação."
+    ],
+    "commonMistakes": [
+      "Abusar de locals para lógica excessivamente complexa, tornando a configuração difícil de ler; nesses casos, considere um módulo."
+    ],
+    "relatedCommands": ["tf-variables-outputs", "tf-resource-block"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/values/locals",
+    "externalReferences": [],
+    "tags": ["terraform", "locals", "hcl"],
+    "keywords": ["terraform locals", "valores locais terraform", "bloco locals"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-depends-on",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "depends_on explícito",
+    "description": "Meta-argumento que força uma dependência entre recursos quando o Terraform não consegue inferi-la automaticamente pelas referências de atributos, garantindo a ordem correta de criação/destruição.",
+    "syntax": "resource \"<tipo>\" \"<nome>\" {\n  depends_on = [<endereco-do-recurso>]\n}",
+    "example": "resource \"aws_iam_role_policy\" \"permite_s3\" {\n  # ...\n}\n\nresource \"aws_instance\" \"web\" {\n  # nao referencia atributos da policy diretamente, mas precisa dela pronta antes\n  depends_on = [aws_iam_role_policy.permite_s3]\n}",
+    "result": "O Terraform garante que `aws_iam_role_policy.permite_s3` seja criada antes de `aws_instance.web`, mesmo sem referência direta de atributo entre os dois.",
+    "notes": [
+      "Na maioria dos casos, referenciar um atributo do outro recurso (ex: `aws_iam_role.x.arn`) já cria a dependência implícita, tornando `depends_on` desnecessário."
+    ],
+    "bestPractices": [
+      "Prefira dependências implícitas (referenciando atributos) sempre que possível; reserve `depends_on` para casos onde não há atributo para referenciar."
+    ],
+    "commonMistakes": [
+      "Usar `depends_on` como solução padrão em vez de investigar se uma referência de atributo resolveria a dependência de forma mais natural."
+    ],
+    "relatedCommands": ["tf-resource-block", "tf-cmd-plan"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on",
+    "externalReferences": [],
+    "tags": ["terraform", "depends_on", "hcl"],
+    "keywords": [
+      "terraform depends_on",
+      "dependencia explicita terraform",
+      "ordem de criacao terraform"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-provisioners",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Provisioners (local-exec e remote-exec)",
+    "description": "Executam scripts/comandos como parte da criação ou destruição de um recurso — `local-exec` roda na máquina que executa o Terraform, `remote-exec` roda dentro do recurso provisionado (via SSH/WinRM).",
+    "syntax": "resource \"<tipo>\" \"<nome>\" {\n  provisioner \"local-exec\" {\n    command = \"<comando>\"\n  }\n}",
+    "example": "resource \"aws_instance\" \"web\" {\n  # ...\n  provisioner \"local-exec\" {\n    command = \"echo ${self.public_ip} >> ips.txt\"\n  }\n}",
+    "result": "Após a criação da instância, o IP público é gravado no arquivo local `ips.txt` na máquina que rodou o `apply`.",
+    "notes": [
+      "A documentação oficial do Terraform trata provisioners como 'último recurso' — a maioria dos casos de uso é melhor resolvida com user_data, cloud-init ou ferramentas de configuração dedicadas (Ansible, Chef)."
+    ],
+    "bestPractices": [
+      "Prefira `user_data`/imagens pré-configuradas a provisioners sempre que possível, pois provisioners não são idempotentes e dificultam o replay do plano."
+    ],
+    "commonMistakes": [
+      "Depender de `remote-exec` para configuração completa de servidores, tornando o provisionamento lento, frágil e difícil de depurar em falhas de rede."
+    ],
+    "relatedCommands": ["tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax",
+    "externalReferences": [],
+    "tags": ["terraform", "provisioners", "hcl"],
+    "keywords": ["terraform provisioner", "local-exec", "remote-exec"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-dynamic-blocks",
+    "category": "Terraform",
+    "subcategory": "Fundamentos",
+    "title": "Dynamic blocks",
+    "description": "Gera dinamicamente blocos aninhados repetidos (como regras de um security group) a partir de uma coleção, evitando repetir manualmente o mesmo bloco várias vezes.",
+    "syntax": "dynamic \"<nome-do-bloco>\" {\n  for_each = <colecao>\n  content {\n    <atributos-usando-<nome-do-bloco>.value>\n  }\n}",
+    "example": "resource \"aws_security_group\" \"web\" {\n  dynamic \"ingress\" {\n    for_each = [80, 443]\n    content {\n      from_port   = ingress.value\n      to_port     = ingress.value\n      protocol    = \"tcp\"\n      cidr_blocks = [\"0.0.0.0/0\"]\n    }\n  }\n}",
+    "result": "Duas regras de ingress são geradas automaticamente, uma para a porta 80 e outra para a 443, sem repetir o bloco `ingress` manualmente.",
+    "notes": [
+      "Só é necessário para blocos aninhados repetíveis (como `ingress`); atributos simples de um resource já usam `for_each`/`count` no nível do resource."
+    ],
+    "bestPractices": [
+      "Use dynamic blocks apenas quando a lista de blocos aninhados realmente varia por entrada; para um número fixo e pequeno de blocos, blocos estáticos são mais legíveis."
+    ],
+    "commonMistakes": [
+      "Usar dynamic blocks para casos com quantidade fixa e pequena de blocos, adicionando complexidade desnecessária à leitura do código."
+    ],
+    "relatedCommands": ["tf-count-for-each", "tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 0.12+",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks",
+    "externalReferences": [],
+    "tags": ["terraform", "dynamic block", "hcl"],
+    "keywords": [
+      "terraform dynamic block",
+      "bloco dinamico terraform",
+      "gerar blocos aninhados"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-console",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform console",
+    "description": "Abre um REPL interativo para avaliar expressões HCL no contexto da configuração e do state atuais, útil para testar funções e referências antes de usá-las no código.",
+    "syntax": "terraform console",
+    "example": "$ terraform console\n> aws_instance.web.public_ip\n\"18.230.10.5\"\n> upper(\"producao\")\n\"PRODUCAO\"",
+    "result": "Cada expressão digitada é avaliada imediatamente contra o state/configuração atuais, sem alterar nada na infraestrutura.",
+    "notes": [
+      "É somente leitura: não é possível criar, atualizar ou destruir recursos a partir do console."
+    ],
+    "bestPractices": [
+      "Use o console para testar o comportamento de funções built-in (`lookup`, `try`, `jsonencode`) antes de aplicá-las em um recurso real."
+    ],
+    "relatedCommands": ["tf-cmd-output", "tf-state-overview"],
+    "difficulty": "intermediario",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/console",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "console"],
+    "keywords": ["terraform console", "testar expressao hcl", "repl terraform"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-replace-taint",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform apply -replace (e taint legado)",
+    "description": "Força a destruição e recriação de um recurso específico no próximo apply, mesmo sem alteração na configuração — por exemplo, para resolver um recurso corrompido ou testar recriação.",
+    "syntax": "terraform apply -replace=<endereco-do-recurso>",
+    "example": "terraform apply -replace=aws_instance.web",
+    "result": "aws_instance.web: Destroying... (por causa da flag -replace)\naws_instance.web: Creating...\n\nApply complete! Resources: 1 added, 0 changed, 1 destroyed.",
+    "notes": [
+      "`-replace` (Terraform 0.15+) substitui o antigo comando `terraform taint`, que marcava o recurso como 'tainted' para recriação no próximo apply."
+    ],
+    "bestPractices": [
+      "Use `-replace` em vez do `taint` legado; ele é explícito no momento do apply e não deixa um estado 'marcado' esquecido no state."
+    ],
+    "commonMistakes": [
+      "Usar `terraform taint` (legado) e esquecer que o recurso ficou marcado, causando uma recriação inesperada em um apply futuro não relacionado."
+    ],
+    "relatedCommands": ["tf-cmd-apply", "tf-state-overview"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 0.15+",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/apply#replace-address",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "replace", "taint"],
+    "keywords": [
+      "terraform apply -replace",
+      "terraform taint",
+      "forcar recriacao recurso"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-moved-block",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "Bloco moved",
+    "description": "Declara de forma versionada no código que um recurso foi renomeado ou movido (de módulo, por exemplo), permitindo que o Terraform atualize o state automaticamente sem `terraform state mv` manual.",
+    "syntax": "moved {\n  from = <endereco-antigo>\n  to   = <endereco-novo>\n}",
+    "example": "moved {\n  from = aws_instance.web\n  to   = aws_instance.web_server\n}",
+    "result": "No próximo plan/apply, o Terraform detecta o bloco `moved` e atualiza o state de `aws_instance.web` para `aws_instance.web_server` automaticamente, sem propor destruir/recriar.",
+    "notes": [
+      "Diferente de `terraform state mv`, o bloco `moved` fica registrado no código e é aplicado automaticamente em qualquer ambiente/máquina que rodar o apply, sem passo manual extra."
+    ],
+    "bestPractices": [
+      "Prefira `moved {}` a `terraform state mv` sempre que a refatoração precisar ser replicada em múltiplos ambientes (dev, staging, prod)."
+    ],
+    "relatedCommands": ["tf-state-mv", "tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.1+",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/language/modules/develop/refactoring",
+    "externalReferences": [],
+    "tags": ["terraform", "moved", "refatoracao"],
+    "keywords": [
+      "terraform moved block",
+      "bloco moved terraform",
+      "refatorar recurso versionado"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-graph",
+    "category": "Terraform",
+    "subcategory": "Comandos",
+    "title": "terraform graph",
+    "description": "Gera uma representação visual (formato DOT do Graphviz) do grafo de dependências entre os recursos da configuração, útil para entender e depurar a ordem de criação/destruição.",
+    "syntax": "terraform graph | dot -Tsvg > grafo.svg",
+    "example": "terraform graph | dot -Tsvg > grafo.svg",
+    "result": "Um arquivo SVG é gerado mostrando cada recurso como um nó e as dependências entre eles como arestas direcionadas.",
+    "notes": [
+      "Requer o Graphviz (`dot`) instalado separadamente para converter a saída DOT em uma imagem visualizável."
+    ],
+    "bestPractices": [
+      "Use `terraform graph` para investigar por que o Terraform está planejando uma ordem de criação/destruição inesperada em configurações complexas."
+    ],
+    "relatedCommands": ["tf-depends-on", "tf-resource-block"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/graph",
+    "externalReferences": [],
+    "tags": ["terraform", "cli", "graph"],
+    "keywords": [
+      "terraform graph",
+      "grafo de dependencias terraform",
+      "visualizar dependencias"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "tf-state-list-show-rm",
+    "category": "Terraform",
+    "subcategory": "State",
+    "title": "terraform state list / show / rm",
+    "description": "Subcomandos para inspecionar e manipular o state diretamente: `list` lista os recursos rastreados, `show` exibe os atributos de um recurso específico, `rm` remove um recurso do state sem destruí-lo na infraestrutura real.",
+    "syntax": "terraform state list [<filtro>]\nterraform state show <endereco>\nterraform state rm <endereco>",
+    "example": "terraform state list\nterraform state show aws_instance.web\nterraform state rm aws_s3_bucket.legado",
+    "result": "`list` exibe todos os endereços de recursos no state; `show` exibe os atributos completos de `aws_instance.web`; `rm` remove `aws_s3_bucket.legado` do state, mas o bucket continua existindo na AWS.",
+    "notes": [
+      "`terraform state rm` não destrói o recurso real — apenas faz o Terraform 'esquecer' dele, útil ao transferir a gestão de um recurso para outra configuração."
+    ],
+    "bestPractices": [
+      "Use `state show` para inspecionar rapidamente os atributos reais de um recurso sem precisar acessar o console do provedor."
+    ],
+    "commonMistakes": [
+      "Confundir `state rm` com `destroy -target`: o primeiro só remove do state (o recurso real continua existindo, órfão), o segundo efetivamente destrói o recurso."
+    ],
+    "relatedCommands": ["tf-state-overview", "tf-state-mv"],
+    "difficulty": "avancado",
+    "platform": ["agnostic"],
+    "language": "HCL",
+    "version": "Terraform 1.x",
+    "officialDocumentation": "https://developer.hashicorp.com/terraform/cli/commands/state/list",
+    "externalReferences": [],
+    "tags": ["terraform", "state", "cli"],
+    "keywords": ["terraform state list", "terraform state show", "terraform state rm"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]

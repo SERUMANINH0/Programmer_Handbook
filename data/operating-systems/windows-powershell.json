@@ -64,5 +64,1603 @@
     "keywords": ["pipeline powershell", "objetos powershell"],
     "favorite": false,
     "updatedAt": "2026-07-01"
+  },
+  {
+    "id": "powershell-get-process",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema",
+    "title": "Get-Process",
+    "description": "Lista os processos em execução no sistema, com CPU, memória e ID, equivalente ao Gerenciador de Tarefas em linha de comando.",
+    "syntax": "Get-Process [-Name <nome>] [-Id <id>]",
+    "example": "Get-Process -Name node | Sort-Object CPU -Descending",
+    "result": "Lista todos os processos node.exe em execução, ordenados pelo maior consumo de CPU.",
+    "aliases": ["ps", "gps"],
+    "flags": [
+      { "flag": "-Name", "description": "Filtra processos pelo nome (aceita curinga)." },
+      { "flag": "-Id", "description": "Busca um processo específico pelo PID." }
+    ],
+    "notes": [
+      "As colunas CPU exibidas são segundos de CPU acumulados desde o início do processo, não percentual instantâneo."
+    ],
+    "bestPractices": [
+      "Combine com `Stop-Process` via pipeline para encerrar processos filtrados (`Get-Process node | Stop-Process`)."
+    ],
+    "commonMistakes": [
+      "Confundir a coluna CPU (tempo acumulado) com uso percentual em tempo real."
+    ],
+    "relatedCommands": ["powershell-start-process"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/get-process",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "processos"],
+    "keywords": ["get-process", "listar processos powershell", "task manager powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-set-location",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Set-Location",
+    "description": "Muda o diretório de trabalho atual do console, equivalente ao `cd`.",
+    "syntax": "Set-Location [-Path] <caminho>",
+    "example": "Set-Location -Path C:\\Projetos\\app",
+    "result": "O prompt passa a refletir C:\\Projetos\\app como diretório atual.",
+    "aliases": ["cd", "chdir", "sl"],
+    "notes": [
+      "`Set-Location -` volta para o diretório anterior, e `Push-Location`/`Pop-Location` mantêm uma pilha de diretórios."
+    ],
+    "bestPractices": [
+      "Use `Push-Location`/`Pop-Location` em scripts que precisam voltar ao diretório original ao final."
+    ],
+    "commonMistakes": [
+      "Usar caminhos relativos sem verificar antes o diretório atual com `Get-Location`."
+    ],
+    "relatedCommands": ["powershell-get-childitem", "powershell-test-path"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/set-location",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": ["set-location", "cd powershell", "mudar diretorio"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-content",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Get-Content",
+    "description": "Lê o conteúdo de um arquivo linha a linha, equivalente ao `cat`/`type`, com suporte a leitura contínua (tail).",
+    "syntax": "Get-Content [-Path] <arquivo> [-Tail <n>] [-Wait]",
+    "example": "Get-Content -Path .\\app.log -Tail 20 -Wait",
+    "result": "Mostra as últimas 20 linhas do arquivo e continua exibindo novas linhas conforme são escritas.",
+    "aliases": ["cat", "type", "gc"],
+    "flags": [
+      { "flag": "-Tail", "description": "Mostra apenas as N últimas linhas." },
+      {
+        "flag": "-Wait",
+        "description": "Mantém o arquivo aberto e exibe linhas novas em tempo real."
+      }
+    ],
+    "notes": ["`-Tail -Wait` juntos reproduzem o comportamento do `tail -f` do Linux."],
+    "bestPractices": [
+      "Use `-Raw` quando precisar do conteúdo inteiro como uma única string, em vez de um array de linhas."
+    ],
+    "commonMistakes": [
+      "Ler arquivos muito grandes sem `-Tail`, carregando todo o conteúdo em memória desnecessariamente."
+    ],
+    "relatedCommands": ["powershell-out-file"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/get-content",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": [
+      "get-content",
+      "cat powershell",
+      "ler arquivo powershell",
+      "tail powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-out-file",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Out-File / Set-Content",
+    "description": "Grava a saída de um comando ou pipeline em um arquivo de texto. `Out-File` trabalha com o pipeline de objetos formatados; `Set-Content` grava strings diretamente e é mais rápido para texto simples.",
+    "syntax": "<comando> | Out-File -FilePath <arquivo> [-Append]\nSet-Content -Path <arquivo> -Value <texto>",
+    "example": "Get-Process | Out-File -FilePath processos.txt\nSet-Content -Path config.txt -Value \"ambiente=producao\"",
+    "result": "processos.txt contém a listagem formatada dos processos; config.txt contém a linha de texto informada.",
+    "flags": [
+      {
+        "flag": "-Append",
+        "description": "Adiciona ao final do arquivo em vez de sobrescrever."
+      },
+      { "flag": "-Encoding", "description": "Define a codificação de saída (ex: UTF8)." }
+    ],
+    "notes": [
+      "`>` e `>>` no console são atalhos para `Out-File` e `Out-File -Append`, respectivamente."
+    ],
+    "bestPractices": [
+      "Prefira `Set-Content`/`Add-Content` para escrever texto puro; use `Out-File` quando quiser preservar a formatação de tabela do console."
+    ],
+    "commonMistakes": [
+      "Esperar que `Out-File` grave o objeto original (para isso, use `Export-Csv` ou `ConvertTo-Json` antes)."
+    ],
+    "relatedCommands": ["powershell-get-content", "powershell-export-csv"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/out-file",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": ["out-file", "set-content", "salvar em arquivo powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-select-object",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de objetos",
+    "title": "Select-Object",
+    "description": "Seleciona propriedades específicas de objetos no pipeline, ou limita a quantidade de itens retornados.",
+    "syntax": "<comando> | Select-Object -Property <propriedades> [-First <n>] [-Last <n>]",
+    "example": "Get-Process | Select-Object -Property Name, CPU -First 5",
+    "result": "Retorna apenas os campos Name e CPU dos 5 primeiros processos da lista.",
+    "aliases": ["select"],
+    "flags": [
+      { "flag": "-First", "description": "Retorna apenas os N primeiros objetos." },
+      {
+        "flag": "-ExpandProperty",
+        "description": "'Achata' uma propriedade, retornando seu valor bruto em vez de um objeto."
+      }
+    ],
+    "notes": [
+      "`Select-Object -ExpandProperty Name` retorna apenas os valores da propriedade, como uma lista de strings simples."
+    ],
+    "bestPractices": [
+      "Use `Select-Object` para reduzir o objeto ao mínimo necessário antes de exportar ou serializar em JSON/CSV."
+    ],
+    "commonMistakes": [
+      "Confundir `Select-Object -First N` (objetos) com `Format-Table` (que só afeta a exibição, não os dados)."
+    ],
+    "relatedCommands": ["powershell-where-object", "powershell-foreach-object"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/select-object",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "pipeline"],
+    "keywords": ["select-object", "selecionar propriedades powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-where-object",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de objetos",
+    "title": "Where-Object",
+    "description": "Filtra objetos do pipeline de acordo com uma condição booleana, equivalente ao `filter`/`grep` sobre objetos estruturados.",
+    "syntax": "<comando> | Where-Object { <condicao> }",
+    "example": "Get-Service | Where-Object { $_.Status -eq \"Stopped\" }",
+    "result": "Lista apenas os serviços cujo status é 'Stopped'.",
+    "aliases": ["where", "?"],
+    "notes": [
+      "Existe também a sintaxe simplificada `Where-Object Status -eq 'Stopped'`, sem chaves nem `$_`."
+    ],
+    "bestPractices": [
+      "Filtre o mais cedo possível no pipeline para reduzir a quantidade de objetos processados pelos comandos seguintes."
+    ],
+    "commonMistakes": [
+      "Usar `=` (atribuição) em vez de `-eq` (comparação) dentro da condição."
+    ],
+    "relatedCommands": ["powershell-select-object", "powershell-comparison-operators"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/where-object",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "pipeline"],
+    "keywords": ["where-object", "filtrar powershell", "grep powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-foreach-object",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de objetos",
+    "title": "ForEach-Object",
+    "description": "Executa um bloco de script para cada objeto recebido do pipeline, permitindo transformar ou agir sobre cada item individualmente.",
+    "syntax": "<comando> | ForEach-Object { <script usando $_> }",
+    "example": "Get-ChildItem *.txt | ForEach-Object { Rename-Item $_ -NewName ($_.BaseName + \"_bkp.txt\") }",
+    "result": "Renomeia cada arquivo .txt adicionando o sufixo '_bkp' antes da extensão.",
+    "aliases": ["foreach", "%"],
+    "notes": [
+      "Diferente do `foreach` (statement, roda em memória), `ForEach-Object` processa item a item conforme chegam do pipeline (streaming), sendo mais eficiente em coleções grandes."
+    ],
+    "bestPractices": [
+      "Para operações simples, prefira o parâmetro `-Parallel` (PowerShell 7+) quando precisar paralelizar chamadas independentes."
+    ],
+    "commonMistakes": [
+      "Usar `ForEach-Object` para apenas filtrar dados, quando `Where-Object` é mais apropriado e legível."
+    ],
+    "relatedCommands": ["powershell-where-object", "powershell-select-object"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/foreach-object",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "pipeline"],
+    "keywords": ["foreach-object", "iterar powershell", "loop pipeline powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-new-item",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "New-Item",
+    "description": "Cria um novo arquivo, diretório ou outro tipo de item suportado pelo provider atual.",
+    "syntax": "New-Item -Path <caminho> -ItemType <File|Directory> [-Value <conteudo>]",
+    "example": "New-Item -Path .\\scripts -ItemType Directory\nNew-Item -Path .\\scripts\\deploy.ps1 -ItemType File",
+    "result": "Cria o diretório 'scripts' e, em seguida, um arquivo vazio 'deploy.ps1' dentro dele.",
+    "flags": [
+      {
+        "flag": "-ItemType",
+        "description": "Define o tipo do item: File, Directory, SymbolicLink, etc."
+      },
+      {
+        "flag": "-Force",
+        "description": "Sobrescreve o item se já existir, sem pedir confirmação."
+      }
+    ],
+    "notes": [
+      "`New-Item -ItemType SymbolicLink` cria links simbólicos, exigindo privilégios elevados em versões mais antigas do Windows."
+    ],
+    "bestPractices": [
+      "Combine com `Test-Path` antes de criar, para evitar sobrescrever itens existentes acidentalmente sem `-Force`."
+    ],
+    "commonMistakes": [
+      "Esquecer `-ItemType Directory` ao criar uma pasta, resultando na criação de um arquivo com esse nome."
+    ],
+    "relatedCommands": ["powershell-test-path", "powershell-remove-item"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/new-item",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": [
+      "new-item",
+      "criar arquivo powershell",
+      "criar pasta powershell",
+      "mkdir powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-remove-item",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Remove-Item",
+    "description": "Remove arquivos, diretórios ou outros itens, equivalente ao `rm`/`del`, com suporte a exclusão recursiva.",
+    "syntax": "Remove-Item [-Path] <caminho> [-Recurse] [-Force]",
+    "example": "Remove-Item -Path .\\dist -Recurse -Force",
+    "result": "Remove a pasta 'dist' e todo o seu conteúdo, sem pedir confirmação e ignorando atributos somente leitura.",
+    "aliases": ["rm", "del", "erase", "ri"],
+    "flags": [
+      {
+        "flag": "-Recurse",
+        "description": "Remove diretórios e todo o conteúdo dentro deles."
+      },
+      {
+        "flag": "-Force",
+        "description": "Remove itens ocultos/somente-leitura sem confirmação."
+      },
+      {
+        "flag": "-WhatIf",
+        "description": "Simula a execução, mostrando o que seria removido sem de fato remover."
+      }
+    ],
+    "notes": [
+      "Diferente do Bash, remover um diretório com conteúdo exige `-Recurse` explicitamente."
+    ],
+    "bestPractices": [
+      "Use `-WhatIf` antes de comandos destrutivos em scripts para conferir o efeito antes de rodar de verdade."
+    ],
+    "commonMistakes": [
+      "Rodar `Remove-Item -Recurse -Force` em variáveis de caminho vazias ($null), apagando o diretório atual inteiro."
+    ],
+    "relatedCommands": ["powershell-new-item", "powershell-copy-item"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/remove-item",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": ["remove-item", "deletar arquivo powershell", "rm powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-copy-item",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Copy-Item / Move-Item",
+    "description": "Copia ou move arquivos e diretórios de um caminho para outro. `Copy-Item` duplica o item; `Move-Item` transfere (equivalente a copiar + apagar a origem).",
+    "syntax": "Copy-Item -Path <origem> -Destination <destino> [-Recurse]\nMove-Item -Path <origem> -Destination <destino>",
+    "example": "Copy-Item -Path .\\build -Destination D:\\backup\\build -Recurse",
+    "result": "Copia recursivamente todo o conteúdo da pasta 'build' para D:\\backup\\build.",
+    "aliases": ["cp", "copy", "cpi", "mv", "move", "mi"],
+    "flags": [
+      {
+        "flag": "-Recurse",
+        "description": "Necessário para copiar diretórios com subpastas."
+      },
+      {
+        "flag": "-Force",
+        "description": "Sobrescreve arquivos de destino já existentes."
+      }
+    ],
+    "notes": [
+      "Sem `-Recurse`, `Copy-Item` em um diretório copia apenas a pasta vazia, não seu conteúdo."
+    ],
+    "bestPractices": [
+      "Use `Move-Item` em vez de `Copy-Item` + `Remove-Item` separados, que é atômico e mais seguro."
+    ],
+    "commonMistakes": ["Esquecer `-Recurse` ao copiar uma pasta com subdiretórios."],
+    "relatedCommands": ["powershell-remove-item", "powershell-new-item"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/copy-item",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": [
+      "copy-item",
+      "move-item",
+      "copiar arquivo powershell",
+      "mover arquivo powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-test-path",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema de arquivos",
+    "title": "Test-Path",
+    "description": "Verifica se um caminho (arquivo, diretório ou chave de registro) existe, retornando um valor booleano.",
+    "syntax": "Test-Path -Path <caminho>",
+    "example": "if (Test-Path -Path .\\config.json) { Write-Output \"Arquivo existe\" }",
+    "result": "$true se o arquivo config.json existir no diretório atual, $false caso contrário.",
+    "notes": [
+      "Funciona com qualquer provider do PowerShell, incluindo `HKLM:\\` (registro) e `Env:\\` (variáveis de ambiente)."
+    ],
+    "bestPractices": [
+      "Sempre valide caminhos com `Test-Path` antes de operações destrutivas em scripts automatizados."
+    ],
+    "commonMistakes": [
+      "Assumir que `Test-Path` lança erro quando o caminho não existe — na verdade ele apenas retorna `$false`."
+    ],
+    "relatedCommands": ["powershell-new-item", "powershell-set-location"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/test-path",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arquivos"],
+    "keywords": ["test-path", "verificar arquivo existe powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-service",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema",
+    "title": "Get-Service / Start-Service / Stop-Service",
+    "description": "Consulta e controla serviços do Windows (Windows Services), listando status ou iniciando/parando/reiniciando um serviço específico.",
+    "syntax": "Get-Service [-Name <nome>]\nStart-Service -Name <nome>\nStop-Service -Name <nome>\nRestart-Service -Name <nome>",
+    "example": "Get-Service -Name wuauserv\nRestart-Service -Name wuauserv -Force",
+    "result": "Mostra o status do serviço Windows Update e depois o reinicia, encerrando dependências se necessário.",
+    "notes": [
+      "Alterar serviços do sistema normalmente exige um console PowerShell aberto como Administrador."
+    ],
+    "bestPractices": [
+      "Use `-Force` em `Stop-Service`/`Restart-Service` apenas quando tiver certeza de que dependências podem ser interrompidas com segurança."
+    ],
+    "commonMistakes": [
+      "Tentar parar um serviço do qual outros serviços dependem sem `-Force`, recebendo um erro de dependência."
+    ],
+    "relatedCommands": ["powershell-get-process"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/get-service",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "servicos"],
+    "keywords": [
+      "get-service",
+      "iniciar servico windows powershell",
+      "parar servico windows"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-start-process",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema",
+    "title": "Start-Process / Stop-Process",
+    "description": "Inicia um novo processo (executável, script ou documento), opcionalmente elevado como Administrador, ou encerra um processo em execução pelo nome/PID.",
+    "syntax": "Start-Process -FilePath <executavel> [-ArgumentList <args>] [-Verb RunAs]\nStop-Process -Name <nome> [-Force]",
+    "example": "Start-Process -FilePath \"notepad.exe\" -Verb RunAs\nStop-Process -Name notepad -Force",
+    "result": "Abre o Bloco de Notas com privilégios elevados, e em seguida encerra o processo pelo nome.",
+    "flags": [
+      {
+        "flag": "-Verb RunAs",
+        "description": "Executa o processo elevado (equivalente a 'Executar como administrador')."
+      },
+      {
+        "flag": "-Force",
+        "description": "Encerra o processo sem pedir confirmação, mesmo que não responda."
+      }
+    ],
+    "notes": [
+      "`Start-Process` sem `-Wait` retorna imediatamente; use `-Wait` para bloquear o script até o processo terminar."
+    ],
+    "bestPractices": [
+      "Use `Start-Process ... -Wait -PassThru` para capturar o código de saída de um processo externo em scripts."
+    ],
+    "commonMistakes": [
+      "Encerrar processos pelo nome (`Stop-Process -Name`) quando há múltiplas instâncias, matando instâncias não intencionais."
+    ],
+    "relatedCommands": ["powershell-get-process", "powershell-execution-policy"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/start-process",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "processos"],
+    "keywords": [
+      "start-process",
+      "stop-process",
+      "executar como administrador powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-invoke-webrequest",
+    "category": "Windows PowerShell",
+    "subcategory": "Rede",
+    "title": "Invoke-WebRequest",
+    "description": "Faz requisições HTTP/HTTPS e retorna a resposta completa (status, headers, conteúdo bruto), útil para baixar arquivos ou testar endpoints.",
+    "syntax": "Invoke-WebRequest -Uri <url> [-Method <metodo>] [-OutFile <arquivo>]",
+    "example": "Invoke-WebRequest -Uri \"https://exemplo.com/arquivo.zip\" -OutFile arquivo.zip",
+    "result": "Baixa o arquivo remoto e salva localmente como 'arquivo.zip'.",
+    "aliases": ["iwr", "curl", "wget"],
+    "flags": [
+      {
+        "flag": "-Method",
+        "description": "Define o verbo HTTP (GET, POST, PUT, DELETE...)."
+      },
+      {
+        "flag": "-OutFile",
+        "description": "Salva a resposta diretamente em um arquivo."
+      },
+      {
+        "flag": "-Headers",
+        "description": "Define um hashtable de cabeçalhos HTTP customizados."
+      }
+    ],
+    "notes": [
+      "Os aliases `curl`/`wget` do PowerShell não têm a mesma sintaxe dos utilitários originais do Linux."
+    ],
+    "bestPractices": [
+      "Para consumir APIs JSON, prefira `Invoke-RestMethod`, que já desserializa a resposta automaticamente."
+    ],
+    "commonMistakes": [
+      "Usar sintaxe de flags do `curl`/`wget` reais junto com o alias do PowerShell, que aceita parâmetros diferentes."
+    ],
+    "relatedCommands": ["powershell-invoke-restmethod"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/invoke-webrequest",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "rede", "http"],
+    "keywords": ["invoke-webrequest", "curl powershell", "baixar arquivo powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-invoke-restmethod",
+    "category": "Windows PowerShell",
+    "subcategory": "Rede",
+    "title": "Invoke-RestMethod",
+    "description": "Faz requisições HTTP a APIs REST e desserializa automaticamente respostas JSON/XML em objetos do PowerShell, prontos para manipular com o pipeline.",
+    "syntax": "Invoke-RestMethod -Uri <url> [-Method <metodo>] [-Body <corpo>] [-ContentType <tipo>]",
+    "example": "Invoke-RestMethod -Uri \"https://api.exemplo.com/usuarios\" -Method Post -Body (@{ nome = \"Ana\" } | ConvertTo-Json) -ContentType \"application/json\"",
+    "result": "Envia um POST com corpo JSON e retorna a resposta já convertida em um PSCustomObject.",
+    "aliases": ["irm"],
+    "flags": [
+      { "flag": "-Method", "description": "Define o verbo HTTP." },
+      {
+        "flag": "-Body",
+        "description": "Corpo da requisição, geralmente uma string JSON."
+      },
+      { "flag": "-ContentType", "description": "Define o cabeçalho Content-Type." }
+    ],
+    "notes": [
+      "Diferente de `Invoke-WebRequest`, o resultado já vem como objeto — não é necessário chamar `ConvertFrom-Json` manualmente."
+    ],
+    "bestPractices": [
+      "Combine com `ConvertTo-Json -Depth` adequado ao montar objetos aninhados no `-Body`, pois o padrão é profundidade 2."
+    ],
+    "commonMistakes": [
+      "Esquecer `-ContentType \"application/json\"`, fazendo a API interpretar o corpo incorretamente."
+    ],
+    "relatedCommands": ["powershell-invoke-webrequest", "powershell-json-conversion"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/invoke-restmethod",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "rede", "api", "rest"],
+    "keywords": ["invoke-restmethod", "consumir api powershell", "post json powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-command",
+    "category": "Windows PowerShell",
+    "subcategory": "Descoberta",
+    "title": "Get-Command",
+    "description": "Lista cmdlets, funções, aliases e executáveis disponíveis na sessão atual, com suporte a busca por nome, verbo ou módulo.",
+    "syntax": "Get-Command [-Name <padrao>] [-Verb <verbo>] [-Module <modulo>]",
+    "example": "Get-Command -Verb Get -Noun *Service*",
+    "result": "Lista todos os cmdlets cujo verbo é 'Get' e o substantivo contém 'Service' (ex: Get-Service).",
+    "aliases": ["gcm"],
+    "notes": [
+      "PowerShell segue a convenção Verbo-Substantivo (Get-, Set-, New-, Remove-...); `Get-Verb` lista todos os verbos aprovados."
+    ],
+    "bestPractices": [
+      "Use `Get-Command` para descobrir o cmdlet certo em vez de pesquisar externamente quando já se sabe o padrão Verbo-Substantivo."
+    ],
+    "commonMistakes": [
+      "Confundir `Get-Command` (lista comandos disponíveis) com `Get-Help` (mostra a documentação de um comando específico)."
+    ],
+    "relatedCommands": ["powershell-get-help", "powershell-get-member"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/get-command",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "descoberta"],
+    "keywords": ["get-command", "listar cmdlets", "buscar comando powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-help",
+    "category": "Windows PowerShell",
+    "subcategory": "Descoberta",
+    "title": "Get-Help",
+    "description": "Exibe a documentação de um cmdlet: sintaxe, parâmetros, exemplos de uso e notas, diretamente no console.",
+    "syntax": "Get-Help <comando> [-Examples] [-Full] [-Online]",
+    "example": "Get-Help Get-ChildItem -Examples",
+    "result": "Mostra apenas a seção de exemplos práticos de uso do cmdlet Get-ChildItem.",
+    "flags": [
+      { "flag": "-Examples", "description": "Mostra apenas exemplos de uso." },
+      {
+        "flag": "-Full",
+        "description": "Mostra a documentação completa, incluindo todos os parâmetros."
+      },
+      { "flag": "-Online", "description": "Abre a documentação oficial no navegador." }
+    ],
+    "notes": [
+      "Na primeira vez, é necessário rodar `Update-Help` (como Administrador) para baixar os arquivos de ajuda completos."
+    ],
+    "bestPractices": [
+      "Rode `Update-Help` periodicamente para manter a documentação local atualizada."
+    ],
+    "commonMistakes": [
+      "Assumir que a ajuda vem pré-instalada completa; sem `Update-Help`, o PowerShell mostra apenas uma versão resumida."
+    ],
+    "relatedCommands": ["powershell-get-command"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/get-help",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "descoberta", "documentacao"],
+    "keywords": ["get-help", "ajuda powershell", "documentacao cmdlet"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-member",
+    "category": "Windows PowerShell",
+    "subcategory": "Descoberta",
+    "title": "Get-Member",
+    "description": "Inspeciona um objeto do pipeline e lista suas propriedades, métodos e tipo .NET subjacente.",
+    "syntax": "<comando> | Get-Member [-MemberType <tipo>]",
+    "example": "Get-Process | Get-Member -MemberType Property",
+    "result": "Lista todas as propriedades disponíveis no objeto Process (Name, Id, CPU, WorkingSet...).",
+    "aliases": ["gm"],
+    "notes": [
+      "É a forma mais rápida de descobrir quais propriedades usar em `Select-Object` ou `Where-Object` sobre um objeto desconhecido."
+    ],
+    "bestPractices": [
+      "Sempre que não souber os campos disponíveis de um cmdlet, pipe para `Get-Member` antes de escrever o filtro."
+    ],
+    "commonMistakes": [
+      "Adivinhar nomes de propriedades em vez de confirmar com `Get-Member`, causando erros de propriedade inexistente."
+    ],
+    "relatedCommands": ["powershell-get-command", "powershell-select-object"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-member",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "descoberta", "objetos"],
+    "keywords": ["get-member", "propriedades objeto powershell", "inspecionar objeto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-automatic-variables",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Variáveis automáticas ($_, $env:, $PSItem)",
+    "description": "O PowerShell define variáveis automáticas preenchidas pelo próprio ambiente: `$_`/`$PSItem` representam o objeto atual no pipeline, e `$env:` expõe variáveis de ambiente do sistema.",
+    "syntax": "$_  (objeto atual no pipeline)\n$env:<NOME>  (variável de ambiente)",
+    "example": "Get-ChildItem | Where-Object { $_.Length -gt 1MB }\nWrite-Output $env:USERPROFILE",
+    "result": "Filtra arquivos maiores que 1MB e depois imprime o caminho da pasta do usuário atual.",
+    "notes": [
+      "`$_` e `$PSItem` são idênticos; `$PSItem` foi adicionado para melhorar a legibilidade em blocos aninhados.",
+      "Definir uma variável de ambiente com `$env:NOME = \"valor\"` só vale para a sessão atual, não persiste após fechar o console."
+    ],
+    "bestPractices": [
+      "Use `[Environment]::SetEnvironmentVariable()` quando precisar persistir uma variável de ambiente permanentemente."
+    ],
+    "commonMistakes": [
+      "Esperar que `$env:VARIAVEL = valor` persista entre sessões do PowerShell, como acontece ao editar via Painel de Controle."
+    ],
+    "relatedCommands": ["powershell-where-object", "powershell-profile"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_automatic_variables",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "variaveis"],
+    "keywords": [
+      "variaveis automaticas powershell",
+      "dolar underscore",
+      "env powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-profile",
+    "category": "Windows PowerShell",
+    "subcategory": "Configuração",
+    "title": "$PROFILE — perfil de inicialização",
+    "description": "Arquivo de script (.ps1) executado automaticamente sempre que o PowerShell inicia, usado para carregar aliases, funções, módulos e customizações pessoais.",
+    "syntax": "$PROFILE",
+    "example": "if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File -Force }\nnotepad $PROFILE",
+    "result": "Cria o arquivo de perfil (caso não exista) e o abre para edição no Bloco de Notas.",
+    "notes": [
+      "`$PROFILE` é na verdade uma variável que aponta para o caminho do perfil 'CurrentUserCurrentHost'; existem outros três perfis (AllUsers, AllHosts) acessíveis via `$PROFILE.AllUsersAllHosts` etc."
+    ],
+    "bestPractices": [
+      "Use o perfil para definir aliases pessoais e importar módulos usados com frequência, mantendo o console produtivo desde a abertura."
+    ],
+    "commonMistakes": [
+      "Editar o perfil errado (ex: AllUsers em vez de CurrentUser) achando que a mudança não teve efeito."
+    ],
+    "relatedCommands": ["powershell-execution-policy", "powershell-import-module"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_profiles",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "configuracao"],
+    "keywords": ["profile powershell", "perfil powershell", "$profile"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-execution-policy",
+    "category": "Windows PowerShell",
+    "subcategory": "Segurança",
+    "title": "Set-ExecutionPolicy",
+    "description": "Controla quais scripts (.ps1) o PowerShell tem permissão de executar no sistema, como camada de proteção contra scripts maliciosos não assinados.",
+    "syntax": "Set-ExecutionPolicy <politica> [-Scope <escopo>]",
+    "example": "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser",
+    "result": "Passa a permitir a execução de scripts locais livremente, mas exige assinatura digital para scripts baixados da internet.",
+    "parameters": [
+      {
+        "name": "politica",
+        "description": "Restricted, AllSigned, RemoteSigned, Unrestricted ou Bypass.",
+        "required": true
+      },
+      {
+        "name": "-Scope",
+        "description": "Aplica a política apenas ao usuário atual (CurrentUser) em vez de todo o sistema.",
+        "required": false
+      }
+    ],
+    "notes": [
+      "O padrão de fábrica no Windows é `Restricted`, que bloqueia a execução de qualquer script .ps1."
+    ],
+    "bestPractices": [
+      "Prefira `-Scope CurrentUser` a alterar a política global da máquina, exigindo menos privilégios administrativos."
+    ],
+    "commonMistakes": [
+      "Usar `Unrestricted` ou `Bypass` permanentemente por comodidade, reduzindo a proteção contra scripts maliciosos."
+    ],
+    "relatedCommands": ["powershell-profile"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.security/set-executionpolicy",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "seguranca"],
+    "keywords": [
+      "execution policy",
+      "executar script powershell bloqueado",
+      "remotesigned"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-import-module",
+    "category": "Windows PowerShell",
+    "subcategory": "Módulos",
+    "title": "Import-Module / Install-Module",
+    "description": "Carrega um módulo (conjunto de cmdlets) na sessão atual. `Install-Module` baixa um módulo da PowerShell Gallery antes de poder importá-lo.",
+    "syntax": "Install-Module -Name <modulo> -Scope CurrentUser\nImport-Module -Name <modulo>",
+    "example": "Install-Module -Name Az -Scope CurrentUser\nImport-Module -Name Az",
+    "result": "Instala o módulo Az (Azure PowerShell) para o usuário atual e o carrega na sessão, disponibilizando seus cmdlets.",
+    "notes": [
+      "Módulos instalados via `Install-Module` ficam em `$env:PSModulePath`; módulos nessas pastas são carregados automaticamente ao usar um de seus cmdlets (autoloading)."
+    ],
+    "bestPractices": [
+      "Use `-Scope CurrentUser` para instalar módulos sem precisar de privilégios de Administrador."
+    ],
+    "commonMistakes": [
+      "Tentar `Import-Module` de um módulo que nunca foi instalado, recebendo erro de módulo não encontrado."
+    ],
+    "relatedCommands": ["powershell-profile", "powershell-get-command"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/import-module",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "modulos"],
+    "keywords": ["import-module", "install-module", "powershell gallery"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-functions",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "Funções (function)",
+    "description": "Bloco de código nomeado e reutilizável, que pode receber parâmetros tipados e seguir a convenção Verbo-Substantivo para se comportar como um cmdlet próprio.",
+    "syntax": "function Verbo-Substantivo {\n  param(\n    [Parameter(Mandatory)][tipo]$Parametro\n  )\n  <corpo>\n}",
+    "example": "function Get-Saudacao {\n  param([string]$Nome = \"Mundo\")\n  \"Ola, $Nome!\"\n}\nGet-Saudacao -Nome \"Ana\"",
+    "result": "Ola, Ana!",
+    "notes": [
+      "`[Parameter(Mandatory)]` torna o parâmetro obrigatório, e o PowerShell solicita o valor interativamente se ele não for informado."
+    ],
+    "bestPractices": [
+      "Siga a convenção Verbo-Substantivo (`Get-Verb` lista os verbos aprovados) para manter funções consistentes com os cmdlets nativos."
+    ],
+    "commonMistakes": [
+      "Declarar parâmetros sem tipo, permitindo que valores incompatíveis quebrem a função silenciosamente em tempo de execução."
+    ],
+    "relatedCommands": ["powershell-try-catch", "powershell-pscustomobject"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_functions",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "scripting", "funcoes"],
+    "keywords": ["function powershell", "criar funcao powershell", "param powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-try-catch",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "try / catch / finally",
+    "description": "Estrutura de tratamento de exceções que captura erros de término (terminating errors) lançados durante a execução de um bloco de código.",
+    "syntax": "try {\n  <codigo que pode falhar>\n} catch {\n  <tratamento>\n} finally {\n  <sempre executa>\n}",
+    "example": "try {\n  Get-Content -Path \"arquivo-inexistente.txt\" -ErrorAction Stop\n} catch {\n  Write-Warning \"Falha ao ler arquivo: $($_.Exception.Message)\"\n}",
+    "result": "Falha ao ler arquivo: Não é possível localizar o caminho...",
+    "notes": [
+      "Muitos cmdlets, por padrão, geram erros 'não terminantes' que não disparam o `catch` — use `-ErrorAction Stop` para forçá-los a interromper a execução e serem capturados."
+    ],
+    "bestPractices": [
+      "Use `$_.Exception.Message` dentro do `catch` para acessar a mensagem de erro original de forma legível."
+    ],
+    "commonMistakes": [
+      "Esquecer `-ErrorAction Stop` no comando dentro do `try`, fazendo o script continuar mesmo após um erro sem cair no `catch`."
+    ],
+    "relatedCommands": ["powershell-functions"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_try_catch_finally",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "scripting", "erros"],
+    "keywords": [
+      "try catch powershell",
+      "tratamento de erro powershell",
+      "exception powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-comparison-operators",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Operadores de comparação (-eq, -like, -match)",
+    "description": "O PowerShell usa operadores nomeados por texto (em vez de símbolos como == ou =~) para comparar valores, buscar padrões com curinga ou aplicar regex.",
+    "syntax": "<valor> -eq|-ne|-gt|-lt|-like|-match <comparacao>",
+    "example": "\"Deploy.ps1\" -like \"*.ps1\"\n\"erro-404-not-found\" -match \"\\d{3}\"",
+    "result": "$true e $true, respectivamente — o primeiro casa com o curinga de extensão, o segundo encontra a sequência de 3 dígitos via regex.",
+    "notes": [
+      "`-eq`/`-ne` comparam igualdade; `-like`/`-notlike` usam curingas (`*`, `?`); `-match`/`-notmatch` usam expressões regulares e preenchem a variável automática `$Matches`."
+    ],
+    "bestPractices": [
+      "Prefira `-eq` a `-match` para comparações simples de igualdade — é mais rápido e evita escapes de regex desnecessários."
+    ],
+    "commonMistakes": [
+      "Usar `=` (atribuição) em vez de `-eq` dentro de condições `if`, o que gera erro de sintaxe em vez de comparar."
+    ],
+    "relatedCommands": ["powershell-where-object"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_comparison_operators",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "operadores"],
+    "keywords": ["operadores powershell", "-eq -like -match", "comparacao powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-json-conversion",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de dados",
+    "title": "ConvertTo-Json / ConvertFrom-Json",
+    "description": "Serializa objetos do PowerShell para uma string JSON, ou desserializa uma string JSON de volta em objetos (PSCustomObject) manipuláveis no pipeline.",
+    "syntax": "<objeto> | ConvertTo-Json [-Depth <n>]\nConvertFrom-Json -InputObject <string-json>",
+    "example": "@{ nome = \"Ana\"; idade = 30 } | ConvertTo-Json",
+    "result": "{\n  \"nome\": \"Ana\",\n  \"idade\": 30\n}",
+    "flags": [
+      {
+        "flag": "-Depth",
+        "description": "Define quantos níveis de aninhamento serializar (padrão é 2)."
+      }
+    ],
+    "notes": [
+      "Objetos aninhados além do `-Depth` padrão (2) são truncados silenciosamente para a string \"System.Object[]\" ou similar."
+    ],
+    "bestPractices": [
+      "Aumente `-Depth` explicitamente ao serializar estruturas aninhadas complexas, como configurações ou respostas de API."
+    ],
+    "commonMistakes": [
+      "Não especificar `-Depth` em objetos profundamente aninhados e obter um JSON truncado sem perceber."
+    ],
+    "relatedCommands": ["powershell-invoke-restmethod", "powershell-pscustomobject"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/convertto-json",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "json"],
+    "keywords": ["convertto-json", "convertfrom-json", "json powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-export-csv",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de dados",
+    "title": "Export-Csv / Import-Csv",
+    "description": "Exporta objetos do pipeline para um arquivo CSV (uma coluna por propriedade) ou importa um CSV existente de volta como objetos.",
+    "syntax": "<comando> | Export-Csv -Path <arquivo> [-NoTypeInformation] [-Delimiter <char>]",
+    "example": "Get-Process | Export-Csv -Path processos.csv -NoTypeInformation",
+    "result": "Gera processos.csv com uma linha de cabeçalho e uma linha por processo, pronto para abrir no Excel.",
+    "flags": [
+      {
+        "flag": "-NoTypeInformation",
+        "description": "Omite a linha extra de metadados de tipo (#TYPE) no topo do arquivo."
+      },
+      {
+        "flag": "-Delimiter",
+        "description": "Define o separador de colunas (padrão é vírgula)."
+      }
+    ],
+    "notes": [
+      "A partir do PowerShell 6+, `-NoTypeInformation` já é o comportamento padrão."
+    ],
+    "bestPractices": [
+      "Sempre use `-NoTypeInformation` no Windows PowerShell 5.1 para gerar CSVs compatíveis com Excel e outras ferramentas."
+    ],
+    "commonMistakes": [
+      "Esquecer `-NoTypeInformation` e obter uma linha extra '#TYPE ...' que quebra a leitura em outras ferramentas."
+    ],
+    "relatedCommands": ["powershell-select-object", "powershell-json-conversion"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/export-csv",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "csv"],
+    "keywords": ["export-csv", "import-csv", "exportar planilha powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-pscustomobject",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de dados",
+    "title": "[PSCustomObject]",
+    "description": "Cria um objeto customizado com propriedades nomeadas definidas pelo desenvolvedor, útil para estruturar dados de forma consistente antes de exportar ou exibir.",
+    "syntax": "[PSCustomObject]@{ Propriedade1 = <valor>; Propriedade2 = <valor> }",
+    "example": "$usuario = [PSCustomObject]@{ Nome = \"Ana\"; Ativo = $true }\n$usuario | Format-Table",
+    "result": "Nome  Ativo\n----  -----\nAna    True",
+    "notes": [
+      "Diferente de um `Hashtable` comum, `[PSCustomObject]` preserva a ordem das propriedades e se integra nativamente com `Format-Table`, `Select-Object` e `ConvertTo-Json`."
+    ],
+    "bestPractices": [
+      "Use `[PSCustomObject]` para retornar dados estruturados de funções em vez de strings formatadas manualmente."
+    ],
+    "commonMistakes": [
+      "Usar um `Hashtable` simples quando a ordem das colunas importa na exibição ou exportação."
+    ],
+    "relatedCommands": ["powershell-functions", "powershell-export-csv"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_pscustomobject",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "objetos"],
+    "keywords": [
+      "pscustomobject",
+      "criar objeto powershell",
+      "hashtable vs pscustomobject"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-remoting",
+    "category": "Windows PowerShell",
+    "subcategory": "Remoting",
+    "title": "Enter-PSSession / Invoke-Command (PowerShell Remoting)",
+    "description": "Executa comandos ou abre um console interativo em uma máquina remota via WinRM, permitindo administração remota sem RDP.",
+    "syntax": "Enter-PSSession -ComputerName <host>\nInvoke-Command -ComputerName <host> -ScriptBlock { <script> }",
+    "example": "Invoke-Command -ComputerName srv-web01 -ScriptBlock { Get-Service -Name W3SVC }",
+    "result": "Executa Get-Service remotamente no servidor srv-web01 e retorna o resultado para a sessão local.",
+    "notes": [
+      "Requer que o PowerShell Remoting esteja habilitado no host remoto (`Enable-PSRemoting`) e portas WinRM (5985/5986) acessíveis."
+    ],
+    "bestPractices": [
+      "Use `Invoke-Command -ComputerName` com uma lista de hosts para rodar o mesmo script em múltiplas máquinas em paralelo."
+    ],
+    "commonMistakes": [
+      "Tentar usar remoting entre máquinas fora de um domínio confiável sem configurar `TrustedHosts` primeiro."
+    ],
+    "relatedCommands": ["powershell-execution-policy"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/scripting/learn/remoting/running-remote-commands",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "remoting", "administracao"],
+    "keywords": ["powershell remoting", "enter-pssession", "invoke-command remoto"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-aliases",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Get-Alias / Set-Alias",
+    "description": "Consulta e cria apelidos (aliases) para cmdlets, permitindo digitar comandos familiares do Bash/CMD (como `ls`, `cat`, `rm`) que na verdade apontam para cmdlets nativos do PowerShell.",
+    "syntax": "Get-Alias [-Name <alias>]\nSet-Alias -Name <alias> -Value <cmdlet>",
+    "example": "Get-Alias -Name gci\nSet-Alias -Name grep -Value Select-String",
+    "result": "Mostra que 'gci' aponta para Get-ChildItem, e cria um novo alias 'grep' apontando para Select-String.",
+    "notes": [
+      "Aliases criados com `Set-Alias` só valem para a sessão atual; para persistir, adicione o comando ao `$PROFILE`."
+    ],
+    "bestPractices": [
+      "Evite depender de aliases não padronizados em scripts compartilhados — use o nome completo do cmdlet para legibilidade e portabilidade."
+    ],
+    "commonMistakes": [
+      "Escrever scripts reutilizáveis usando aliases como `ls`, `cat`, `rm`, que podem não existir em outros ambientes (ex: PowerShell em Linux)."
+    ],
+    "relatedCommands": ["powershell-profile", "powershell-get-command"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/set-alias",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "aliases"],
+    "keywords": ["get-alias", "set-alias", "apelidos powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-shortcut-tab-completion",
+    "category": "Windows PowerShell",
+    "subcategory": "Atalhos do console",
+    "title": "Tab — autocompletar comandos e caminhos",
+    "description": "Pressionar Tab completa automaticamente nomes de cmdlets, parâmetros, caminhos de arquivo e valores de enum; pressionar repetidamente cicla entre as opções possíveis.",
+    "shortcut": "Tab",
+    "notes": ["Shift + Tab cicla as sugestões na ordem inversa."],
+    "bestPractices": [
+      "Use Tab para descobrir parâmetros disponíveis de um cmdlet digitando o traço (`-`) e pressionando Tab repetidamente."
+    ],
+    "relatedCommands": ["powershell-get-command"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/scripting/learn/shell/tab-completion",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "atalhos"],
+    "keywords": ["tab completion powershell", "autocompletar powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-shortcut-history-search",
+    "category": "Windows PowerShell",
+    "subcategory": "Atalhos do console",
+    "title": "Ctrl + R — busca reversa no histórico",
+    "description": "Abre uma busca incremental pelo histórico de comandos já executados no console, permitindo digitar parte de um comando antigo para reexecutá-lo rapidamente.",
+    "shortcut": "Ctrl + R",
+    "notes": [
+      "F8 também percorre o histórico filtrando pelo texto já digitado na linha atual, sem abrir a busca interativa."
+    ],
+    "relatedCommands": ["powershell-shortcut-f7-history"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+ (módulo PSReadLine)",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/psreadline/about/about_psreadline",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "atalhos", "historico"],
+    "keywords": ["ctrl r powershell", "busca historico powershell", "psreadline"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-shortcut-f7-history",
+    "category": "Windows PowerShell",
+    "subcategory": "Atalhos do console",
+    "title": "F7 — histórico de comandos em janela",
+    "description": "Abre uma janela popup com a lista completa de comandos já digitados na sessão atual, navegável com as setas e executável com Enter — recurso herdado do console clássico do Windows.",
+    "shortcut": "F7",
+    "notes": [
+      "Disponível no Console Host clássico (conhost); no Windows Terminal, o comportamento pode variar conforme o modo de renderização."
+    ],
+    "relatedCommands": ["powershell-shortcut-history-search"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/psreadline/about/about_psreadline",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "atalhos", "historico"],
+    "keywords": ["f7 powershell", "historico de comandos janela"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-switch-statement",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "switch",
+    "description": "Estrutura de controle que compara um valor contra múltiplos padrões (literais, curingas ou regex) e executa o bloco correspondente ao primeiro que casar.",
+    "syntax": "switch (<valor>) {\n  <padrao1> { <acao1> }\n  <padrao2> { <acao2> }\n  default { <acao-padrao> }\n}",
+    "example": "$status = \"erro\"\nswitch ($status) {\n  \"ok\" { \"Tudo certo\" }\n  \"erro\" { \"Falha detectada\" }\n  default { \"Status desconhecido\" }\n}",
+    "result": "Falha detectada",
+    "notes": [
+      "Ao contrário de C/JavaScript, `switch` no PowerShell não precisa de `break` — cada bloco executa isoladamente, a menos que várias condições casem (nesse caso, todas executam, salvo uso explícito de `break`).",
+      "`switch -Wildcard` e `switch -Regex` habilitam comparação por curinga ou expressão regular em vez de igualdade exata."
+    ],
+    "bestPractices": [
+      "Use `switch -Regex` em vez de uma cadeia longa de `if/elseif` ao validar padrões de texto."
+    ],
+    "commonMistakes": [
+      "Esperar que o `switch` pare após o primeiro bloco correspondente, como em outras linguagens — sem `break`, múltiplos blocos que casarem serão todos executados."
+    ],
+    "relatedCommands": ["powershell-comparison-operators", "powershell-functions"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_switch",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "scripting", "switch"],
+    "keywords": ["switch powershell", "estrutura switch powershell", "case powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-arrays-hashtables",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Arrays (@()) e Hashtables (@{})",
+    "description": "Duas estruturas de dados nativas: arrays (`@()`) armazenam listas ordenadas de valores; hashtables (`@{}`) armazenam pares chave-valor, semelhante a um dicionário/objeto.",
+    "syntax": "$array = @(<valor1>, <valor2>, ...)\n$hash = @{ <chave1> = <valor1>; <chave2> = <valor2> }",
+    "example": "$nomes = @(\"Ana\", \"Bruno\", \"Carla\")\n$config = @{ ambiente = \"producao\"; porta = 3000 }\n$config.porta",
+    "result": "3000",
+    "notes": [
+      "Arrays em PowerShell têm tamanho fixo por padrão; `+=` na verdade cria um novo array por trás dos panos, o que é custoso em loops grandes.",
+      "Hashtables preservam a ordem de inserção a partir do PowerShell 3+ quando criadas com `[ordered]@{}`."
+    ],
+    "bestPractices": [
+      "Para adicionar itens repetidamente em loop, use um `System.Collections.Generic.List[object]` ou `ArrayList` em vez de `+=` em um array comum, por performance."
+    ],
+    "commonMistakes": [
+      "Usar `+=` em um array dentro de um loop grande, gerando uma cópia inteira do array a cada iteração."
+    ],
+    "relatedCommands": ["powershell-pscustomobject", "powershell-foreach-object"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_hash_tables",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "arrays", "hashtable"],
+    "keywords": ["array powershell", "hashtable powershell", "dicionario powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-read-host",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "Read-Host",
+    "description": "Pausa o script e solicita uma entrada digitada pelo usuário no console, opcionalmente ocultando o texto digitado (senhas).",
+    "syntax": "Read-Host [-Prompt <texto>] [-AsSecureString]",
+    "example": "$nome = Read-Host -Prompt \"Digite seu nome\"\n$senha = Read-Host -Prompt \"Digite a senha\" -AsSecureString",
+    "result": "A variável $nome recebe o texto digitado; $senha recebe uma SecureString com os caracteres ocultos durante a digitação.",
+    "flags": [
+      { "flag": "-Prompt", "description": "Texto exibido antes de aguardar a entrada." },
+      {
+        "flag": "-AsSecureString",
+        "description": "Oculta os caracteres digitados e retorna um objeto SecureString em vez de texto puro."
+      }
+    ],
+    "notes": [
+      "Scripts que usam `Read-Host` não podem rodar de forma totalmente automatizada/desatendida sem fornecer a entrada por outro meio."
+    ],
+    "bestPractices": [
+      "Use `-AsSecureString` sempre que solicitar senhas ou tokens, evitando exibi-los em texto plano no console."
+    ],
+    "commonMistakes": [
+      "Solicitar senha com `Read-Host` sem `-AsSecureString`, deixando o valor visível na tela e no histórico do console."
+    ],
+    "relatedCommands": ["powershell-functions"],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/read-host",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "scripting", "entrada"],
+    "keywords": ["read-host", "entrada interativa powershell", "ler senha powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-here-strings",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Here-strings (@\"...\"@)",
+    "description": "Sintaxe para definir strings multilinha literais (com ou sem interpolação de variáveis), preservando quebras de linha e formatação sem precisar escapar aspas.",
+    "syntax": "@\"\n<texto multilinha com $variaveis>\n\"@\n\n@'\n<texto multilinha literal, sem interpolacao>\n'@",
+    "example": "$nome = \"Ana\"\n$mensagem = @\"\nOla, $nome!\nBem-vinda ao sistema.\n\"@",
+    "result": "\"Ola, Ana!\\nBem-vinda ao sistema.\" (string multilinha com o valor de $nome interpolado)",
+    "notes": [
+      "O delimitador de fechamento (`\"@` ou `'@`) precisa estar sozinho no início da linha, sem espaços antes.",
+      "Aspas duplas (`@\"..\"@`) interpolam variáveis; aspas simples (`@'..'@`) tratam o conteúdo como texto literal."
+    ],
+    "bestPractices": [
+      "Use here-strings para gerar blocos de JSON, YAML ou SQL diretamente no script, sem escapar aspas manualmente."
+    ],
+    "commonMistakes": [
+      "Indentar o delimitador de fechamento (`\"@`), o que causa erro de sintaxe — ele deve começar exatamente na coluna 1."
+    ],
+    "relatedCommands": ["powershell-json-conversion"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_quoting_rules#here-strings",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "strings"],
+    "keywords": [
+      "here-string powershell",
+      "string multilinha powershell",
+      "@ aspas powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-classes",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "class",
+    "description": "Define um tipo customizado orientado a objetos, com propriedades, métodos e construtores, disponível a partir do PowerShell 5.0.",
+    "syntax": "class NomeDaClasse {\n  [tipo]$Propriedade\n\n  NomeDaClasse([tipo]$valor) {\n    $this.Propriedade = $valor\n  }\n\n  [tipo] Metodo() {\n    return <valor>\n  }\n}",
+    "example": "class Produto {\n  [string]$Nome\n  [decimal]$Preco\n\n  Produto([string]$nome, [decimal]$preco) {\n    $this.Nome = $nome\n    $this.Preco = $preco\n  }\n\n  [string] Resumo() {\n    return \"$($this.Nome): R$ $($this.Preco)\"\n  }\n}\n$p = [Produto]::new(\"Teclado\", 150)\n$p.Resumo()",
+    "result": "Teclado: R$ 150",
+    "notes": [
+      "Diferente de funções, classes oferecem tipagem forte de propriedades e construtores, mas não suportam tão bem recarregamento dinâmico durante o desenvolvimento (é preciso reiniciar a sessão após editar a definição)."
+    ],
+    "bestPractices": [
+      "Use classes quando precisar de um modelo de dados reutilizável com validação/tipos fortes; para scripts simples, funções continuam mais práticas."
+    ],
+    "commonMistakes": [
+      "Editar a definição de uma classe já carregada e esperar que a sessão atual reflita a mudança sem reiniciar o console."
+    ],
+    "relatedCommands": ["powershell-functions", "powershell-pscustomobject"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.0+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_classes",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "classes", "poo"],
+    "keywords": [
+      "class powershell",
+      "orientacao a objetos powershell",
+      "criar classe powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-background-jobs",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "Start-Job / Receive-Job",
+    "description": "Executa um bloco de script em segundo plano, em um processo separado, permitindo continuar usando o console enquanto o job roda e coletar o resultado depois.",
+    "syntax": "Start-Job -ScriptBlock { <script> }\nReceive-Job -Id <id> [-Wait] [-Keep]",
+    "example": "$job = Start-Job -ScriptBlock { Start-Sleep -Seconds 10; \"Concluido\" }\nReceive-Job -Job $job -Wait",
+    "result": "Concluido",
+    "flags": [
+      {
+        "flag": "-Wait",
+        "description": "Bloqueia até o job terminar antes de retornar o resultado."
+      },
+      {
+        "flag": "-Keep",
+        "description": "Mantém o resultado do job disponível para leitura futura, em vez de descartá-lo após ler."
+      }
+    ],
+    "notes": [
+      "Jobs rodam em um processo `powershell.exe`/`pwsh.exe` separado, então variáveis da sessão atual não ficam automaticamente disponíveis dentro do ScriptBlock (use `-ArgumentList` para passá-las)."
+    ],
+    "bestPractices": [
+      "Para paralelizar muitas tarefas leves, prefira `ForEach-Object -Parallel` (PowerShell 7+), que tem menos overhead que jobs completos."
+    ],
+    "commonMistakes": [
+      "Esquecer de rodar `Remove-Job` após consumir o resultado, acumulando jobs finalizados na sessão."
+    ],
+    "relatedCommands": ["powershell-foreach-object", "powershell-start-process"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/start-job",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "jobs", "background"],
+    "keywords": [
+      "start-job",
+      "receive-job",
+      "background job powershell",
+      "processo em segundo plano"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-dsc-overview",
+    "category": "Windows PowerShell",
+    "subcategory": "Automação",
+    "title": "Desired State Configuration (DSC) — visão geral",
+    "description": "Plataforma declarativa do PowerShell para descrever o estado desejado de configuração de um sistema (pacotes instalados, serviços rodando, arquivos presentes) e aplicá-lo/mantê-lo automaticamente.",
+    "syntax": "Configuration <Nome> {\n  Node <alvo> {\n    <Recurso> <NomeRecurso> {\n      <propriedades>\n    }\n  }\n}",
+    "example": "Configuration WebServer {\n  Node \"localhost\" {\n    WindowsFeature IIS {\n      Name = \"Web-Server\"\n      Ensure = \"Present\"\n    }\n  }\n}\nWebServer\nStart-DscConfiguration -Path .\\WebServer -Wait -Verbose",
+    "result": "O nó local é configurado para garantir que o recurso IIS (Web-Server) esteja instalado, aplicando o estado descrito de forma idempotente.",
+    "notes": [
+      "DSC é declarativo: você descreve o estado final desejado, e o motor DSC decide as ações necessárias para alcançá-lo, reaplicando-as se o estado desviar depois."
+    ],
+    "bestPractices": [
+      "Use DSC (ou ferramentas equivalentes como Ansible/Chef/Puppet) para configuração de servidores em vez de scripts imperativos que só rodam uma vez."
+    ],
+    "commonMistakes": [
+      "Confundir DSC com um script comum — recursos DSC precisam ser idempotentes (rodar múltiplas vezes sem efeito colateral extra)."
+    ],
+    "relatedCommands": ["powershell-import-module"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+ / PSDesiredStateConfiguration",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/dsc/overview",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "dsc", "automacao"],
+    "keywords": [
+      "desired state configuration",
+      "dsc powershell",
+      "configuracao declarativa"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-module-manifest",
+    "category": "Windows PowerShell",
+    "subcategory": "Módulos",
+    "title": "Módulos e manifestos (.psm1 / .psd1)",
+    "description": "Um módulo PowerShell é um arquivo `.psm1` contendo funções reutilizáveis; o manifesto `.psd1` (opcional, mas recomendado) descreve metadados como versão, autor, dependências e quais funções são exportadas.",
+    "syntax": "New-ModuleManifest -Path <modulo.psd1> -RootModule <modulo.psm1> -ModuleVersion <versao>",
+    "example": "New-ModuleManifest -Path .\\MeuModulo\\MeuModulo.psd1 -RootModule \"MeuModulo.psm1\" -ModuleVersion \"1.0.0\" -Author \"Time Plataforma\"",
+    "result": "Um arquivo MeuModulo.psd1 é gerado com os metadados do módulo, referenciando MeuModulo.psm1 como o arquivo de código.",
+    "notes": [
+      "`FunctionsToExport` no manifesto controla quais funções ficam públicas ao importar o módulo — funções auxiliares internas podem ser omitidas dessa lista."
+    ],
+    "bestPractices": [
+      "Sempre crie um manifesto (.psd1) para módulos compartilhados, mesmo simples — ele documenta versão e dependências de forma padronizada."
+    ],
+    "commonMistakes": [
+      "Colocar todas as funções do módulo em `FunctionsToExport = '*'`, expondo funções internas que deveriam ser privadas."
+    ],
+    "relatedCommands": ["powershell-import-module", "powershell-functions"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "modulos", "manifesto"],
+    "keywords": ["psm1", "psd1", "modulo manifest powershell", "criar modulo powershell"],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-get-winevent",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema",
+    "title": "Get-WinEvent",
+    "description": "Consulta os logs de eventos do Windows (Application, System, Security e logs de aplicações específicas), com filtros mais poderosos e performáticos que o antigo `Get-EventLog`.",
+    "syntax": "Get-WinEvent -LogName <log> [-MaxEvents <n>] [-FilterHashtable <hash>]",
+    "example": "Get-WinEvent -FilterHashtable @{ LogName = \"System\"; Level = 2; StartTime = (Get-Date).AddHours(-1) }",
+    "result": "Lista os eventos de erro (Level 2) do log System registrados na última hora.",
+    "flags": [
+      {
+        "flag": "-MaxEvents",
+        "description": "Limita a quantidade de eventos retornados."
+      },
+      {
+        "flag": "-FilterHashtable",
+        "description": "Filtra por LogName, Level, StartTime, Id, ProviderName, entre outros, de forma performática."
+      }
+    ],
+    "notes": [
+      "`Get-WinEvent` acessa a API ETW/EventLog moderna e suporta logs que `Get-EventLog` (cmdlet legado) não enxerga."
+    ],
+    "bestPractices": [
+      "Prefira `-FilterHashtable` a filtrar com `Where-Object` depois de trazer todos os eventos — o filtro é aplicado no nível do provider, muito mais rápido."
+    ],
+    "commonMistakes": [
+      "Rodar `Get-WinEvent` sem nenhum filtro em um log grande (como Security), travando o console por trazer milhões de registros."
+    ],
+    "relatedCommands": ["powershell-get-service"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.diagnostics/get-winevent",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "logs", "eventos"],
+    "keywords": [
+      "get-winevent",
+      "logs de eventos windows",
+      "visualizador de eventos powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-registry-get-itemproperty",
+    "category": "Windows PowerShell",
+    "subcategory": "Sistema",
+    "title": "Get-ItemProperty (Registro do Windows)",
+    "description": "Lê valores de chaves do Registro do Windows, que o PowerShell expõe como um provider de sistema de arquivos navegável (`HKLM:\\`, `HKCU:\\`).",
+    "syntax": "Get-ItemProperty -Path <chave-registro> [-Name <valor>]",
+    "example": "Get-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\" -Name ProductName",
+    "result": "ProductName : Windows 11 Pro",
+    "notes": [
+      "`Set-ItemProperty` grava valores, e `New-Item`/`Remove-Item` funcionam com chaves de registro como se fossem pastas, já que o Registro é acessado via provider."
+    ],
+    "bestPractices": [
+      "Sempre exporte/leia a chave com `Get-ItemProperty` antes de alterar valores de registro em scripts, para confirmar o estado atual e evitar sobrescrever algo inesperado."
+    ],
+    "commonMistakes": [
+      "Editar valores de registro sem privilégio de Administrador e sem tratamento de erro, falhando silenciosamente em alguns contextos."
+    ],
+    "relatedCommands": ["powershell-test-path", "powershell-new-item"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/get-itemproperty",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "registro"],
+    "keywords": [
+      "get-itemproperty",
+      "registro do windows powershell",
+      "editar registro powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-vs-cmd",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "PowerShell vs. CMD — quando usar cada um",
+    "description": "Comparação prática entre os dois shells nativos do Windows: CMD é mais simples e leve para comandos pontuais legados, enquanto PowerShell oferece pipeline de objetos, tratamento de erros estruturado e automação avançada.",
+    "syntax": "N/A — comparação conceitual",
+    "example": "Um `.bat` legado de deploy antigo continua rodando via CMD, mas um novo script de automação de infraestrutura é escrito em PowerShell.",
+    "result": "Ambos coexistem no Windows moderno; a escolha depende do contexto e do que já está em produção.",
+    "notes": [
+      "PowerShell consegue chamar a maioria dos comandos internos do CMD e executar arquivos `.bat` diretamente, mas o oposto (CMD chamando cmdlets) não funciona nativamente."
+    ],
+    "bestPractices": [
+      "Prefira PowerShell para scripts novos que precisam manipular dados estruturados, chamar APIs ou tratar erros; use CMD apenas para manter compatibilidade com scripts legados."
+    ],
+    "commonMistakes": [
+      "Reescrever um `.bat` simples e estável em PowerShell só por modernização, sem necessidade real, introduzindo risco de regressão."
+    ],
+    "relatedCommands": [],
+    "difficulty": "iniciante",
+    "platform": ["windows"],
+    "version": "N/A",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/scripting/overview",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "cmd", "comparacao"],
+    "keywords": [
+      "powershell vs cmd",
+      "diferenca powershell cmd",
+      "quando usar powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-add-member",
+    "category": "Windows PowerShell",
+    "subcategory": "Manipulação de objetos",
+    "title": "Add-Member",
+    "description": "Adiciona uma nova propriedade ou método a um objeto já existente em tempo de execução, útil para enriquecer objetos retornados por outros cmdlets antes de exportar ou exibir.",
+    "syntax": "<objeto> | Add-Member -MemberType NoteProperty -Name <nome> -Value <valor>",
+    "example": "Get-Process -Name node | Select-Object -First 1 | Add-Member -MemberType NoteProperty -Name Ambiente -Value \"Producao\" -PassThru",
+    "result": "O objeto do processo passa a ter uma propriedade extra 'Ambiente' com o valor 'Producao', além das propriedades originais.",
+    "flags": [
+      {
+        "flag": "-MemberType",
+        "description": "Tipo do membro adicionado: NoteProperty (mais comum), ScriptMethod, AliasProperty, entre outros."
+      },
+      {
+        "flag": "-PassThru",
+        "description": "Retorna o objeto modificado no pipeline (sem isso, Add-Member não produz saída)."
+      }
+    ],
+    "notes": [
+      "Sem `-PassThru`, o objeto é modificado mas nada é impresso — comum esquecer essa flag e achar que o comando 'não funcionou'."
+    ],
+    "bestPractices": [
+      "Use `Add-Member` para enriquecer objetos com dados calculados antes de `Export-Csv` ou `ConvertTo-Json`, em vez de criar um `[PSCustomObject]` do zero copiando campo a campo."
+    ],
+    "commonMistakes": [
+      "Esquecer `-PassThru` e assumir que o cmdlet não teve efeito, quando na verdade só não retornou o objeto modificado no pipeline."
+    ],
+    "relatedCommands": ["powershell-pscustomobject", "powershell-select-object"],
+    "difficulty": "intermediario",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/add-member",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "objetos"],
+    "keywords": [
+      "add-member",
+      "adicionar propriedade objeto powershell",
+      "enriquecer objeto powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-call-operator",
+    "category": "Windows PowerShell",
+    "subcategory": "Conceitos fundamentais",
+    "title": "Operador de chamada (&) vs. Invoke-Expression",
+    "description": "O operador `&` executa um comando ou caminho armazenado em uma string/variável como comando (mais seguro); `Invoke-Expression` (iex) interpreta e executa uma string inteira como código PowerShell (mais poderoso, porém arriscado).",
+    "syntax": "& <caminho-ou-comando> [args]\nInvoke-Expression -Command <string-com-codigo>",
+    "example": "$script = \"C:\\Scripts\\deploy.ps1\"\n& $script -Ambiente \"producao\"",
+    "result": "Executa o script deploy.ps1 passando o parâmetro -Ambiente, exatamente como se tivesse sido digitado diretamente no console.",
+    "notes": [
+      "`&` não reinterpreta a string como código — ela é tratada como o nome de um comando a ser executado com os argumentos fornecidos.",
+      "`Invoke-Expression` avalia a string inteira como um bloco de código PowerShell, permitindo até múltiplos comandos concatenados — por isso é mais perigoso com entrada não confiável."
+    ],
+    "bestPractices": [
+      "Prefira `&` (ou `. `/dot-sourcing) a `Invoke-Expression` sempre que possível — é mais previsível e menos vulnerável a injeção de código."
+    ],
+    "commonMistakes": [
+      "Usar `Invoke-Expression` para montar comandos dinâmicos a partir de entrada externa (arquivo, argumento, API), abrindo brecha para injeção de código arbitrário."
+    ],
+    "relatedCommands": ["powershell-execution-policy"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_operators#call-operator--",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "operadores", "seguranca"],
+    "keywords": [
+      "call operator powershell",
+      "invoke-expression",
+      "iex powershell",
+      "executar script dinamico"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "powershell-splatting",
+    "category": "Windows PowerShell",
+    "subcategory": "Scripting",
+    "title": "Splatting (@parametros)",
+    "description": "Técnica que empacota um conjunto de parâmetros nomeados em uma hashtable (ou array, para posicionais) e os passa de uma vez a um cmdlet usando `@`, em vez de listar cada `-Parametro valor` na linha de comando.",
+    "syntax": "$parametros = @{ Parametro1 = <valor>; Parametro2 = <valor> }\nComando @parametros",
+    "example": "$params = @{\n  Path = \".\\build\"\n  Destination = \"D:\\backup\\build\"\n  Recurse = $true\n  Force = $true\n}\nCopy-Item @params",
+    "result": "Equivalente a rodar `Copy-Item -Path .\\build -Destination D:\\backup\\build -Recurse -Force`, mas com os parâmetros organizados em variável.",
+    "notes": [
+      "Splatting melhora a legibilidade de chamadas com muitos parâmetros e permite reutilizar o mesmo conjunto de parâmetros em múltiplas chamadas."
+    ],
+    "bestPractices": [
+      "Use splatting em scripts com chamadas longas de cmdlets (muitos parâmetros) para evitar linhas extensas difíceis de ler e revisar."
+    ],
+    "commonMistakes": [
+      "Usar `$` em vez de `@` ao aplicar a hashtable no comando (`Comando $parametros` passa a hashtable inteira como um único argumento, em vez de expandir os parâmetros)."
+    ],
+    "relatedCommands": ["powershell-functions", "powershell-arrays-hashtables"],
+    "difficulty": "avancado",
+    "platform": ["windows"],
+    "version": "PowerShell 5.1+",
+    "officialDocumentation": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_splatting",
+    "externalReferences": [],
+    "tags": ["powershell", "windows", "scripting", "splatting"],
+    "keywords": [
+      "splatting powershell",
+      "@parametros powershell",
+      "passar parametros powershell"
+    ],
+    "favorite": false,
+    "updatedAt": "2026-07-23"
   }
 ]
